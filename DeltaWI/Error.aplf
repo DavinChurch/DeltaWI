@@ -1,0 +1,8 @@
+ {condition}Error message
+⍝ Produce a ⎕EN=870 error message to be reported back to the ∆WI calling code
+⍝ If the {condition} left argument does not exist or represents a True value, then produce the message; otherwise do nothing.
+⍝ If the {condition} left argument is character data (a message) then reverse the arguments (a la ⍨) before processing.
+
+ :If 0=⎕NC'condition' ⋄ condition←1 ⋄ :EndIf
+ :If 0 2∊⍨10|⎕DR condition ⋄ (condition message)←message condition ⋄ :EndIf
+ message ⎕SIGNAL 870/⍨1∊condition

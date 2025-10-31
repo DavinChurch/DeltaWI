@@ -1,0 +1,4 @@
+ {R}←{X}∆NQ Y
+⍝ Cover function for ⎕NQ; Extend for use with EWC
+ :If 0=⎕NC'X' ⋄ X←⊢ ⋄ :EndIf
+ R←X ⎕NQ Y

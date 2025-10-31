@@ -1,0 +1,5 @@
+ R←{X}∆WN Y
+⍝ Cover function for ⎕WN; Extend for use with EWC
+
+ :If 0=⎕NC'X' ⋄ X←⊢ ⋄ :EndIf
+ R←X ∆WN Y

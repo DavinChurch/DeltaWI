@@ -1,0 +1,106 @@
+ (object objref action)←{object}ObjectName action;wself;prefix;star;t
+⍝ Parse multiple sources naming the object on which to act
+⍝ Part of the object naming may be composed from ∆WSELF, the left argument, and/or a prefix from the right argument.
+⍝ Return the full ∆WI name of the requested object, a reference to the GUI object itself, and a potentially-modified action-vector.
+⍝ If the action is New or Create, have the GUI reference point to the object's parent (since the object itself likely will not exist).
+⍝ If the action is Delete or self, and the object does not currently exist, return ⎕NULL instead of an object reference.
+⍝ (Warning: Production of a composite object name uses a complex algorithm that encompasses many subtle edge conditions.)
+⍝ (Future: ActiveX pointers may eventually need to be accepted in place of names.)
+⍝ Globals: GUIref, Application, Application.∆WSELF
+
+ :Section ⍝ Obtain ∆WSELF
+     wself←⎕NULL ⍝ Begin by determining if there is a ∆WSELF set (assume not until found)
+     :If ×Application.⎕NC'∆WSELF'
+         '∆WI ERROR: ∆WSELF may not be relative to itself (unsupported)'Error':.'∊⍨⊃wself←∆dlt caller.∆WSELF
+         '∆WI ERROR: DOMAIN ERROR in ∆WSELF'Error~(0 1∊⍨≢⍴wself)∧IsChar wself
+         wself↓⍨←2×'#.'≡2↑wself ⍝ Remove redundant #. prefix
+     :EndIf
+     '∆WI OBJECT NAME ERROR: Improperly formed object name'Error('#'∊wself)∧1<≢wself ⍝ No imbedded "#" in names
+ :EndSection
+
+ :Section ⍝ Validate left argument
+     :If 0=⎕NC'object'
+     :OrIf object≡⎕NULL ⍝ (Allow a "missing" flag to be passed in, to be used for testing)
+         object←wself ⍝ If we're missing a left argument, set it to wself, which is its true meaning
+     :EndIf
+     '∆WI CREATION ERROR: Invalid object pointer'Error~(0 1∊⍨≢⍴object)∧IsChar object
+     object←∆dlt object ⍝ Work with a neat left argument
+     ⍝'∆WI OBJECT NAME ERROR: Improperly formed object name'Error('#'∊object)∧1<≢object ⍝ No imbedded "#" in object
+     '∆WI OBJECT NAME ERROR: Improperly formed object name'Error∨/'#:'∊1↓object ⍝ No imbedded "#" or ":" in object
+ :EndSection
+
+ :Section ⍝ Now it's time to combine the "wself" and "object" parts together (into "object")
+     '∆WI OBJECT ERROR: Current object undefined'Error 0=≢object ⍝ Make sure we have an object name to process
+     '∆WI OBJECT ERROR: Current object undefined'Error(':.'∊⍨⊃object)∧⎕NULL' '∊⍨⊃wself ⍝ Make sure we have a wself to refer to
+     :If ':'=⊃object ⍝ This is relative to a top-level name, so change our root reference name before proceeding
+         '∆WI OBJECT NAME ERROR: Improperly formed object name'Error'.'∊2↑object ⍝ APL+Win doesn't allow this construct
+         wself←¯1 Parent wself ⍝ Pull out just the top-level name
+         object[1]←'.' ⍝ Pass the rest on to the next decision
+     :EndIf
+     object←(wself/⍨'.'=⊃object),(('.'=⊃object)∧1=≢object)↓object ⍝ Dot-prefix names should be relative to wself
+     object↓⍨←2×'#.'≡2↑object ⍝ Remove redundant #. prefix
+     '∆WI OBJECT ERROR: Parent not found (too many ..''s)'Error'.'=⊃object
+     '∆WI OBJECT ERROR: Current object undefined'Error 0=≢object ⍝ Make sure the final combined name has anything in it (is this actually needed?)
+     ⍝? Make sure that all these objects (at least non-leaf ones) actually exist
+ :EndSection
+
+ :Section ⍝ Resolve imbedded parentage signals just in case there's an error before we get to the next step
+     object←'.'∆cuts object ⍝?'.'(1↓¨,⊂⍨1,=)object ⍝ Cut into pieces between each '.'
+     :While (≢object)≥t←0⍳⍨≢¨object ⍝ Resolve each parentage reference until clean
+         '∆WI OBJECT ERROR: Parent not found (too many ..''s)'Error t≤1
+         '∆WI OBJECT ERROR: Cannot use ".." notation on undefined object'Error ⎕NULL≡GUIref Locate(t-1)↑object
+         object←(object↑⍨t-2),t↓object ⍝ Remove parent pointer and matching parent's name
+     :EndWhile
+     object←'.'∆sew object ⍝?1↓∊'.',¨object ⍝ Reconstitute name parts into current name for later use
+ :EndSection
+
+ :Section ⍝ Now it's time to split apart any name-prefixes from the argument itself and deal with those
+     :If (1=≡action)∧(×≢action)∧~IsChar action ⋄ (1⊃action)←,1⊃action ⋄ :EndIf ⍝ Separate out scalar action names, just in case
+     :If 0=≢action←,⊆action ⋄ action←'' ⋄ :EndIf ⍝ In case they try to call us with an empty argument
+     prefix←,⊃action←,⊆action ⍝ Force entire argument into a nested vector, which operates exactly as if unnested, and grab first word
+     prefix↓⍨←star←'*'=⊃prefix ⍝ Extract any '*' signal that suppresses UDC functionality
+     '∆WI OBJECT ERROR: DOMAIN ERROR in argument'Error~(0 1∊⍨≢⍴prefix)∧IsChar prefix
+     '∆WI OBJECT NAME ERROR: Improperly formed object name'Error'#'∊1↓prefix ⍝ No imbedded "#" in prefix
+     '∆WI OBJECT NAME ERROR: Improperly formed object name'Error':'∊1↓prefix ⍝ No imbedded ":" in prefix
+     prefix↑⍨←⌈/0,⍸,prefix∊':.' ⍝ Extract any name-prefix portion of the command  ⍝?(':'=⊃prefix),
+     (1⊃action)←∆dlt(≢prefix)↓1⊃action ⋄ prefix←∆dlt prefix~'*' ⍝ Strip off any name-prefix and remove redundant spaces/'*'
+     (1⊃action)←∆dlt(t←'*'=⊃1⊃action)↓1⊃action ⋄ (1⊃action),⍨←'*'/⍨star∨t ⍝ Clean up '*' prefixes
+     :If ⎕NULL∊prefix ⋄ objname←object ⋄ objref←⎕NULL ⋄ :Return ⋄ :EndIf ⍝ For testing the above processes independently, allow for an early exit to be requested
+ :EndSection
+
+ :Section ⍝ Now it's time to combine the "object" and "prefix" parts together (into "object")
+     :If ':'=⊃prefix ⍝ This is relative to a top-level name, so change our current reference name before proceeding
+         object←¯1 Parent object ⍝ Pull out just the top-level name to be our parent
+         prefix[1]←'.' ⍝ Pass on to next decision
+         prefix↓⍨←'.'=⊃1↓prefix
+     :ElseIf (':'∊prefix)∧∧/(⊃':'∆cuts prefix)∊⍥⎕C ⎕A,⎕D,'∆⍙' ⍝ Do we have a ":" after the first word (shorthand for top-level)?
+        prefix[prefix⍳':']←'.' ⋄ prefix,⍨←'#.' ⍝ Convert first ':' to standard #. notation
+        object←'' ⍝ And ignore anything else we got from the other arguments
+     :EndIf
+     prefix↓⍨←-'.'=⊃⌽prefix ⍝ There better always be a trailing '.' on this that needs removal!
+     prefix,⍨←'.'/⍨(~'.#'∊⍨⊃prefix)∧∧/×≢¨object prefix ⍝ Is this prefix an implicit child of the object name?
+     :If ('#'∊prefix)∨~'. '∊⍨⊃prefix
+         object←prefix
+     :Else
+         object,←prefix
+     :EndIf
+     '∆WI OBJECT ERROR: Current object undefined'Error ⎕NULL∊object ⍝ Did we end up with no name reference at all?
+ :EndSection
+
+ :Section ⍝ Resolve any new imbedded parentage signals
+     object←'.'∆cuts object ⍝?'.'(1↓¨,⊂⍨1,=)object ⍝ Cut into pieces between each '.'
+     :While (≢object)≥t←0⍳⍨≢¨object ⍝ Resolve each parentage reference until clean
+         '∆WI OBJECT ERROR: Parent not found (too many ..''s)'Error t≤1+'#'∊⊃object
+         '∆WI OBJECT ERROR: Cannot use ".." notation on undefined object'Error ⎕NULL≡GUIref Locate(t-1)↑object
+         object←(object↑⍨t-2),t↓object ⍝ Remove parent pointer and matching parent's name
+     :EndWhile
+     object←'.'∆sew object ⍝?1↓∊'.',¨object ⍝ Reconstitute name parts into final name for special case handling
+     object,←'#'/⍨0=≢object ⍝ If the parentage has gone all the way back to root, change it explicitly
+     object↓⍨←2×'#.'≡2↑object ⍝ Remove redundant #. prefix
+     :If ⎕NULL∊∊action ⋄ objname←object ⋄ objref←⎕NULL ⋄ :Return ⋄ :EndIf ⍝ For testing the above processes independently, allow for an early exit to be requested
+ :EndSection
+
+ :Section ⍝ Finally, we've gotten a fully-specific object name to operate on!
+     ⍝ Locate the GUI reference to the complete name, except for the leaf in the case of 'New' or 'Create'
+     objref←('New' 'Create'∊⍨⍥⎕C⊂⊃action)(GUIref Locate)object ⍝ Here's the final reference to the GUI object that was named
+ :EndSection

@@ -1,0 +1,13 @@
+ result←action(obj OnAction)args;todo
+ ⍝ Check object to see if it has onAction processing to perform.
+ ⍝ If so, perform it and return any result. Otherwise just return a continuation signal.
+
+ :If 2=obj.⎕NC'_onAction' ⍝ Has something been defined here?
+ :AndIf ×≢todo←obj._onAction
+⍝? Set up ∆W* variables
+     Run todo
+⍝? Check ∆W* variables to see if processing has been handled or needs to be continued normally
+⍝? If the onAction event calls ∆WI '*', how can we detect that there so we know to continue?
+ :EndIf
+
+ result←⎕NULL ⍝? For now, just assume there are no onActions to do

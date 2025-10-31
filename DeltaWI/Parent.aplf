@@ -1,0 +1,6 @@
+ parent←which Parent name
+⍝ Obtain one of the GUI parent names (must be unnested text)
+⍝ which←Number of levels of parentage to strip off from end if positive or take from beginning if negative (default=1)
+
+ :If 0=⎕NC'which' ⋄ which←1 ⋄ :EndIf
+ name←'.'∆sew(-which){⍺>0:⍺↑⍵ ⋄ ⍺↓⍵}'.'∆cuts name

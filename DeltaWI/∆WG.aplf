@@ -1,0 +1,5 @@
+ R←X ∆WG Y
+⍝ Cover function for ⎕WG; Extend for use with EWC
+⍝ Left argument is not optional!
+
+ R←X ⎕WG Y

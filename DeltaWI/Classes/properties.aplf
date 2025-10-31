@@ -1,0 +1,9 @@
+ result←object properties arg;lower;private;public;override;udp
+⍝ Produce a list of available properties for this object
+ '∆WI ACTION ERROR: Property "properties" is read-only'##.Error×≢arg
+ lower←⎕C ⎕A
+ private←lower object.Class.⎕NL ¯3 ⍝ Class-specific properties
+ override←(1≥≢¨object.Class.⎕CR¨private)/private ⍝ Class-specific suppression of generic properties ⍝? (is this fast enough?)
+ public←override~⍨lower ⎕NL ¯3 ⍝ Accessible class-generic properties
+ udp←{⍵/⍨'∆'=⊃¨⍵}1↓¨'_'object.⎕NL ¯2 ⍝ User-defined properties
+ result←{⍵[⍋⍵]}{'⎕'@('⍙'=⊢)⍵}¨{⍵/⍨~'on'∊⍥⊆2↑¨⍵}private∪public∪udp ⍝ Combine & clean up lists

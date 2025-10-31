@@ -1,0 +1,3 @@
+ {R}←∆DQ Y
+⍝ Cover function for ⎕DQ; Extend for use with EWC
+ R←⎕DQ Y

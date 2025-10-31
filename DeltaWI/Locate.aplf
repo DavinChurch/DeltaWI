@@ -1,0 +1,73 @@
+ ref←{leaf}(root Locate)name;next;class;to;links;link
+⍝ Traverse each level in the composite name to find the GUI object defined for it and return a reference to the ultimate object.
+⍝ Watch out for invisible layers (_mb, _mdi, _pic) in the Dyalog GUI structure,
+⍝ Return ⎕NULL if a named object does not exist at any point in the traversal.
+⍝ (Hopefully this runs quickly enough.)
+⍝ Specify a reference to the starting point of the search as the left operand.
+⍝ Right argument (name) may be passed as a character string or a nested vector.
+⍝ Optional left argument (leaf) is the number of leaf nodes to ignore (either 0 or 1).
+⍝ Allow relative naming with ":" and/or "." prefixes on each node; so must assume proper Ancestry variables for implementation.
+⍝ Support use of 'links' property to provide for child alias names.
+⍝ Global: GUIref, *.Ancestry
+
+ :If IsChar name ⋄ name←'.'∆cuts name ⋄ :EndIf ⍝ Split apart composite name if not already provided that way
+ :If 2=⎕NC'leaf' ⋄ name↓⍨←-leaf ⋄ :EndIf ⍝ Ignore leaf node if requested (should only be 0 or 1)
+ ref←root ⍝ Search from the provided root downwards ⍝? (We might not actually end up using this operand when it's ≠ GUIref)
+ :While ×≢name
+     next←⊃name ⋄ to←⎕NULL ⍝ What's our next level name?
+     :Section ⍝ Allow relative naming
+         :If '#'∊next ⋄ ref←GUIref ⋄ name←1↓name ⋄ :Continue ⋄ :EndIf ⍝ In case it's just referencing the root itself
+         :If ':'=⊃next ⍝ If this is relative to the highest level object in the ancestry chain
+             ref←⊃GUIref,⍨1↓ref.Ancestry ⍝ Re-point back to the top-level parent
+             :If 0=≢next←1↓next ⍝ If the ":" stands alone, we're done with this term and the next is relative to this
+                 name←1↓name
+                 :Continue
+             :EndIf ⍝ Otherwise, this still contains a name to process
+         :EndIf
+         ⍝ Top-level shorthand (with embedded ":") should have been already handled before we get here (right?)
+         :If 0=≢next ⍝ We have a leading ".", so we're going to move relative to our current position
+             :If 1<t←+/∧\0=≢¨name ⍝ How many leading "."s do we have together?
+                 ref←⊃GUIref,⍨(t-1)↓ref.Ancestry ⍝ If there's more than one, then that indicates backing up through parents
+             :EndIf
+             name←t↓name ⍝ Now ignore all the leading ".."s and look for the next name
+             :Continue
+         :EndIf
+     :EndSection
+
+     class←ref._class ⍝ In case there's more than one redirection
+     :Section ⍝ Redirections around hidden child objects
+         :If 9=ref.⎕NC'_mb' ⋄ ref←ref._mb ⋄ :EndIf ⍝ Skip over a hidden MenuBar object layer, if present
+         :Select class ⍝ Check APL+Win parent class type to watch out for other invisible children
+         :Case 'MDIForm' ⋄ ref←ref._mdi ⍝ Skip over required hidden object layer
+         :Case 'Picture' ⋄ ref←ref._pic ⍝ Skip over required hidden object layer
+         :EndSelect
+     :EndSection
+
+     :Section ⍝ Follow this next step in the normal path traversal
+         :If '!'≠⊃next ⍝ Look for a normal child, unless they've specified not to
+             to←ref ⎕VGET⊂next ⎕NULL ⍝ Find next reference following the chain forward
+         :Else
+             to←⎕NULL
+         :EndIf
+     :EndSection
+
+     :If to≡⎕NULL ⍝ If the child's name does not actually exist, see if there's an alias available
+         :Section ⍝ Follow any link that might be specified by aliasing the child's name
+             next↓⍨←'!'=⊃next ⍝ We've already handled the link-only signal
+             :If 2=ref.⎕NC'_links' ⍝ Do we have any links defined here?
+             :AndIf ~0∊⍴links←ref._links ⍝ Obtain object cross-linking alias table
+             :AndIf (2=≢⍴links)∧(2=2⊃2↑⍴links)∧~0∊IsChar¨links ⍝ Make sure it's a reasonably good structure, just in case
+                 :If ⎕NULL≢link←' '∆dlt(links[;1]⍳⊂next)⊃links[;2],⎕NULL ⍝ Is there an alias link defined here?
+                     :If (':'∊link)∧∧/(⊃':'∆cuts link)∊⍥⎕C ⎕A,⎕D,'∆⍙' ⍝ Do we have a ":" after the first word (shorthand for top-level)?
+                         link[link⍳':']←'.' ⋄ link,⍨←'#.' ⍝ Convert first ':' to standard #. notation
+                     :EndIf
+                     name←(⊂next),('.'∆cuts link),1↓name ⍝ Insert the specified alias definition directly into the node list being processed
+                     to←ref ⍝ Continue from current location
+                 :EndIf
+             :EndIf
+         :EndSection
+     :EndIf
+
+     :If to≡⎕NULL ⋄ ref←⎕NULL ⋄ :Return ⋄ :EndIf ⍝ Any failed step will fail the entire location process
+     ref←to ⋄ name←1↓name ⍝ Ready to keep going with the next step
+ :EndWhile

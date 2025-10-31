@@ -1,0 +1,9 @@
+ av←font QuadAV unicode
+⍝ If the font is an APL+Win font (based on ⎕AV), then convert the Unicode right argument to ⎕AV-based text
+
+
+ :If 'Apl Santa Fe' 'APL+Win' 'APL2000' 'APLHELP' 'APLPLUS' 'APLPLUSI'∊⍨⊂font
+    av←                     ⍝????? ⎕AVU is not giving me the results I expected - more testing needed
+ :Else
+     av←unicode
+ :EndIf

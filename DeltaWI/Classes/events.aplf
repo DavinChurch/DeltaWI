@@ -1,0 +1,7 @@
+ result←object events arg;private;public;override
+⍝ Produce a list of available methods for this object
+ '∆WI ACTION ERROR: Property "events" is read-only'##.Error×≢arg
+ private←'o'object.Class.⎕NL ¯3 ⍝ Class-specific events
+ override←(1≥≢¨object.Class.⎕CR¨private)/private ⍝ Class-specific suppression of generic events ⍝? (is this fast enough?)
+ public←override~⍨'o'⎕NL ¯3 ⍝ Accessible class-generic events
+ result←{⍵[⍋⍵]}{'⎕'@('⍙'=⊢)⍵}¨{⍵/⍨'on'∊⍥⊆2↑¨⍵}private∪public ⍝ Combine & clean up lists

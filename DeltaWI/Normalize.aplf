@@ -1,0 +1,11 @@
+(action args)←Normalize args
+⍝ Accept any APL+Win-valid right argument structure and restructure it into "normal form".
+⍝ Return the action name as a separate value and make sure the rest of the argument is a vector.
+⍝ Some actions allow either a vector of arguments at the same nesting level of the action, or as a
+⍝ single nested argument as the second item of the right argument. Unfortunately, there is no way to
+⍝ tell in advance whether multiple arguments are processed in the same way as a single nested argument,
+⍝ so we'll just have to return the vector as it is and let the individual routines figure out if
+⍝ arguments can be passed in alternate ways.
+
+action←,⊃⊆args ⍝ Extract the action name by itself
+:if 0∊⍴args←1↓⊆args ⋄ args←⍬ ⋄ :endif ⍝ And then return the rest of the argument as a vector (with empties normalized to ⍬)

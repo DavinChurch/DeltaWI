@@ -1,0 +1,7 @@
+ dqcode←eventnames Event eventmessage
+⍝ When any needed Dyalog event is signalled, execute this function to perform the appropriate operations.
+⍝ The right argument and result are the standard Dyalog event message and action.
+⍝ The left argument is a list of APL+Win event names that should respond to this Dyalog event.
+⍝ The event name 'Event' can be used to invoke Dyalog-style processing.
+
+ dqcode←0 ⍝? For testing during development

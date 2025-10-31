@@ -1,0 +1,14 @@
+ value←obj ∆WGet props;names;real
+⍝ Get properties from a given object (each must potentially be an object property)
+
+ value←names←,¨⊃¨⊆¨props ⍝ Dyalog property names being referenced
+
+ ⍝ For any real properties, just call ∆WG normally
+ :If ∨/real←names∊⍥⎕C obj ∆WG'PropList' ⍝ (Hopefully this is fast enough to not need caching)
+     (real/value)←obj ∆WG real/names
+ :EndIf
+
+ ⍝ For any pseudo-properties, assume they're property-like variables and retrieve them (using any provided defaults)
+ :If ∨/~real
+     (value/⍨~real)←obj ⎕VGET props/⍨~real
+ :EndIf

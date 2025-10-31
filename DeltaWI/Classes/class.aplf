@@ -1,0 +1,4 @@
+ result←object class arg
+⍝ Produce a list of available properties for this object
+ '∆WI ACTION ERROR: Property "class" is read-only'##.Error×≢arg
+ result←object._class

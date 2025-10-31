@@ -1,0 +1,16 @@
+ result←object links arg
+⍝ Allow reading and writing a list of arbitrary pseudo-child aliases
+ :If ×≢arg ⍝ If we have new data, validate and write it
+     '∆WI LENGTH ERROR: links'##.Error 2<≢arg
+     :If 1<≢arg ⋄ arg←1 2⍴arg ⋄ :EndIf ⍝ Allow a single link to be given as a vector
+     '∆WI RANK ERROR: links'##.Error 2≠≢⍴arg
+     '∆WI LENGTH ERROR: links'##.Error 2≠2⊃⍴arg
+     '∆WI DOMAIN ERROR: links'##.Error 0∊##.IsChar¨arg
+     '∆WI RANK ERROR: links'##.Error 0∊1=≢¨⍴¨arg
+     arg←∆dlt¨arg ⍝ Ignore leading and trailing spaces
+     '∆WI DOMAIN ERROR: links'##.Error 0∊##.IsValidName¨arg[;1]
+     object ⎕VSET⊂'_links'arg
+     result←0 0⍴''
+ :Else ⍝ Otherwise just read it
+     result←object ⎕VGET⊂'_links'(0 2⍴⊂'')
+ :EndIf

@@ -1,0 +1,14 @@
+ obj ∆WSet props;names;real
+⍝ Set properties on a given object (each must potentially be an object property)
+
+ names←,¨⊃¨⊆¨props ⍝ Dyalog property names being referenced
+
+ ⍝ For any real properties, just call ∆WS normally
+ :If ∨/real←names∊⍥⎕C obj ∆WG'PropList' ⍝ (Hopefully this is fast enough to not need caching)
+     obj ∆WS real/props
+ :EndIf
+
+ ⍝ For any pseudo-properties, create property-like variables instead in case of later need
+ :If ∨/~real
+     obj ⎕VSET props/⍨~real
+ :EndIf

@@ -1,0 +1,21 @@
+ canon←{dictionary}Canonize given;events
+⍝ When an APL+Win action is provided, it may occasionally ignore capitalization. In that case, correct the name's capitalization.
+⍝ The left argument (dictionary) may be a list of validly-spelled names that may be recapitalized (for deeper-level sub-action processing),
+⍝ or it may be an object reference for use by top-level action name processing, which provides an implicit source for properly-capitalized
+⍝ names (specifically event handler names, which are based on the object's 'events' property).
+
+ canon←given ⍝ Begin by assuming case-sensitivity
+ :Select ⎕NC'dictionary'
+ :Case 2
+     :If 2=≡dictionary
+         ⍝ This is a nested list of properly-capitalized terms for use to recapitalize other areas that may allow case insensitivity (e.g. Draw).
+         canon←(dictionary⍳⍥⎕C⊂given)⊃dictionary,⊂given ⍝ Recapitalize it if it's found in the master list
+     :EndIf
+ :Case 9
+     ⍝ This is an object reference, so it is pointing to an instance of a GUI class that will be used to determine capitalization rules.
+     ⍝ APL+Win allows only event handler names to be case insensitive, so we'll just check those.
+     :If 'on'≡⍥⎕C 2↑given ⍝ This might need recapitalization
+         events←(⊂'on'),¨dictionary('events'Invoke)⍬ ⍝ Get a list of all defined event handler names for this argument
+         canon←(events⍳⍥⎕C⊂given)⊃events,⊂given ⍝ Recapitalize it if it's a known name
+     :EndIf
+ :EndSelect

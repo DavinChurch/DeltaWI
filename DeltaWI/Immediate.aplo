@@ -1,0 +1,37 @@
+ result←action(obj Immediate)args
+⍝ Certain operations do not care about real class-based operations, so take care of them here.
+⍝ This includes UDP assignments or references, handling non-existent objects, or operating on certain global synthetic actions.
+⍝ If nothing needs to be performed here, return ⎕NULL. Otherwise return the correct ∆WI result.
+
+ :If obj≡⎕NULL ⍝ Check for non-existant object processing
+     :If 'Delete' 'self'∊⍨⊂action ⍝ Special actions where object existence is optional
+         result←0 0⍴''
+         :Return ⍝ Processed; exit with this result
+     :Else ⍝ Anything else performed on an undefined object is an error
+         Error'∆WI OBJECT ERROR: Current object undefined'
+     :EndIf
+ :EndIf
+
+ :If '?'=⊃action ⍝ Asking for system help, but we don't support that
+     result←(1↓action),' : Help not available'
+     :Return ⍝ Processed; exit with this result
+ :EndIf
+
+ :If '∆'=⊃action ⍝ UDP processing
+     :If 0∊≢args ⍝ Reading a UDP
+         result←obj ⎕VGET⊂('_',action)0 ⍝ Read current value with a standard default of scalar 0
+     :Else ⍝ Assigning a UDP
+         :If 1=≢args ⋄ args←⊃args ⋄ :EndIf ⍝ Single values should be scalar
+         :If args≡0 ⍝ If it's being set back to default, then that's basically an erasure
+             obj.⎕EX'_',action ⍝ Just keep it neat
+         :Else
+             obj ⎕VSET⊂('_',action)args ⍝ Set the new value
+         :EndIf
+         result←0 0⍴''
+     :EndIf
+     :Return ⍝ Processed; exit with this result
+ :EndIf
+
+ ⍝ Other "instant" processing may be added here
+
+ result←⎕NULL ⍝ If no processing was performed, return a continuation signal

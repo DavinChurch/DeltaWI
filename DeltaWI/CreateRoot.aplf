@@ -1,0 +1,22 @@
+ CreateRoot root;inches;this;tpp;devcaps
+⍝ The first time that ∆WI is used, we need to create and populate the root of the GUI structure
+
+ this←⎕VGET root ⎕NS'' ⍝ Create the root GUI namespace that we can build from
+
+ this.(_name _self _class)←,¨'#' '#' 'System' ⍝ Constant properties
+ this.Ancestry←0⍴this.Class←Classes.System ⍝ Base references
+
+ ⍝ Define system settings
+ devcaps←'.'⎕WG'DevCaps'
+ this.AspectRatio←÷/1⊃devcaps ⍝ Pixel aspect ration (h÷w)
+ ⍝inches←(2⊃devcaps)÷25.4 ⍝ How big is the screen in inches (h,w); estimated
+ tpp←15 ⍝?1440÷25.4×⊃÷/2↑devcaps ⍝ Twips/pixel ⍝ Override calculated tpp with an assumed value (should we be doing this?)
+ this._units←1 2⍴16 8 ⍝ Pixels per system character unit (constant; assumed)
+ this._units⍪←this._units[1;]÷8 4 ⍝ Dialog units
+ this._units⍪←2⍴20÷tpp ⍝ screensize÷inches÷72 ⍝ Points (72/in)
+ this._units⍪←2⍴÷tpp ⍝ Twips (1440/in)
+ this._units⍪←devcaps[4]÷100 ⍝ Virtual pixels (scaled, by default)
+ this._units⍪←1 1 ⍝ True pixels
+
+⍝ Assign class default properties
+ this ⎕VSET Classes.System ⎕VGET ¯2
