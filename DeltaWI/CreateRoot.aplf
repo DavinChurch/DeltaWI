@@ -17,6 +17,7 @@
  this._units⍪←2⍴÷tpp ⍝ Twips (1440/in)
  this._units⍪←devcaps[4]÷100 ⍝ Virtual pixels (scaled, by default)
  this._units⍪←1 1 ⍝ True pixels
+ this._size←(1⊃devcaps)÷this._units[1;] ⍝ Screen size in character units
 
 ⍝ Assign class default properties
  this ⎕VSET Classes.System ⎕VGET ¯2

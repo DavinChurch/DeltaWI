@@ -7,4 +7,4 @@
      back←1-⍨back⍳⍨⍥⊆⎕XSI↑¨⍨≢back   ⍝ How far back is it in the )SI?
      back(86⌶)expression            ⍝ Execute the expression at the correct point of the application
  :EndIf
-⍝? Instead of just going back until we hit the application scope, should we instead be going back to the ∆WI call itself?
+⍝? Instead of just going back until we hit the application scope, should we instead be going all the way back to the ∆WI call itself?

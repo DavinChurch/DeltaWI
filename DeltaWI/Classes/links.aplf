@@ -1,5 +1,6 @@
  result←object links arg
 ⍝ Allow reading and writing a list of arbitrary pseudo-child aliases
+
  :If ×≢arg ⍝ If we have new data, validate and write it
      '∆WI LENGTH ERROR: links'##.Error 2<≢arg
      :If 1<≢arg ⋄ arg←1 2⍴arg ⋄ :EndIf ⍝ Allow a single link to be given as a vector

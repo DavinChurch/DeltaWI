@@ -1,4 +1,5 @@
  result←object name arg
-⍝ Produce a list of available properties for this object
+⍝ Return this object's leaf GUI name
+
  '∆WI ACTION ERROR: Property "name" is read-only'##.Error×≢arg
  result←object._name

@@ -1,0 +1,13 @@
+ result←object newclasses arg
+⍝ Allow reading and writing a list of user-defined class names
+
+ :If ×≢arg ⍝ If we have new data, validate and write it
+     :If (3=|≡arg)∧1=≢arg ⋄ arg←⊃arg ⋄ :EndIf ⍝ Disclose a nested list of names
+     :If 2=≢⍴arg ⋄ arg←↓arg ⋄ :EndIf ⍝ Permit a matrix of names
+     'DOMAIN ERROR'##.##.Error 0∊##.##.IsValidName¨arg
+     arg←##.##.∆dlt¨,¨arg ⍝ Force into a list of arbitrary names
+     object ⎕VSET⊂'_newclasses'arg
+     result←0 0⍴''
+ :Else ⍝ Otherwise just read it
+     result←object ⎕VGET⊂'_newclasses'⍬
+ :EndIf

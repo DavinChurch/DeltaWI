@@ -1,0 +1,12 @@
+ result←object(name Create)arg;child
+⍝ Create a new GUI object (replacing if necessary)
+
+ name←⊃⌽'.'∆cuts name ⍝ Make sure we have only the leaf name to be created
+ :If (⊂name)∊object ##.Classes.children ⍬ ⍝ Does this child exist?
+     child←object ##.Locate name ⍝ Find the child object reference
+     'Unable to locate existing child object!'⎕SIGNAL 16/⍨child≡⎕NULL ⍝ (This better not be able to happen!)
+     child('Delete'##.Invoke)⍬ ⍝ Get rid of the existing child in the normal way
+ :EndIf
+
+ ⍝ Now that no child is here, just call the normal New.New routine
+ result←object(name New)arg

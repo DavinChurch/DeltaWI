@@ -6,7 +6,7 @@
 
  fn←'⍙'@('⎕'=⊢)action               ⍝ If we allow synthetic ⎕-names, use ⍙ in the fn name instead
  :If 3=obj.Class.⎕NC fn             ⍝ Is there a class-specific fn?
-     ('∆WI ACTION ERROR: Action "',action,'" not found')Error 1≥≢obj.Class.⎕CR'handler' ⍝ Report overridden definition
+     ('∆WI ACTION ERROR: Action "',action,'" not found')Error 1≥≢obj.Class.⎕CR fn ⍝ Report overridden definition
      handler←obj.Class.⍎fn          ⍝ Obtain reference to fn
  :ElseIf 3=Classes.⎕NC fn           ⍝ Is there a class-generic fn?
      handler←Classes.⍎fn            ⍝ Obtain reference to fn

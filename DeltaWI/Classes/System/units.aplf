@@ -1,0 +1,6 @@
+ result←object units arg
+⍝ Return the definitions (in pixels) of all the different scales available
+⍝ Note: units[3 4], representing physical sizes, are estimated for the hardware in use
+
+ '∆WI ACTION ERROR: Property "units" is read-only'##.##.Error×≢arg
+ result←object._units

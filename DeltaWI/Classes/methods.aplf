@@ -1,8 +1,9 @@
  result←object methods arg;lower;private;public;override;upper
 ⍝ Produce a list of available methods for this object
+
  '∆WI ACTION ERROR: Property "methods" is read-only'##.Error×≢arg
  upper←1 ⎕C ⎕A,'⍙'
  private←upper object.Class.⎕NL ¯3 ⍝ Class-specific methods
- override←(1≥≢¨object.Class.⎕CR¨private)/private ⍝ Class-specific suppression of generic methods ⍝? (is this fast enough?)
+ private~←override←(1≥≢¨object.Class.⎕CR¨private)/private ⍝ Class-specific suppression of generic methods ⍝? (is this fast enough?)
  public←override~⍨upper ⎕NL ¯3 ⍝ Accessible class-generic methods
  result←{⍵[⍋⍵]}{'⎕'@('⍙'=⊢)⍵}¨private∪public ⍝ Combine & clean up

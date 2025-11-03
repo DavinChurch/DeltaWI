@@ -1,0 +1,4 @@
+result←object(name New)arg
+⍝ Create a brand-new GUI object, as specified
+
+⍝? ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  NYI

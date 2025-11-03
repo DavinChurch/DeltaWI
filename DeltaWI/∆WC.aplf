@@ -1,4 +1,5 @@
  {R}←X ∆WC Y
 ⍝ Cover function for ⎕WC; Extend for use with EWC
 ⍝ Left argument is not optional!
+
  R←X ⎕WC Y

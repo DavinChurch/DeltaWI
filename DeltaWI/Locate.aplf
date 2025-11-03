@@ -64,6 +64,8 @@
                      name←(⊂next),('.'∆cuts link),1↓name ⍝ Insert the specified alias definition directly into the node list being processed
                      to←ref ⍝ Continue from current location
                  :EndIf
+             :Else
+⍝? What was I going to do here??
              :EndIf
          :EndSection
      :EndIf

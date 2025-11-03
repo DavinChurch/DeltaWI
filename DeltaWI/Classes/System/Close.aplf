@@ -1,0 +1,11 @@
+ result←object Close arg
+⍝ Sign off from APL
+⍝? Only supporting 'Close' 0 for now - add features later
+
+ '∆WI LENGTH ERROR: Close'##.##.Error 1<≢arg
+ '∆WI DOMAIN ERROR: Close'##.##.Error~0 1 2∊⍨⊃arg
+ :If 0=⊃arg,1
+     ⎕OFF ⍝ Sign off immediately
+ :Else
+     ##.##.Error'Close not currently supported with a non-0 argument' ⍝? This needs writing, if we can get it to happen normally
+ :EndIf

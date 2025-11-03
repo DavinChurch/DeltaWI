@@ -1,0 +1,19 @@
+ result←object Printers arg
+⍝ Inquire about printers available on this system
+
+ :If 0=≢arg
+     ⍝ Return list of all local printers
+     ⍝ [;1]←Printer name ⋄ [;2]←Port name
+     result←↑2↑¨','##.##.∆cuts¨'.'##.##.∆WG'PrintList'
+ :ElseIf (1=≢arg)∧'Tree'≡⍥⎕C⊃arg
+     ⍝ Return recursive list of printers available anywhere on the network
+     ##.##.Error'Printer tree operation not yet written' ⍝?
+ :ElseIf (1=≢arg)∧'Default'≡⍥⎕C⊃arg
+     ⍝ Return default printer name & port
+     ##.##.Error'Printer default operation not yet written' ⍝?
+ :ElseIf (2=≢arg)∧'Default'≡⍥⎕C⊃arg
+     ⍝ Change the default printer to the one named
+     ##.##.Error'Printer change default operation not yet written' ⍝?
+ :Else
+     ##.##.Error'∆WI ACTION ERROR: Invalid operation for "Printers" method'
+ :EndIf

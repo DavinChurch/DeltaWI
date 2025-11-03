@@ -1,4 +1,5 @@
  result←object self arg
-⍝ Produce a list of available properties for this object
+⍝ Return this object'a full GUI name
+
  '∆WI ACTION ERROR: Property "self" is read-only'##.Error×≢arg
  result←object._self

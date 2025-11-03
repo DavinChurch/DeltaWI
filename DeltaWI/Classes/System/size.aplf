@@ -1,0 +1,5 @@
+ result←object size arg
+⍝ Return the size of the screen in character units
+
+ '∆WI ACTION ERROR: Property "size" is read-only'##.##.Error×≢arg
+ result←object._size

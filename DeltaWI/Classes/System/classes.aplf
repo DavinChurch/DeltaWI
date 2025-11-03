@@ -1,0 +1,7 @@
+ result←object classes arg
+⍝ Produce a list of standard system classes that are currently implemented
+
+ '∆WI ACTION ERROR: Property "classes" is read-only'##.##.Error×≢arg
+ result←##.⎕NL ¯9
+ :If (⊂'ActiveX')∊result ⋄ result←'ActiveControl' 'ActiveObject',result~(⊂'ActiveX') ⋄ :EndIf ⍝ Rename ActiveX pseudonym
+ result~←'System' 'Dyalog' 'UDC' ⍝ Remove other special cases (pseudonyms)

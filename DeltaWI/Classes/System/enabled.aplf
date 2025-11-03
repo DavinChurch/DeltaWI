@@ -1,0 +1,5 @@
+ result←object enabled arg
+⍝ Just a constant here
+
+ '∆WI ACTION ERROR: Property "enabled" is read-only'##.##.Error×≢arg
+ result←object ⎕VGET⊂'_enabled' 1

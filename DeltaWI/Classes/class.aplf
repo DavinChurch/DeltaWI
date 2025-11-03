@@ -1,4 +1,5 @@
  result←object class arg
-⍝ Produce a list of available properties for this object
+⍝ Return the APL+Win class name for this object
+
  '∆WI ACTION ERROR: Property "class" is read-only'##.Error×≢arg
  result←object._class

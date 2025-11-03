@@ -1,5 +1,6 @@
  result←object data arg
 ⍝ Allow reading and writing arbitrary data for this object
+
  :If ×≢arg ⍝ If we have new data, write it
      :If 1=≢arg ⋄ arg←⊃arg ⋄ :EndIf ⍝ If only a single item is provided, assume it is unnested
      object ⎕VSET⊂'_data'arg

@@ -1,5 +1,6 @@
  result←object children arg;hidden;at;here
 ⍝ Produce a list of available children belonging to this object
+
  '∆WI ACTION ERROR: Property "children" is read-only'##.Error×≢arg
  result←⍕¨##.∆WN object
  :For hidden :In result∩'_mb' '_mdi' '_pic' ⍝ Search under known-invisible children
