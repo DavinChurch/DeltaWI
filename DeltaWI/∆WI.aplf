@@ -21,7 +21,7 @@
 ⍝ Time to execute the requested operation
 ⍝ Handle object creation cases separately; otherwise start up the normal action processing by class
  :Select name
- :Case 'Create' ⋄ result←objref(objname New.Create)args             ⍝ Delete any existing GUI object and then recreate it
- :Case 'New' ⋄ result←objref(objname New.New)args                   ⍝ Create a new GUI object as a child of its parent objref
+ :Case 'Create' ⋄ result←objref(LeafName objname)New.Create args    ⍝ Delete any existing GUI object and then recreate it
+ :Case 'New' ⋄ result←objref(LeafName objname)New.New args          ⍝ Create a new GUI object as a child of its parent objref
  :Else ⋄ result←objref(name Invoke)args                             ⍝ Call the standard processing routine (by proxy), passing standard arguments
  :EndSelect

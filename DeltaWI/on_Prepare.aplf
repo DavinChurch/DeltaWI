@@ -1,7 +1,7 @@
  result←object on_Prepare arg;event
 ⍝ Read or write an event handler "command" - common handler processing
 
- event←2⊃⎕SI ⍝ Get my parent's event-handler name
+ event←2⊃⎕SI ⍝ Get my parent's event-handler-setting function name
  :If 0=≢arg
      result←object ⎕VGET⊂('_',event)'' ⍝ Read existing handler text
  :ElseIf 1=≢arg

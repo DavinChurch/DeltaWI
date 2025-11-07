@@ -1,6 +1,5 @@
- Make∆WI;∆WI
- ⍝ Create a ∆WI dFn in the calling namespace to interface with the DeltaWI package
- ⍝ A dFn is preferred to a function assignment because it can be rendered as a text file and because it shows up in an 86⌶ )SI.
+ Make∆WI
+ ⍝ Create a ∆WI function in the calling namespace to interface with the DeltaWI package
+ ⍝ An actual function is preferred to a function assignment because it can be rendered as a text file and because it shows up in an 86⌶'s )SI.
 
- ∆WI←{⍺←⊢ ⋄ 0::⎕SIGNAL⊂(⊂¨'EN' 'EM' 'Message'),¨⊂¨⎕DMX.(EN EM Message) ⋄ ⍺ #.DeltaWI.∆WI ⍵}
- (⊃⎕RSI).⎕FX ⎕NR'∆WI'
+ (⊃⎕RSI).⎕FX Make∆WI_Source

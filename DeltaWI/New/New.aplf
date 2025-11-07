@@ -1,4 +1,7 @@
-result←object(name New)arg
+ result←object New arg;name;parent
 ⍝ Create a brand-new GUI object, as specified
+
+ (parent name)←object ⍝ Separate non-standard two-part argument
+
 
 ⍝? ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  NYI

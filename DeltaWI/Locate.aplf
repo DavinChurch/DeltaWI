@@ -12,7 +12,7 @@
 
  :If IsChar name ⋄ name←'.'∆cuts name ⋄ :EndIf ⍝ Split apart composite name if not already provided that way
  :If 2=⎕NC'leaf' ⋄ name↓⍨←-leaf ⋄ :EndIf ⍝ Ignore leaf node if requested (should only be 0 or 1)
- ref←root ⍝ Search from the provided root downwards ⍝? (We might not actually end up using this operand when it's ≠ GUIref)
+ ref←root ⍝ Search from the provided root downwards
  :While ×≢name
      next←⊃name ⋄ to←⎕NULL ⍝ What's our next level name?
      :Section ⍝ Allow relative naming
@@ -56,16 +56,14 @@
              next↓⍨←'!'=⊃next ⍝ We've already handled the link-only signal
              :If 2=ref.⎕NC'_links' ⍝ Do we have any links defined here?
              :AndIf ~0∊⍴links←ref._links ⍝ Obtain object cross-linking alias table
-             :AndIf (2=≢⍴links)∧(2=2⊃2↑⍴links)∧~0∊IsChar¨links ⍝ Make sure it's a reasonably good structure, just in case
+             :AndIf (2=≢⍴links)∧(2=2⊃2↑⍴links)∧~0∊IsChar¨links ⍝ Make sure it's a reasonably good structure, just in case (optional)
                  :If ⎕NULL≢link←' '∆dlt(links[;1]⍳⊂next)⊃links[;2],⎕NULL ⍝ Is there an alias link defined here?
                      :If (':'∊link)∧∧/(⊃':'∆cuts link)∊⍥⎕C ⎕A,⎕D,'∆⍙' ⍝ Do we have a ":" after the first word (shorthand for top-level)?
-                         link[link⍳':']←'.' ⋄ link,⍨←'#.' ⍝ Convert first ':' to standard #. notation
+                         link[link⍳':']←'.' ⋄ link,⍨←'#.' ⍝ Convert first ':' to "." with standard #. notation
                      :EndIf
                      name←(⊂next),('.'∆cuts link),1↓name ⍝ Insert the specified alias definition directly into the node list being processed
                      to←ref ⍝ Continue from current location
                  :EndIf
-             :Else
-⍝? What was I going to do here??
              :EndIf
          :EndSection
      :EndIf

@@ -5,11 +5,12 @@
  ⍝ If not found, signal an error.
 
  fn←'⍙'@('⎕'=⊢)action               ⍝ If we allow synthetic ⎕-names, use ⍙ in the fn name instead
- :If 3=obj.Class.⎕NC fn             ⍝ Is there a class-specific fn?
-     ('∆WI ACTION ERROR: Action "',action,'" not found')Error 1≥≢obj.Class.⎕CR fn ⍝ Report overridden definition
-     handler←obj.Class.⍎fn          ⍝ Obtain reference to fn
- :ElseIf 3=Classes.⎕NC fn           ⍝ Is there a class-generic fn?
-     handler←Classes.⍎fn            ⍝ Obtain reference to fn
+ '∆WI ACTION ERROR: Action "',action,'" not found'Error(~IsValidName fn)∨∨/'∆⍙_'∊action
+ :If 3=obj.Class.⎕NC fn             ⍝ Is there a class-specific function?
+     ('∆WI ACTION ERROR: Action "',action,'" not found')Error 1≥≢obj.Class.⎕CR fn ⍝ Report error upon overridden definition
+     handler←obj.Class.⍎fn          ⍝ Obtain reference to the handler function
+ :ElseIf 3=Classes.⎕NC fn           ⍝ Is there a class-generic function?
+     handler←Classes.⍎fn            ⍝ Obtain reference to the handler function
  :Else
      Error'∆WI ACTION ERROR: Action "',action,'" not found'
  :EndIf

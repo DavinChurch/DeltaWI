@@ -1,4 +1,4 @@
-(action args)←Normalize args
+ (action args)←Normalize args
 ⍝ Accept any APL+Win-valid right argument structure and restructure it into "normal form".
 ⍝ Return the action name as a separate value and make sure the rest of the argument is a vector.
 ⍝ Some actions allow either a vector of arguments at the same nesting level of the action, or as a
@@ -7,5 +7,12 @@
 ⍝ so we'll just have to return the vector as it is and let the individual routines figure out if
 ⍝ arguments can be passed in alternate ways.
 
-action←,⊃⊆args ⍝ Extract the action name by itself
-:if 0∊⍴args←1↓⊆args ⋄ args←⍬ ⋄ :endif ⍝ And then return the rest of the argument as a vector (with empties normalized to ⍬)
+ 'RANK ERROR'Error 1<≢⍴args
+ 'LENGTH ERROR'Error 0∊⍴args
+ action←⊃⊆args ⍝ Extract the action name by itself
+ 'DOMAIN ERROR'Error~IsChar action
+ 'RANK ERROR'Error 1<≢⍴action
+ '∆WI ACTION NAME ERROR: Improperly formed action name'Error(' '∊action)∨0=≢action
+ action←,action ⍝ Ravel scalar actions
+ :If 0∊⍴args←1↓,⊆args ⋄ args←⍬ ⋄ :EndIf ⍝ And then return the rest of the argument as a vector (with empties normalized to ⍬)
+ ⍝ An action's arguments need to be normalized too but they have different requirements for different actions, so handle that later

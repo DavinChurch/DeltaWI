@@ -9,3 +9,4 @@
      result←((at-1)↑result),here,at↓result
  :EndFor
  result/⍨←~('_'=⊃¨result)∧∧/¨result∊¨⊂⎕D ⍝ Eliminate numbered invisible children
+ result,⍨¨←⊂object._self,'.' ⍝ Result must return full GUI names
