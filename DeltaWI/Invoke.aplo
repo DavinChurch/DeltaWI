@@ -1,19 +1,25 @@
- result←obj(action Invoke)args;handler;fn
+ result←obj(action Invoke)args;handler;fn;nothere
  ⍝ Invoke one of the class-based operational functions within the Classes namespaces.
  ⍝ Search the class-specific namespace first, then the class-generic namespace.
  ⍝ Execute the found function with the given arguments and return the result back to ∆WI.
  ⍝ If not found, signal an error.
 
- fn←'⍙'@('⎕'=⊢)action               ⍝ If we allow synthetic ⎕-names, use ⍙ in the fn name instead
- '∆WI ACTION ERROR: Action "',action,'" not found'Error(~IsValidName fn)∨∨/'∆⍙_'∊action
- :If 3=obj.Class.⎕NC fn             ⍝ Is there a class-specific function?
-     ('∆WI ACTION ERROR: Action "',action,'" not found')Error 1≥≢obj.Class.⎕CR fn ⍝ Report error upon overridden definition
-     handler←obj.Class.⍎fn          ⍝ Obtain reference to the handler function
- :ElseIf 3=Classes.⎕NC fn           ⍝ Is there a class-generic function?
-     handler←Classes.⍎fn            ⍝ Obtain reference to the handler function
+ fn←'⍙'@('⎕'=⊢)action                           ⍝ If we allow synthetic ⎕-names, use ⍙ in the fn name instead
+ nothere←'∆WI ACTION ERROR: Action "',action,'" not found'
+ nothere Error(~IsValidName fn)∨∨/'∆⍙_'∊action
+
+ ⍝ Decide upon the needed routine for action execution
+ :If (⊂LeafName⍕obj.Class)∊'ActiveX' 'Dyalog'   ⍝ Is this a special (external) class requiring custom handling?
+     nothere Error 4≠obj.Class.⎕NC'Invoke'      ⍝ Need another layer of interface since action names aren't fixed for these
+     handler←action obj.Class.Invoke            ⍝ Use the pre-bound invocation operator for external classes
+ :ElseIf 3=obj.Class.⎕NC fn                     ⍝ Is there a class-specific function?
+     nothere Error 1≥≢obj.Class.⎕CR fn          ⍝ Report error upon overridden definition
+     handler←obj.Class.⍎fn                      ⍝ Obtain reference to the handler function
+ :ElseIf 3=Classes.⎕NC fn                       ⍝ Is there a class-generic function?
+     handler←Classes.⍎fn                        ⍝ Obtain reference to the handler function
  :Else
-     Error'∆WI ACTION ERROR: Action "',action,'" not found'
+     Error nothere
  :EndIf
 
- ⍝ Now, invoke the actual processing routine!
+ ⍝ Now, invoke the actual processing routine to do the job!
  result←obj handler args

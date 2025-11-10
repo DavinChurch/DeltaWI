@@ -1,0 +1,24 @@
+ result←object New arg;name;parent;onnew;oldglobs;class;newobj;wself
+ ⍝ Create a brand-new UDC GUI object, as specified in the application's onNew handler
+
+ (parent name)←object ⍝ Separate non-standard two-part argument
+ class←##.∆dmu⊃arg
+
+ onnew←GUIref ⎕VGET⊂'_onNew' '' ⍝ Obtain application's "New" handler command from the root
+ ('∆WI CLASS ERROR: Class "',class,'" not found')##.Error 0=≢onnew ⍝ If there's nothing to process this name, then it's an error
+
+ wself←parent._self,'.',name ⍝ New object name to create
+ oldglobs←Application.(∆WSELF ∆WARG ∆WRES ∆WEVENT) ⍝ Capture existing system-level globals (akin to localizing them)
+ :With Application          ⍝ Set application's GUI variables for onNew event processing
+     ∆WSELF←wself           ⍝ New object name to create
+     ∆WARG←class            ⍝ New class name to create
+     ∆WRES←(⊂'New'),arg     ⍝ Normalized argument string (including method & class name)
+     ∆WEVENT←'New'          ⍝ And the event name we're processing
+ :EndWith
+ Run onnew ⍝ Execute the application's custom creation process!
+ newobj←parent ##.Locate,⊂name ⍝ Where can we find the newly-custom-created object
+ ('∆WI CLASS ERROR: Class "',class,'" not found')##.Error newobj≡⎕NULL
+ Application.(∆WSELF ∆WARG ∆WRES ∆WEVENT)←oldglobs ⍝ Restore previous system-level globals (akin to de-localizing them)
+
+ ⍝ Note: There will be no base GUI variables created here because the UDC process must use ∆WI itself to create the real objects
+ ⍝ Note: This function will not proceed to call Classes.New because all the creation steps will have already been done by ∆WI from within onNew.

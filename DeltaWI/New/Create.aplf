@@ -7,6 +7,7 @@
      child←parent ##.Locate name ⍝ Find the child object reference
      'Unable to locate existing child object!'⎕SIGNAL 16/⍨child≡⎕NULL ⍝ (This better not be able to happen!)
      child('Delete'##.Invoke)⍬ ⍝ Get rid of the existing child in the normal way
+     child←⍬ ⍝ Dispose of extraneous reference to the child which no longer exists
  :EndIf
 
  ⍝ Now that no child is here, just call the normal New.New routine

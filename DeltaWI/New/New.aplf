@@ -1,7 +1,46 @@
- result←object New arg;name;parent
+ result←object New arg;name;parent;class;meta;ismeta;isreal;isnew;isnative;in;onnew;oldglobs;wself;newobj
 ⍝ Create a brand-new GUI object, as specified
 
+⍝? Future support: We should be able to pass a GUI 'def' variable as the argument. (Is this perhaps ⎕OR under Dyalog??)
+
  (parent name)←object ⍝ Separate non-standard two-part argument
+ '∆WI OBJECT ERROR: Object already exists'##.Error(⊂name)∊parent ##.Classes.children ⍬ ⍝ Make sure the name does not yet exist
+ 'LENGTH ERROR'##.Error 0=≢arg
+ '∆WI CLASS NAME ERROR: Improperly formed class name'##.Error 0=≢class←##.∆dmu⊃arg
+ class↓⍨←isnative←'*'=⊃class ⍝ Are we signalling a bypass of newclasses?
+ ismeta←×≢meta←(' '∊class)/⊃' '∆cut class ⍝ Look for the first word in a multi-word class name to see if it needs special group (meta-class) handling
+ isreal←(⊂class)∊GUIref ##.Classes.System.classes ⍬ ⍝ Standard system class names
+ isnew←(⊂class)∊GUIref ##.Classes.System.newclasses ⍬ ⍝ Application-named UDC classes
 
+ ⍝ Check all the different combination possibilities to see how we should analyze this
+ :If ismeta ⍝ We have a special type of class
+     ⍝ This needs to be processed as a meta-class
+     :Select meta ⍝ Must be a case-sensitive type-name that we support
+     :CaseList 'ActiveControl' 'ActiveObject'
+         ('∆WI CLASS ERROR: Class "',class,'" not found')##.Error 3≠##.Classes.ActiveX.⎕NC'New'
+         result←object ##.Classes.ActiveX.New arg ⍝ Call the ActiveX-specific New function
+     :Case 'Dyalog'
+         ('∆WI CLASS ERROR: Class "',class,'" not found')##.Error 3≠##.Classes.Dyalog.⎕NC'New'
+         result←object ##.Classes.Dyalog.New arg ⍝ Call the Dyalog-specific New function
+     :Else
+         ##.Error'∆WI CLASS ERROR: Class "',class,'" not found'
+     :EndSelect
 
-⍝? ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  NYI
+ :ElseIf (~isnative)∧(~'.'∊class)∧isnew∨~isreal ⍝ Or they've told us or implied to process it as new
+     ('∆WI CLASS ERROR: Class "',class,'" not found')##.Error 3≠##.Classes.UDC.⎕NC'New'
+     result←object ##.Classes.UDC.New arg ⍝ Call the UDC-specific New function
+
+ :ElseIf isreal ⍝ Then they haven't replaced a standard class name
+     ⍝ Process this as a normal class
+     in←##.Classes.⎕VGET(class ⎕NULL) ⍝ Grab a reference to the proper standard class namespace
+     ('∆WI CLASS ERROR: Class "',class,'" not found')##.Error in≡⎕NULL
+     ('∆WI CLASS ERROR: Class "',class,'" not found')##.Error 3≠in.⎕NC'New'
+     result←object in.New arg ⍝ Call the class-specific New handler
+
+ :ElseIf '.'∊class ⍝ Check for an implied ActiveX control here (is this the best way to check?)
+     ('∆WI CLASS ERROR: Class "',class,'" not found')##.Error 3≠##.Classes.ActiveX.⎕NC'New'
+     result←object ##.Classes.ActiveX.New arg ⍝ Call the ActiveX-specific New function
+
+ :Else
+     ##.Error'∆WI CLASS ERROR: Class "',class,'" not found'
+ :EndIf

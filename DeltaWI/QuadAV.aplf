@@ -1,7 +1,7 @@
  av←font QuadAV unicode;t
 ⍝ If the font is an APL+Win font (based on ⎕AV), then convert the Unicode right argument to ⎕AV-based text
 
- :If 'Apl Santa Fe' 'APL+Win' 'APL2000' 'APLHELP' 'APLPLUS' 'APLPLUSI'∊⍨⊂font
+ :If 'APL+Win' 'APL2000' 'APLHELP' 'APLPLUS' 'APLPLUSI'∊⍨⊂font ⍝ List of known APL+Win font names
      ⍝ Return the UCS code where the appropriate glyph is found in ⎕AV
      av←⎕UCS ⎕IO-⍨(≢∆AV)⌊∆AV⍳unicode
      :If ∨/t←0=av ⋄ (t/av)←t/unicode ⋄ :EndIf ⍝ Check to see if any of their characters were explicit Unicode (numeric) and preserve them exactly
