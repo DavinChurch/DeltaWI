@@ -4,7 +4,7 @@
  :If ×≢arg ⍝ If we have new data, write it
      :If 1=≢arg ⋄ arg←⊃arg ⋄ :EndIf ⍝ If only a single item is provided, assume it is unnested
      object ⎕VSET⊂'_data'arg
-     result←0 0⍴''
+     result←NoRes
  :Else ⍝ Otherwise just read it
      result←object ⎕VGET⊂'_data' 0
  :EndIf

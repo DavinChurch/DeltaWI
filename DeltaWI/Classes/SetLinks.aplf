@@ -14,4 +14,4 @@
  was⍪←arg ⍝ Add new links to the bottom of the list
  was⌿⍨←0≠≢¨was[;2] ⍝ Throw away any links to be deleted
  object ⎕VSET⊂'_links'was ⍝ Now we can put back the new list
- result←0 0⍴''
+ result←NoRes

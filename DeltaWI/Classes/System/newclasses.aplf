@@ -7,7 +7,7 @@
      'DOMAIN ERROR'##.##.Error 0∊##.##.IsValidName¨arg
      arg←##.##.∆dlt¨,¨arg ⍝ Force into a list of arbitrary names
      object ⎕VSET⊂'_newclasses'arg
-     result←0 0⍴''
+     result←##.NoRes
  :Else ⍝ Otherwise just read it
      result←object ⎕VGET⊂'_newclasses'⍬
  :EndIf

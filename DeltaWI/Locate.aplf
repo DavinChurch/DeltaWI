@@ -8,6 +8,7 @@
 ⍝ Optional left argument (leaf) is the number of leaf nodes to ignore (either 0 or 1).
 ⍝ Allow relative naming with ":" and/or "." prefixes on each node; so must assume proper Ancestry variables for implementation.
 ⍝ Support use of 'links' property to provide for child alias names.
+⍝ If the final object has an invisible Dyalog-required child, ignore the child and return only the APL+Win object reference
 ⍝ Global: GUIref, *.Ancestry
 
  :If IsChar name ⋄ name←'.'∆cuts name ⋄ :EndIf ⍝ Split apart composite name if not already provided that way

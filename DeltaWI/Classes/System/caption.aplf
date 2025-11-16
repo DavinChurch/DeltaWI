@@ -4,7 +4,7 @@
  :If 0=≢arg
      result←⎕SE.Caption ⍝ Return existing system caption
  :Else
-     '∆WI DOMAIN ERROR: caption'##.##.Error (1≠≢arg)∨~##.##.IsChar 1⊃arg
+     '∆WI DOMAIN ERROR: caption'##.##.Error(1≠≢arg)∨~##.##.IsChar 1⊃arg
      ⎕SE.Caption←1⊃arg ⍝ Change the system caption
-     result←0 0⍴''
+     result←##.NoRes
  :EndIf

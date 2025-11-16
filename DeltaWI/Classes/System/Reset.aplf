@@ -8,4 +8,4 @@
  ⍝ Throw away the system object and all its contents, too - they'll be recreated with default value on the next call
  Application.⎕EX GUIroot
 ⍝? When we're using EWC, how do we kill off all the root properties?
- result←0 0⍴''
+ result←##.NoRes

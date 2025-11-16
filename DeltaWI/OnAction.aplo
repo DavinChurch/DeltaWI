@@ -12,3 +12,7 @@
  :EndIf
 
  result←⎕NULL ⍝? For now, just assume there are no onActions to do
+
+
+ ⍝? onAction may be a NL-delimited list of actions to take in sequence, stepped through with ∆WI '*'.
+ ⍝? How are we going to handle the whole ∆WI '*' system??

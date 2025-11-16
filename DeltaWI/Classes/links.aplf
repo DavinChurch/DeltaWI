@@ -11,7 +11,7 @@
      arg←∆dlt¨arg ⍝ Ignore leading and trailing spaces
      '∆WI DOMAIN ERROR: links'##.Error 0∊##.IsValidName¨arg[;1]
      object ⎕VSET⊂'_links'arg
-     result←0 0⍴''
+     result←NoRes
  :Else ⍝ Otherwise just read it
      result←object ⎕VGET⊂'_links'(0 2⍴⊂'')
  :EndIf

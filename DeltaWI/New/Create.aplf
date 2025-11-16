@@ -10,5 +10,5 @@
      child←⍬ ⍝ Dispose of extraneous reference to the child which no longer exists
  :EndIf
 
- ⍝ Now that no child is here, just call the normal New.New routine
+ ⍝ Now that no such child is here, just call the normal New.New routine
  result←object New arg

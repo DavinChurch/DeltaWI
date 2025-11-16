@@ -1,7 +1,7 @@
  result←object Set arg;prop
 ⍝ Set multiple properties in a single call
 
- result←0 0⍴''
+ result←NoRes
  :For prop :In arg ⍝ Loop through properties sequentially
      '∆WI ACTION ERROR: Property-reference not permitted in this context'##.Error 2≠≡prop
      'DOMAIN ERROR'##.Error~IsChar⊃prop

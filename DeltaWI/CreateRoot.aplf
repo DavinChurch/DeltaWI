@@ -17,7 +17,12 @@
  this._units⍪←2⍴÷tpp ⍝ Twips (1440/in)
  this._units⍪←devcaps[4]÷100 ⍝ Virtual pixels (scaled, by default)
  this._units⍪←1 1 ⍝ True pixels
- this._size←(1⊃devcaps)÷this._units[1;] ⍝ Screen size in character units
+ this._size←(1⊃devcaps)÷this._units[1;] ⍝ Represents the physical screen size, in character units
+ this._where←0 0,this._size ⍝ Pretend the APL root has a location (full-screen)
+ this._extent←this._size ⍝ Pretend the APL root has an extent (full-screen)
+ this._scale←1 ⍝ Pretend the APL root is measured in characters
+ ⍝ Dyalog GUI objects need a parent's Coord in order to measure Posn (at least)
+ ⍝ The usual default for a Dyalog root is 'Prop', so convert it to/from pixels to match up (unless it has been changed)
 
-⍝ Assign class default properties
+ ⍝ Assign class default properties
  this ⎕VSET Classes.System ⎕VGET ¯2

@@ -1,53 +1,6 @@
- result←object New arg;sub;item;illegal;final
- ⍝ Finish initializing a just-created new GUI object
- ⍝ The action and class have already been removed from the argument list.
+ result←object New arg
+ ⍝ Finish initializing a just-created new GUI object, but we won't do it directly here
+ ⍝ Instead, just redirect the call to ##.New.Prepare to do this work for us within a better-isolated environment.
+ ⍝ This redirection allows class-specific New functions to just call ##.New as usual with any common-area processing calls.
 
- ⍝ Watch out for things that can't be handled on a New-command
- illegal←'Create' 'New' ⍝? What else might be illegal here (by name)?
- '∆WI OBJECT ERROR: Object already exists'##.Error∨/illegal∊⊃¨⊆¨arg
-
- object ∆WS('Coord' 'RealPixel')('AutoConf' 0) ⍝ Everybody needs these
- :Select object._class
- :Case 'Menu'
-     ⍝ An APL+Win Menu object may be any of four Dyalog object-types depending on context.
-     ⍝ That much should have been handled by Menu.New by now.
-     ⍝? Hmmm... will Menu.New create the MenuBar part of a top-level menu (probably not) or the named Menu item upon it? Start hidden and relocate??
-     ⍝? Can we look backwards (up the stack) to handle this properly?
-     ⍝? Is there anything else we need to do specially here?
- :Case 'MDIForm'
-     sub←⎕VGET((⍕object),'._mdi')∆WC'MDIClient'('Coord' 'RealPixel')('AutoConf' 0)
-     sub.Owner←object
- :Case 'Picture'
-     object ∆WS'Coord' 'User'
-     sub←⎕VGET((⍕object),'._pic')∆WC'SubForm'('Coord' 'RealPixel')('AutoConf' 0)
-     sub.Owner←object
-     ⍝? Now we're going to need to attach a file-less Bitmap object so this can be drawn on.
- :EndSelect
-
- ⍝ Assign class default properties/variables
- object ⎕VSET object.Class ⎕VGET ¯2
-
- ⍝ Apply list of application-specific properties and methods to this new object
- final←'Close' 'Hide' 'Show' 'Open' ⍝ Methods that are not done until the very end
- :For item :In arg~final
-    ⍝ We'll handle these by calling ∆WI recursively and hope we won't get interrupted or slow down
-     {}object._self ∆WI item ⍝ Call ∆WI to do the work, but we can never get a returned result from these operations
- :EndFor
-
- ⍝ Activate/show the new object as requested
- :For item :In final∪⍨arg,(~∨/final∊arg)/¯1↑final ⍝ There should only be one of these at most, usually; default=Open
-⍝? Don't forget to fire automatic events for these methods (respect suppress??)
-⍝? Watch out for possible inheriting from parentage?
-     :Select item
-     :Case 'Close'
-         object ##.∆WSet('Active' 0)('Visible' 0)
-     :Case 'Hide'
-         object ##.∆WSet('Active' 1)('Visible' 0)
-     :Case 'Show'
-         object ##.∆WSet('Active' 1)('Visible' 1)
-     :Case 'Open'
-         object ##.∆WSet('Active' 1)('Visible' 1)
-     :EndSelect
- :EndFor
-
- result←object._self ⍝ Finally, give them back the GUI name of the object that they created
+ result←object ##.New.Prepare arg
