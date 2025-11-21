@@ -1,0 +1,68 @@
+ result←object scale arg;size;units;scale;extent;exent;border;Borders;psize;pscale;tunits;punits;margins
+⍝ Request or modify the scaling factor of a GUI object
+
+ :If (1=≢arg)∧1<|≡arg ⋄ arg←⊃arg ⋄ :EndIf ⍝ Make sure a nested argument is disclosed
+
+ :Section ⍝ Get all our basic information
+     (exent size scale border)←object ⎕VGET('_extent'⍬)('_size'⍬)('_scale'⍬)('_border' 0) ⍝ My current settings
+     (psize pscale)←(⊃object.Ancestry)⎕VGET('_size'⍬)('_scale' 1) ⍝ Parent's 'size' & 'scale' (for use by 'where' and 'extent')
+     units←GUIref._units ⍝ Get system conversion factors
+     punits←(1⍪units)[1+⊃pscale;] ⍝ Compute unit-conversions for the parent object's 'scale'
+     Borders←_supp.GetBorders object ⍝ Time to figure out what the border definitions are for this class (capitalized because it represents a global)
+ :EndSection
+
+ :Section  ⍝ Are they just asking for the current setting?
+     :If 0=≢arg
+         result←scale ⍝ How is it currently set?
+         :If 0≠⊃scale ⍝ If it's proportional, it better have all 5 items already, set by the application
+             ⍝ Otherwise we need to fill in the actual items by computation
+             result←(1↑scale),0 0,size÷units[⊃scale;] ⍝ This is how big it is in the current units
+             :If 5 6∊⍨⊃result ⋄ result←⌊0.5+result ⋄ :EndIf ⍝ If 'scale' is in pixels, round to integers
+         :EndIf
+         :Return ⍝ And that's all we're doing, so it's time to exit
+     :EndIf
+ :EndSection
+
+ :Section ⍝ Convert structure to a single value for a non-zero 'scale' or exactly 5 items when using a zero 'scale'
+     :If (0≠⊃arg)∧1 5∊⍨≢arg
+         arg←1↑arg ⍝ A fixed scaling factor ignores further arguments
+     :Else
+         :Select ≢arg ⍝ A proportional scaling factor allows a variety of input structures
+         :Case 1
+             arg←arg,0 0 0 0 ⍝ This is consistent but will produce an error below
+         :Case 2
+             arg←0 0 0,arg
+         :Case 4
+             arg←0,arg
+         :Case 5
+             ⍝ They've given us all 5 items
+         :Else
+             ##.Error'∆WI LENGTH ERROR: scale'
+         :EndSelect
+         '∆WI DOMAIN ERROR: scale'##.Error 0∊scale[4 5]
+     :EndIf
+ :EndSection
+
+ :Section ⍝ Figure out conversion needs for 'size'
+     :Select ×⊃¨scale arg ⍝ Are we converting to or from proportional scaling?
+     :Case 0 0 ⍝ Staying in proportional, but maybe changing factors
+         size←arg[4 5] ⍝ Just directly setting new 'size' values
+     :Case 0 1 ⍝ Converting from proportional to fixed
+         tunits←(1⍪units)[1+⊃arg;] ⍝ Compute new-scale unit-conversions for this object's 'scale'
+         margins←+/2 2⍴+⌿Borders[1;,2;] ⍝ Differences between 'extent' and 'size' (in pixels)
+         size←tunits×margins-⍨extent×punits ⍝ Convert to new units
+     :Case 1 0 ⍝ Converting from fixed to proportional
+         size←arg[4 5] ⍝ Just directly setting new 'size' values
+     :Case 1 1 ⍝ Remaining fixed, but maybe changing units
+         size←units[⊃arg;]÷⍨size×units[⊃scale;] ⍝ Convert to new units
+     :EndSelect
+ :EndSection
+
+ :Section ⍝ Set APL+Win properties (Dyalog properties don't change)
+     scale←arg ⍝ Now we can set the new property value from what they gave us
+     :If 5 6∊⍨⊃scale ⋄ (size scale)←⌊0.5+size scale ⋄ :EndIf ⍝ If new 'scale' is in pixels, round to integers
+     object ⎕VSET('_size'size)('_scale'scale) ⍝ Set new APL+Win reference values
+⍝? Make adjustments for closed object handling
+ :EndSection
+
+ result←NoRes

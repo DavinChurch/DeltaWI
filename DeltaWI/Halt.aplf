@@ -1,0 +1,18 @@
+ {when} Halt msg;⎕ML
+⍝∇ Cause an intentional error-stop in calling function.
+⍝ Provide a text message and/or stopping condition in either argument.
+⍝ Examples:
+⍝             Halt ''           ⍝ Simple stop
+⍝             Halt 'message'    ⍝ Stop with a message
+⍝             Halt a=0          ⍝ Stop only if "a=0"
+⍝          '' Halt a=0          ⍝ Also stop if "a=0"
+⍝       (a=0) Halt ''           ⍝ Also stop if "a=0"
+⍝   'message' Halt a=0          ⍝ Stop with a message if "a=0"
+⍝       (a=0) Halt 'message'    ⍝ Also stop with a message if "a=0"
+⍝
+
+ ⎕ML←2 ⍝ Copied from Davin's APL+Win toolkit 5/23/2025
+ :If 0=⎕NC'when' ⋄ :AndIf 0∊↑0⍴msg ⋄ when←msg ⋄ msg←'' ⋄ :EndIf
+ :If 2=⎕NC'when' ⋄ :AndIf 0∊↑0⍴msg ⋄ (when msg)←msg when ⋄ :EndIf ⍝ Reverse arguments
+ :If 2=⎕NC'when' ⋄ :AndIf ~1∊when ⋄ :Return ⋄ :EndIf
+ (msg,(0∊⍴msg)/'Halt')⎕SIGNAL 888 ⍝ Assuming 888 is not being trapped

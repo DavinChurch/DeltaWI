@@ -10,8 +10,8 @@
 ⍝? What can we do to implement subclass permissions in ActiveX/Dyalog?
 ⍝? Search for subclasses in a different structure of global variable in those NSs (if subclass≢'')?
  ('∆WI CLASS ERROR: Class "',class,'" not found')##.Error 3≠in.⎕NC'New'
- children←⍬ ⋄ :If 0<parent.Class.⎕NC'_supp.∆Children' ⋄ children←,,¨⊆parent.Class._supp.∆Children ⋄ :EndIf
- parents←⍬ ⋄ :If 0<in.⎕NC'_supp.∆Parents' ⋄ parents←,,¨⊆in._supp.∆Parents ⋄ :EndIf
+ children←⍬ ⋄ :If 2 3∊⍨parent.Class.⎕NC'_supp.∆Children' ⋄ children←,,¨⊆parent.Class._supp.∆Children ⋄ :EndIf
+ parents←⍬ ⋄ :If 2 3∊⍨in.⎕NC'_supp.∆Parents' ⋄ parents←,,¨⊆in._supp.∆Parents ⋄ :EndIf
  children,⍨←((×≢children)∧∧/'~'∊¨children)/⊂'*' ⍝ If they're all exclusions, assume they're the only exclusions from entire list
  parents,⍨←((×≢parents)∧∧/'~'∊¨parents)/⊂'*' ⍝ If they're all exclusions, assume they're the only exclusions from entire list
  :If ~ok←>/(2↑children∊⍨⊂,'*')∨('' '~',¨⊂class)∊children ⍝ Is this new class permitted by the parent?

@@ -1,0 +1,65 @@
+ result←object size arg;size;extent;where;scale;border;pscale;units;psize;dthick;Borders;margins;t;tunits;punits;dysize
+⍝ Request or modify the size of a GUI object
+
+⍝ Note: 'where' is outside dimensions, relative to parent and using parent's scale
+⍝       'size' is inside (client area) dimensions, less internal margins, using current scale
+⍝       'extent' is inside (client area) dimensions, but using parent's scale
+⍝ While object is closed:
+⍝       Assign where←2⍴ leaves it as 2⍴ and doesn't change size/extent
+⍝       Assign where←4⍴ changes size/extent to ⍬
+⍝       Assign size←2⍴ or extent←2⍴, truncates where to 2⍴
+⍝       Scale≠0 just doesn't store elements #2-#5 ⍝? Or does it?? Ever??
+⍝       Upon opening, all are resynchronized
+
+ :If (1=≢arg)∧1<|≡arg ⋄ arg←⊃arg ⋄ :EndIf ⍝ Make sure a nested argument is disclosed
+
+ :Select ≢arg
+
+ :Case 0
+     result←object ⎕VGET'_size'⍬ ⍝ Where is it currently located?
+
+ :Case 2
+     :Section ⍝ Get all our basic information
+         (where extent size scale border)←object ⎕VGET('_where'⍬)('_extent'⍬)('_size'⍬)('_scale' 1)('_border' 0) ⍝ My current settings
+         (psize pscale)←(⊃object.Ancestry)⎕VGET('_size'⍬)('_scale' 1) ⍝ Parent's 'size' & 'scale' (for use by 'where' and 'extent')
+         units←GUIref._units ⍝ Get system conversion factors
+         tunits←(1⍪units)[1+⊃scale;] ⍝ Compute unit-conversions for this object's 'scale'
+         punits←(1⍪units)[1+⊃pscale;] ⍝ Compute unit-conversions for the parent object's 'scale'
+         Borders←_supp.GetBorders object ⍝ Time to figure out what the border definitions are for this class (capitalized because it represents a global)
+     :EndSection
+
+     :Section ⍝ Recompute APL+Win 'size'
+         '∆WI SIZE ERROR: Cannot set "size" when "scale" is proportional; Use "extent" or "where" instead'##.Error 0=⊃scale
+         '∆WI DOMAIN ERROR: size'##.Error∨/0>arg
+         size←arg ⍝ We'd better just be able to assign this
+     :EndSection
+     :Section ⍝ Recompute APL+Win 'extent'
+         margins←+/2 2⍴+⌿Borders[1;,2;] ⍝ Differences between 'extent' and 'size' (in pixels)
+         extent←punits÷⍨margins+size×tunits ⍝ Convert to parent units to get 'extent'
+     :EndSection
+     :Section ⍝ Recompute APL+Win 'where'
+         margins←+/2 2⍴+⌿Borders[1;1 3;] ⍝ Differences between 'extent' and 'where' (in pixels)
+         where←(2↑where),punits÷⍨margins+extent×punits ⍝ Add margins back between 'extent' and 'where'
+     :EndSection
+     :Section ⍝ Set APL+Win properties
+         :If 5 6∊⍨⊃scale ⋄ size←⌊0.5+size ⋄ :EndIf ⍝ If 'scale' is in pixels, round to integers
+         :If 5 6∊⍨⊃pscale ⋄ (where extent)←⌊0.5+where extent ⋄ :EndIf ⍝ If parent 'scale' is in pixels, round to integers
+         object ⎕VSET('_where'where)('_size'size)('_extent'extent) ⍝ Set new APL+Win reference values
+⍝? Make adjustments for closed object handling
+     :EndSection
+
+     :Section ⍝ Compute and set Dyalog sizing properties
+         dysize←extent×punits
+         :If 'User'≡object ∆WG'Coord' ⍝ In this case, we've got to do something about using custom coordinates (used for Pictures)
+             ##.Halt'How do we need to handle this??'
+             ⍝? How can I relocate the Picture parent when its Coord=User? Does it use the parent's Coord?
+             ⍝? What happens if there's a Picture within a Picture?
+         :EndIf
+         object ∆WSet'Size'dysize
+     :EndSection
+     result←NoRes
+
+ :Else
+     ##.Error'∆WI LENGTH ERROR: size'
+
+ :EndSelect

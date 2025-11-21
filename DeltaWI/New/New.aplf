@@ -17,7 +17,7 @@
 
  :Section ⍝ See if we've got a hidden Dyalog-required GUI child under this one, which should become our future Dyalog GUI parent
      hidden←'_mb' '_mdi' '_pic' ⍝ Possible hidden object names that need to remain as part of the GUI structure
-     :If ×≢hidden←(1⍳⍨9=parent.⎕NC¨hidden)⊃hidden,⊂'' ⍝ Do one of these exist here?
+     :If ×≢hidden←(9⍳⍨parent.⎕NC↑hidden)⊃hidden,⊂'' ⍝ Do one of these exist here?
          object[1]←parent ⎕VGET hidden ⍝ If so, change the future actual parent reference to that object instead
      :EndIf
  :EndSection
