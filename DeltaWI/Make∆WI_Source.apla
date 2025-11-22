@@ -2,7 +2,7 @@
  ' result←{object}∆WI action                                       '
  '⍝ Call #.DeltaWI.∆WI directly                                    '
  ' :If 0=⎕NC''object'' ⋄ object←⊢ ⋄ :EndIf                           '
- ' :Trap 0 ⋄ result←object #.DeltaWI.∆WI action                    '
+ ' :Trap 0 ⋄ result←object ⎕THIS.∆WI action                        '
  ' :Else ⋄ ⎕SIGNAL⊂(⊂¨''EN'' ''EM'' ''Message''),¨⊂¨⎕DMX.(EN EM Message) '
  ' :EndTrap                                                        '
 ]

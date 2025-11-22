@@ -1,5 +1,7 @@
- Make∆WI
+ Make∆WI;this
  ⍝ Create a ∆WI function in the calling namespace to interface with the DeltaWI package
  ⍝ An actual function is preferred to a function assignment because it can be rendered as a text file and because it shows up in an 86⌶'s )SI.
 
- (⊃⎕RSI).⎕FX Make∆WI_Source
+ 'DeltaWI must reside in a named namespace'⎕SIGNAL 11/⍨1∊'[Namespace]'⍷this←⍕⎕THIS
+ ⍝ (The above check can be fooled by ⎕DF, but let's not bother to watch for it.)
+ (⊃⎕RSI).⎕FX'⎕THIS'⎕R this⍤1⊢Make∆WI_Source ⍝ Create the ∆WI interface function in the calling namespace

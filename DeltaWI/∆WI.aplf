@@ -9,8 +9,9 @@
 
 ⍝ Pre-process the ∆WI call
  nametesting←⎕NULL∊∊action                                          ⍝ Allow for name-parsing-only internal testing to be performed
+ :If 2=⎕NC'object' ⋄ nametesting∨←⎕NULL∊∊object ⋄ :EndIf            ⍝ Allow for name-parsing-only internal testing to be performed
  :If 0=⎕NC'object' ⋄ object←⊢ ⋄ :EndIf                              ⍝ Allow monadic use
- (objname objref action)←object ObjectName action                   ⍝ Parse object name to which this call applies
+ (objname objref action)←object ObjectName action                   ⍝ Parse out object name to which this call applies
  :If nametesting ⋄ result←objname action ⋄ :Return ⋄ :EndIf         ⍝ Allow for name-parsing-only internal testing to be performed
  :If action≡,'*' ⋄ ∘∘∘ ⋄ :EndIf                                     ⍝? Resume from within onAction handler? [Not yet designed]
  (name args)←Normalize action                                       ⍝ Separate action name from its arguments and standardize structure
