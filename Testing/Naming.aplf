@@ -1,0 +1,138 @@
+ Naming;∆WSELF;name;NA;defn
+⍝ Run tests of ∇ObjectName to make sure all the name-handling possibilities are working
+
+ NA←⎕NULL ⍝ We'll be using this to activate hooks in ∇ObjectName for independent testing
+
+⍝ ∆WSELF undefined for these tests:
+ ∆WI Fail'∆WI OBJECT ERROR: Current object undefined'⊢'self'NA
+ ''∆WI Fail'∆WI OBJECT ERROR: Current object undefined'⊢'self'NA
+ 'foo'∆WI Pass'foo'⊢'self'NA
+
+⍝ Now, we need to run the whole suite of tests multiple times, with different object names actually defined
+ :For defn :In '' 'foo' 'foo.fum' 'foo.fum.goo' 'foo.fum.gum' 'foo.goo' 'foo.goo.hoo'
+
+⍝???    'foo' ∆WI 'Delete'
+⍝? Define a different structure for each suite, once we can define structures
+
+     ∆WSELF←''
+     ∆WI Fail'∆WI OBJECT ERROR: Current object undefined'⊢'self'NA
+     ''∆WI Fail'∆WI OBJECT ERROR: Current object undefined'⊢'self'NA
+     'foo'∆WI Pass'foo'⊢'self'NA
+
+     :For ∆WSELF :In ':xxx' '.xxx' ⍝ Check error reports for unsupported ∆WSELF syntax
+         ∆WI Fail'∆WI ERROR: ∆WSELF may not be relative to itself (unsupported)'⊢'self'NA
+     :EndFor
+     :For ∆WSELF :In '#xxx' 'xxx#yyy' 'xxx:yyy' ⍝ Check error reports for illegal ∆WSELF syntax
+         ∆WI Fail'∆WI OBJECT NAME ERROR: Improperly formed object name'⊢'self'NA
+     :EndFor
+
+     ∆WSELF←'foo'
+     :For name :In '#xxx' 'xxx#yyy' 'xxx:yyy' ⍝ Check error reports for illegal left argument syntax
+         name ∆WI Fail'∆WI OBJECT NAME ERROR: Improperly formed object name'⊢'self'NA
+     :EndFor
+     ''∆WI Fail'∆WI OBJECT ERROR: Current object undefined'⊢'self'NA
+     'foo'∆WI Pass'foo'⊢'self'NA
+     ∆WI Pass'foo'⊢'self'NA
+     ∆WI Pass'foo'⊢'.self'NA
+ ⍝? We need to re-run these tests on an existing object because they'll give different results/errors (maybe everything foo needs it too??)
+ ⍝∆WI Pass (,'#')⊢'..self'NA
+ ⍝∆WI Fail'∆WI OBJECT ERROR: Parent not found (too many ..''s)'⊢'...self'NA
+     ∆WI Fail'∆WI OBJECT ERROR: Cannot use ".." notation on undefined object'⊢'..self'NA
+     ∆WI Fail'∆WI OBJECT ERROR: Cannot use ".." notation on undefined object'⊢'...self'NA
+     ∆WI Pass'foo'⊢':self'NA
+     ':'∆WI Pass'foo'⊢'self'NA
+     ':.foo'∆WI Fail'∆WI OBJECT NAME ERROR: Improperly formed object name'⊢'self'NA
+     ∆WI Pass'foo'⊢':self'NA
+     ∆WI Pass'foo'⊢':.self'NA
+ ⍝∆WI Pass(,'#')⊢':..self'NA ⍝? This one needs a definition
+     ∆WI Fail'∆WI OBJECT ERROR: Cannot use ".." notation on undefined object'⊢':..self'NA
+
+     ∆WSELF←'foo.goo.hoo'
+     ∆WI Pass'foo'⊢':self'NA
+     ''∆WI Fail'∆WI OBJECT ERROR: Current object undefined'⊢':self'NA
+     ':'∆WI Pass'foo'⊢'self'NA
+     ':.foo'∆WI Fail'∆WI OBJECT NAME ERROR: Improperly formed object name'⊢'self'NA
+
+⍝ Now, let's test missing inputs or only portions of the analysis at one time
+
+⍝ We'll start by checking the phase 1 path where ∆WSELF is combined with the left argument name
+     :For ∆WSELF :In NA''
+         :For name :In NA'' ':foo' '.foo' '..foo'
+             name ∆WI Fail'∆WI OBJECT ERROR: Current object undefined'⊢'self'NA
+         :EndFor
+         :For name :In ,¨'#' 'foo'
+             name ∆WI Pass name⊢'.self'NA
+         :EndFor
+     :EndFor
+     :For ∆WSELF :In ,¨'#' 'foo' 'foo.goo'
+         ''∆WI Fail'∆WI OBJECT ERROR: Current object undefined'⊢'self'NA
+         '#'∆WI Pass(,'#')⊢'.self'NA
+     :EndFor
+     ∆WSELF←'#'
+     :For name :In 'goo' ':goo' '.goo'
+         name ∆WI Pass'goo'⊢'.self'NA
+     :EndFor
+     '..foo'∆WI Fail'∆WI OBJECT ERROR: Parent not found (too many ..''s)'⊢'self'NA
+     ∆WSELF←'foo'
+     :For name :In 'goo' '..goo'
+         :If '.'=⊃name
+             name ∆WI Fail'∆WI OBJECT ERROR: Cannot use ".." notation on undefined object'⊢'.self'NA ⍝? Only if not defined
+         :Else
+             name ∆WI Pass'goo'⊢'.self'NA
+         :EndIf
+     :EndFor
+     :For name :In ':goo' '.goo'
+         name ∆WI Pass'foo.goo'⊢'.self'NA
+     :EndFor
+     ∆WSELF←'foo.fum'
+     'goo'∆WI Pass'goo'⊢'.self'NA
+     ':goo'∆WI Pass'foo.goo'⊢'.self'NA
+     '.goo'∆WI Pass'foo.fum.goo'⊢'.self'NA
+ ⍝? '..goo'∆WI Pass'foo.goo'⊢'.self'NA
+     '..goo'∆WI Fail'∆WI OBJECT ERROR: Cannot use ".." notation on undefined object'⊢'.self'NA
+
+⍝ Next we'll check the phase 2 paths where each effective name from above is combined with all possible prefixes from the right argument
+     ∆WSELF←'' ⍝ ∆WSELF isn't used here because all the possible resulting values from pass 1 are used as absolute left argument inputs
+     '#'∆WI Pass(,'#')⊢'self'NA
+     '#'∆WI Pass(,'#')⊢'#.self'NA
+     '#'∆WI Pass'foo'⊢'foo.self'NA
+     '#'∆WI Pass'foo'⊢':foo.self'NA
+     '#'∆WI Pass'foo'⊢'.foo.self'NA
+     '#'∆WI Fail'∆WI OBJECT ERROR: Parent not found (too many ..''s)'⊢'..foo.self'NA
+     '#'∆WI Pass'foo'⊢':.foo.self'NA
+     '#'∆WI Fail'∆WI OBJECT ERROR: Parent not found (too many ..''s)'⊢':..foo.self'NA
+
+     'foo'∆WI Pass'foo'⊢'self'NA
+     'foo'∆WI Pass(,'#')⊢'#.self'NA
+     'foo'∆WI Pass'foo.goo'⊢'goo.self'NA
+     'foo'∆WI Pass'foo.goo'⊢':goo.self'NA
+     'foo'∆WI Pass'foo.goo'⊢'.goo.self'NA
+ ⍝?'foo'∆WI Pass'goo'⊢'..goo.self'NA
+     'foo'∆WI Fail'∆WI OBJECT ERROR: Cannot use ".." notation on undefined object'⊢'..goo.self'NA
+     'foo'∆WI Pass'foo.goo'⊢':.goo.self'NA
+ ⍝?'foo'∆WI Pass'goo'⊢':..goo.self'NA
+     'foo'∆WI Fail'∆WI OBJECT ERROR: Cannot use ".." notation on undefined object'⊢':..goo.self'NA
+
+     'foo.fum'∆WI Pass'foo.fum'⊢'self'NA
+     'foo.fum'∆WI Pass(,'#')⊢'#.self'NA
+     'foo.fum'∆WI Pass'foo.fum.goo'⊢'goo.self'NA
+     'foo.fum'∆WI Pass'foo.goo'⊢':goo.self'NA
+     'foo.fum'∆WI Pass'foo.fum.goo'⊢'.goo.self'NA
+ ⍝?'foo.fum'∆WI Pass'foo.goo'⊢'..goo.self'NA
+     'foo.fum'∆WI Fail'∆WI OBJECT ERROR: Cannot use ".." notation on undefined object'⊢'..goo.self'NA
+     'foo.fum'∆WI Pass'foo.goo'⊢':.goo.self'NA
+ ⍝?'foo.fum'∆WI Pass'goo'⊢':..goo.self'NA
+     'foo.fum'∆WI Fail'∆WI OBJECT ERROR: Cannot use ".." notation on undefined object'⊢':..goo.self'NA
+
+     'foo.fum.gum'∆WI Pass'foo.fum.gum'⊢'self'NA
+     'foo.fum.gum'∆WI Pass(,'#')⊢'#.self'NA
+     'foo.fum.gum'∆WI Pass'foo.fum.gum.goo'⊢'goo.self'NA
+     'foo.fum.gum'∆WI Pass'foo.goo'⊢':goo.self'NA
+     'foo.fum.gum'∆WI Pass'foo.fum.gum.goo'⊢'.goo.self'NA
+ ⍝?'foo.fum.gum'∆WI Pass'foo.fum.goo'⊢'..goo.self'NA
+     'foo.fum.gum'∆WI Fail'∆WI OBJECT ERROR: Cannot use ".." notation on undefined object'⊢'..goo.self'NA
+     'foo.fum.gum'∆WI Pass'foo.goo'⊢':.goo.self'NA
+ ⍝?'foo.fum.gum'∆WI Pass'goo'⊢':..goo.self'NA
+     'foo.fum.gum'∆WI Fail'∆WI OBJECT ERROR: Cannot use ".." notation on undefined object'⊢':..goo.self'NA
+
+ :EndFor

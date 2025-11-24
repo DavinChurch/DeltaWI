@@ -3,4 +3,4 @@
 ⍝ which←Number of levels of parentage to strip off from end if positive or take from beginning if negative (default=1)
 
  :If 0=⎕NC'which' ⋄ which←1 ⋄ :EndIf
- name←'.'∆sew(-which){⍺>0:⍺↑⍵ ⋄ ⍺↓⍵}'.'∆cuts name
+ parent←'.'∆sew(-which){⍺>0:⍺↑⍵ ⋄ ⍺↓⍵}'.'∆cuts name
