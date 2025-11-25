@@ -1,0 +1,53 @@
+ result←object Delete arg;hidden;kids
+⍝ Delete a GUI object (we're already sure it's here)
+
+
+ '∆WI ACTION ERROR: Method "Delete" does not accept an argument'##.Error×≢arg
+ :If ×≢kids←object children ⍬
+     result←(object ⎕VGET ##.LeafName¨kids)Delete¨⊂⍬ ⍝ Recursively delete all my children
+ :EndIf
+
+ :Section ⍝ Make sure it's closed first
+     :If object._opened ⍝ If open, we'll need to change it to closed first
+         :If object._visible>0
+ ⍝? Deal with onHide
+             object ⎕VSET'_visible' 0 ⍝ Just in case something wonders about this before it's gone
+             object ##.∆WSet'Visible' 0
+         :EndIf
+ ⍝? Deal with onDestroy (but not onClose)
+         object ⎕VSET('_opened' 0)('_enabled' 0) ⍝ Just in case something wonders about this before it's gone
+         object ##.∆WSet'Active' 0
+     :EndIf
+ :EndSection
+
+ :Section ⍝ Get rid of hidden objects
+     hidden←'_mb' '_mdi' '_pic'
+     :For hidden :In (9=object.⎕NC↑hidden)/hidden ⍝ See about getting rid of any hidden Dyalog immediate children
+         :Select hidden
+         :Case '_mb'
+⍝? Add any special handling for this
+         :Case '_mdi'
+⍝? Add any special handling for this
+         :Case '_pic'
+⍝? Add any special handling for this
+         :EndSelect
+         :If ×≢hidden←'_'(object ⎕VGET hidden).⎕NL ¯9 ⍝ This may have (mostly for Pictures) other hidden Dyalog (drawing) objects contained within it
+         :AndIf ×≢hidden/⍨←∧/(1↓¨hidden)∊¨⊂⎕D ⍝ Look for _999-style native objects
+             ##.∆EX⍕¨object ⎕VGET hidden
+         :EndIf
+         ##.∆EX⍕object.⎕VGET hidden
+     :EndFor
+     :If ×≢hidden←'_'object.⎕NL ¯9 ⍝ Other hidden Dyalog objects
+     :AndIf ×≢hidden←(∧/(1↓¨hidden)∊¨⊂⎕D)/hidden ⍝ Look for _999-style native objects
+         ##.∆EX⍕¨object ⎕VGET hidden
+     :EndIf
+ :EndSection
+
+⍝? Deal with onDelete event here?
+
+⍝? Anything else to clean up?
+
+⍝ Finally, time to actually get rid of it!
+ ##.∆EX⍕object
+
+ result←NoRes ⍝ Never return a result

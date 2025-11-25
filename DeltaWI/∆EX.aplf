@@ -1,0 +1,4 @@
+ {R}←∆EX Y
+⍝ Cover function for ⎕EX when erasing GUI objects; Extend for use with EWC
+
+ R←⎕EX Y ⍝? (Remember to do this for EWC, too)

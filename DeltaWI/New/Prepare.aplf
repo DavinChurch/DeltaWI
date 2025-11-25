@@ -1,4 +1,4 @@
- result←object Prepare arg;sub;item;illegal;final
+ result←object Prepare arg;sub;item;illegal;final;v0
  ⍝ Finish initializing a just-created new GUI object
  ⍝ The action and class have already been removed from the argument list.
 
@@ -41,15 +41,20 @@
  :For item :In final∪⍨arg,(~∨/final∊arg)/¯1↑final ⍝ There should only be one of these at most, usually; default=Open
 ⍝? Don't forget to fire automatic events for these methods (respect suppress??)
 ⍝? Watch out for possible inheriting from parentage?
+     v0←-'Form' 'MDIForm' 'Menu'∊⍨⊂object._class ⍝ "Invisible" setting for this class
      :Select item
      :Case 'Close'
          object ##.∆WSet('Active' 0)('Visible' 0)
+         object ⎕VSET('_opened' 0)('_visible'v0)('_enabled' 0)
      :Case 'Hide'
          object ##.∆WSet('Active' 1)('Visible' 0)
+         object ⎕VSET('_opened' 1)('_visible'v0)('_enabled' 1)
      :Case 'Show'
          object ##.∆WSet('Active' 0)('Visible' 1)
+         object ⎕VSET('_opened' 1)('_visible' 1)('_enabled' 1)
      :Case 'Open' ⍝ Or none of the above
          object ##.∆WSet('Active' 1)('Visible' 1)
+         object ⎕VSET('_opened' 1)('_visible' 1)('_enabled' 1)
      :EndSelect
  :EndFor
 
