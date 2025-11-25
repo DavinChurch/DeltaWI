@@ -4,4 +4,4 @@
  '∆WI ACTION ERROR: Property "classes" is read-only'##.##.Error×≢arg
  result←##.⎕NL ¯9
  :If (⊂'ActiveX')∊result ⋄ result←'ActiveControl' 'ActiveObject',result~(⊂'ActiveX') ⋄ :EndIf ⍝ Rename ActiveX pseudonym
- result~←,¨'System' 'Dyalog' 'UDC' '_' ⍝ Remove other special cases (pseudonyms)
+ result~←,¨'System' 'Dyalog' '_supp' ⍝ Remove other special cases (pseudonyms)

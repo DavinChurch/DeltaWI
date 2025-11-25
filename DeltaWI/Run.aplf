@@ -6,5 +6,7 @@
      back←'.',⍨⍕Application         ⍝ Which namespace are we looking for?
      back←1-⍨back⍳⍨⍥⊆⎕XSI↑¨⍨≢back   ⍝ How far back is it in the )SI?
      back(86⌶)expression            ⍝ Execute the expression at the correct point of the application
+     ⍝? Is any result returned from 86⌶, that we should be explicitly disposing of?
  :EndIf
 ⍝? Instead of just going back until we hit the application scope, should we instead be going all the way back to the ∆WI call itself?
+⍝? Does it make a difference? (Only for shadowed variables??)

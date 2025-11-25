@@ -1,4 +1,4 @@
- result←object New arg;name;parent;class;meta;ismeta;isreal;isnew;isnative;in;onnew;oldglobs;wself;newobj;subclass;hidden
+ result←object New arg;name;parent;class;meta;ismeta;isreal;isnew;isnative;in;subclass;hidden
 ⍝ Create a brand-new GUI object, as specified
 
 ⍝? Future support: We should be able to pass a GUI 'def' variable as the argument. (This will probably be a ⎕OR under Dyalog)
@@ -16,7 +16,8 @@
  :EndSection
 
  :Section ⍝ See if we've got a hidden Dyalog-required GUI child under this one, which should become our future Dyalog GUI parent
-     hidden←'_mb' '_mdi' '_pic' ⍝ Possible hidden object names that need to remain as part of the GUI structure
+     hidden←'_mdi' '_pic' ⍝ Possible hidden object names that need to remain as part of the GUI structure
+     ⍝ Note that an _mb cannot yet exist on a new object, so we won't worry about them here
      :If ×≢hidden←(9⍳⍨parent.⎕NC↑hidden)⊃hidden,⊂'' ⍝ Do one of these exist here?
          object[1]←parent ⎕VGET hidden ⍝ If so, change the future actual parent reference to that object instead
      :EndIf
@@ -47,7 +48,7 @@
 
  :ElseIf (~isnative)∧(~'.'∊class)∧isnew∨~isreal ⍝ Or they've told us or implied to process it as new
      :Section ⍝ Application-controlled UDC creation
-         in←##.Classes.UDC ⍝ Just for easier reference
+         in←##.UDC ⍝ Just for easier reference
          result←object in.New arg ⍝ Call the UDC-specific New function
      :EndSection
 
@@ -70,6 +71,13 @@
          :Else
              ##.Error'∆WI PARENTAGE ERROR: Invalid parentage for class "',class,'"'
          :EndIf
+     :EndSection
+
+ :ElseIf ×≢GUIref ⎕VGET⊂'_onNew' ''
+     ⍝ Finally, before giving up, try running onNew anyway to see if an unknown class can be created
+     :Section ⍝ Application-controlled UDC creation
+         in←##.UDC ⍝ Just for easier reference
+         result←object in.New arg ⍝ Call the UDC-specific New function
      :EndSection
 
  :Else

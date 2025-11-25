@@ -8,6 +8,8 @@
 ⍝ (Future: ActiveX pointers may eventually need to be accepted in place of names.)
 ⍝ Globals: GUIref, Application, Application.∆WSELF
 
+⍝? Should we :IF around calls to Locate if we're using ⎕NULL-testing code paths? Or do we want to report problems if we haven't set up a real GUI?
+
  :Section ⍝ Obtain ∆WSELF
      wself←⎕NULL ⍝ Begin by determining if there is a ∆WSELF set (assume not until found)
      :If ×Application.⎕NC'∆WSELF'
