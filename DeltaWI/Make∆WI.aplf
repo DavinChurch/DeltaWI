@@ -4,4 +4,5 @@
 
  'DeltaWI must reside in a named namespace'⎕SIGNAL 11/⍨1∊'[Namespace]'⍷this←⍕⎕THIS
  ⍝ (The above check can be fooled by ⎕DF, but let's not bother to watch for it.)
+ '∆WI already exists in the calling namespace!'⎕SIGNAL 11/⍨0≠(⊃⎕RSI).⎕NC'∆WI'
  (⊃⎕RSI).⎕FX'⎕THIS'⎕R this⍤1⊢Make∆WI_Source ⍝ Create the ∆WI interface function in the calling namespace

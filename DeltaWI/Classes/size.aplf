@@ -11,6 +11,8 @@
 ⍝       Scale≠0 just doesn't store elements #2-#5 ⍝? Or does it?? Ever??
 ⍝       Upon opening, all are resynchronized
 
+⍝? Don't forget to fire onResize event (and any other events necessary)
+
  :If (1=≢arg)∧1<|≡arg ⋄ arg←⊃arg ⋄ :EndIf ⍝ Make sure a nested argument is disclosed
 
  :Select ≢arg

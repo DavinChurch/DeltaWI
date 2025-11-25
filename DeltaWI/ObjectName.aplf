@@ -15,7 +15,8 @@
      :If ×Application.⎕NC'∆WSELF'
      :AndIf ⎕NULL≢wself←Application.∆WSELF
          '∆WI ERROR: DOMAIN ERROR in ∆WSELF'Error~(0 1∊⍨≢⍴wself)∧IsChar wself
-         '∆WI ERROR: ∆WSELF may not be relative to itself (unsupported)'Error':.'∊⍨⊃wself←∆dlt wself
+         wself←∆dlt wself
+         '∆WI ERROR: ∆WSELF may not be relative to itself (unsupported)'Error('.'=⊃wself)∨':'∊wself
          wself↓⍨←2×'#.'≡2↑wself ⍝ Remove redundant #. prefix
      :EndIf
      '∆WI OBJECT NAME ERROR: Improperly formed object name'Error('#'∊wself)∧1<≢wself ⍝ No imbedded "#" in names
