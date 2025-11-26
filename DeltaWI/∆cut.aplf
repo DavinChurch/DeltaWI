@@ -1,5 +1,6 @@
  words←{delim}∆cut text;⎕IO;⎕ML
 ⍝ Cut a vector into nested pieces at a delimiter, without empties.
+
 ⍝ The delimiter(s) are optional and default to a space (' '),
 ⍝ NewLine, and LineFeed.
 ⍝

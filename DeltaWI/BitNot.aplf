@@ -1,0 +1,16 @@
+ new←which BitNot flags;⎕IO;⎕ML
+⍝ Invert a specific bit (0-30) in a bit-encoded flag integer (<2*32)
+⍝ and return its new composite integer value.
+
+⍝ If multiple bits are given (as a vector), then invert all those bits at once.
+⍝ An array of answers is returned if an array of input values is provided.
+⍝ Examples:
+⍝    8 ← 1 BitNot 10
+⍝   11 ← 0 BitNot 10
+⍝    4 ← 1 2 3 BitNot 10
+⍝
+⍝ Written 14 January 2017 by Davin Church of Creative Software Design
+⍝ Ported to Dyalog 25 November 2025 by Davin Church of Creative Software Design
+
+ ⎕IO←⎕ML←1
+ which←(,which)[⍒,which] ⋄ new←(31⍴2)⊤flags ⋄ ((⊂31-which)⌷[1]new)←~(⊂31-which)⌷[1]new ⋄ new←2⊥new

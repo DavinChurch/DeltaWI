@@ -1,0 +1,19 @@
+ vals←size BitVals flags
+⍝ Convert a bit-encoded flag integer (<2*32) into a vector of "size" integers and zeros
+⍝ (LSB first) representing the bit positions that are composed to construct the flag.
+
+⍝ An optional left argument may be supplied to specify the number of
+⍝ bit values to be returned, defaulting to 31 bits.
+⍝ If a vector or matrix of flags is supplied, the result is a matrix with
+⍝ one more dimension (of "size" bits) appended to it.
+⍝ Examples:
+⍝   0 2 0 8 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ← BitVals 10
+⍝   1 2 4 0 16 0 64 0 0 0 0 0 0 8192 0 0 65536 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ← BitVals 73815
+⍝   0 2 0 8 0 0 0 0 ← 8 BitVals 10
+⍝
+⍝ Written 15 June 2012 by Davin Church of Creative Software Design
+⍝ Modified 28 March 2013 by Davin Church of Creative Software Design
+⍝ Ported to Dyalog 25 November 2025 by Davin Church of Creative Software Design
+
+ ⎕IO←⎕ML←1 ⋄ :If 0=⎕NC'size' ⋄ size←31 ⋄ :EndIf ⋄ size←⌊⊃size
+ vals←(⌽⍉(size⍴2)⊤⍉flags)×[1+≢⍴flags]2*1-⍨⍳size

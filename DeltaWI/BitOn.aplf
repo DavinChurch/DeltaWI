@@ -1,0 +1,16 @@
+ new←which BitOn flags;⎕IO;⎕ML
+⍝ Turn on (set) a specific bit (0-30) in a bit-encoded flag integer (<2*32)
+⍝ and return its new composite integer value.
+
+⍝ If multiple bits are given (as a vector), then set all those bits at once.
+⍝ An array of answers is returned if an array of input values is provided.
+⍝ Examples:
+⍝   10 ← 1 BitOn 10
+⍝   11 ← 0 BitOn 10
+⍝   14 ← 1 2 3 BitOn 10
+⍝
+⍝ Written 10 July 2011 by Davin Church of Creative Software Design
+⍝ Ported to Dyalog 25 November 2025 by Davin Church of Creative Software Design
+
+ ⎕IO←⎕ML←1
+ which←(,which)[⍒,which] ⋄ new←(31⍴2)⊤flags ⋄ ((⊂31-which)⌷[1]new)←1 ⋄ new←2⊥new

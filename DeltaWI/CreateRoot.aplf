@@ -8,7 +8,7 @@
 
  ⍝ Define system settings
  devcaps←'.'⎕WG'DevCaps'
- this.AspectRatio←÷/1⊃devcaps ⍝ Pixel aspect ration (h÷w)
+ this.ScreenSize←1⊃devcaps ⍝ The pixel-size of the entire screen
  ⍝inches←(2⊃devcaps)÷25.4 ⍝ How big is the screen in inches (h,w); estimated
  tpp←15 ⍝?1440÷25.4×⊃÷/2↑devcaps ⍝ Twips/pixel ⍝ Override calculated tpp with an assumed value (should we be doing this?)
  this._units←1 2⍴16 8 ⍝ Pixels per system character unit (constant; assumed)
@@ -17,7 +17,7 @@
  this._units⍪←2⍴÷tpp ⍝ Twips (1440/in)
  this._units⍪←devcaps[4]÷100 ⍝ Virtual pixels (scaled, by default)
  this._units⍪←1 1 ⍝ True pixels
- this._size←(1⊃devcaps)÷this._units[1;] ⍝ Represents the physical screen size, in character units
+ this._size←this.ScreenSize÷this._units[1;] ⍝ Represents the physical screen size, in character units
  this._where←0 0,this._size ⍝ Pretend the APL root has a location (full-screen)
  this._extent←this._size ⍝ Pretend the APL root has an extent (full-screen)
  this._scale←1 ⍝ Pretend the APL root is measured in characters

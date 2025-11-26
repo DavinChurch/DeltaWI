@@ -1,0 +1,18 @@
+ bits←{size}Bits flags;⎕IO;⎕ML
+⍝ Convert a bit-encoded flag integer (<2*32) into a vector of "size" bits (LSB first)
+⍝
+⍝ An optional left argument may be supplied to specify the number of
+⍝ bits to be returned, defaulting to 31 bits.
+⍝ If a vector or matrix of flags is supplied, the result is a matrix with
+⍝ one more dimension (of "size" bits) appended to it.
+⍝ Examples:
+⍝   0 1 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ← Bits 10
+⍝   1 1 1 0 1 0 1 0 0 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ← Bits 73815
+⍝   0 1 0 1 0 0 0 0 ← 8 Bits 10
+⍝
+⍝ Written 15 June 2012 by Davin Church of Creative Software Design
+⍝ Modified 28 March 2013 by Davin Church of Creative Software Design
+⍝ Ported to Dyalog 25 November 2025 by Davin Church of Creative Software Design
+
+ ⎕IO←⎕ML←1 ⋄ :If 0=⎕NC'size' ⋄ size←31 ⋄ :EndIf ⋄ size←⌊⊃size
+ bits←⌽⍉(size⍴2)⊤⍉flags

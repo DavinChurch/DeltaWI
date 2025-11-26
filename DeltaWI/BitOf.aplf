@@ -1,0 +1,15 @@
+ bit←which BitOf flags;⎕IO;⎕ML
+⍝ Return a specific bit (0-30) from a bit-encoded flag integer (<2*32)
+
+⍝ If multiple bits are given (as a vector), the return all those bits,
+⍝ bit-re-encoded back into a new integer using only those bit positions.
+⍝ An array of answers is returned if an array of input values is provided.
+⍝ Examples:
+⍝   1 ← 1 BitOf 10
+⍝   0 ← 2 BitOf 10
+⍝   3 ← 1 3 BitOf 10
+⍝
+⍝ Written 10 July 2011 by Davin Church of Creative Software Design
+⍝ Ported to Dyalog 25 November 2025 by Davin Church of Creative Software Design
+
+ ⎕IO←⎕ML←1 ⋄ bit←2⊥((⌽0,⍳30)∊which)⌿(31⍴2)⊤flags

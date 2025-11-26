@@ -1,10 +1,12 @@
  text←{thread}∆sew values;t;u;v;w;x;⎕IO;⎕ML
 ⍝ Join together a list (or array) of character vectors into composite vectors separated by delimiters.
+
 ⍝ Left argument (required): Character scalar or vector used to join adjacent values together.
 ⍝ Right argument: Data to be formatted (Depth ≤ 2; Any rank)
 ⍝
 ⍝ Written 31 December 2007 by Davin Church of Creative Software Design
 ⍝ Last modified in Dyalog 16 November 2025 by Davin Church of Creative Software Design
+⍝ Ported to Dyalog 20 November 2025 by Davin Church of Creative Software Design
 
  ⎕IO←⎕ML←1 ⋄ :If 2≠⎕NC'thread' ⋄ thread←'' ⋄ :EndIf ⋄ thread←∊thread ⍝ Thread used for sewing
  text←(⍴thread)↓¨,/(⊂'')⍪(⊂''),(⊂thread),¨values ⍝ Handle arbitrary arrays
