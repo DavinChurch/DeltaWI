@@ -31,7 +31,7 @@
  ⍝? Needs fancy computation for bordered objects!
 
  ⍝ Apply list of application-specific properties and methods to this new object
- final←'Close' 'Hide' 'Show' 'Open' ⍝ Methods that are not done until the very end
+ final←'Close' 'Hide' 'Show' 'Open' ⍝ Methods that are not done until the very end (the last one being the default)
  :For item :In arg~final
     ⍝ We'll handle these by calling ∆WI recursively and hope we won't get interrupted or slow down
      {}object._self ∆WI item ⍝ Call ∆WI to do the work, but we can never use a returned result from these operations
