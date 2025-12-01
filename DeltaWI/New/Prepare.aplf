@@ -1,4 +1,4 @@
- result←object Prepare arg;sub;item;illegal;final;v0
+ result←object Prepare arg;sub;item;illegal;final;v0;vars
  ⍝ Finish initializing a just-created new GUI object
  ⍝ The action and class have already been removed from the argument list.
 
@@ -6,7 +6,9 @@
  illegal←'Create' 'New' ⍝? What else might be illegal here (by name)?
  '∆WI OBJECT ERROR: Object already exists'##.Error∨/illegal∊⊃¨⊆¨arg
 
- object ∆WS('Coord' 'RealPixel')('AutoConf' 0) ⍝ Everybody needs these
+ object._self↓⍨←2×'#.'≡2↑object._self ⍝ Make sure that _self doesn't have a leading '#.' on it (may be created by top-level New functions)
+
+ object ##.∆WS('Coord' 'RealPixel')('AutoConf' 0) ⍝ Everybody needs these
  :Select object._class
  :Case 'Menu'
      ⍝ An APL+Win Menu object may be any of four Dyalog object-types depending on context.
@@ -15,17 +17,19 @@
      ⍝? Can we look backwards (up the stack) to handle this properly?
      ⍝? Is there anything else we need to do specially here?
  :Case 'MDIForm'
-     sub←⎕VGET((⍕object),'._mdi')∆WC'MDIClient'('Coord' 'RealPixel')('AutoConf' 0)
+     sub←⎕VGET((⍕object),'._mdi')##.∆WC'MDIClient'('Coord' 'RealPixel')('AutoConf' 0)
      sub.Owner←object
  :Case 'Picture'
-     object ∆WS'Coord' 'User' ⍝ A picture object's parent needs an exception to Coord
-     sub←⎕VGET((⍕object),'._pic')∆WC'SubForm'('Coord' 'RealPixel')('AutoConf' 0)
+     object ##.∆WS'Coord' 'User' ⍝ A picture object's parent needs an exception to Coord
+     sub←⎕VGET((⍕object),'._pic')##.∆WC'SubForm'('Coord' 'RealPixel')('AutoConf' 0)
      sub.Owner←object
      ⍝? Now we're going to need to attach a file-less Bitmap object so this can be drawn on.
  :EndSelect
 
- ⍝ Assign class default properties/variables
- object ⎕VSET object.Class ⎕VGET ¯2
+ ⍝ Assign class default pseudo-properties and variables
+ vars←object.Class.⎕NL ¯2.1 ⍝ What variables are in this namespace (including currently-executing locals)
+ vars←(~1∊¨⊃¨object.Class.⎕STATE¨vars)/vars ⍝ Remove currently-executing locals to leave only globals
+ object ⎕VSET(↑vars)(object.Class ⎕VGET vars) ⍝ Replicate them in the new object
 
  ⍝ Set default 'where', 'extent', 'size', & 'scale'? Or is this done by my parent?
  ⍝? Needs fancy computation for bordered objects!
@@ -34,7 +38,7 @@
  final←'Close' 'Hide' 'Show' 'Open' ⍝ Methods that are not done until the very end (the last one being the default)
  :For item :In arg~final
     ⍝ We'll handle these by calling ∆WI recursively and hope we won't get interrupted or slow down
-     {}object._self ∆WI item ⍝ Call ∆WI to do the work, but we can never use a returned result from these operations
+     {}object._self ##.∆WI item ⍝ Call ∆WI to do the work, but we can never use a returned result from these operations
  :EndFor
 
  ⍝ Activate/show the new object as requested

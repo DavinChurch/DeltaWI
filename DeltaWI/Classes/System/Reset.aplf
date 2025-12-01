@@ -2,10 +2,11 @@
 ⍝ Reset the entire GUI state immediately
 
  '∆WI ACTION ERROR: Method "Reset" does not accept an argument'##.##.Error×≢arg
- Application.∆WSELF←'' ⋄ Application.⎕EX'∆WEVENT' '∆WARG' '∆WRES' ⍝ Dispose of all the ⎕W-variables
- wins←object ##.children'' ⍝ What are the top-level objects?
- wins ##.##.∆WI¨⊂'Delete' ⍝ Delete each top-level object in the usual way, by GUI name (allow UDC customization)
+ ##.##.Application.∆WSELF←'' ⋄ ##.##.Application.⎕EX'∆WEVENT' '∆WARG' '∆WRES' ⍝ Dispose of all the ⎕W-variables
+ :If ×≢wins←object ##.children ⍬ ⍝ What are the top-level objects?
+     wins ##.##.∆WI¨⊂'Delete' ⍝ Delete each top-level object in the usual way, by GUI name (allow UDC customization)
+ :EndIf
  ⍝ Throw away the system object and all its contents, too - they'll be recreated with default value on the next call
- Application.⎕EX⍕GUIref
+ ##.##.Application.⎕EX⍕##.##.GUIref
 ⍝? When we're using EWC, how do we kill off all the root properties?
  result←##.NoRes

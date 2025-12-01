@@ -3,7 +3,7 @@
 ⍝ This includes UDP assignments or references, handling non-existent objects, or operating on certain global synthetic actions.
 ⍝ If nothing needs to be performed here, return ⎕NULL. Otherwise return the correct ∆WI result.
 
- :If obj≡⎕NULL ⍝ Check for non-existant object processing
+ :If obj≡⎕NULL ⍝ Check for non-existant object processing (a pointer to the parent can't be non-existant)
      :If 'Delete' 'self'∊⍨⊂action ⍝ Special actions where object existence is optional
          :If action≡'self' ⋄ result←'' ⋄ :Else ⋄ result←0 0⍴'' ⋄ :EndIf
          :Return ⍝ Processed; exit with this result
@@ -32,8 +32,8 @@
      :Return ⍝ Processed; exit with this result
  :EndIf
 
- ⍝ Disallow creation/deletion of the System (root) object
- ('∆WI ACTION ERROR: Action "',(⊃action),'" not found')Error(obj≡GUIref)∧'Create' 'Delete' 'New'∊⍨⊂action
+ ⍝ Disallow deletion of the System (root) object
+ ('∆WI ACTION ERROR: Action "',action,'" not found')Error(obj≡GUIref)∧action≡'Delete'
 
  ⍝ Other "instant" processing may be added here
 

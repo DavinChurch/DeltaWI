@@ -1,14 +1,20 @@
  obj ∆WSet props;names;real
 ⍝ Set properties on a given object (each must potentially be an object property)
+⍝ For use by common-area routines to access properties that may or may not exist on the particular object
 
- names←,¨⊃¨⊆¨props ⍝ Dyalog property names being referenced
+ :If 1=≡⊃⊆props ⋄ props←⊂⊆props ⋄ :EndIf ⍝ This is a simple name-value pair so must nest
+ names←⊃¨props←,props ⍝ Dyalog property names being referenced
+ :If 0∊≢props ⋄ :Return ⋄ :EndIf ⍝ Nothing to do
+ 'Missing property name'⎕SIGNAL 11/⍨0∊≢¨props ⍝ Watch for internal coding error
+ 'Missing property name'⎕SIGNAL 11/⍨0∊≢¨names ⍝ Watch for internal coding error
+ 'Missing property value'⎕SIGNAL 11/⍨∨/1≥≢¨props ⍝ Watch for internal coding error
 
  ⍝ For any real properties, just call ∆WS normally
  :If ∨/real←names∊⍥⎕C obj ∆WG'PropList' ⍝ (Hopefully this is fast enough to not need caching)
-     obj ∆WS real/props
+     obj ∆WS real/props ⍝ Set actual property values
  :EndIf
 
  ⍝ For any pseudo-properties, create property-like variables instead in case of later need
  :If ∨/~real
-     obj ⎕VSET props/⍨~real
+     obj ⎕VSET props/⍨~real ⍝ Set WS value instead
  :EndIf

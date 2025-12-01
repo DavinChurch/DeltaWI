@@ -2,10 +2,10 @@
 ⍝ Produce a list of available children belonging to this object
 
  '∆WI ACTION ERROR: Property "children" is read-only'##.Error×≢arg
- result←⍕¨##.∆WN object
+ :If 0=≢result←⍕¨##.∆WN object ⋄ result←0⍴⊂'' ⋄ :Return ⋄ :EndIf
  :For hidden :In result∩'_mb' '_mdi' '_pic' ⍝ Search under known-invisible children
-     at←result∊⊂hidden
-     here←⍕¨##.∆WN object ⎕VGET hidden
+     at←result⍳⊂hidden
+     :If 0=≢here←⍕¨##.∆WN object ⎕VGET hidden ⋄ here←0⍴⊂'' ⋄ :EndIf
      result←((at-1)↑result),here,at↓result
  :EndFor
  result/⍨←~('_'=⊃¨result)∧∧/¨result∊¨⊂⎕D ⍝ Eliminate numbered invisible children

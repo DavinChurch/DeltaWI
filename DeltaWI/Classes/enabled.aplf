@@ -4,7 +4,7 @@
  :If ×≢arg ⍝ If we have a new state, change it
      'DOMAIN ERROR'##.##.Error(1≠≢arg)∨~0 1∊⍨1↑arg
      object ⎕VSET⊂'_enabled'arg
-     object ∆WSet'Active'(~arg)
+     object ##.∆WSet'Active'(~arg)
      result←NoRes
  :Else ⍝ Otherwise just read it
      result←object ⎕VGET⊂'_enabled' 1

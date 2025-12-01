@@ -2,4 +2,4 @@
 ⍝ Cover function for ⎕WN; Extend for use with EWC
 
  :If 0=⎕NC'X' ⋄ X←⊢ ⋄ :EndIf
- R←X ∆WN Y
+ R←X ⎕WN Y

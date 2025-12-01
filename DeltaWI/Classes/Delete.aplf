@@ -11,7 +11,7 @@
      :If object._opened ⍝ If open, we'll need to change it to closed first
          :If object._visible>0
  ⍝? Deal with onHide
-             object ⎕VSET'_visible' 0 ⍝ Just in case something wonders about this before it's gone
+             object ⎕VSET⊂'_visible' 0 ⍝ Just in case something wonders about this before it's gone
              object ##.∆WSet'Visible' 0
          :EndIf
  ⍝? Deal with onDestroy (but not onClose)

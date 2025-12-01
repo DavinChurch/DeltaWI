@@ -2,9 +2,9 @@
 ⍝ Determine which GUI object currently has the focus
 
  '∆WI ACTION ERROR: Property "focus" is read-only'##.##.Error×≢arg
- :If ×≢result←1 ∆NQ'.' 'GetFocus' ⍝ Retrieve the Dyalog focus object
- :AndIf ('.',⍨⍕GUIref)≡(1+≢⍕GUIref)↑result
-     result←'.'∆sew'_mb' '_mdi' '_pic'~⍨2↓'.'∆cuts result ⍝ Now convert it into a ∆WI name
+ :If ×≢result←1 ##.##.∆NQ'.' 'GetFocus' ⍝ Retrieve the Dyalog focus object
+ :AndIf ('.',⍨⍕##.##.GUIref)≡(1+≢⍕##.##.GUIref)↑result
+     result←'.'##.##.∆sew'_mb' '_mdi' '_pic'~⍨2↓'.'##.##.∆cuts result ⍝ Now convert it into a ∆WI name
  :Else
      result←'' ⍝ Just in case we're not sure where we are
  :EndIf

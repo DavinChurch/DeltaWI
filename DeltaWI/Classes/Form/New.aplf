@@ -1,4 +1,4 @@
- result←object New arg;parent;name;actions;where;newobj;given
+ result←object New arg;parent;name;actions;where;newobj;given;props;border;nocaption
 ⍝ Create a new Form object
 
  (parent name)←object ⍝ Separate non-standard two-part argument
@@ -9,7 +9,7 @@
  ⍝(border style)←0~⍨¨##.##.BitVals¨+/¨∊¨(0,⍨1↓¨arg)[actions⍳'border' 'style'] ⍝ Get the bit-flag values they've provided on this line
 
  ⍝ Optionally prepend object defaults (in reverse order) to be handled
- given←((1↓¨arg),⊂⍬)[actions⍳'where' 'caption'] ⍝ Which of our defaults are they giving us anyway (so we can skip the defaults)
+ given←((1↓¨arg),⊂⍬)[actions⍳'where' 'caption' 'border'] ⍝ Which of our defaults are they giving us anyway (so we can skip the defaults)
  :If 4≠≢∊1⊃given
      where←,parent._size÷⍤1⊢2 2⍴4 4 2 2 ⍝ Default APL+Win Form size and position ⍝? Do we need to mess with any border sizes here?
      arg,⍨←⊂'where'where ⍝ [2] Start us with a default 'where' size and position (APL+Win measure) -- will usually be overridden later
@@ -19,7 +19,19 @@
  :EndIf
  ⍝? This sequence may cause a little flickering, but see if it's a problem before we look into changing it
 
- newobj←((⍕parent),'.',name)##.##.∆WC'Form'('Visible' 0) ⍝ Create the actual Dyalog object
+ props←'Form'('Visible' 0)
+ nocaption←''≡2⊃given
+ :If nocaption∧16>border←+/3⊃given ⍝ No border; no title bar
+     props,←('Sizeable' 0)('Moveable' 0)('SysMenu' 0)('MinButton' 0)('MaxButton' 0)('Border' 0)
+ :ElseIf nocaption∧1∊border←##.##.BitVals border ⍝ Thin border; no title bar
+     props,←('Sizeable' 0)('Moveable' 0)('SysMenu' 0)('MinButton' 0)('MaxButton' 0)('Border' 1)
+ :Else ⍝ Normal border and title bar
+     props,←(16 32 64∊border),¨⍨⊂¨'SysMenu' 'MinButton' 'MaxButton'
+     props,←('Sizeable' 1)('Moveable' 1)('Border' 2)
+ :EndIf
+
+ newobj←⎕VGET((⍕parent),'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
+ ⍝ While we have the object creation data in hand, let's set up the required identification and connectivity variables
  newobj.(_self _name _class)←(parent._self,'.',name)name'Form' ⍝ Set ∆WI control information
  newobj.(Ancestry Class)←(parent.Ancestry,parent)⎕THIS ⍝ Set ∆WI control information
 

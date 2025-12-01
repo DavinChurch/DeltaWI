@@ -1,5 +1,6 @@
  result←object size arg
 ⍝ Return the size of the screen in character units
+⍝ Note that this size does not exclude the Windows task bar (which matches APL+Win)
 
  '∆WI ACTION ERROR: Property "size" is read-only'##.##.Error×≢arg
  result←object._size

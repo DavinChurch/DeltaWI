@@ -2,7 +2,7 @@
 ⍝ Create a new GUI object (replacing if necessary)
 
  (parent name)←object ⍝ Separate non-standard two-part argument
- name←⊃⌽'.'∆cuts name ⍝ Make sure we have only the leaf name to be created
+ name←⊃⌽'.'##.∆cuts name ⍝ Make sure we have only the leaf name to be created
  :If (⊂name)∊parent ##.Classes.children ⍬ ⍝ Does this child exist?
      child←parent ##.Locate name ⍝ Find the child object reference
      'Unable to locate existing child object!'⎕SIGNAL 16/⍨child≡⎕NULL ⍝ (This better not be able to happen!)

@@ -1,4 +1,4 @@
- vals←size BitVals flags
+ vals←{size} BitVals flags
 ⍝ Convert a bit-encoded flag integer (<2*32) into a vector of "size" integers and zeros
 ⍝ (LSB first) representing the bit positions that are composed to construct the flag.
 

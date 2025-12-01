@@ -4,7 +4,7 @@
  result←⍬ ⍝ Accumulate results
  :For prop :In arg ⍝ Loop through properties sequentially
      '∆WI ACTION ERROR: Property-set not permitted in this context'##.Error 1<|≡prop
-     'DOMAIN ERROR'##.Error~IsChar prop
+     'DOMAIN ERROR'##.Error~##.IsChar prop
 ⍝? Will a failure here pass error #870 upwards again?
-     result,←⊂object._self ∆WI prop ⍝ Call ∆WI recursively for easiest access to relative naming ⍝? (Hopefully this is fast enough)
+     result,←⊂object._self ##.∆WI prop ⍝ Call ∆WI recursively for easiest access to relative naming ⍝? (Hopefully this is fast enough)
  :EndFor

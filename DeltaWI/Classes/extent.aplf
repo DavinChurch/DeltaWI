@@ -1,4 +1,4 @@
- result←object extent arg;size;extent;where;scale;border;pscale;units;psize;dthick;Borders;margins;t;tunits;punits;dyposn;dysize
+ result←object extent arg;size;extent;where;scale;border;pscale;units;psize;dthick;Borders;margins;t;tunits;punits;dysize
 ⍝ Request or modify the size of a GUI object
 
 ⍝ Note: 'where' is outside dimensions, relative to parent and using parent's scale
@@ -18,14 +18,14 @@
  :Select ≢arg
 
  :Case 0
-     result←object ⎕VGET'_extent'⍬ ⍝ Where is it currently located?
+     result←object ⎕VGET⊂'_extent'⍬ ⍝ Where is it currently located?
 
  :Case 2
      '∆WI DOMAIN ERROR: extent'##.Error∨/0>arg
      :Section ⍝ Get all our basic information
          (where extent size scale border)←object ⎕VGET('_where'⍬)('_extent'⍬)('_size'⍬)('_scale' 1)('_border' 0) ⍝ My current settings
          (psize pscale)←(⊃object.Ancestry)⎕VGET('_size'⍬)('_scale' 1) ⍝ Parent's 'size' & 'scale' (for use by 'where' and 'extent')
-         units←GUIref._units ⍝ Get system conversion factors
+         units←##.GUIref._units ⍝ Get system conversion factors
          tunits←(1⍪units)[1+⊃scale;] ⍝ Compute unit-conversions for this object's 'scale'
          punits←(1⍪units)[1+⊃pscale;] ⍝ Compute unit-conversions for the parent object's 'scale'
          Borders←_supp.GetBorders object ⍝ Time to figure out what the border definitions are for this class (capitalized because it represents a global)
@@ -52,14 +52,13 @@
      :EndSection
 
      :Section ⍝ Compute and set Dyalog positioning properties
-         dyposn←Borders[2;3;1 3]+Borders[2;1;1 3]-⍨Borders[1;1;1 3]+punits×where[1 2] ⍝ Where should the Dyalog Posn start?
          dysize←extent×punits
-         :If 'User'≡object ∆WG'Coord' ⍝ In this case, we've got to do something about using custom coordinates (used for Pictures)
+         :If 'User'≡object ##.∆WG'Coord' ⍝ In this case, we've got to do something about using custom coordinates (used for Pictures)
              ##.Halt'How do we need to handle this??'
              ⍝? How can I relocate the Picture parent when its Coord=User? Does it use the parent's Coord?
              ⍝? What happens if there's a Picture within a Picture?
          :EndIf
-         object ∆WSet('Posn'dyposn)('Size'dysize)
+         object ##.∆WSet'Size'dysize
      :EndSection
      result←NoRes
 
