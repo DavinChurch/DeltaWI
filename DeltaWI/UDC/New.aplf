@@ -4,7 +4,7 @@
  (parent name)←object ⍝ Separate non-standard two-part argument
  class←##.∆dmu⊃arg
 
- onnew←GUIref ⎕VGET⊂'_onNew' '' ⍝ Obtain application's "New" handler command from the root
+ onnew←GUIroot ⎕VGET⊂'_onNew' '' ⍝ Obtain application's "New" handler command from the root
  ('∆WI CLASS ERROR: Class "',class,'" not found')##.Error 0=≢onnew ⍝ If there's nothing to process this name, then it's an error
 
  wself←parent._self,'.',name ⍝ New object name to create

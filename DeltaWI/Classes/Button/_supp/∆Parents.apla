@@ -1,0 +1,17 @@
+(
+ 'Button'
+ 'Check'
+ 'Combo'
+ 'Edit'
+ 'Form'
+ 'Frame'
+ 'Label'
+ 'List'
+ 'Option'
+ 'Page'
+ 'Picture'
+ 'Scroll'
+ 'Spinner'
+ 'Status'
+ 'Toolbox'
+)

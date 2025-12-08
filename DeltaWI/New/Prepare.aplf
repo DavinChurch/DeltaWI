@@ -8,7 +8,7 @@
 
  object._self↓⍨←2×'#.'≡2↑object._self ⍝ Make sure that _self doesn't have a leading '#.' on it (may be created by top-level New functions)
 
- object ##.∆WS('Coord' 'RealPixel')('AutoConf' 0) ⍝ Everybody needs these
+ object ##.∆WS('Coord' 'RealPixel')('AutoConf' 0)('Visible' 0) ⍝ Everybody needs these
  :Select object._class
  :Case 'Menu'
      ⍝ An APL+Win Menu object may be any of four Dyalog object-types depending on context.
@@ -18,21 +18,19 @@
      ⍝? Is there anything else we need to do specially here?
  :Case 'MDIForm'
      sub←⎕VGET((⍕object),'._mdi')##.∆WC'MDIClient'('Coord' 'RealPixel')('AutoConf' 0)
-     sub.Owner←object
+     sub._Owner←object
  :Case 'Picture'
      object ##.∆WS'Coord' 'User' ⍝ A picture object's parent needs an exception to Coord
      sub←⎕VGET((⍕object),'._pic')##.∆WC'SubForm'('Coord' 'RealPixel')('AutoConf' 0)
-     sub.Owner←object
+     sub._Owner←object
      ⍝? Now we're going to need to attach a file-less Bitmap object so this can be drawn on.
  :EndSelect
 
  ⍝ Assign class default pseudo-properties and variables
- vars←object.Class.⎕NL ¯2.1 ⍝ What variables are in this namespace (including currently-executing locals)
- vars←(~1∊¨⊃¨object.Class.⎕STATE¨vars)/vars ⍝ Remove currently-executing locals to leave only globals
- object ⎕VSET(↑vars)(object.Class ⎕VGET vars) ⍝ Replicate them in the new object
-
- ⍝ Set default 'where', 'extent', 'size', & 'scale'? Or is this done by my parent?
- ⍝? Needs fancy computation for bordered objects!
+ object.(_scale _opened _visible)←1 0 0 ⍝ All new objects default to scale=1, not-yet-logically-open, and invisible
+ vars←object._Class.⎕NL ¯2.1 ⍝ What variables are in this namespace (including currently-executing locals)
+ vars←(~1∊¨⊃¨object._Class.⎕STATE¨vars)/vars ⍝ Remove currently-executing locals to leave only globals
+ object ⎕VSET(↑vars)(object._Class ⎕VGET vars) ⍝ Replicate them in the new object
 
  ⍝ Apply list of application-specific properties and methods to this new object
  final←'Close' 'Hide' 'Show' 'Open' ⍝ Methods that are not done until the very end (the last one being the default)
@@ -42,7 +40,7 @@
  :EndFor
 
  ⍝ Activate/show the new object as requested
- :For item :In final∪⍨arg,(~∨/final∊arg)/¯1↑final ⍝ There should only be one of these at most, usually; default=Open
+ :For item :In final∩⍨arg,(~∨/final∊arg)/¯1↑final ⍝ There should only be one of these at most, usually; default=Open
 ⍝? Don't forget to fire automatic events for these methods (respect suppress??)
 ⍝? Watch out for possible inheriting from parentage?
      v0←-'Form' 'MDIForm' 'Menu'∊⍨⊂object._class ⍝ "Invisible" setting for this class

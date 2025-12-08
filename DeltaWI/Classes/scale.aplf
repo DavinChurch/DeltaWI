@@ -5,8 +5,8 @@
 
  :Section ⍝ Get all our basic information
      (exent size scale border)←object ⎕VGET('_extent'⍬)('_size'⍬)('_scale'⍬)('_border' 0) ⍝ My current settings
-     (psize pscale)←(⊃object.Ancestry)⎕VGET('_size'⍬)('_scale' 1) ⍝ Parent's 'size' & 'scale' (for use by 'where' and 'extent')
-     units←##.GUIref._units ⍝ Get system conversion factors
+     (psize pscale)←(⊃object._Ancestry)⎕VGET('_size'⍬)('_scale' 1) ⍝ Parent's 'size' & 'scale' (for use by 'where' and 'extent')
+     units←##.GUIroot._units ⍝ Get system conversion factors
      punits←(1⍪units)[1+⊃pscale;] ⍝ Compute unit-conversions for the parent object's 'scale'
      Borders←_supp.GetBorders object ⍝ Time to figure out what the border definitions are for this class (capitalized because it represents a global)
  :EndSection

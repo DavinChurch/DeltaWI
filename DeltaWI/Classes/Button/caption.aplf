@@ -1,0 +1,12 @@
+ result←object caption arg;old;new
+⍝ Read or change the caption on the Button
+
+ old←object ⎕VGET⊂'_caption' '' ⍝ Existing caption
+ :If 0=≢arg
+     result←old
+ :Else
+     new←⊃arg ⍝ New caption to be shown
+     object ⎕VSET⊂'_caption'new ⍝ Update the APL+Win record
+     object ##.##.∆WS'caption'((⎕UCS 10)@{⍵=⎕UCS 13}⊢new) ⍝ Change the Dyalog object so the screen actually changes
+     result←##.NoRes
+ :EndIf

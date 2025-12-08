@@ -1,0 +1,35 @@
+ result←object New arg;parent;name;actions;given;where;extent;props;newobj;psize;units;pscale
+⍝ Create a new Button object
+
+ (parent name)←object ⍝ Separate non-standard two-part argument
+ arg←1↓arg ⍝ Ignore the class name, we know what it is
+ actions←⊃¨arg ⍝ The names of the actions that we'll be using to create this object with
+ units←##.##.GUIroot._units ⍝ We'll want this for scale conversions
+
+ ⍝ Optionally prepend object defaults (in reverse order) to be handled
+ given←((1↓¨arg),⊂⍬)[actions⍳'where' 'caption' 'extent'] ⍝ Which of our defaults are they giving us anyway (so we can skip the defaults)
+ :If 4≠≢∊1⊃given
+     :If 2≠≢extent←∊3⊃given ⋄ extent←_extent ⋄ :EndIf ⍝ Default button extent
+     psize←parent._size ⍝ What's the parent's size converted to character units?
+     :If 0=⊃pscale←parent._scale
+         Halt'How do we figure the new position when the parent (and maybe their parent) is proportional?'
+     :Else
+         psize×←÷⌿units[1,⍨⊃pscale;] ⍝ Convert to character units
+     :EndIf
+     ⍝ For some reason, a button is centered using an extent that is 1/16 of a character larger? Is it to leave room for a drop shadow?
+     where←(0.5×psize-extent+2↑÷16),extent
+     arg,⍨←⊂'where'where ⍝ [2] Start us with a default 'where' extent and position (APL+Win measure) -- will usually be overridden later
+ :EndIf
+ :If ~'caption'∊⍥⊆actions ⍝ If they're not setting a caption immediately, we'll put in a default
+     arg,⍨←⊂'caption'name ⍝ [1] Use the object name as a caption, though this will almost certainly be changed later by the application
+ :EndIf
+
+ props←'Button'('Style' 'Push')('EdgeStyle' 'Plinth')('Visible' 0)
+ ⍝? The Plinth EdgeStyle is not displaying in the way that I expect
+
+ newobj←⎕VGET((⍕parent),'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
+ ⍝ While we have the object creation data in hand, let's set up the required identification and connectivity variables
+ newobj.(_self _name _class)←(parent._self,'.',name)name'Button' ⍝ Set ∆WI control information
+ newobj.(_Ancestry _Class)←(parent._Ancestry,parent)⎕THIS ⍝ Set ∆WI control information
+
+ result←newobj ##.New arg ⍝ Now call the standard Classes.New routine to complete the creation work

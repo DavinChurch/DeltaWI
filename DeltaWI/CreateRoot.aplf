@@ -4,11 +4,12 @@
  this←⎕VGET root ⎕NS'' ⍝ Create the root GUI namespace that we can build from
 
  this.(_name _self _class)←,¨'#' '#' 'System' ⍝ Constant properties
- this.Ancestry←0⍴this.Class←Classes.System ⍝ Base references
+ this._Ancestry←0⍴this._Class←Classes.System ⍝ Base references
 
  ⍝ Define system settings
  devcaps←'.'⎕WG'DevCaps'
  this.ScreenSize←1⊃devcaps ⍝ The pixel-size of the entire screen
+ this.AspectRatio←÷/⌽2⊃devcaps ⍝ The ratio (W÷H) of inch-size of the screen; estimated; used for visual concerns like square- and circle-drawing
  ⍝inches←(2⊃devcaps)÷25.4 ⍝ How big is the screen in inches (h,w); estimated
  tpp←15 ⍝?1440÷25.4×⊃÷/2↑devcaps ⍝ Twips/pixel ⍝ Override calculated tpp with an assumed value (should we be doing this?)
  this._units←1 2⍴16 8 ⍝ Pixels per system character unit (constant; assumed)

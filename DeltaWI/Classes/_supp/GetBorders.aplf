@@ -1,7 +1,7 @@
  Borders←GetBorders object;borders;type
 ⍝ Retrieve the '∆Borders' class-specific information pseudo-global
  Borders←2 3 4⍴0 ⍝ Time to figure out what the border definitions are for this class (capitalized because it represents a global)
- :If 2 3∊⍨type←object.Class.⎕NC'_supp.∆Borders' ⋄ borders←object.Class._supp.∆Borders ⋄ :EndIf
+ :If 2 3∊⍨type←object._Class.⎕NC'_supp.∆Borders' ⋄ borders←object._Class._supp.∆Borders ⋄ :EndIf
  :If 0=1 2⊃⎕AT'borders'
      Borders←borders ⍝ Just a value (one way or another), so return it as-is
  :Else

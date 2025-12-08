@@ -1,12 +1,11 @@
- Run expression;back
+ Run expression;back;requote
 ⍝ Execute the given expression in the Application's calling name scope (no explicit return value)
 
- :If ≢expression
-     expression←expression ⍝? Convert any double-quotes into single-quotes before execution
+ :If ×≢expression
+     requote←'''[^'']*''' '"[^"]*"'⎕R{⍵.('\"' ''''⎕R'''' ''''''⍣PatternNum⊢Match)} ⍝ Convert any double-quotes into single-quotes before execution
      back←'.',⍨⍕Application         ⍝ Which namespace are we looking for?
      back←1-⍨back⍳⍨⍥⊆⎕XSI↑¨⍨≢back   ⍝ How far back is it in the )SI?
-     back(86⌶)expression            ⍝ Execute the expression at the correct point of the application
-     ⍝? Is any result returned from 86⌶, that we should be explicitly disposing of?
+     back(86⌶)requote expression    ⍝ Execute the expression at the correct point of the application
  :EndIf
 ⍝? Instead of just going back until we hit the application scope, should we instead be going all the way back to the ∆WI call itself?
 ⍝? Does it make a difference? (Only for shadowed variables??)

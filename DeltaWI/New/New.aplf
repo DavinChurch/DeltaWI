@@ -11,8 +11,8 @@
      class↓⍨←isnative←'*'=⊃class ⍝ Are we signalling a bypass of newclasses?
      ismeta←×≢meta←(' '∊class)/⊃subclass←' '##.∆cut class ⍝ Look for the first word in a multi-word class name to see if it needs special group (meta-class) handling
      subclass←1↓subclass ⍝ Hang onto the second word (if present) so we can try to use it for additional authorization checking
-     isreal←(⊂class)∊##.GUIref ##.Classes.System.classes ⍬ ⍝ Standard system class names
-     isnew←(⊂class)∊##.GUIref ##.Classes.System.newclasses ⍬ ⍝ Application-named UDC classes
+     isreal←(⊂class)∊##.GUIroot ##.Classes.System.classes ⍬ ⍝ Standard system class names
+     isnew←(⊂class)∊##.GUIroot ##.Classes.System.newclasses ⍬ ⍝ Application-named UDC classes
      arg←,¨⊆¨arg ⍝ Pre-nest & ravel entire argument list for passing to .New routines
  :EndSection
 
@@ -58,7 +58,7 @@
          in←##.Classes ⎕VGET⊂class ⎕NULL ⍝ Grab a reference to the proper standard class namespace (it can't accidentally grab a fn)
          ('∆WI CLASS ERROR: Class "',class,'" not found')##.Error in≡⎕NULL ⍝ Make sure it exists
          :If parent ChildOK in class ⍝ Determine if we can place this child here
-             result←object in.New arg ⍝ Call the class-specific New handler
+             result←object in.New arg ⍝ Call the class-specific New handler (ignore the generic handler)
          :Else
              ##.Error'∆WI PARENTAGE ERROR: Invalid parentage for class "',class,'"'
          :EndIf
@@ -74,7 +74,7 @@
          :EndIf
      :EndSection
 
- :ElseIf ×≢##.GUIref ⎕VGET⊂'_onNew' ''
+ :ElseIf ×≢##.GUIroot ⎕VGET⊂'_onNew' ''
      ⍝ Finally, before giving up, try running onNew anyway to see if an unknown class can be created
      :Section ⍝ Application-controlled UDC creation
          in←##.UDC ⍝ Just for easier reference

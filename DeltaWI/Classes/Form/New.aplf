@@ -11,17 +11,22 @@
  ⍝ Optionally prepend object defaults (in reverse order) to be handled
  given←((1↓¨arg),⊂⍬)[actions⍳'where' 'caption' 'border'] ⍝ Which of our defaults are they giving us anyway (so we can skip the defaults)
  :If 4≠≢∊1⊃given
-     where←,parent._size÷⍤1⊢2 2⍴4 4 2 2 ⍝ Default APL+Win Form size and position ⍝? Do we need to mess with any border sizes here?
+     where←,parent._size÷⍤1⊢2 2⍴4 4 2 2 ⍝ Default APL+Win Form size and position
      arg,⍨←⊂'where'where ⍝ [2] Start us with a default 'where' size and position (APL+Win measure) -- will usually be overridden later
  :EndIf
  :If ~'caption'∊⍥⊆actions ⍝ If they're not setting a caption immediately, we'll put in a default
      arg,⍨←⊂'caption'name ⍝ [1] Use the object name as a caption, though this will almost certainly be changed later by the application
  :EndIf
+ :If 0=≢border←3⊃given
+     border←_border
+ :Else
+     border←+/border
+ :EndIf
  ⍝? This sequence may cause a little flickering, but see if it's a problem before we look into changing it
 
  props←'Form'('Visible' 0)
  nocaption←''≡2⊃given
- :If nocaption∧16>border←+/3⊃given ⍝ No border; no title bar
+ :If nocaption∧16>border ⍝ No border; no title bar
      props,←('Sizeable' 0)('Moveable' 0)('SysMenu' 0)('MinButton' 0)('MaxButton' 0)('Border' 0)
  :ElseIf nocaption∧1∊border←##.##.BitVals border ⍝ Thin border; no title bar
      props,←('Sizeable' 0)('Moveable' 0)('SysMenu' 0)('MinButton' 0)('MaxButton' 0)('Border' 1)
@@ -33,6 +38,6 @@
  newobj←⎕VGET((⍕parent),'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
  ⍝ While we have the object creation data in hand, let's set up the required identification and connectivity variables
  newobj.(_self _name _class)←(parent._self,'.',name)name'Form' ⍝ Set ∆WI control information
- newobj.(Ancestry Class)←(parent.Ancestry,parent)⎕THIS ⍝ Set ∆WI control information
+ newobj.(_Ancestry _Class)←(parent._Ancestry,parent)⎕THIS ⍝ Set ∆WI control information
 
  result←newobj ##.New arg ⍝ Now call the standard Classes.New routine to complete the creation work

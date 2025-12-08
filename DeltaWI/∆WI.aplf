@@ -1,10 +1,10 @@
- result←{object}∆WI action;Application;objname;objref;args;name;⎕TRAP;GUIref;nametesting
+ result←{object}∆WI action;Application;objname;objref;args;name;⎕TRAP;GUIroot;nametesting
 ⍝ Entry point of DeltaWI package -- emulates APL+Plus ⎕WI system function
 
- ⎕TRAP←(870 'C' '⎕EN ⎕SIGNAL⍨⊃⎕DM') ((0 1000) 'S')
+ ⎕TRAP←(870 'C' '⎕EN ⎕SIGNAL⍨⊃⎕DM')((0 1000)'S')
  Application←⊃⎕THIS,⍨⎕RSI~⎕THIS                                     ⍝ Global: Where are we being called from?
  :If 0=⎕NC'#.⍙WI' ⋄ CreateRoot'#.⍙WI' ⋄ :EndIf                      ⍝ On our first call, create a root from which everything GUI grows
- GUIref←#.⍙WI                                                       ⍝ Global: A reference to our GUI structure root (for later use)
+ GUIroot←#.⍙WI                                                      ⍝ Global: A reference to our GUI structure root (for later use)
 
 ⍝ Pre-process the ∆WI call
  nametesting←⎕NULL∊action                                           ⍝ Allow for name-parsing-only internal testing to be performed

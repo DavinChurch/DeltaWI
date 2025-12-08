@@ -6,7 +6,7 @@
 ⍝ If the action is Delete or self, and the object does not currently exist, return ⎕NULL instead of an object reference.
 ⍝ (Warning: Production of a composite object name uses a complex algorithm that encompasses many subtle edge conditions.)
 ⍝ (Future: ActiveX pointers may eventually need to be accepted in place of names.)
-⍝ Globals: GUIref, Application, Application.∆WSELF
+⍝ Globals: GUIroot, Application, Application.∆WSELF
 
  :Section ⍝ Watch for testing scenarios
      ⍝ If one of the argument items (besides the first) is itself ⎕NULL, then that indicates we're running naming tests
@@ -60,7 +60,7 @@
      :While (≢object)≥t←0⍳⍨≢¨object ⍝ Resolve each parentage reference until clean
          '∆WI OBJECT ERROR: Parent not found (too many ..''s)'Error t≤1
          :If nametesting<2
-             '∆WI OBJECT ERROR: Cannot use ".." notation on undefined object'Error ⎕NULL≡GUIref Locate(t-1)↑object
+             '∆WI OBJECT ERROR: Cannot use ".." notation on undefined object'Error ⎕NULL≡GUIroot Locate(t-1)↑object
          :EndIf
          object←(object↑⍨t-2),t↓object ⍝ Remove parent pointer and matching parent's name
      :EndWhile
@@ -109,7 +109,7 @@
      :While (≢object)≥t←0⍳⍨≢¨object ⍝ Resolve each parentage reference until clean
          '∆WI OBJECT ERROR: Parent not found (too many ..''s)'Error t≤1+'#'∊⊃object
          :If nametesting<2
-             '∆WI OBJECT ERROR: Cannot use ".." notation on undefined object'Error ⎕NULL≡GUIref Locate(t-1)↑object
+             '∆WI OBJECT ERROR: Cannot use ".." notation on undefined object'Error ⎕NULL≡GUIroot Locate(t-1)↑object
          :EndIf
          object←(object↑⍨t-2),t↓object ⍝ Remove parent pointer and matching parent's name
      :EndWhile
@@ -121,5 +121,5 @@
 
  :Section ⍝ Finally, we've gotten a fully-specific object name to operate on!
      ⍝ Locate the GUI reference to the complete name, except for the leaf in the case of 'New' or 'Create'
-     objref←('New' 'Create'∊⍨⍥⎕C⊂⊃action)(GUIref Locate)object ⍝ Here's the final reference to the GUI object that was named
+     objref←('New' 'Create'∊⍨⍥⎕C⊂⊃action)(GUIroot Locate)object ⍝ Here's the final reference to the GUI object that was named
  :EndSection

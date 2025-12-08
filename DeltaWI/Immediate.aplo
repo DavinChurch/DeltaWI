@@ -33,7 +33,7 @@
  :EndIf
 
  ⍝ Disallow deletion of the System (root) object
- ('∆WI ACTION ERROR: Action "',action,'" not found')Error(obj≡GUIref)∧action≡'Delete'
+ ('∆WI ACTION ERROR: Action "',action,'" not found')Error(obj≡GUIroot)∧action≡'Delete'
 
  ⍝ Other "instant" processing may be added here
 
