@@ -2,7 +2,6 @@
 ⍝ Create a new Button object
 
  (parent name)←object ⍝ Separate non-standard two-part argument
- arg←1↓arg ⍝ Ignore the class name, we know what it is
  actions←⊃¨arg ⍝ The names of the actions that we'll be using to create this object with
  units←##.##.GUIroot._units ⍝ We'll want this for scale conversions
 

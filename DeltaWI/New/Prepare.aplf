@@ -8,7 +8,7 @@
 
  object._self↓⍨←2×'#.'≡2↑object._self ⍝ Make sure that _self doesn't have a leading '#.' on it (may be created by top-level New functions)
 
- object ##.∆WS('Coord' 'RealPixel')('AutoConf' 0)('Visible' 0) ⍝ Everybody needs these
+ object ##.∆WSet('Coord' 'RealPixel')('AutoConf' 0)('Visible' 0) ⍝ Everybody needs these (that have them)
  :Select object._class
  :Case 'Menu'
      ⍝ An APL+Win Menu object may be any of four Dyalog object-types depending on context.

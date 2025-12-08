@@ -2,7 +2,6 @@
 ⍝ Create a new Form object
 
  (parent name)←object ⍝ Separate non-standard two-part argument
- arg←1↓arg ⍝ Ignore the class name, we know what it is
  actions←⊃¨arg ⍝ The names of the actions that we'll be using to create this object with
  ⍝? Just reminders for us to use elsewhere - not needed here
  ⍝only←'VScroll' 'HScroll' ⍝ These properties may only be set during ∆WC
