@@ -1,6 +1,6 @@
  ok←run _onClick message
  ⍝ Execute the Button:onClick event handler
 
- ##.##.Application ⎕VSET('∆WARG'⍬)('∆WRES' 0) ⍝ No arguments/results
+⍝? ##.##.Application ⎕VSET('∆WARG'⍬)('∆WRES' 0) ⍝ No arguments/results
  ##.##.Run run
  ok←1 ⍝ Never denied

@@ -1,4 +1,4 @@
- dq←events Event message;event;object;realevent;localize;fn;action;run;Application;handler
+ dq←events Event message;event;object;realevent;localize;fn;action;run;Application;handler;⎕TRAP
 ⍝ When any needed Dyalog event is signalled, execute this function to perform the appropriate operations.
 ⍝ The right argument and result are the standard Dyalog event message and action.
 ⍝ The left argument is a list of APL+Win event names (w/o 'on') that should respond to this Dyalog event, in order.
@@ -16,6 +16,9 @@
 
 ⍝? What if an event needs to fire on an object's parent?
 
+ ⎕TRAP←(870 'C' '⎕EN ⎕SIGNAL⍨⊃⎕DM')((0 1000)'S') ⍝ Trap event errors in the usual way
+ ⍝? Since this happens within an event callback, how do we really want to handle this??
+
  dq←1 ⍝ If nothing else, just continue APL/Windows processing normally
  :If 0=≢events ⋄ :Return ⋄ :EndIf ⍝ If there are no APL+Win events to emulate, just exit
  (object realevent)←2↑message ⍝ What object/event are we processing?
@@ -28,19 +31,23 @@
      :Else
          :Section ⍝ This is a standard APL+Win event
              Application ⎕VSET('∆WSELF'object._self)('∆WEVENT'event)('∆WARG'⍬)('∆WRES' 0) ⍝ Pre-set standard names
-             :If 3=object._Class.⎕NC fn←'_on',event ⍝ Look for the defined event handler function for this class
-             ⍝ Note: The variable name containing the text to execute is identical to the handler function name, but in the GUI namespace instead
-⍝? We might need to call ∇Invoke here instead (to support generic classes), but don't trigger the invalid-name check -- how?
-             :AndIf 2=object.⎕NC fn
-             :AndIf ×≢run←object ⎕VGET⊂fn''
-                 handler←object._Class.⍎fn ⍝ Obtain a reference to the class event-processing function (I wish there was a non-⍎ way to do this)
+             fn←'_on',event ⍝ This will be both the defined event handler function name and also the GUI variable name containing the handler text
+             :If ×≢run←object ⎕VGET⊂fn'' ⍝ Do we have some handler text to execute?
+                 :If 3=object._Class.⎕NC fn ⍝ Is there a class-specific handler?
+                     handler←object._Class.⍎fn ⍝ Obtain a reference to the class event-processing function (I wish there was a non-⍎ way to do this)
+                 :ElseIf 3=Classes.⎕NC fn ⍝ Is there a class-generic handler?
+                     handler←Classes.⍎fn ⍝ Obtain a reference to the class event-processing function (I wish there was a non-⍎ way to do this)
+                 :Else
+                     ⍝? How should we be reporting this???
+                     Error'"',object._class,'" event handler for "',(1↓fn),'" is not defined'
+                 :EndIf
                  action←run handler message ⍝ Execute the class event-processing function with the usual syntax
                  :Select action ⍝ What have they told us to do?
                  :Case 0 ⍝ Abort this event handling and remainder of processing sequence
                      dq←0 ⍝ Cancel the event at the Dyalog level
                      :Leave ⍝ And exit processing
                  :Case 1 ⍝ Proceed normally
-                     :If 0=⎕NC⍕object ⍝ Has my own object disappeared out from under me?
+                     :If 0=⎕NC⍕object ⍝ But has my own object disappeared out from under me anyway?
                          dq←0 ⍝ This also means that nothing else can operate on it from now on, so abort remaining loops
                          :Leave ⍝ Exit processing
                      :EndIf
@@ -53,7 +60,7 @@
      :EndIf
  :EndFor
  :If ×≢⊃localize
- :AndIf ⎕NULL≡(⊃object._Ancestry) Locate⊃localize ⍝ Has the previous ∆WSELF-named object gone away?
+ :AndIf ⎕NULL≡(⊃object._Ancestry)Locate⊃localize ⍝ Has the previous ∆WSELF-named object gone away?
      localize[1]←⊂'' ⍝ The previous ∆WSELF object has disappeared - reset ∆WSELF to '' when it's restored
  :EndIf
  Application ⎕VSET(↑'∆WSELF' '∆WEVENT' '∆WARG' '∆WRES')localize ⍝ Restore previous application quad-vars
