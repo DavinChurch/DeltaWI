@@ -4,21 +4,21 @@
 ⍝ Left and right arguments are provided directly from the ∇onXxxx setting function
 ⍝ All event names must be provided with case-sensitive canonical names (without "on" prefix)
 ⍝ Left operand is a single Dyalog event name to be intercepted
+⍝   If '', then only set the event handler text and don't intercept anything from Dyalog
 ⍝ Right operand is an APL+Win event name, optionally nested and followed by ordering criteria
 ⍝   Ordering criteria should be one or more other APL+Win event names prefixed by either "<" or ">".
 ⍝   The new event should be processed *after* any events named with a ">" prefix and *before* any events named with a "<" prefix.
 ⍝ Example: result←object ('Select' ##.##.SetEvent 'Click' '>MouseDown' '>MouseUp') arg
 
- :Section ⍝ Validate arguments (use ⎕SIGNAL for SetEvent usage errors)
+ :Section ⍝ Validate non-user arguments (use ⎕SIGNAL for SetEvent usage errors)
      myevent←,⊆myevent ⋄ before←1↓¨myevent/⍨'<'=⊃¨myevent ⋄ after←1↓¨myevent/⍨'>'=⊃¨myevent ⋄ myevent/⍨←~'<>'∊⍨⊃¨myevent ⍝ Decompose event list
      'No emulated event name provided'⎕SIGNAL 5/⍨0=≢myevent
      'Too many emulated event names provided'⎕SIGNAL 5/⍨1<≢myevent
      myevent←⊃myevent ⍝ We only set up one emulated event with a call here
-     'LENGTH ERROR: Wrong number of arguments'Error 1<≢arg
      'Improper specification of event names'⎕SIGNAL 11/⍨0∊IsChar¨realevent myevent,before,after
      'Do not use "on" prefix on event names'⎕SIGNAL 11/⍨(⊂'on')∊2↑¨realevent myevent,before,after
-     'Not an available native event name'⎕SIGNAL 11/⍨~realevent∊⍥⊆object ∆WG'EventList'
-     result←Classes.NoRes ⍝ We'll pre-set ahead of time in case of an early exit
+     'Not an available native event name'⎕SIGNAL 11/⍨(×≢realevent)∧~realevent∊⍥⊆object ∆WG'EventList'
+     result←Classes.NoRes ⍝ We'll pre-set result ahead of time in case of an early exit
  :EndSection
 
  :Section ⍝ Return existing handler if requested
@@ -28,10 +28,15 @@
      :EndIf
  :EndSection
 
- :Section ⍝ Record APL+Win event handler text (exactly as specified)
+ :Section ⍝ Validate and record APL+Win event handler text (exactly as specified)
+     'LENGTH ERROR: Wrong number of arguments'Error 1<≢arg
      ('∆WI DOMAIN ERROR: on',myevent)Error~IsChar arg←⊃arg
      ('∆WI RANK ERROR: on',myevent)Error 1≠≢⍴arg←1/arg
+     arg←∆dlt¨arg ⍝ Ignore leading and trailing spaces
      object ⎕VSET⊂('_on',myevent)arg ⍝ Set new APL+Win event handler text
+     :If 0=≢realevent
+         :Return ⍝ There's nothing else to do here, so just exit
+     :EndIf
  :EndSection
 
  :Section ⍝ Obtain or initialize Dyalog-native event definition

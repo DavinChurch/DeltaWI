@@ -1,3 +1,2 @@
  result←object onNew arg
- :If ##.NoRes≢result←object ##.##.on_Prepare arg ⋄ :Return ⋄ :EndIf ⍝ Prepare standard processing
-⍝? Now add a Dyalog event that needs to fire this APL+Win event
+ result←object(''##.##.SetEvent'New')arg ⍝ This is never activated by a native Dyalog event

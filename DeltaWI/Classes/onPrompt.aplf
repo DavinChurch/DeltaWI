@@ -1,3 +1,3 @@
  result←object onPrompt arg
- :If 0 0≢⍴result←object ##.on_Prepare arg ⋄ :Return ⋄ :EndIf ⍝ Prepare standard processing
-⍝? Now add a Dyalog event that needs to fire this APL+Win event
+ result←object('??'##.##.SetEvent'Prompt')arg
+⍝? Finish event interception
