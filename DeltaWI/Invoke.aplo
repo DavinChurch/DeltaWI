@@ -13,7 +13,7 @@
      ⍝ This operator is used by ActiveX & Dyalog class-types, as well as Grid and APL special case rewrites
      handler←action obj._Class.Invoke           ⍝ Use the pre-bound invocation operator for external classes
  :ElseIf 3=obj._Class.⎕NC fn                    ⍝ Is there a class-specific function?
-     nothere Error 1≥≢obj._Class.⎕CR fn         ⍝ Report error when finding a blocked general definition
+     nothere Error 1 2 0≢⊃obj._Class.⎕AT fn     ⍝ Report error when finding a blocked general definition
      handler←obj._Class.⍎fn                     ⍝ Obtain reference to the handler function (I wish there was a non-⍎ way to do this)
  :ElseIf 3=Classes.⎕NC fn                       ⍝ Is there a class-generic function?
      handler←Classes.⍎fn                        ⍝ Obtain reference to the handler function (I wish there was a non-⍎ way to do this)

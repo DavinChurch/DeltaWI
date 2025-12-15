@@ -4,7 +4,7 @@
  '∆WI ACTION ERROR: Property "properties" is read-only'##.Error×≢arg
  lower←⎕C ⎕A
  private←lower object._Class.⎕NL ¯3 ⍝ Class-specific properties
- private~←override←(1≥≢¨object._Class.⎕CR¨private)/private ⍝ Class-specific suppression of generic properties ⍝? (is this fast enough?)
+ private~←override←((⊂1 2 0)≢¨⊃¨object._Class.⎕AT¨private)/private ⍝ Class-specific suppression of generic properties
  public←override~⍨lower ⎕NL ¯3 ⍝ Accessible class-generic properties
  udp←{⍵/⍨'∆'=⊃¨⍵}1↓¨'_'object.⎕NL ¯2 ⍝ User-defined properties
  result←{⍵[⍋⍵]}{'⎕'@('⍙'=⊢)⍵}¨{⍵/⍨~'on'∊⍥⊆2↑¨⍵}private∪public∪udp ⍝ Combine & clean up lists

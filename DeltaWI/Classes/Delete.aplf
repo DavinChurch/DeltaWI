@@ -38,7 +38,7 @@
          ##.∆EX⍕object.⎕VGET hidden
      :EndFor
      :If ×≢hidden←'_'object.⎕NL ¯9 ⍝ Other hidden Dyalog objects
-     :AndIf ×≢hidden←(∧/(1↓¨hidden)∊¨⊂⎕D)/hidden ⍝ Look for _999-style native objects
+     :AndIf ×≢hidden←(∧/¨(1↓¨hidden)∊¨⊂⎕D)/hidden ⍝ Look for _999-style native objects
          ##.∆EX⍕¨object ⎕VGET hidden
      :EndIf
  :EndSection
