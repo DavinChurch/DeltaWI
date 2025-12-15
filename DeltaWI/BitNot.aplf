@@ -13,4 +13,4 @@
 ⍝ Ported to Dyalog 25 November 2025 by Davin Church of Creative Software Design
 
  ⎕IO←⎕ML←1
- which←(,which)[⍒,which] ⋄ new←(31⍴2)⊤flags ⋄ ((⊂31-which)⌷[1]new)←~(⊂31-which)⌷[1]new ⋄ new←2⊥new
+ which←∪(,which)[⍒,which] ⋄ new←(31⍴2)⊤flags ⋄ ((⊂31-which)⌷[1]new)←~(⊂31-which)⌷[1]new ⋄ new←2⊥new
