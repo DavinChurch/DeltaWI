@@ -1,0 +1,24 @@
+ Form;MT;∆WSELF
+⍝ Test elements of the Form object support
+
+ MT←0 0⍴'' ⍝ An empty return value for many ∆WI calls
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f'∆WI Pass(,'f')⊢'New' 'Form' ⍝? 'Hide'
+ 'f'∆WI Pass MT⊢'caption' 'Testing'
+ 'f'∆WI Pass'Testing'⊢'caption'
+
+ ∆WSELF←'f' ⍝ This technically won't work in APL+Win, but it will here because we can't trap assignment errors
+ ∆WI Pass(,'f')⊢'self'
+ ⍝ Can't test default 'where' because it will vary by monitor
+
+
+ 'f'∆WI Pass MT⊢'Delete' ⍝ Clean up after tests
+
+
+⍝ Also need early/initial support and testing for:
+⍝   border, (visible), value, style
+⍝   >data<, (hwnd), (icon), (modified), (modifystop), (opened), (state?), (suppress)
+⍝   Close, (Focus), (Hide), (Modify), (Open), (Show), Wait
+⍝   (onClose), (onDestroy), [onPrompt], [onTooltip], (onDelete), (onFocus), (onHide),
+⍝   (onModified), (onOpen), (onShow), (onUnfocus), onWait

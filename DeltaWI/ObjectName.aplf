@@ -69,7 +69,7 @@
 
  :Section ⍝ Now it's time to split apart any name-prefixes from the argument itself and deal with those
      :If (1=≡action)∧(×≢action)∧~IsChar action ⋄ (1⊃action)←,1⊃action ⋄ :EndIf ⍝ Separate out scalar action names, just in case
-     :If 0=≢action←,⊆action ⋄ action←'' ⋄ :EndIf ⍝ In case they try to call us with an empty argument
+     :If 0=≢action ⋄ action←'' ⋄ :EndIf ⍝ In case they try to call us with an empty argument
      prefix←,⊃action←,⊆action ⍝ Force entire argument into a nested vector, which operates exactly as if unnested, and grab first word
      prefix↓⍨←star←'*'=⊃prefix ⍝ Extract any '*' signal that suppresses UDC functionality
      '∆WI OBJECT ERROR: DOMAIN ERROR in argument'Error~(0 1∊⍨≢⍴prefix)∧IsChar prefix

@@ -17,6 +17,16 @@
      :Return ⍝ Processed; exit with this result
  :EndIf
 
+ :If action≡'data'
+     :If ×≢args ⍝ If we have new data, write it
+         :If 1=≢args ⋄ args←⊃args ⋄ :EndIf ⍝ If only a single item is provided, assume it is unnested
+         obj ⎕VSET⊂'_data'args
+         result←Classes.NoRes
+     :Else ⍝ Otherwise just read it (default=0)
+         result←obj ⎕VGET⊂'_data' 0
+     :EndIf
+ :EndIf
+
  :If '∆'=⊃action ⍝ UDP processing
      :If 0∊≢args ⍝ Reading a UDP
          result←obj ⎕VGET⊂('_',action)0 ⍝ Read current value with a standard default of scalar 0

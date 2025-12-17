@@ -16,3 +16,4 @@
  action←,action ⍝ Ravel scalar actions
  :If 0∊⍴args←1↓,⊆args ⋄ args←⍬ ⋄ :EndIf ⍝ And then return the rest of the argument as a vector (with empties normalized to ⍬)
  ⍝ An action's arguments need to be normalized too but they have different requirements for different actions, so handle them later
+ ⍝? Do they? Or can we at least ⊆¨ them?

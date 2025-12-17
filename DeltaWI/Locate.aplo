@@ -19,7 +19,7 @@
      :Section ⍝ Allow relative naming
          :If '#'∊next ⋄ ref←GUIroot ⋄ name←1↓name ⋄ :Continue ⋄ :EndIf ⍝ In case it's just referencing the root itself
          :If ':'=⊃next ⍝ If this is relative to the highest level object in the ancestry chain
-             ref←⊃GUIroot,⍨1↓ref._Ancestry ⍝ Re-point back to the top-level parent
+             ref←⊃GUIroot,⍨1↓⌽ref._Ancestry ⍝ Re-point back to the top-level parent
              :If 0=≢next←1↓next ⍝ If the ":" stands alone, we're done with this term and the next is relative to this
                  name←1↓name
                  :Continue
@@ -28,7 +28,7 @@
          ⍝ Top-level shorthand (with embedded ":") should have been already handled before we get here (right?)
          :If 0=≢next ⍝ We have a leading ".", so we're going to move relative to our current position
              :If 1<t←+/∧\0=≢¨name ⍝ How many leading "."s do we have together?
-                 ref←⊃GUIroot,⍨(t-1)↓ref._Ancestry ⍝ If there's more than one, then that indicates backing up through parents
+                 ref←⊃GUIroot,⍨⌽(t-1)↓ref._Ancestry ⍝ If there's more than one, then that indicates backing up through parents
              :EndIf
              name←t↓name ⍝ Now ignore all the leading ".."s and look for the next name
              :Continue

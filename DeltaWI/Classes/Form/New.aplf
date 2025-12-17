@@ -31,12 +31,12 @@
      props,←('Sizeable' 0)('Moveable' 0)('SysMenu' 0)('MinButton' 0)('MaxButton' 0)('Border' 1)
  :Else ⍝ Normal border and title bar
      props,←(16 32 64∊border),¨⍨⊂¨'SysMenu' 'MinButton' 'MaxButton'
-     props,←('Sizeable' 1)('Moveable' 1)('Border' 2)
+     props,←('Sizeable' 1)('Moveable' 1)('Border' 1)
  :EndIf
 
  newobj←⎕VGET((⍕parent),'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
  ⍝ While we have the object creation data in hand, let's set up the required identification and connectivity variables
  newobj.(_self _name _class)←(parent._self,'.',name)name'Form' ⍝ Set ∆WI control information
- newobj.(_Ancestry _Class)←(parent._Ancestry,parent)⎕THIS ⍝ Set ∆WI control information
+ newobj.(_Ancestry _Class)←(parent,parent._Ancestry)⎕THIS ⍝ Set ∆WI control information
 
  result←newobj ##.New arg ⍝ Now call the standard Classes.New routine to complete the creation work
