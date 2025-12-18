@@ -13,7 +13,7 @@
      subclass←1↓subclass ⍝ Hang onto the second word (if present) so we can try to use it for additional authorization checking
      isreal←(⊂class)∊##.GUIroot ##.Classes.System.classes ⍬ ⍝ Standard system class names
      isnew←(⊂class)∊##.GUIroot ##.Classes.System.newclasses ⍬ ⍝ Application-named UDC classes
-     arg←1↓⍬,⍥⊆1↓,¨⊆¨arg ⍝ Pre-nest & ravel entire argument list (except class) for passing to .New routines
+     arg←1↓⍬⊂⍛,1↓,¨⊆¨arg ⍝ Pre-nest & ravel entire argument list (except class) for passing to .New routines
  :EndSection
 
  :Section ⍝ See if we've got a hidden Dyalog-required GUI child under this one, which should become our future Dyalog GUI parent

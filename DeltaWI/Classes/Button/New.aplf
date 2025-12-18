@@ -24,7 +24,7 @@
      :EndIf
      ⍝? We may also remove any existing 'extent' (or 'size') from their command line so we don't re-execute it? But is it worth it?
  :EndIf
- :If ~'caption'∊⍥⊆actions ⍝ If they're not setting a caption immediately at all, we'll put in a default
+ :If ~'caption'⊂⍛∊actions ⍝ If they're not setting a caption immediately at all, we'll put in a default
      arg,⍨←⊂'caption'name ⍝ [1] Use the object name as a caption, though this will almost certainly be changed later by the application
  :EndIf
 

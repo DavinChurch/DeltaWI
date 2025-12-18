@@ -4,7 +4,7 @@
 ⍝ If nothing needs to be performed here, return ⎕NULL. Otherwise return the correct ∆WI result.
 
  :If obj≡⎕NULL ⍝ Check for non-existant object processing (a pointer to the parent can't be non-existant)
-     :If 'Delete' 'self'∊⍨⊂action ⍝ Special actions where object existence is optional
+     :If action⊂⍛∊'Delete' 'self' ⍝ Special actions where object existence is optional
          :If action≡'self' ⋄ result←'' ⋄ :Else ⋄ result←0 0⍴'' ⋄ :EndIf
          :Return ⍝ Processed; exit with this result
      :Else ⍝ Anything else performed on an undefined object is an error

@@ -13,7 +13,7 @@
      where←,parent._size÷⍤1⊢2 2⍴4 4 2 2 ⍝ Default APL+Win Form size and position
      arg,⍨←⊂'where'where ⍝ [2] Start us with a default 'where' size and position (APL+Win measure) -- will usually be overridden later
  :EndIf
- :If ~'caption'∊⍥⊆actions ⍝ If they're not setting a caption immediately, we'll put in a default
+ :If ~'caption'⊂⍛∊actions ⍝ If they're not setting a caption immediately, we'll put in a default
      arg,⍨←⊂'caption'name ⍝ [1] Use the object name as a caption, though this will almost certainly be changed later by the application
  :EndIf
  :If 0=≢border←3⊃given

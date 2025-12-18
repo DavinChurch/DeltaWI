@@ -42,7 +42,7 @@
 
  :Section ⍝ Now it's time to combine the "wself" and "object" parts together (into "object")
      '∆WI OBJECT ERROR: Current object undefined'Error 0=≢object ⍝ Make sure we have an object name to process
-     '∆WI OBJECT ERROR: Current object undefined'Error(':.'∊⍨⊃object)∧⎕NULL' '∊⍨⊃wself ⍝ Make sure we have a wself to refer to
+     '∆WI OBJECT ERROR: Current object undefined'Error(object⊃⍛∊':.')∧wself⊃⍛∊⎕NULL' ' ⍝ Make sure we have a wself to refer to
      :If ':'=⊃object ⍝ This is relative to a top-level name, so change our root reference name before proceeding
          '∆WI OBJECT NAME ERROR: Improperly formed object name'Error'.'∊2↑object ⍝ APL+Win doesn't allow this construct
          wself←¯1 Parent wself ⍝ Pull out just the top-level name
@@ -57,7 +57,7 @@
 
  :Section ⍝ Resolve imbedded parentage signals just in case there's an error before we get to the next step
      object←'.'∆cuts object ⍝ Cut into pieces between every '.'
-     :While (≢object)≥t←0⍳⍨≢¨object ⍝ Resolve each parentage reference until clean
+     :While (≢object)≥t←object≢¨⍛⍳0 ⍝ Resolve each parentage reference until clean
          '∆WI OBJECT ERROR: Parent not found (too many ..''s)'Error t≤1
          :If nametesting<2
              '∆WI OBJECT ERROR: Cannot use ".." notation on undefined object'Error ⎕NULL≡GUIroot Locate(t-1)↑object
@@ -96,7 +96,7 @@
      :EndIf
      prefix↓⍨←-'.'=⊃⌽prefix ⍝ There better always be a trailing '.' on this that needs removal!
      prefix,⍨←'.'/⍨(~'.#'∊⍨⊃prefix)∧∧/×≢¨object prefix ⍝ Is this prefix an implicit child of the object name?
-     :If ('#'∊prefix)∨~'. '∊⍨⊃prefix
+     :If ('#'∊prefix)∨~prefix⊃⍛∊'. '
          object←prefix
      :Else
          object,←prefix
@@ -106,7 +106,7 @@
 
  :Section ⍝ Resolve any new imbedded parentage signals
      object←'.'∆cuts object ⍝ Cut into pieces between every '.'
-     :While (≢object)≥t←0⍳⍨≢¨object ⍝ Resolve each parentage reference until clean
+     :While (≢object)≥t←object≢¨⍛⍳0 ⍝ Resolve each parentage reference until clean
          '∆WI OBJECT ERROR: Parent not found (too many ..''s)'Error t≤1+'#'∊⊃object
          :If nametesting<2
              '∆WI OBJECT ERROR: Cannot use ".." notation on undefined object'Error ⎕NULL≡GUIroot Locate(t-1)↑object

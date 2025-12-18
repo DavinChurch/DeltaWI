@@ -43,7 +43,7 @@
  :For item :In final∩⍨arg,(~∨/final∊arg)/¯1↑final ⍝ There should only be one of these at most, usually; default=Open
 ⍝? Don't forget to fire automatic events for these methods (respect suppress??)
 ⍝? Watch out for possible inheriting from parentage?
-     v0←-'Form' 'MDIForm' 'Menu'∊⍨⊂object._class ⍝ "Invisible" setting for this class
+     v0←-object._class⊂⍛∊'Form' 'MDIForm' 'Menu' ⍝ "Invisible" setting for this class
      :Select item
      :Case 'Close'
          object ##.∆WSet('Active' 0)('Visible' 0)

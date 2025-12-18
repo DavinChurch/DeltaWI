@@ -7,4 +7,4 @@
  private~←override←((⊂1 2 0)≢¨⊃¨object._Class.⎕AT¨private)/private ⍝ Class-specific suppression of generic properties
  public←override~⍨lower ⎕NL ¯3 ⍝ Accessible class-generic properties
  udp←{⍵/⍨'∆'=⊃¨⍵}1↓¨'_'object.⎕NL ¯2 ⍝ User-defined properties
- result←{⍵[⍋⍵]}{'⎕'@('⍙'=⊢)⍵}¨{⍵/⍨~'on'∊⍥⊆2↑¨⍵}private∪public∪udp ⍝ Combine & clean up lists
+ result←{⍵[⍋⍵]}{'⎕'@('⍙'=⊢)⍵}¨{⍵/⍨~'on'⊂⍛∊2↑¨⍵}private∪public∪udp ⍝ Combine & clean up lists

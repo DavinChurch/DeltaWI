@@ -16,5 +16,5 @@
 
  ⍝ For any pseudo-properties, create property-like variables instead in case of later need
  :If ∨/~real
-     obj ⎕VSET props/⍨~real ⍝ Set WS value instead
+     obj ⎕VSET real~⍛/props ⍝ Set WS value instead
  :EndIf

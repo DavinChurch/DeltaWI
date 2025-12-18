@@ -44,8 +44,8 @@
          where←(2↑where),punits÷⍨margins+extent×punits ⍝ Add margins back between 'extent' and 'where'
      :EndSection
      :Section ⍝ Set APL+Win properties
-         :If 5 6∊⍨⊃scale ⋄ size←⌊0.5+size ⋄ :EndIf ⍝ If 'scale' is in pixels, round to integers
-         :If 5 6∊⍨⊃pscale ⋄ (where extent)←⌊0.5+where extent ⋄ :EndIf ⍝ If parent 'scale' is in pixels, round to integers
+         :If scale⊃⍛∊5 6 ⋄ size←⌊0.5+size ⋄ :EndIf ⍝ If 'scale' is in pixels, round to integers
+         :If pscale⊃⍛∊5 6 ⋄ (where extent)←⌊0.5+where extent ⋄ :EndIf ⍝ If parent 'scale' is in pixels, round to integers
          object ⎕VSET('_where'where)('_size'size)('_extent'extent) ⍝ Set new APL+Win reference values
 ⍝? Make adjustments for closed object handling
      :EndSection

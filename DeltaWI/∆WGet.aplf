@@ -15,5 +15,5 @@
 
  ⍝ For any pseudo-properties, assume they're property-like variables and retrieve them (using any provided defaults)
  :If ∨/~real
-     (value/⍨~real)←obj ⎕VGET props/⍨~real ⍝ Obtain from WS if present, otherwise use default value
+     (real~⍛/value)←obj ⎕VGET real~⍛/props ⍝ Obtain from WS if present, otherwise use default value
  :EndIf

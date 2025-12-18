@@ -3,7 +3,7 @@
 
  :If ×≢expression
      requote←'''[^'']*''' '"[^"]*"'⎕R{⍵.('\"' ''''⎕R'''' ''''''⍣PatternNum⊢Match)} ⍝ Convert any double-quotes into single-quotes before execution
-     back←'.',⍨⍕Application         ⍝ Which namespace are we looking for?
+     back←Application⍕⍛,'.'         ⍝ Which namespace are we looking for?
      back←1-⍨back⍳⍨⍥⊆⎕XSI↑¨⍨≢back   ⍝ How far back is it in the )SI?
      back(86⌶)requote expression    ⍝ Execute the expression at the correct point of the application
  :EndIf

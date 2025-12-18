@@ -3,7 +3,7 @@
 ⍝? Only supporting 'Close' 0 for now - add features later
 
  '∆WI LENGTH ERROR: Close'##.##.Error 1<≢arg
- '∆WI DOMAIN ERROR: Close'##.##.Error~0 1 2∊⍨⊃arg
+ '∆WI DOMAIN ERROR: Close'##.##.Error~arg⊃⍛∊0 1 2
  :If 0=⊃arg,1
      ⎕OFF ⍝ Sign off immediately
  :Else
