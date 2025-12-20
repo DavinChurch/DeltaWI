@@ -1,3 +1,2 @@
  result←object onDestroy arg
- result←object('??'##.##.SetEvent'Destroy')arg
-⍝? Finish event interception
+ result←object(''##.##.SetEvent'Destroy')arg ⍝ This is never activated by a native Dyalog event

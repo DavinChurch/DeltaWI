@@ -1,4 +1,4 @@
- result←object Prepare arg;sub;item;illegal;final;v0;vars
+ result←object Prepare arg;sub;illegal;final;v0;vars;acts;action;aarg
  ⍝ Finish initializing a just-created new GUI object
  ⍝ The action and class have already been removed from the argument list.
 
@@ -27,36 +27,42 @@
  :EndSelect
 
  ⍝ Assign class default pseudo-properties and variables
- object.(_scale _opened _visible)←1 0 0 ⍝ All new objects default to scale=1, not-yet-logically-open, and invisible
+ object.(_scale _opened _visible _enabled)←1 0 1 1 ⍝ All new objects default to scale=1, not-yet-logically-open, but otherwise visible
  vars←object._Class.⎕NL ¯2.1 ⍝ What variables are in this namespace (including currently-executing locals)
  vars←(~1∊¨⊃¨object._Class.⎕STATE¨vars)/vars ⍝ Remove currently-executing locals to leave only globals
  object ⎕VSET(↑vars)(object._Class ⎕VGET vars) ⍝ Replicate them in the new object
 
  ⍝ Apply list of application-specific properties and methods to this new object
- final←'Close' 'Hide' 'Show' 'Open' ⍝ Methods that are not done until the very end (the last one being the default)
- :For item :In arg~final
-    ⍝ We'll handle these by calling ∆WI recursively and hope we won't get interrupted or slow down
-     {}object._self ##.∆WI item ⍝ Call ∆WI to do the work, but we can never use a returned result from these operations
+ final←'Close' 'Hide' 'Show' 'Open' ⍝ Methods that are not done until the very end (the last of these being the default)
+ acts←⊃¨arg←⊆¨arg
+ :For action :In (~acts∊final)/arg
+     ⍝ We'll handle these by calling ∆WI recursively and hope we won't get interrupted or slow down
+     {}object._self ##.∆WI action ⍝ Call ∆WI to do the work, but we can never use a returned result from these operations
  :EndFor
 
  ⍝ Activate/show the new object as requested
- :For item :In final∩⍨arg,(~∨/final∊arg)/¯1↑final ⍝ There should only be one of these at most, usually; default=Open
-⍝? Don't forget to fire automatic events for these methods (respect suppress??)
+ object._opened←1 ⍝ It will end up opened, unless 'Close' turns it off
+ :For action :In final∩⍨acts,(~∨/final∊acts)/¯1↑final ⍝ There should usually only be one of these at most; default=Open
 ⍝? Watch out for possible inheriting from parentage?
+     aarg←1↓(acts⍳⊂action)⊃arg,⊂⍬
      v0←-object._class⊂⍛∊'Form' 'MDIForm' 'Menu' ⍝ "Invisible" setting for this class
-     :Select item
+     :Select action
      :Case 'Close'
+         object._opened←0
          object ##.∆WSet('Active' 0)('Visible' 0)
-         object ⎕VSET('_opened' 0)('_visible'v0)('_enabled' 0)
      :Case 'Hide'
+         object._visible←v0
+         {}'Hide'##.Event object ##.Application,aarg ⍝ Run the onHide event handler with arguments
          object ##.∆WSet('Active' 1)('Visible' 0)
-         object ⎕VSET('_opened' 1)('_visible'v0)('_enabled' 1)
      :Case 'Show'
-         object ##.∆WSet('Active' 0)('Visible' 1)
-         object ⎕VSET('_opened' 1)('_visible' 1)('_enabled' 1)
+         {}object('Show'##.Invoke)aarg ⍝ Use its normal Show method which includes firing events
+         ⍝object ##.∆WSet('Active' 0)('Visible' 1)
+         ⍝object ⎕VSET('_opened' 1)('_visible' 1)('_enabled' 1)
      :Case 'Open' ⍝ Or none of the above
-         object ##.∆WSet('Active' 1)('Visible' 1)
-         object ⎕VSET('_opened' 1)('_visible' 1)('_enabled' 1)
+         object._opened←0 ⍝ Pretend that it's not open yet so we can call the standard routine
+         {}object('Open'##.Invoke)aarg ⍝ Use its normal Open method which includes firing events
+         ⍝object ##.∆WSet('Active' 1)('Visible' 1)
+         ⍝object ⎕VSET('_opened' 1)('_visible' 1)('_enabled' 1)
      :EndSelect
  :EndFor
 

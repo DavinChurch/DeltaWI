@@ -4,19 +4,19 @@
 
  '∆WI ACTION ERROR: Method "Delete" does not accept an argument'##.Error×≢arg
  :If ×≢kids←object children ⍬
-     result←(object ⎕VGET ##.LeafName¨kids)Delete¨⊂⍬ ⍝ Recursively delete all my children
+     result←(object ⎕VGET ##.LeafName¨kids)('Delete' ##.Invoke)¨⊂⍬ ⍝ Recursively delete all my children
  :EndIf
 
  :Section ⍝ Make sure it's closed first
      :If object._opened ⍝ If open, we'll need to change it to closed first
          :If object._visible>0
- ⍝? Deal with onHide
-             object ⎕VSET⊂'_visible' 0 ⍝ Just in case something wonders about this before it's gone
+             object._visible←0 ⍝ Just in case something wonders about this before it's gone
              object ##.∆WSet'Visible' 0
+             {}'Hide'##.Event object ##.Application ⍝ Run the onHide event handler
          :EndIf
- ⍝? Deal with onDestroy (but not onClose)
-         object ⎕VSET('_opened' 0)('_enabled' 0) ⍝ Just in case something wonders about this before it's gone
+         object.(_opened _enabled)←0 0 ⍝ Just in case something wonders about this before it's gone
          object ##.∆WSet'Active' 0
+         {}'Destroy'##.Event object ##.Application ⍝ Run the onDestroy event handler
      :EndIf
  :EndSection
 
@@ -43,7 +43,7 @@
      :EndIf
  :EndSection
 
-⍝? Deal with onDelete event here?
+ {}'Delete'##.Event object ##.Application ⍝ Run the onDelete event handler
 
 ⍝? Anything else to clean up?
 

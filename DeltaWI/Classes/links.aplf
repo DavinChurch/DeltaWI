@@ -10,7 +10,8 @@
      '∆WI RANK ERROR: links'##.Error 0∊1=≢¨⍴¨arg
      arg←∆dlt¨arg ⍝ Ignore leading and trailing spaces
      '∆WI DOMAIN ERROR: links'##.Error 0∊##.IsValidName¨arg[;1]
-     object ⎕VSET⊂'_links'arg
+     :If 0∊⍴arg ⋄ arg←0 2⍴⊂'' ⋄ :EndIf ⍝ Normalize empty array
+     object._links←arg
      result←NoRes
  :Else ⍝ Otherwise just read it
      result←object ⎕VGET⊂'_links'(0 2⍴⊂'')

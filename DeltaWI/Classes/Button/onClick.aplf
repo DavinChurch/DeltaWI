@@ -1,4 +1,2 @@
  result←object onClick arg
-⍝ Define the onClick event in the usual way
-
  result←object('Select'##.##.SetEvent'Click' '>MouseDown' '>MouseUp')arg

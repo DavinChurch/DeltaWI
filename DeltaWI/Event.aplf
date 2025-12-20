@@ -1,38 +1,53 @@
- dq←events Event message;event;object;realevent;localize;fn;action;run;Application;handler;⎕TRAP;GUIroot
+ dq←events Event message;event;object;realevent;localize;fn;action;run;Application;handler;⎕TRAP;GUIroot;suppress
 ⍝ When any needed Dyalog event is signalled, execute this function directly to perform the appropriate operations.
 ⍝ Important: This function operates independently of ∆WI and allows a separate access point into the DeltaWI system when events call it.
 ⍝
 ⍝ The right argument and result are the standard Dyalog ⎕DQ event message and action.
 ⍝ The left argument is a list of APL+Win event names (w/o 'on') that should respond to this Dyalog event, in order.
 ⍝ The event name 'Event' can be used to invoke Dyalog-style processing, but uses (modified & restricted) Dyalog-style processing syntax.
-⍝ This function will also be called explicitly when firing implied events (due to methods or changing properties), but respect 'suppress' somewhere.
-⍝   But if this is called explicitly from within ∆WI, do we need to do anything about passing across "Application", or will it work anyway??
+⍝ This function will also be called explicitly when firing implied events (due to methods or changing properties), and will respect 'suppress'.
+⍝ Note: When firing an implied event, message[2] must be synthesized with an Application reference instead of a (text) event name.
+⍝ The terms Internal/Implied/Implicit/Synthetic are used to mean similar things in these descriptive comments.
 
 ⍝ Results from ∇_onXxxx APL+Win event handlers (and standard Dyalog callback functions) as well as myself:
 ⍝       1 = Normal processing continues
 ⍝       0 = Normal processing ignored (and abort further processing of pseudo-events and standard APL/Windows handling)
 ⍝       A substitute event message for ⎕DQ to process ⍝? See if a prototype of this process can work effectively
+⍝       A special explicit returned result, but only when processing an implied event from/for an APL+Win handler
 
 ⍝? What if an event needs to be fired on an object's parent instead? Does the ∇_onXxxx routine figure this out for us somehow?
 
  ⎕TRAP←(870 'C' '⎕EN ⎕SIGNAL⍨⊃⎕DM')((0 1000)'S') ⍝ Trap event errors in the usual ∆WI way
- ⍝? Since this happens within an event callback rather than an application call, how do we really want to handle ∆WI-style (or other) errors??
+ ⍝? Since this normally happens within an event callback rather than an application call, how do we really want to handle ∆WI-style (or other) errors??
+ ⍝? And since we often call this implicitly during internal processing, do we want to do the same thing to report back to our internal code??
 
  dq←1 ⍝ If nothing else, just continue APL/Windows processing normally
  :If 0=≢events ⋄ :Return ⋄ :EndIf ⍝ If there are no APL+Win events to emulate, just exit
- (object realevent)←2↑message ⍝ What object/event are we processing?
- Application←⊃⎕THIS,⍨⎕RSI~⎕THIS ⍝ Global: What is the current namespace when the event fires?
+ (object realevent)←2↑message ⍝ What object/event are we processing? ("message" may be synthetic)
+ :If 9=⎕NC'realevent' ⍝ Is this an internal (non-real) event call?
+     ⍝ If our event message ia synthetic with an "event name" that's actually a namespace reference,
+     ⍝ then that is a previous "Application" pointer being passed in from an internal (implied) event.
+     'Exactly one event name required for synthetic events'⎕SIGNAL 11/⍨(1≠≡events)∨1≠≢⊆events ⍝ Report improper usage directly
+     Application←realevent ⍝ Use what we're given instead of looking for an external caller source
+     message[2]←⊂realevent←'' ⍝ Signal everyone that this is a synthetic event and should be handled a little differently
+     suppress←object ⎕VGET⊂'_suppress' 0 ⍝ Have they asked to suppress this internal event?
+     dq←Classes.NoRes ⍝ We'll have a different default return value for synthetic events (for when it is suppressed)
+ :Else
+     Application←⊃⎕THIS,⍨⎕THIS~⍨⎕RSI/⍨⎕THIS⍕⍛{(⊂⍺)≢¨⍵↑¨⍨≢⍺}⎕NSI ⍝ Global: What is the current application namespace (outside DeltaWI) when the event fires?
+     suppress←0 ⍝ External events never get suppressed
+ :EndIf
  GUIroot←⊃object._Ancestry ⍝ Global: What is the root of our GUI object tree?
  localize←Application ⎕VGET('∆WSELF' '')('∆WEVENT' '')('∆WARG'⍬)('∆WRES' 0) ⍝ Capture previous application quad-vars
  :For event :In events ⍝ Process each APL+Win event name, in listed order
-⍝? Perhaps we should allow an event-name prefix here to indicate that it's an implied event and may be 'suppressed'?
      :If event≡'Event'
          :Section ⍝ This is a Dyalog-direct event rather than an APL+Win event
 ⍝? This needs a whole new style of event processing (for either Dyalog or non-Dyalog classes)
          :EndSection
+     :ElseIf suppress
+         ⍝ If they've asked for implicit events to be suppressed, then we don't do anything at all here
      :Else
          :Section ⍝ This is a standard APL+Win event
-             Application ⎕VSET('∆WSELF'object._self)('∆WEVENT'event)('∆WARG'⍬)('∆WRES' 0) ⍝ Pre-set standard names
+             Application.(∆WSELF ∆WEVENT ∆WARG ∆WRES)←object._self event ⍬ 0 ⍝ Pre-set standard names
 
              fn←'_on',event ⍝ This will be both the class-defined event handler function name and also the GUI variable name containing the handler text
              :If ×≢run←object ⎕VGET⊂fn'' ⍝ Do we have some handler text to execute?
@@ -42,37 +57,46 @@
                      handler←Classes.⍎fn ⍝ Obtain a reference to the class event-processing function (I wish there was a non-⍎ way to do this)
                  :Else
                      ⍝? How should we be reporting this???
-                     Error'"',object._class,'" event handler for "',(1↓fn),'" is not defined'
+                     Error'Required "',object._class,'" event handler for "',(1↓fn),'" is not defined'
                  :EndIf
 
-                 action←run handler message ⍝ Execute the class event-processing function with the normal APL syntax
+                 action←run handler message ⍝ Execute the class event-processing function
 
-                 :Select action ⍝ What have they told us to do?
-                 :Case 0 ⍝ Abort this event handling and remainder of processing sequence
-                     dq←0 ⍝ Cancel the event at the Dyalog level
-                     :Leave ⍝ And exit processing
-                 :Case 1 ⍝ Proceed normally
-                     :If 0=⎕NC⍕object ⍝ But has my own object disappeared out from under me anyway?
-                         dq←0 ⍝ This also means that nothing else can operate on it from now on, so abort remaining loops & processing
-                         ⍝? We're aborting here even though "object" still has a local copy of contents - I assume that's a good idea?
-                         :Leave ⍝ Exit processing
-                     :EndIf
-                 :Else ⍝? Process an alternate version of the event message?? Will this work?
-                     dq←action ⍝ Return new-message to Dyalog
-                     ⍝ But since we're also handling a sequence of events to deal with, we need to keep going.
-                     ⍝ In such a case, I think it's best to modify the message being passed to following events
-                     ⍝ so they can operate on the modified version. In addition, any further changes they decide
-                     ⍝ to make will apply against the modified message and create a new modification to replace
-                     ⍝ the previous one.
-                     ⍝? Will this reasonably satisfy the need to modify messages in this chained-handler environment?
-                     object←⊃message←action ⍝ Potentially move to a different object ⍝? Is this OK?
-                 :EndSelect
+                 :If 0=≢2⊃message ⍝ Was this a synthetic event being processed?
+                     dq←action ⍝ If so, then the result is always special
+                     ⍝ The explicit result here is a value to be returned to the caller, not a new message to send to ⎕DQ
+                     ⍝ (The handler code must know to return a result value from this event because message[2]≡'')
+                     ⍝? If a synthetic event needs to return an abort signal, use ⎕NULL since 0 might be meaningful data
+                 :Else
+                     :Select action ⍝ What have they told us to do?
+                     :Case 0 ⍝ Abort this event handling and remainder of processing sequence
+                         dq←0 ⍝ Cancel the event at the Dyalog level
+                         :Leave ⍝ And exit processing
+                     :Case 1 ⍝ Proceed normally
+                         :If 0=⎕NC⍕object ⍝ But has my own object disappeared out from under me anyway?
+                             dq←0 ⍝ This also means that nothing else can operate on it from now on, so abort remaining loops & processing
+                             ⍝? We're aborting here even though "object" still has a local copy of contents - I assume that's a good idea?
+                             :Leave ⍝ Exit processing
+                         :EndIf
+                     :Else ⍝? Process an alternate version of the event message?? Will this work?
+                         dq←action ⍝ Return new-message to Dyalog
+                         ⍝ Ok, this is a real event and we're getting back a new ⎕DQ message to pass back to it
+                         ⍝ But since we're also handling a sequence of events to deal with, we need to keep going.
+                         ⍝ In such a case, I think it's best to modify the message being passed to following events
+                         ⍝ so they can operate on the modified version. In addition, any further changes they decide
+                         ⍝ to make will apply against the modified message and create a new modification to replace
+                         ⍝ the previous one.
+                         ⍝? Will this reasonably satisfy the need to modify messages in this chained-handler environment?
+                         object←⊃message←action ⍝ Potentially move to a different object ⍝? Is this OK?
+                     :EndSelect
+                 :EndIf
              :EndIf
          :EndSection
      :EndIf
  :EndFor
+
  :If ×≢⊃localize
  :AndIf ⎕NULL≡GUIroot Locate⊃localize ⍝ Has the previous ∆WSELF-named object gone away?
      localize[1]←⊂'' ⍝ The previous ∆WSELF object has disappeared - reset ∆WSELF to '' when it's restored
  :EndIf
- Application ⎕VSET(↑'∆WSELF' '∆WEVENT' '∆WARG' '∆WRES')localize ⍝ Restore previous application quad-vars
+ Application.(∆WSELF ∆WEVENT ∆WARG ∆WRES)←localize ⍝ Restore previous application quad-vars as if de-localizing

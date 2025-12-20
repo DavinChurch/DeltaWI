@@ -65,7 +65,7 @@
      :Else
          :If 0=≢arg ⍝ Are they disabling an event?
              pseudo~←⊂myevent ⍝ Remove the name from the list to process
-         ⍝? What happens if we're removing the last APL+Win event from this Dyalog event?
+⍝? What happens if we're removing the last APL+Win event from this Dyalog event? Do we need to set 'Event' to have Action=0?
          :ElseIf myevent⊂⍛∊pseudo
          ⍝ It's already here - leave it alone
              :Return ⍝ We don't need to update anything in the GUI

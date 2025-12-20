@@ -1,0 +1,42 @@
+ result←object visible arg;was
+⍝ Request or modify the visibility of a GUI object
+
+ result←was←object._visible ⍝ We'll need to know the previous setting in order to decide on event handlers
+
+ :If 0=≢arg ⍝ Are they asking for the current setting?
+     :Return ⍝ That's it just give it to them
+ :EndIf
+
+ '∆WI LENGTH ERROR: visible'##.Error 1≠≢arg
+ '∆WI LENGTH ERROR: visible'##.Error 1≠≢arg←⊃arg
+ :Select object._class ⍝ What visibility choices are valid for this class?
+ :CaseList 'Form' 'MDIForm' ⋄ choices←¯3 ¯2 ¯1 0 1 2 3 ⍝ But 0→¯1
+ :Case 'Menu' ⋄ choices←0 1
+ :Else ⋄ choices←¯1 0 1 ⍝ But 0→¯1
+ :EndSelect
+ '∆WI DOMAIN ERROR: visible'##.Error 1<|≡arg
+ '∆WI DOMAIN ERROR: visible'##.Error~arg⊃⍛∊choices
+ arg←⊃arg-(arg=0)∧object._class≢'Menu' ⍝ Convert 0s to ¯1s except Menus
+
+ :If arg>⍥×was ⍝ Are we about to make it visible?
+ :AndIf ~object._opened ⍝ See if it's currently closed
+     {}object('Open'##.Invoke)⍬ ⍝ Force it open
+     was←object._visible ⍝ In case it changed
+ :EndIf
+
+ object._visible←arg ⍝ Store new APL+Win value
+ object ##.∆WSet⊂'Visible'(arg>0) ⍝ Set Dyalog control visibility
+ :If object._class⊂⍛∊'Form' 'MDIForm' ⍝ Set Dyalog Form viewability
+     object ##.∆WSet⊂'State'(arg|⍛-1) ⍝ Handle minimized & maximized Forms as well as visibility
+ :EndIf
+
+ :If arg≠⍥×was ⍝ Has the sign of the visible bit changed?
+     :If arg>0 ⍝ If it is becoming visible
+         {}'Show'##.Event object ##.Application ⍝ Run the onShow event handler
+         {}'Resize'##.Event object ##.Application,object._size,arg-1 ⍝ Run the onResize event handler
+     :Else ⍝ It is becoming invisible
+         {}'Hide'##.Event object ##.Application ⍝ Run the onHide event handler
+     :EndIf
+ :EndIf
+
+ result←NoRes

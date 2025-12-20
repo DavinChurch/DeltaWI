@@ -8,17 +8,15 @@
 ⍝       Assign where←2⍴ leaves it as 2⍴ and doesn't change size/extent
 ⍝       Assign where←4⍴ changes size/extent to ⍬
 ⍝       Assign size←2⍴ or extent←2⍴, truncates where to 2⍴
-⍝       Scale≠0 just doesn't store elements #2-#5 ⍝? Or does it?? Ever??
-⍝       Upon opening, all are resynchronized
-
-⍝? Don't forget to fire onResize event (and any other events necessary)
+⍝       Scale≠0 just doesn't store elements #2-#5
+⍝       Upon opening, all are resynchronized ⍝? Do we need to do this?
 
  :If (1=≢arg)∧1<|≡arg ⋄ arg←⊃arg ⋄ :EndIf ⍝ Make sure a nested argument is disclosed
 
  :Select ≢arg
 
  :Case 0
-     result←object ⎕VGET⊂'_size'⍬ ⍝ Where is it currently located?
+     result←object ⎕VGET⊂'_size'⍬ ⍝ What is it currently set to?
 
  :Case 2
      :Section ⍝ Get all our basic information
@@ -46,7 +44,7 @@
      :Section ⍝ Set APL+Win properties
          :If scale⊃⍛∊5 6 ⋄ size←⌊0.5+size ⋄ :EndIf ⍝ If 'scale' is in pixels, round to integers
          :If pscale⊃⍛∊5 6 ⋄ (where extent)←⌊0.5+where extent ⋄ :EndIf ⍝ If parent 'scale' is in pixels, round to integers
-         object ⎕VSET('_where'where)('_size'size)('_extent'extent) ⍝ Set new APL+Win reference values
+         object.(_where _size _extent)←where size extent ⍝ Set new APL+Win reference values
 ⍝? Make adjustments for closed object handling
      :EndSection
 
@@ -59,6 +57,9 @@
          :EndIf
          object ##.∆WSet'Size'dysize
      :EndSection
+
+     {}'Resize'##.Event object ##.Application,object._size,0 ⍝ Run the onResize event handler
+⍝? Does onResize run anyway if the size doesn't actually change?
      result←NoRes
 
  :Else

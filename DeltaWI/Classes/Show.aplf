@@ -1,0 +1,39 @@
+ result←object Show arg;hidden;kids;kid
+⍝ Show a GUI object
+
+ :If ~object._opened
+     {}object('Open'##.Invoke)⍬ ⍝ If it's not opened yet, Open it
+ :EndIf
+
+ result←'Show'##.Event object ##.Application,arg ⍝ Run the onShow event handler
+ object._visible←1⌈|object._visible ⍝ Mark the object as visible
+ object ##.∆WSet⊂'Visible' 1 ⍝ Update Dyalog control property
+
+⍝? Should this also show it's kids??
+ :If ×≢kids←object children ⍬
+     {}(object ⎕VGET ##.LeafName¨kids)('Show'##.Invoke)¨⊂⍬ ⍝ Recursively Show all my children
+ :EndIf
+
+⍝? Should this do anything to internal objects?
+⍝ :Section ⍝ Get rid of hidden objects
+⍝     hidden←'_mb' '_mdi' '_pic'
+⍝     :For hidden :In (9=object.⎕NC↑hidden)/hidden ⍝ See about getting rid of any hidden Dyalog immediate children
+⍝         :Select hidden
+⍝         :Case '_mb'
+⍝⍝? Add any special handling for this
+⍝         :Case '_mdi'
+⍝⍝? Add any special handling for this
+⍝         :Case '_pic'
+⍝⍝? Add any special handling for this
+⍝         :EndSelect
+⍝         :If ×≢hidden←'_'(object ⎕VGET hidden).⎕NL ¯9 ⍝ This may have (mostly for Pictures) other hidden Dyalog (drawing) objects contained within it
+⍝         :AndIf ×≢hidden/⍨←∧/(1↓¨hidden)∊¨⊂⎕D ⍝ Look for _999-style native objects
+⍝             ##.∆EX⍕¨object ⎕VGET hidden
+⍝         :EndIf
+⍝         ##.∆EX⍕object.⎕VGET hidden
+⍝     :EndFor
+⍝     :If ×≢hidden←'_'object.⎕NL ¯9 ⍝ Other hidden Dyalog objects
+⍝     :AndIf ×≢hidden←(∧/¨(1↓¨hidden)∊¨⊂⎕D)/hidden ⍝ Look for _999-style native objects
+⍝         ##.∆EX⍕¨object ⎕VGET hidden
+⍝     :EndIf
+⍝ :EndSection

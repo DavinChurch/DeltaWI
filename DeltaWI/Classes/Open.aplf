@@ -1,0 +1,45 @@
+ result←object Open arg;hidden;kids
+⍝ Open a closed GUI object
+
+ :If object._opened ⍝ If it's already opened, the we have nothing to do here
+     result←NoRes
+     :Return
+ :EndIf
+
+ object._opened←1
+ result←'Open'##.Event object ##.Application,arg ⍝ Run the onOpen event handler
+⍝? Does onResize run if the size isn't changed by opening?
+ {}'Resize'##.Event object ##.Application,object._size,0 ⍝ Run the onResize event handler
+⍝? What do we need to do about hidden internal objects while opening?
+
+ :If ×≢kids←object children ⍬
+     result←(object ⎕VGET ##.LeafName¨kids)('Open'##.Invoke)¨⊂⍬ ⍝ Recursively Open all my children
+ :EndIf
+
+ object ##.∆WSet⊂'Active' 1 ⍝ Update Dyalog control properties
+
+
+
+
+⍝ :Section ⍝ Get rid of hidden objects
+⍝     hidden←'_mb' '_mdi' '_pic'
+⍝     :For hidden :In (9=object.⎕NC↑hidden)/hidden ⍝ See about getting rid of any hidden Dyalog immediate children
+⍝         :Select hidden
+⍝         :Case '_mb'
+⍝⍝? Add any special handling for this
+⍝         :Case '_mdi'
+⍝⍝? Add any special handling for this
+⍝         :Case '_pic'
+⍝⍝? Add any special handling for this
+⍝         :EndSelect
+⍝         :If ×≢hidden←'_'(object ⎕VGET hidden).⎕NL ¯9 ⍝ This may have (mostly for Pictures) other hidden Dyalog (drawing) objects contained within it
+⍝         :AndIf ×≢hidden/⍨←∧/(1↓¨hidden)∊¨⊂⎕D ⍝ Look for _999-style native objects
+⍝             ##.∆EX⍕¨object ⎕VGET hidden
+⍝         :EndIf
+⍝         ##.∆EX⍕object.⎕VGET hidden
+⍝     :EndFor
+⍝     :If ×≢hidden←'_'object.⎕NL ¯9 ⍝ Other hidden Dyalog objects
+⍝     :AndIf ×≢hidden←(∧/¨(1↓¨hidden)∊¨⊂⎕D)/hidden ⍝ Look for _999-style native objects
+⍝         ##.∆EX⍕¨object ⎕VGET hidden
+⍝     :EndIf
+⍝ :EndSection
