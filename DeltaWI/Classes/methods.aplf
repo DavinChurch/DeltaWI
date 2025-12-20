@@ -6,4 +6,4 @@
  private←upper object._Class.⎕NL ¯3 ⍝ Class-specific methods
  private~←override←((⊂1 2 0)≢¨⊃¨object._Class.⎕AT¨private)/private ⍝ Class-specific suppression of generic methods
  public←override~⍨upper ⎕NL ¯3 ⍝ Accessible class-generic methods
- result←{⍵[⍋⍵]}{'⎕'@('⍙'=⊢)⍵}¨private∪public ⍝ Combine & clean up
+ result←{⍵[⍋⍵]}'⎕'@('⍙'=⊢)¨private∪public ⍝ Combine & clean up

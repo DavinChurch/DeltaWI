@@ -6,7 +6,7 @@
      :If 2=≢⍴arg ⋄ arg←↓arg ⋄ :EndIf ⍝ Permit a matrix of names
      'DOMAIN ERROR'##.##.Error 0∊##.##.IsValidName¨arg
      arg←##.##.∆dlt¨,¨arg ⍝ Force into a list of arbitrary names
-     object ⎕VSET⊂'_newclasses'arg
+     object._newclasses←arg
      result←##.NoRes
  :Else ⍝ Otherwise just read it
      result←object ⎕VGET⊂'_newclasses'⍬

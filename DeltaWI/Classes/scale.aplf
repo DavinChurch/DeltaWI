@@ -61,7 +61,7 @@
  :Section ⍝ Set APL+Win properties (Dyalog properties don't change)
      scale←arg ⍝ Now we can set the new property value from what they gave us
      :If scale⊃⍛∊5 6 ⋄ (size scale)←⌊0.5+size scale ⋄ :EndIf ⍝ If new 'scale' is in pixels, round to integers
-     object ⎕VSET('_size'size)('_scale'scale) ⍝ Set new APL+Win reference values
+     object.(_size _scale)←size scale ⍝ Set new APL+Win reference values
 ⍝? Make adjustments for closed object handling
  :EndSection
 

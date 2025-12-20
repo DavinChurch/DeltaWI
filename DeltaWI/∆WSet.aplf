@@ -1,9 +1,13 @@
- obj ∆WSet props;names;real
+ testing←obj ∆WSet props;names;real
 ⍝ Set properties on a given object (each must potentially be an object property)
-⍝ For use by common-area routines to access properties that may or may not exist on the particular object
+⍝ For use by common-area routines to access properties that may or may not actually exist on the particular object
 
- :If 1=≡⊃⊆props ⋄ props←⊂⊆props ⋄ :EndIf ⍝ This is a simple name-value pair so must nest
- names←⊃¨props←,props ⍝ Dyalog property names being referenced
+⍝ Begin by ensuring correct nesting for each property
+ :If 0=≡props ⋄ props←,¨props ⋄ :EndIf
+ :If 1=|≡props ⋄ props←⊂,props ⋄ :EndIf
+ props←,¨⊆¨,props
+ :If obj≡'⎕' ⋄ testing←props ⋄ :Return ⋄ :EndIf ⍝ Only for testing argument parsing
+ names←,¨⊃¨props ⍝ Dyalog property names being referenced
  :If 0∊≢props ⋄ :Return ⋄ :EndIf ⍝ Nothing to do
  'Missing property name'⎕SIGNAL 11/⍨0∊≢¨props ⍝ Watch for internal coding error
  'Missing property name'⎕SIGNAL 11/⍨0∊≢¨names ⍝ Watch for internal coding error

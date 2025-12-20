@@ -20,7 +20,7 @@
  :If action≡'data'
      :If ×≢args ⍝ If we have new data, write it
          :If 1=≢args ⋄ args←⊃args ⋄ :EndIf ⍝ If only a single item is provided, assume it is unnested
-         obj ⎕VSET⊂'_data'args
+         obj._data←args
          result←Classes.NoRes
      :Else ⍝ Otherwise just read it (default=0)
          result←obj ⎕VGET⊂'_data' 0

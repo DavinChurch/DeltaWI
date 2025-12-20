@@ -9,5 +9,5 @@
      result←((at-1)↑result),here,at↓result
  :EndFor
  result/⍨←~('_'=⊃¨result)∧∧/¨result∊¨⊂⎕D ⍝ Eliminate numbered invisible children
- result↓¨⍨←1+≢⍕object ⍝ Don't include Dyalog's prefixes of this object
+ result↓¨⍨←1+≢⍕object ⍝ Don't include Dyalog's prefixes of this object ⍝? (is this the same as ##.LeafName, or possible worse?)
  result,⍨¨←⊂2↓object._self,'.' ⍝ Result must return full APL+Win GUI names (including APL+Win parentage), except '#.'

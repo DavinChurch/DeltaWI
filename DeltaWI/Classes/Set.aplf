@@ -1,10 +1,10 @@
  result←object Set arg;prop
 ⍝ Set multiple properties in a single call
 
- result←NoRes
+ result←NoRes ⍝ Never return any data
  :For prop :In arg ⍝ Loop through properties sequentially
-     '∆WI ACTION ERROR: Property-reference not permitted in this context'##.Error 2≠≡prop
+     '∆WI ACTION ERROR: Property-reference not permitted in this context'##.Error 2≠|≡prop
      'DOMAIN ERROR'##.Error~##.IsChar⊃prop
 ⍝? Will a failure here pass error #870 upwards again?
-     object._self ##.∆WI prop ⍝ Call ∆WI recursively for easiest access to relative naming ⍝? (Hopefully this is fast enough)
+     {}object._self ##.∆WI prop ⍝ Call ∆WI recursively for easiest access to relative naming ⍝? (Hopefully this is fast enough)
  :EndFor

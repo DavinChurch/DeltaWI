@@ -5,4 +5,4 @@
  private←'o'object._Class.⎕NL ¯3 ⍝ Class-specific events
  private~←override←((⊂1 2 0)≢¨⊃¨object._Class.⎕AT¨private)/private ⍝ Class-specific suppression of generic events
  public←override~⍨'o'⎕NL ¯3 ⍝ Accessible class-generic events
- result←{⍵[⍋⍵]}{'⎕'@('⍙'=⊢)⍵}¨2↓¨{⍵/⍨'on'⊂⍛∊2↑¨⍵}private∪public ⍝ Combine & clean up lists
+ result←{⍵[⍋⍵]}'⎕'@('⍙'=⊢)¨2↓¨{⍵/⍨'on'⊂⍛∊2↑¨⍵}private∪public ⍝ Combine & clean up lists

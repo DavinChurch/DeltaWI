@@ -6,12 +6,14 @@
      result←old
  :Else
      new←⊃arg ⍝ New caption to be shown
-     object ⎕VSET⊂'_caption'new ⍝ Update the APL+Win record
+     '∆WI RANK ERROR: caption' ##.##.Error 1<≢⍴new
+     '∆WI DOMAIN ERROR: caption' ##.##.Error ~##.##.IsChar new
+     object._caption←new←,new ⍝ Update the APL+Win record
      object ##.##.∆WS'caption'new ⍝ Change the Dyalog object so the screen actually changes
      :If ≠/×≢¨old new ⍝ Are we changing whether there's a caption or not?
          :If ×≢new ⍝ Adding a caption
          :AndIf 1>object ##.##.∆WG'Border'
-             ⍝? Border cannot be changed after creation, and I don't think it's worth Recreating it
+⍝? Border cannot be changed after creation, and it doesn't sound like it's worth Recreating it
          :EndIf
          {}object ##.where,⊂(object ⎕VGET⊂'_where'⍬) ⍝ Recalculate all sizing/border parameters
      :EndIf

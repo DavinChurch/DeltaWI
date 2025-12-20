@@ -4,8 +4,8 @@
  MT←0 0⍴'' ⍝ An empty return value for many ∆WI calls
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
- ∆WSELF←'f' ⍝ This technically won't work in APL+Win, but it will here because we can't trap assignment errors
- ∆WI Pass(,'f')⊢'New' 'Form'
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'
+ ∆WSELF←'f'
  ∆WI Pass(,'f')⊢'self'
  ∆WI Pass MT⊢'where' 0 0 10 10
  ∆WI Pass 0 0 10 10⊢'where'
@@ -31,21 +31,21 @@
  ∆WI Pass MT⊢'extent' 10 30
  ∆WI Pass 80 120⊢'size'
 
+ 'f.b1'∆WI Pass'f.b1'⊢'New' 'Button'('where' 0 0)('caption' 'Yep')
  ∆WSELF←'f.b1'
- ∆WI Pass'f.b1'⊢'New' 'Button'('where' 0 0)('caption' 'Yep')
  ∆WI Pass'f.b1'⊢'self'
  ∆WI Pass 0 0 12 40⊢'where'
  ∆WI Pass 12 40⊢'extent'
  ∆WI Pass 1.5 10⊢'size'
 
+ 'f.b2'∆WI Pass'f.b2'⊢'New' 'Button'('where' 15 40)('extent' 18 60)('caption' 'Nope')
  ∆WSELF←'f.b2'
- ∆WI Pass'f.b2'⊢'New' 'Button'('where' 15 40)('extent' 18 60)('caption' 'Nope')
  ∆WI Pass 15 40 18 60⊢'where'
  ∆WI Pass 18 60⊢'extent'
  ∆WI Pass 2.25 15⊢'size'
 
+ 'f.b3'∆WI Pass'f.b3'⊢'New' 'Button'('where' 40 20)('size' 2 20)('caption' 'Maybe')
  ∆WSELF←'f.b3'
- ∆WI Pass'f.b3'⊢'New' 'Button'('where' 40 20)('size' 2 20)('caption' 'Maybe')
  ∆WI Pass 40 20 16 80⊢'where'
  ∆WI Pass 16 80⊢'extent'
  ∆WI Pass 2 20⊢'size'
@@ -53,5 +53,4 @@
 
 ⍝? Proportional scaling can't be tested until written
 
- ⎕DL 15
 quit:'f'∆WI Pass MT⊢'Delete' ⍝ Clean up after tests

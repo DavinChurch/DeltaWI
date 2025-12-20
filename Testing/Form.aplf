@@ -8,16 +8,40 @@
  'f'∆WI Pass MT⊢'caption' 'Testing'
  'f'∆WI Pass'Testing'⊢'caption'
 
- ∆WSELF←'f' ⍝ This technically won't work in APL+Win, but it will here because we can't trap assignment errors
- ∆WI Pass(,'f')⊢'self'
+ 'f'∆WI Pass(,'f')⊢'self'
+ ∆WSELF←'f'
  ⍝ Can't test default 'where' because it will vary by monitor
+
+⍝ Check visibilities
+ ∆WI Pass 1⊢'visible'
+ ∆WI Pass MT⊢'visible' ¯1
+ ∆WI Pass ¯1⊢'visible'
+ ∆WI Pass MT⊢'visible' ¯2
+ ∆WI Pass ¯2⊢'visible'
+ ∆WI Pass MT⊢'visible' ¯3
+ ∆WI Pass ¯3⊢'visible'
+ ∆WI Pass MT⊢'visible' 0
+ ∆WI Pass ¯1⊢'visible'
+ ∆WI Pass MT⊢'visible' 1
+ ∆WI Pass 1⊢'visible'
+ ∆WI Pass MT⊢'visible' 2
+ ∆WI Pass 2⊢'visible'
+ ∆WI Pass MT⊢'visible' 3
+ ∆WI Pass 3⊢'visible'
+ ∆WI Pass MT⊢'visible' 1
+
+
+
+
+
+
 
 
  'f'∆WI Pass MT⊢'Delete' ⍝ Clean up after tests
 
 
 ⍝ Also need early/initial support and testing for:
-⍝   border, (visible), value, style
+⍝   border, value, style
 ⍝   >data<, (hwnd), (icon), (modified), (modifystop), (opened), (state?), (suppress)
 ⍝   Close, (Focus), (Hide), (Modify), (Open), (Show), Wait
 ⍝   (onClose), (onDestroy), [onPrompt], [onTooltip], (onDelete), (onFocus), (onHide),

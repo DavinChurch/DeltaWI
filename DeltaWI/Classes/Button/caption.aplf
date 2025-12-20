@@ -6,7 +6,8 @@
      result←old
  :Else
      new←⊃arg ⍝ New caption to be shown
-     object ⎕VSET⊂'_caption'new ⍝ Update the APL+Win record
+     object._caption←new ⍝ Update the APL+Win record
      object ##.##.∆WS'caption'((⎕UCS 10)@{⍵=⎕UCS 13}⊢new) ⍝ Change the Dyalog object so the screen actually changes
+⍝? Does changing the Dyalog button caption auto-change the button size?
      result←##.NoRes
  :EndIf

@@ -13,5 +13,6 @@
  t←arg[;1]∊was[;1] ⋄ was[was[;1]⍳t/arg[;1];]←t⌿arg ⋄ arg⌿⍨←~t ⍝ Update changed links in-place
  was⍪←arg ⍝ Add new links to the bottom of the list
  was⌿⍨←0≠≢¨was[;2] ⍝ Throw away any links to be deleted
- object ⎕VSET⊂'_links'was ⍝ Now we can put back the new list
+ :if 0∊⍴was ⋄ was←0 2⍴⊂'' ⋄ :endif ⍝ Normalize empty list
+ object._links←was ⍝ Now we can put back the new list
  result←NoRes

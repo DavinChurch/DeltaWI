@@ -9,11 +9,11 @@
 
  wself←parent._self,'.',name ⍝ New object name to create
  localize←##.Application ⎕VGET('∆WSELF' '')('∆WEVENT' '')('∆WARG'⍬)('∆WRES' 0) ⍝ Capture previous application quad-vars
- ##.Application ⎕VSET('∆WSELF'wself)('∆WEVENT' 'New')('∆WARG'class)('∆WRES'(⊂'New'),arg) ⍝ Set application's GUI variables for onNew event processing
+ ##.Application.(∆WSELF ∆WEVENT ∆WARG ∆WRES)←wself'New'class((⊂'New'),arg) ⍝ Set application's GUI variables for onNew event processing
  ##.Run onnew ⍝ Execute the application's custom creation process!
  newobj←parent ##.Locate,⊂name ⍝ Where can we find the newly-custom-created object
  ('∆WI CLASS ERROR: Class "',class,'" not found')##.Error newobj≡⎕NULL
- ##.Application ⎕VSET(↑'∆WSELF' '∆WEVENT' '∆WARG' '∆WRES')localize ⍝ Restore previous application quad-vars
+ ##.Application.(∆WSELF ∆WEVENT ∆WARG ∆WRES)←localize ⍝ Restore previous application quad-vars
 
  ⍝ Note: There will be no base GUI variables created here because the UDC process must use ∆WI itself to create the real objects
  ⍝ Note: This function will not proceed to call Classes.New because all the creation steps will have already been done by ∆WI from within onNew.
