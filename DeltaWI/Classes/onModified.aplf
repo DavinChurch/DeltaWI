@@ -1,0 +1,2 @@
+ result←object onModified arg
+ result←object(''##.SetEvent'Modified')arg ⍝ This is never activated by a native Dyalog event

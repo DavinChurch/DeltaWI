@@ -1,0 +1,2 @@
+ result←object onDelete arg
+ result←object(''##.SetEvent'Delete')arg ⍝ This is never activated by a native Dyalog event

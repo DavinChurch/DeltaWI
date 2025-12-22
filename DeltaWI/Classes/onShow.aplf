@@ -1,0 +1,2 @@
+ result←object onShow arg
+ result←object(''##.SetEvent'Show')arg ⍝ This is never activated by a native Dyalog event

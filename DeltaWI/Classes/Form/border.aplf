@@ -1,0 +1,35 @@
+ result←object border arg;old;new;props;settings;bad;moveable
+⍝ Read or change the border style of the Form
+
+ old←object ⎕VGET⊂'_border' '' ⍝ Existing border
+ :If 0=≢arg
+     result←old
+ :Else
+     :If 1=≢new←arg
+         new←⊃new
+     :EndIf
+     '∆WI DOMAIN ERROR: border'##.##.Error(1<|≡new)∨3≠10|⎕DR new
+     new←+/∊arg ⍝ New border property
+     '∆WI ATTRIBUTE ERROR: Invalid "border" attribute specified'##.##.Error(new<0)∨(new≥1024)∨∨/4 8∊##.##.BitVals new ⍝ Is it out of range?
+     object._border←new ⍝ Update APL+Win value
+
+     ⍝ Adjust Dyalog settings
+     ⍝ Modifiable: SysMenu, MinButton, MaxButton, HelpButton, Moveable
+     ⍝ Not modifiable: Border, Sizeable
+     (old new)←##.##.BitVals¨old new ⍝ Let's watch out for changing individual bit values
+     bad←((2↑old≠new)/1 2),new∩128 512
+     ('Unsupported Form border value: ','&'##.##.∆commalist bad)##.##.Error×≢bad
+     moveable←(∨/16 32 64∊new)∨×≢object ⎕VGET⊂'_caption' ''
+     settings←object ##.##.∆WG'SysMenu' 'MinButton' 'MaxButton' 'HelpButton' 'Moveable'
+     props←⍬ ⍝ Determine which Dyalog properties we ought to be changing
+     :If settings[1]≠16∊new ⋄ props,←⊂'SysMenu'(16∊new) ⋄ :EndIf
+     :If settings[2]≠32∊new ⋄ props,←⊂'MinButton'(32∊new) ⋄ :EndIf
+     :If settings[3]≠64∊new ⋄ props,←⊂'MaxButton'(64∊new) ⋄ :EndIf
+     :If settings[4]≠256∊new ⋄ props,←⊂'HelpButton'(256∊new) ⋄ :EndIf
+     :If settings[5]≠moveable ⋄ props,←⊂'Moveable'moveable ⋄ :EndIf ⍝ This is as close as we can get, I think
+
+     :If ∨/old≠new ⍝ If we're actually changing things, reconstruct sizing
+         {}object ##.where,⊂(object ⎕VGET⊂'_where'⍬) ⍝ Recalculate all sizing/border parameters
+     :EndIf
+     result←##.NoRes
+ :EndIf

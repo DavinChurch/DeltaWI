@@ -1,0 +1,6 @@
+ result←object hwnd arg
+⍝ Return the internal Windows handle for this control
+⍝ This only works for visible GUI objects (and should be suppressed for other classes)
+
+ '∆WI ACTION ERROR: Property "hwnd" is read-only'##.Error×≢arg
+ result←object ∆WGet'Handle'

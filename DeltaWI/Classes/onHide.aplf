@@ -1,0 +1,2 @@
+ result←object onHide arg
+ result←object(''##.SetEvent'Hide')arg ⍝ This is never activated by a native Dyalog event

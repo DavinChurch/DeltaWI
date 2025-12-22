@@ -41,8 +41,7 @@
 
 
 ⍝ Also need early/initial support and testing for:
-⍝   border, value, style
-⍝   >data<, (hwnd), (icon), (modified), (modifystop), (opened), (state?), (suppress)
-⍝   Close, (Focus), (Hide), (Modify), (Open), (Show), Wait
-⍝   (onClose), (onDestroy), [onPrompt], [onTooltip], (onDelete), (onFocus), (onHide),
-⍝   (onModified), (onOpen), (onShow), (onUnfocus), onWait
+⍝   style
+⍝   (icon), (state?)
+⍝   Close, (Focus), Wait
+⍝   [onPrompt], [onTooltip], (onFocus), (onUnfocus), onWait

@@ -1,0 +1,50 @@
+ result←object(reason modify)new;was;flags;mystop;do;kid;parent;done;kids;mod
+⍝ Subroutine for 'modified' and 'Modify' and changes they make to parent and child objects.
+⍝ The usual values are passed (new is derived from arg after validation and handling ⍬/¯1),
+⍝ plus a "reason/relationship" code to be given to the onModified event handler
+⍝   reason[1]←0=explicit change; 1=parent was cleared; ¯1=descendant was changed
+⍝   reason[2]←1=user-caused; ¯1=property-caused; ¯2=method-caused
+
+ was←object ⎕VGET⊂'_modified' 0
+ object._modified←new ⍝ We've got a new value
+
+ :Section ⍝ Cascade the changes upward or downward as appropriate
+⍝? All this logic needs to be carefully checked to make sure it's complete & accurate
+     :If new ⍝ Turning it on sets all ancestors to ¯1 up until a modifystop is reached or it is already 1 (or ¯1)
+         flags←↑(¯1↓object._Ancestry)⎕VGET('_modified' 0)('_modifystop' 0) ⍝ [;1]←modified, [;2]←modifystop
+         mystop←object ⎕VGET⊂'_modifystop' 0
+         do←+/∧\(flags[;1]=0)∧~¯1↓mystop,flags[;2] ⍝ How many of my ancestors need to be changed?
+         :For parent :In do↑object._Ancestry
+             parent._modified←¯1 ⍝ It's ¯1 now to show that I've been modified
+             {}'Modified'##.##.Event parent ##.##.Application,¯1 0,¯1,reason[2] ⍝ Run their onModified event handler
+         :EndFor
+     :Else ⍝ Turning it off, resets all descendants to 0 as well, and conditionally some of the ancestors as well
+         ⍝ Reset all descendants
+         :For kid :In object ⎕VGET ##.##.LeafName¨object children ⍬
+             {}kid((1,reason[2])modify)0 ⍝ Recursively clear all my children's flags
+         :EndFor
+         ⍝ Check ancestors to see if they need resetting
+         :If reason[1]≠1 ⍝ If my parent is being cleared then we don't need to bother because all the children's flags are going away
+             parent←⊃object._Ancestry ⍝ Now we're going to see which of my ancestors also need adjusting
+             done←,object ⍝ Branches we've already checked
+             :While parent≢GUIroot ⍝ Scan as far upwards as we need to
+                 flags←parent ⎕VGET('_modified' 0)('_modifystop' 0)
+                 :If flags[1]≠¯1 ⋄ :Leave ⋄ :EndIf  ⍝ No more parents to do, including this one
+                 ⍝ We're going to reset this parent if there are no other descendants that have been modified
+                 :If ×≢kids←parent ##.children ⍬ ⍝ Look for all their offspring
+                 :AndIf ×≢kids←done~⍨parent ⎕VGET ##.##.LeafName¨kids ⍝ Except our own tree
+                     mod←kids ⎕VGET⊂'_modified' 0 ⍝ Which of their children have been modified?
+                     :If ∨/mod≠0 ⋄ :Leave ⋄ :EndIf ⍝ If any siblings have been modified - we're done
+                 :EndIf
+                 ⍝ Ok, no other children of this parent have modifications, so we need to reset it to 0 as well
+                 parent._modified←0 ⍝ I was the only modified child of this parent, so reset it as well
+                 {}'Modified'##.##.Event parent ##.##.Application,0 ¯1,¯1,reason[2] ⍝ Run their onModified event handler
+                 :If flags[2] ⋄ :Leave ⋄ :EndIf ⍝ If modifications stop here, then don't go any further up
+                 done,←parent ⋄ parent←⊃parent._Ancestry ⍝ Now check their parent to see if it need changes
+             :EndWhile
+         :EndIf
+     :EndIf
+ :EndSection
+
+ ⍝ Finally, we'll fire my own onModified event
+ result←'Modified'##.##.Event object ##.##.Application,new,was,reason ⍝ Run my onModified event handler (with arguments and result)

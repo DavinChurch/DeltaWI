@@ -1,0 +1,2 @@
+ result←object onOpen arg
+ result←object(''##.SetEvent'Open')arg ⍝ This is never activated by a native Dyalog event

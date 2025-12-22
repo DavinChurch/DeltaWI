@@ -1,0 +1,8 @@
+ text←{conj}∆commalist items;r
+⍝ Turn a nested list of items into a proper english comma-delimited
+⍝ list (including a conjunction [default='or']).
+⍝ Copied from an ancient APL+Win version on 12/20/2025 by Davin Church of Creative Software Design
+
+ :If 0=⎕NC'conj' ⋄ conj←'or' ⋄ :EndIf ⋄ conj←conj,(' '≠¯1↑conj)/' ' ⍝ Default
+ r←≢items←,,¨⍕¨items ⍝ Pre-clean and count the items in the list
+ text←¯2↓∊items,¨((×⍴conj)∧(r=2)=⍳r)↓¨((-⍴conj)×(⍳r)≠r-1)↓¨⊂', ',conj ⍝ Format the whole list at once
