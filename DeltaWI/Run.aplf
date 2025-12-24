@@ -1,11 +1,27 @@
- Run expression;back;requote
-⍝ Execute the given expression in the Application's calling name scope (no explicit return value)
+ {WRES}←{parms}Run expression;back;requote;wres
+⍝ Execute the given expression in the Application's calling name scope (no explicit result from expression, just ∆WRES)
+⍝ Allow setting of both (not just one) ∆WARG and ∆WRES in the optional argument.
+⍝ Return the application's ∆WRES value.
+
+ :If 2=⎕NC'parms'                               ⍝ Let's allow them to set both event variables via the left argument
+ :AndIf 2=≢parms                                ⍝ (Both must be included to make the correct nesting assumptions)
+     ⍝ If the first item of ∆WARG is itself a namespace reference, then let's assume that they have not removed
+     ⍝ the two message-prefix items before passing it to me, and do it automatically here.
+     :If 9=⎕NC 1⊃parms ⋄ (1⊃parms)↓⍨←2 ⋄ :EndIf ⍝ So they don't have to bother dropping this off every time
+     parms←{⍵⊃⍨⍳1=≢⍵}¨1↓¨0,¨parms               ⍝ Auto-disclose singletons ⍝? Is there any reason we shouldn't be doing this for ∆WRES?
+     Application.∆WARG←1⊃parms
+     Application.∆WRES←wres←2⊃parms
+ :Else
+     wres←Application ⎕VGET⊂'∆WRES' 0           ⍝ Make an assumption about the default return value if it gets erased
+ :EndIf
 
  :If ×≢expression
      requote←'''[^'']*''' '"[^"]*"'⎕R{⍵.('\"' ''''⎕R'''' ''''''⍣PatternNum⊢Match)} ⍝ Convert any double-quotes into single-quotes before execution
-     back←Application⍕⍛,'.'         ⍝ Which namespace are we looking for?
-     back←1-⍨back⍳⍨⍥⊆⎕XSI↑¨⍨≢back   ⍝ How far back is it in the )SI?
-     back(86⌶)requote expression    ⍝ Execute the expression at the correct point of the application
+     back←Application⍕⍛,'.'                     ⍝ Which namespace are we looking for?
+     back←1-⍨back⍳⍨⍥⊆⎕XSI↑¨⍨≢back               ⍝ How far back is it in the )SI?
+     back(86⌶)requote expression                ⍝ Execute the expression at the correct point of the application
  :EndIf
 ⍝? Instead of just going back until we hit the application scope, should we instead be going all the way back to the ∆WI call itself?
-⍝? Does it make a difference? (Only for shadowed variables??)
+⍝? Does it make a difference? (Only for interim-shadowed variables??)
+
+ WRES←Application ⎕VGET⊂'∆WRES'wres             ⍝ Return result to the calling function for easier access (but shy so it won't just print)

@@ -11,7 +11,8 @@
  localize←##.Application ⎕VGET('∆WSELF' '')('∆WEVENT' '')('∆WARG'⍬)('∆WRES' 0) ⍝ Capture previous application quad-vars
  ##.Application.(∆WSELF ∆WEVENT ∆WARG ∆WRES)←wself'New'class((⊂'New'),arg) ⍝ Set application's GUI variables for onNew event processing
  ##.Run onnew ⍝ Execute the application's custom creation process!
- newobj←parent ##.Locate,⊂name ⍝ Where can we find the newly-custom-created object
+ newobj←parent ##.Locate,⊂name ⍝ Where can we find the newly-custom-created object?
+⍝? It must have created an object to have worked. I don't think there's any way that it can say "I don't want to do anything", right?
  ('∆WI CLASS ERROR: Class "',class,'" not found')##.Error newobj≡⎕NULL
  ##.Application.(∆WSELF ∆WEVENT ∆WARG ∆WRES)←localize ⍝ Restore previous application quad-vars
 

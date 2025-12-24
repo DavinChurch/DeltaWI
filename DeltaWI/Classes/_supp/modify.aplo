@@ -1,4 +1,4 @@
- result←object(reason modify)new;was;flags;mystop;do;kid;parent;done;kids;mod
+ {result}←object(reason modify)new;was;flags;mystop;do;kid;parent;done;kids;mod
 ⍝ Subroutine for 'modified' and 'Modify' and changes they make to parent and child objects.
 ⍝ The usual values are passed (new is derived from arg after validation and handling ⍬/¯1),
 ⍝ plus a "reason/relationship" code to be given to the onModified event handler
@@ -16,12 +16,12 @@
          do←+/∧\(flags[;1]=0)∧~¯1↓mystop,flags[;2] ⍝ How many of my ancestors need to be changed?
          :For parent :In do↑object._Ancestry
              parent._modified←¯1 ⍝ It's ¯1 now to show that I've been modified
-             {}'Modified'##.##.Event parent ##.##.Application,¯1 0,¯1,reason[2] ⍝ Run their onModified event handler
+             'Modified'##.##.Event parent ##.##.Application,¯1 0,¯1,reason[2] ⍝ Run their onModified event handler
          :EndFor
      :Else ⍝ Turning it off, resets all descendants to 0 as well, and conditionally some of the ancestors as well
          ⍝ Reset all descendants
          :For kid :In object ⎕VGET ##.##.LeafName¨object children ⍬
-             {}kid((1,reason[2])modify)0 ⍝ Recursively clear all my children's flags
+             kid((1,reason[2])modify)0 ⍝ Recursively clear all my children's flags
          :EndFor
          ⍝ Check ancestors to see if they need resetting
          :If reason[1]≠1 ⍝ If my parent is being cleared then we don't need to bother because all the children's flags are going away
@@ -38,7 +38,7 @@
                  :EndIf
                  ⍝ Ok, no other children of this parent have modifications, so we need to reset it to 0 as well
                  parent._modified←0 ⍝ I was the only modified child of this parent, so reset it as well
-                 {}'Modified'##.##.Event parent ##.##.Application,0 ¯1,¯1,reason[2] ⍝ Run their onModified event handler
+                 'Modified'##.##.Event parent ##.##.Application,0 ¯1,¯1,reason[2] ⍝ Run their onModified event handler
                  :If flags[2] ⋄ :Leave ⋄ :EndIf ⍝ If modifications stop here, then don't go any further up
                  done,←parent ⋄ parent←⊃parent._Ancestry ⍝ Now check their parent to see if it need changes
              :EndWhile

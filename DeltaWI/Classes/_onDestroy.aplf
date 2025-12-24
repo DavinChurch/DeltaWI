@@ -1,5 +1,5 @@
- ok←run _onClick message
- ⍝ Execute the Button:onClick event handler
+ ok←run _onDestroy message
+ ⍝ Execute the generic onDestroy event handler
  ⍝ No arguments or results are used for this event.
 
  ok←1⊣##.##.Run run

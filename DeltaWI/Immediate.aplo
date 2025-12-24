@@ -17,7 +17,8 @@
      :Return ⍝ Processed; exit with this result
  :EndIf
 
- :If action≡'data'
+ :If action≡'data' ⍝ This is a generic data-storage property usable on any control
+     ⍝ This does not bother to use Dyalog's Data property, but just stores the value in a namespace variable
      :If ×≢args ⍝ If we have new data, write it
          :If 1=≢args ⋄ args←⊃args ⋄ :EndIf ⍝ If only a single item is provided, assume it is unnested
          obj._data←args

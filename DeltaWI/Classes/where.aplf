@@ -102,7 +102,7 @@
          object ##.∆WSet('Posn'dyposn)('Size'dysize)
      :EndSection
 
-     {}'Resize'##.Event object ##.Application,object._size,0 ⍝ Run the onResize event handler
+     'Resize'##.Event object ##.Application,object._size,0 ⍝ Run the onResize event handler
 ⍝? Does onResize run anyway if the size doesn't actually change?
      result←NoRes
 

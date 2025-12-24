@@ -1,0 +1,4 @@
+ result←object supress arg
+⍝ Permit an ancient and incorrect spelling of 'suppress'
+
+ result←object suppress arg

@@ -1,0 +1,25 @@
+ rpt←info_report;class;common;meths;props;events;active;override;cls;fns;sort;nofns;pw;except
+⍝ A developer-only tool, produce a quick report of all the properties/methods/events/defaults for all classes that have implementations
+⍝ Can be used to compare with APL+Win to see what is missing (or what might need to be class-overridden)
+⍝ rpt[;1]←Class (namespace) name; rpt[;2]←'methods' 'properties' 'events' 'defaults'; rpt[;3]←list of names
+
+ rpt←0 3⍴⊂''
+ meths←{⍵/⍨⍵⊃¨⍛∊'⍙',1 ⎕C ⎕A}
+ props←{((⊂'on'),¨events ⍵)~⍨⍵/⍨⍵⊃¨⍛∊⎕A}
+ events←{⍵{⍺⍺∊⍨⊂'_on',⍵:⍵ ⋄ '(',⍵,')'}¨2↓¨⍵/⍨(⊂'on')≡¨2↑¨⍵}
+ active←{⍵/⍨(⊂1 2 0)≡¨⊃¨⍺.⎕AT¨⍵} ⍝ Determine if these function definitions are "active"
+ override←{⍵/⍨(⊂1 2 0)≢¨⊃¨⍺.⎕AT¨⍵} ⍝ Determine if these function definitions are class overrides
+ common←{(meths ⍵)(props ⍵)(events ⍵)}##.⎕NL ¯3 ⍝ [1]←methods, [2]←properties, [3]←events
+ sort←{∪⍵[⍋⍵~¨⊂'()']~⍺}
+ except←'supress' '(Action)' '(New)' ⍝ Names I don't want to be carrying around everywhere, such as obsolete spellings or things w/o event handlers
+ :For class :In 'System'⊂⍛,(##.⎕NL ¯9)~'System' 'ActiveX' 'Dyalog' '_supp'
+     cls←## ⎕VGET class ⍝ Point to the class definition
+     fns←except~⍨cls active cls.⎕NL ¯3 ⋄ nofns←cls override cls.⎕NL ¯3
+     rpt⍪←class'methods'(except sort(nofns~⍨1⊃common),meths fns)
+     rpt⍪←class'properties'(except sort(nofns~⍨2⊃common),props fns)
+     rpt⍪←class'events'(except sort((events nofns)~⍨3⊃common),events fns)
+     rpt⍪←class'defaults'(cls.⎕NL ¯2)
+ :EndFor
+ rpt←(×≢¨rpt[;3])⌿rpt ⍝ Skip missing types
+ pw←⎕PW-2+2⊃⍴⍕rpt[;1 2] ⍝ Figure out maximum wrapping width within ⎕PW
+ rpt[;3]←pw{nc←⌊⍺÷2+⌈/≢¨⍵ ⋄ (nc,⍨⌈nc÷⍨≢⍵)⍴1↓(1+nc×⌈nc÷⍨≢⍵)↑''⊂⍛,⍵}¨rpt[;3] ⍝ Format into columns

@@ -12,11 +12,11 @@
          :If object._visible>0
              object._visible←0 ⍝ Just in case something wonders about this before it's gone
              object ##.∆WSet'Visible' 0
-             {}'Hide'##.Event object ##.Application ⍝ Run the onHide event handler
+             'Hide'##.Event object ##.Application ⍝ Run the onHide event handler
          :EndIf
          object.(_opened _enabled)←0 0 ⍝ Just in case something wonders about this before it's gone
          object ##.∆WSet'Active' 0
-         {}'Destroy'##.Event object ##.Application ⍝ Run the onDestroy event handler
+         'Destroy'##.Event object ##.Application ⍝ Run the onDestroy event handler
      :EndIf
  :EndSection
 
@@ -35,7 +35,7 @@
          :AndIf ×≢hidden/⍨←∧/(1↓¨hidden)∊¨⊂⎕D ⍝ Look for _999-style native objects
              ##.∆EX⍕¨object ⎕VGET hidden
          :EndIf
-         ##.∆EX⍕object.⎕VGET hidden
+         ##.∆EX⍕object ⎕VGET hidden
      :EndFor
      :If ×≢hidden←'_'object.⎕NL ¯9 ⍝ Other hidden Dyalog objects
      :AndIf ×≢hidden←(∧/¨(1↓¨hidden)∊¨⊂⎕D)/hidden ⍝ Look for _999-style native objects
@@ -43,7 +43,7 @@
      :EndIf
  :EndSection
 
- {}'Delete'##.Event object ##.Application ⍝ Run the onDelete event handler
+ 'Delete'##.Event object ##.Application ⍝ Run the onDelete event handler
 
 ⍝? Anything else to clean up?
 

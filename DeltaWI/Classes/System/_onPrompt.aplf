@@ -1,0 +1,5 @@
+ ok←run _onPrompt message
+⍝ Execute a System:onPrompt event handler
+⍝? I haven't figured out who calls this yet & how
+
+ ok←NoRes⊣message 0 ##.##.Run run

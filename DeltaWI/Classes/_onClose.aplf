@@ -1,0 +1,6 @@
+ ok←run _onClose message
+ ⍝ Execute a generic onClose event handler
+ ⍝ Must return only 0 or 1
+
+ ok←message 1 ##.Run run
+ ok←~⊂ok⊂⍛∊0(,0) ⍝ Are they allowing closure? ⍝? Does ∆WRES←,0 also disallow closing?

@@ -1,26 +1,23 @@
  result←object Hide arg;was;new
 ⍝ Hide a GUI object
 
- result←NoRes
  was←object._visible
- :If was≤0 ⍝ Is it already hidden?
-     :Return ⍝ Nothing to do so just exit
- :EndIf
-
- :If ~object._opened ⍝ Is it a closed object?
-    ⍝ We have to run the Open method first, before we do anything else
-     {}object('Open'##.Invoke)⍬ ⍝ Force it open
-     was←object._visible ⍝ In case it changed
-     :If was≤0 ⍝ Is it hidden now?
-         :Return ⍝ Nothing left to do so just exit
+ :If was>0 ⍝ Is it visible?
+     :If ~object._opened ⍝ Is it a closed object?
+         ⍝ We have to run the Open method first, before we do anything else
+         object('Open'##.Invoke)⍬ ⍝ Force it open
+         was←object._visible ⍝ In case it changed
+         :If was≤0 ⍝ Is it hidden now?
+             :Return ⍝ Nothing left to do so just exit
+         :EndIf
      :EndIf
+
+     ⍝ Negate the APL+Win visible property
+     new←(-was)+object._class≡'Menu' ⍝ Menu objects can't be ¯1
+     object._visible←new ⍝ Store the new APL+Win value
+
+     ⍝ And update Dyalog to change the actual screen
+     object ##.∆WSet⊂'Visible' 0 ⍝ Set Dyalog control visibility
  :EndIf
-
- ⍝ Negate the APL+Win visible property
- new←(-was)+object._class≡'Menu' ⍝ Menu objects can't be ¯1
- object._visible←new ⍝ Store the new APL+Win value
-
- ⍝ And update Dyalog to change the actual screen
- object ##.∆WSet⊂'Visible' 0 ⍝ Set Dyalog control visibility
 
  result←'Hide'##.Event object ##.Application,arg ⍝ Run the onHide event handler (with arguments and result)

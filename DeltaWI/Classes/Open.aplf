@@ -1,7 +1,7 @@
  result←object Open arg;hidden;kids
 ⍝ Open a closed GUI object
 
- :If object._opened ⍝ If it's already opened, the we have nothing to do here
+ :If object._opened ⍝ If it's already opened, then we have nothing to do here
      result←NoRes
      :Return
  :EndIf
@@ -9,7 +9,7 @@
  object._opened←1
  result←'Open'##.Event object ##.Application,arg ⍝ Run the onOpen event handler
 ⍝? Does onResize run if the size isn't changed by opening?
- {}'Resize'##.Event object ##.Application,object._size,0 ⍝ Run the onResize event handler
+ 'Resize'##.Event object ##.Application,object._size,0 ⍝ Run the onResize event handler
 ⍝? What do we need to do about hidden internal objects while opening?
 
  :If ×≢kids←object children ⍬

@@ -1,0 +1,4 @@
+ result←object Close arg
+⍝ Close a GUI object and its children, if allowed, but do not delete it completely
+
+ result←object (0 _supp.close) arg ⍝ Call the master processor code, but don't force it to close

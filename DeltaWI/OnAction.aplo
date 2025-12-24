@@ -9,6 +9,7 @@
      Run todo
 ⍝? Check ∆W* variables to see if processing has been handled or needs to be continued normally
 ⍝? If the onAction event calls ∆WI '*', how can we detect that there so we know to continue processing?
+⍝? Do we need to watch for ∆WRES?
  :EndIf
 
  result←⎕NULL ⍝? For now, just assume there are no onActions to do
@@ -16,3 +17,5 @@
 
  ⍝? onAction may be a NL-delimited list of actions to take in sequence, stepped through with ∆WI '*'.
  ⍝? How are we going to handle the whole ∆WI '*' system??
+
+ ⍝? Should the execution support for this be moved to Classes._onAction so it looks like other events at that level?

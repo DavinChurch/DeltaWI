@@ -1,4 +1,4 @@
- dq←events Event message;event;object;realevent;localize;fn;action;run;Application;handler;⎕TRAP;GUIroot;suppress
+ {dq}←events Event message;event;object;realevent;localize;fn;action;run;Application;handler;⎕TRAP;GUIroot;suppress
 ⍝ When any needed Dyalog event is signalled, execute this function directly to perform the appropriate operations.
 ⍝ Important: This function operates independently of ∆WI and allows a separate access point into the DeltaWI system when events call it.
 ⍝
@@ -69,7 +69,7 @@
                      ⍝? If a synthetic event needs to return an abort signal, use ⎕NULL since 0 might be meaningful data
                  :Else
                      :Select action ⍝ What have they told us to do?
-                     :Case 0 ⍝ Abort this event handling and remainder of processing sequence
+                     :CaseList 0 ⎕NULL ⍝ Abort this event handling and remainder of processing sequence
                          dq←0 ⍝ Cancel the event at the Dyalog level
                          :Leave ⍝ And exit processing
                      :Case 1 ⍝ Proceed normally

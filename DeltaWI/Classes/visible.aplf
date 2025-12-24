@@ -20,7 +20,7 @@
 
  :If arg>⍥×was ⍝ Are we about to make it visible?
  :AndIf ~object._opened ⍝ See if it's currently closed
-     {}object('Open'##.Invoke)⍬ ⍝ Force it open
+     object('Open'##.Invoke)⍬ ⍝ Force it open
      was←object._visible ⍝ In case it changed
  :EndIf
 
@@ -32,10 +32,10 @@
 
  :If arg≠⍥×was ⍝ Has the sign of the visible bit changed?
      :If arg>0 ⍝ If it is becoming visible
-         {}'Show'##.Event object ##.Application ⍝ Run the onShow event handler
-         {}'Resize'##.Event object ##.Application,object._size,arg-1 ⍝ Run the onResize event handler
+         'Show'##.Event object ##.Application ⍝ Run the onShow event handler
+         'Resize'##.Event object ##.Application,object._size,arg-1 ⍝ Run the onResize event handler
      :Else ⍝ It is becoming invisible
-         {}'Hide'##.Event object ##.Application ⍝ Run the onHide event handler
+         'Hide'##.Event object ##.Application ⍝ Run the onHide event handler
      :EndIf
  :EndIf
 

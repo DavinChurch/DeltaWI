@@ -1,0 +1,4 @@
+ ok←run _onHide message
+ ⍝ Execute a generic onHide event handler
+
+ ok←{⍵≡0:NoRes ⋄ ⍵}message 0 ##.##.Run run

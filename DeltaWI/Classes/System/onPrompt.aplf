@@ -1,0 +1,5 @@
+ result←object onPrompt arg
+ ⍝? Is there any way to trap something in Dyalog to activate this event?
+ ⍝? How about tying it to onFocus & onUnFocus and running the prompts ourselves?
+ ⍝? But APL+Win Menu items get the prompt without the Focus, so that won't always work
+ result←object(''##.##.SetEvent'Prompt')arg

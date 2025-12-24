@@ -1,3 +1,0 @@
- result←object onPrompt arg
- ⍝? Is there any way to trap something in Dyalog to activate this event?
- result←object(''##.##.SetEvent'Prompt')arg

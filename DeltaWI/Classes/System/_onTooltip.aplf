@@ -1,0 +1,5 @@
+ ok←run _onTooltip message
+⍝ Execute a System:onTooltip event handler
+⍝? I haven't figured out who calls this yet & how
+
+ ok←NoRes⊣message 0 ##.##.Run run

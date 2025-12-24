@@ -1,0 +1,24 @@
+ {result}←object(force close)arg;hidden;kids
+⍝ Close a GUI object and its children, if not denied, but do not delete it completely
+⍝ Return a 1 for successfully closed or 0 if denied (and not forced).
+⍝ The operand specifies whether or not closing can be denied by the onClose event.
+
+ :If result←~object._opened ⋄ :Return ⋄ :EndIf ⍝ If it's already closed, then we just tell them so
+ result←force∨'Close'##.##.Event object ##.##.Application,arg ⍝ Run the onClose event handler (always return 0 or 1)
+ :If result=0 ⋄ :Return ⋄ :EndIf ⍝ Closing was denied
+
+ ⍝ Proceed to close the object, starting by force-closing all its children
+ :If ×≢kids←object children ⍬
+ :AndIf ×≢kids←object ⎕VGET ##.##.LeafName¨kids ⍝ Except our own tree
+     kids(1 close)¨⊂⍬ ⍝ Force-close all my children recursively
+ :EndIf
+
+ ⍝ Now, let's "destroy" myself
+ object._visible←(-object._visible)+object._class≡'Menu' ⍝ Menu objects can't be ¯1
+⍝? Should we actually be marking this hidden, even though closed objects typically aren't?
+ 'Hide'##.##.Event object ##.##.Application ⍝ Run the onHide event handler
+ 'Destroy'##.##.Event object ##.##.Application ⍝ Run the onDestroy event handler
+
+ ⍝ And now we can mark myself as gone, but not forgotten
+ object._opened←0
+ object ##.##.∆WSet('Active' 0)('Visible' 0) ⍝ Update Dyalog control properties

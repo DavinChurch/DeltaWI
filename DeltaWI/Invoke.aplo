@@ -1,4 +1,4 @@
- result←obj(action Invoke)args;handler;fn;nothere;op
+ {result}←obj(action Invoke)args;handler;fn;nothere;op
  ⍝ Invoke one of the class-based operational functions within the Classes namespaces.
  ⍝ Search the class-specific namespace first, then the class-generic namespace.
  ⍝ Execute the found function with the given arguments and return the result back to ∆WI.
