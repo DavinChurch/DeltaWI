@@ -55,7 +55,7 @@
              ⍝? How can I relocate the Picture parent when its Coord=User? Does it use the parent's Coord?
              ⍝? What happens if there's a Picture within a Picture?
          :EndIf
-         object ##.∆WSet'Size'dysize
+         object ##.∆WSet⊂'Size'dysize
      :EndSection
 
      'Resize'##.Event object ##.Application,object._size,0 ⍝ Run the onResize event handler

@@ -13,7 +13,7 @@
  'DOMAIN ERROR'Error~IsChar action
  'RANK ERROR'Error 1<≢⍴action
  '∆WI ACTION NAME ERROR: Improperly formed action name'Error(' '∊action)∨0=≢action
- action←,action ⍝ Ravel scalar actions
+ action←('*'=⊃action)↓action
  :If 0∊⍴args←1↓,⊆args ⋄ args←⍬ ⋄ :EndIf ⍝ And then return the rest of the argument as a vector (with empties normalized to ⍬)
  ⍝ An action's arguments need to be normalized too but they have different requirements for different actions, so handle them later
  ⍝ For instance, properties that have simple arguments can be either nested (requiring ⊃) or unnested.

@@ -1,0 +1,28 @@
+ ok←run _onAction message;resume;queue;object;steps
+⍝ Execute the generic onAction event handler
+⍝ The message being passed in here is the whole ∆WI argument (normalized), plus a flag, so it needs a little extra (non-standard) processing
+⍝ This involves a complicated recursive _and_ reentrant process, so be cautious with it.
+
+⍝ Note that if onAction processing is permanently interrupted, a stack of uncompleted tasks is left in the queue.
+⍝ However, these shouldn't get in the way unless they try to improperly call ∆WI '*' before the object is deleted.
+
+ (object resume)←message[1 3] ⍝ resume means: Are we continuing a current onAction?
+ :If resume∧×≢queue←object ⎕VGET⊂'_OnAction_queue'⍬ ⍝ Examine our LIFO queue of onAction expressions
+     :If 0=≢steps←⊃queue ⍝ Are we done with this onAction queue?
+         object._OnAction_queue←1↓queue ⍝ Remember that we've tried all these choices
+         ok←NoRes
+         :Return ⍝ Return all the way out of the original ∆WI ⍝? -- I hope!
+     :EndIf
+     run←⊃steps ⋄ queue[1]←⊂steps←1↓steps ⍝ We'll process the next expression this time through
+     object._OnAction_queue←queue ⍝ And remember where we were for next time
+ :ElseIf resume ⍝ Trying to resume with no queue at all is an error
+     ok←⎕NULL ⍝ Pass it back to the normal ∆WI procssing sequence to report it for us ⍝? Will this work?
+     :Return
+ :Else
+     run←##.∆dim ##.∆dlt¨(⎕UCS 13)##.∆cut run ⍝ What to do, but watch for multiple actions to perform
+     object._OnAction_queue←(⊂1↓run),queue ⍝ And remember that we're starting up something new
+     run←⊃run ⍝ We'll start with the first (usually only) expression
+ :EndIf
+
+
+ ok←(3↓message)NoRes ##.Run run ⍝ Pass along the original action as data

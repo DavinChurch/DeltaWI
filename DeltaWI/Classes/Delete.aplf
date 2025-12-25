@@ -11,11 +11,11 @@
      :If object._opened ⍝ If open, we'll need to change it to closed first
          :If object._visible>0
              object._visible←0 ⍝ Just in case something wonders about this before it's gone
-             object ##.∆WSet'Visible' 0
+             object ##.∆WSet⊂'Visible' 0
              'Hide'##.Event object ##.Application ⍝ Run the onHide event handler
          :EndIf
          object.(_opened _enabled)←0 0 ⍝ Just in case something wonders about this before it's gone
-         object ##.∆WSet'Active' 0
+         object ##.∆WSet⊂'Active' 0
          'Destroy'##.Event object ##.Application ⍝ Run the onDestroy event handler
      :EndIf
  :EndSection

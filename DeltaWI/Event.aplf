@@ -22,12 +22,12 @@
  ⍝? And since we often call this implicitly during internal processing, do we want to do the same thing to report back to our internal code??
 
  dq←1 ⍝ If nothing else, just continue APL/Windows processing normally
- :If 0=≢events ⋄ :Return ⋄ :EndIf ⍝ If there are no APL+Win events to emulate, just exit
+ :If 0=≢events←,⊆,events ⋄ :Return ⋄ :EndIf ⍝ If there are no APL+Win events to emulate, just exit
  (object realevent)←2↑message ⍝ What object/event are we processing? ("message" may be synthetic)
  :If 9=⎕NC'realevent' ⍝ Is this an internal (non-real) event call?
      ⍝ If our event message ia synthetic with an "event name" that's actually a namespace reference,
      ⍝ then that is a previous "Application" pointer being passed in from an internal (implied) event.
-     'Exactly one event name required for synthetic events'⎕SIGNAL 11/⍨(1≠≡events)∨1≠≢⊆events ⍝ Report improper usage directly
+     'Exactly one event name required for synthetic events'⎕SIGNAL 11/⍨(2≠≡events)∨1≠≢events ⍝ Report improper usage directly
      Application←realevent ⍝ Use what we're given instead of looking for an external caller source
      message[2]←⊂realevent←'' ⍝ Signal everyone that this is a synthetic event and should be handled a little differently
      suppress←object ⎕VGET⊂'_suppress' 0 ⍝ Have they asked to suppress this internal event?

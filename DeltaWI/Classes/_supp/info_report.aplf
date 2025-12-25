@@ -11,7 +11,7 @@
  override←{⍵/⍨(⊂1 2 0)≢¨⊃¨⍺.⎕AT¨⍵} ⍝ Determine if these function definitions are class overrides
  common←{(meths ⍵)(props ⍵)(events ⍵)}##.⎕NL ¯3 ⍝ [1]←methods, [2]←properties, [3]←events
  sort←{∪⍵[⍋⍵~¨⊂'()']~⍺}
- except←'supress' '(Action)' '(New)' ⍝ Names I don't want to be carrying around everywhere, such as obsolete spellings or things w/o event handlers
+ except←'supress' '(New)' ⍝ Names I don't want to be carrying around everywhere, such as obsolete spellings or things w/o event handler fns
  :For class :In 'System'⊂⍛,(##.⎕NL ¯9)~'System' 'ActiveX' 'Dyalog' '_supp'
      cls←## ⎕VGET class ⍝ Point to the class definition
      fns←except~⍨cls active cls.⎕NL ¯3 ⋄ nofns←cls override cls.⎕NL ¯3

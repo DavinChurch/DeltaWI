@@ -1,21 +1,16 @@
- result←action(obj OnAction)args;todo
- ⍝ Check object to see if it has onAction processing to perform.
- ⍝ If so, perform it and return any result. Otherwise just return a continuation signal.
+ result←action(obj OnAction resume)args
+⍝ Check object to see if it has any onAction processing to perform
+⍝ If so, perform it and return any result (often NoRes). Otherwise just return a continuation signal (⎕NULL).
+⍝ If resume=1, then this is a '*' continuation after (partial) onAction processing that should be resumed.
+
+⍝ In the GUI object, keep a LIFO queue (in case of recursive onActions) of where we are in the processing
+⍝ sequence for this object/action. After all the expressions (usually just 1) in the top item of the queue are
+⍝ complete, remove it from the queue and just return to ∆WI for immediate exit with nothing done.
+⍝? Have I got those exit procedures right?
 
  :If '*'≠⊃⊃action ⍝ A '*' prefix means to ignore any onAction handling
- :AndIf 2=obj.⎕NC'_onAction' ⍝ Has anything been defined here?
- :AndIf ×≢todo←obj._onAction
-⍝? Set up ∆W* variables
-     Run todo
-⍝? Check ∆W* variables to see if processing has been handled or needs to be continued normally
-⍝? If the onAction event calls ∆WI '*', how can we detect that there so we know to continue processing?
-⍝? Do we need to watch for ∆WRES?
+ :AndIf ×≢(⎕UCS 13 32)∆dlt obj ⎕VGET⊂'_onAction' '' ⍝ Is there any processing to do?
+     result←'Action'Event obj Application,resume,action⊂⍛,args ⍝ Start up (or resume) onAction processing
+ :Else
+     result←⎕NULL ⍝ There are no onActions to perform here at all - let ∆WI continue without any interruptions
  :EndIf
-
- result←⎕NULL ⍝? For now, just assume there are no onActions to do
-
-
- ⍝? onAction may be a NL-delimited list of actions to take in sequence, stepped through with ∆WI '*'.
- ⍝? How are we going to handle the whole ∆WI '*' system??
-
- ⍝? Should the execution support for this be moved to Classes._onAction so it looks like other events at that level?

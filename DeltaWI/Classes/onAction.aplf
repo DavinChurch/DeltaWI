@@ -1,2 +1,2 @@
  result←object onAction arg
- result←object(''##.##.SetEvent'Action')arg ⍝ This is never activated by a native Dyalog event
+ result←object(''##.SetEvent'Action')arg ⍝ This is never activated by a native Dyalog event

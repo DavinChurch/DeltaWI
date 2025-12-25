@@ -37,7 +37,7 @@
          'LENGTH ERROR: Wrong number of arguments'Error 1<≢arg
          ('∆WI DOMAIN ERROR: on',myevent)Error~IsChar arg←⊃arg
          ('∆WI RANK ERROR: on',myevent)Error 1≠≢⍴arg←1/arg
-         arg←∆dlt¨arg ⍝ Ignore leading and trailing spaces
+         arg←∆dlt arg ⍝ Ignore leading and trailing spaces
          object ⎕VSET⊂('_on',myevent)arg ⍝ Set new APL+Win event handler text
          :If 0=≢realevent
              :Return ⍝ There's nothing else to do here, so just exit

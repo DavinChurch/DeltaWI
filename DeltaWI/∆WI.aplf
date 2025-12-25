@@ -1,8 +1,8 @@
- result←{object}∆WI action;Application;objname;objref;args;name;⎕TRAP;GUIroot;nametesting
+ result←{object}∆WI action;Application;objname;objref;args;name;⎕TRAP;GUIroot;nametesting;resume
 ⍝ Entry point of DeltaWI package -- emulates APL+Plus ⎕WI system function
 
  ⎕TRAP←(870 'C' '⎕DM ⊃⍛⎕SIGNAL ⎕EN')((0 1000)'S')
- Application←⊃⎕THIS,⍨⎕THIS~⍨⎕RSI/⍨⎕THIS⍕⍛{(⊂⍺)≢¨⍵↑¨⍨≢⍺}⎕NSI          ⍝ Global: Where are we being called from (outside DeltaWI)?
+ Application←⊃⎕THIS,⍨⎕THIS~⍨⎕RSI/⍨⎕THIS⍕⍛{(⊂⍺)≢¨⍵↑¨⍨≢⍺}⎕NSI         ⍝ Global: Where are we being called from (outside DeltaWI)?
  :If 0=⎕NC'#.⍙WI' ⋄ CreateRoot'#.⍙WI' ⋄ :EndIf                      ⍝ On our first call, create a root from which everything GUI grows
  GUIroot←#.⍙WI                                                      ⍝ Global: A reference to our GUI structure root (for later use)
 
@@ -11,11 +11,13 @@
  :If 0=⎕NC'object' ⋄ object←⊢ ⋄ :EndIf                              ⍝ Allow monadic use
  (objname objref action)←object ObjectName action                   ⍝ Parse out object name to which this call applies
  :If nametesting ⋄ result←objname ⋄ :Return ⋄ :EndIf                ⍝ Allow for name-parsing-only internal testing to be performed
- :If action≡,'*' ⋄ ∘∘∘ ⋄ :EndIf                                     ⍝? Resume from within onAction handler? [Not yet designed]
+ :If resume←action≡,⊂,'*'                                           ⍝ Resume from within onAction handler?
+     action←Application ⎕VGET⊂'∆WARG'⍬                              ⍝ Reconstitute the original command and pass it back into onAction for resumption
+ :EndIf
  (name args)←Normalize action                                       ⍝ Separate action name from its arguments and standardize structure
  name←objref Canonize name                                          ⍝ In cases where capitalization is optional, adjust it to standard
  :If ⎕NULL≢result←name(objref Immediate)args ⋄ :Return ⋄ :EndIf     ⍝ Perform any out-of-band "instant" processing
- :If ⎕NULL≢result←action(objref OnAction)args ⋄ :Return ⋄ :EndIf    ⍝ Perform any application-specified alternative onAction processing
+ :If ⎕NULL≢result←(1↑action)(objref OnAction resume)args ⋄ :Return ⋄ :EndIf ⍝ Perform any application-specified alternative onAction processing
 
 ⍝ Time to execute the requested operation
 ⍝ Handle object creation cases separately; otherwise start up the normal action processing by class
