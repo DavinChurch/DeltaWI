@@ -4,8 +4,8 @@
  :If 0=≢arg
      result←object._enabled
  :Else
-     'DOMAIN ERROR'##.##.Error(1≠≢arg)∨~0 1∊⍨1↑arg
-     object._enabled←⊃arg
+     'DOMAIN ERROR'##.Error(1≠≢arg)∨~0 1∊⍨1↑arg
+     object._enabled←##.Single arg
      ⍝object ##.∆WSet⊂'Active'(~arg)
      ⍝? Disabling a GUI object while leaving it open isn't possible in Dyalog
      result←NoRes

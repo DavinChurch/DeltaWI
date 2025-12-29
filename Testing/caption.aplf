@@ -1,0 +1,11 @@
+ caption
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'
+ 'f'∆WI Pass(,'f')⊢'caption'
+ 'f'∆WI Pass MT⊢'caption' 'Testing'
+ 'f'∆WI Pass'Testing'⊢'caption'
+ 'f.b'∆WI Pass'f.b'⊢'Create' 'Button'('caption' 'Push Me')
+ 'f.b'∆WI Pass'Push Me'⊢'caption'
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

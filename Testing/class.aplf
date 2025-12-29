@@ -1,0 +1,8 @@
+ class
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ '#'∆WI Pass'System'⊢'class'
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'
+ 'f'∆WI Pass'Form'⊢'class'
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

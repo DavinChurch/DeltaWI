@@ -2,4 +2,4 @@ ok←run _onDelete message
  ⍝ Execute the generic onDelete event handler
  ⍝ No arguments or results are used for this event.
 
-ok←1⊣##.##.Run run
+ok←1⊣##.Run run

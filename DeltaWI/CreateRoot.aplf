@@ -25,5 +25,7 @@
  ⍝ Dyalog GUI objects need a parent's Coord in order to measure Posn (at least)
  ⍝ The usual default for a Dyalog root is 'Prop', so convert it to/from pixels to match up (unless it has been changed)
 
+ ⍝? We may eventually set up something here to make sure that onTooltip and onPrompt can be supported?
+
  ⍝ Assign class default properties
  this ⎕VSET Classes.System ⎕VGET ¯2

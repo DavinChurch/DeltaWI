@@ -20,7 +20,7 @@
      :Return
  :Else
      run←##.∆dim ##.∆dlt¨(⎕UCS 13)##.∆cut run ⍝ What to do, but watch for multiple actions to perform
-     object._OnAction_queue←(⊂1↓run),queue ⍝ And remember that we're starting up something new
+     object._OnAction_queue←(⊂2↓⍬⊂⍛,run),queue ⍝ And remember that we're starting up something new
      run←⊃run ⍝ We'll start with the first (usually only) expression
  :EndIf
 

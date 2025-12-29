@@ -1,0 +1,6 @@
+ events
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ '#'∆WI Pass{1=≢⍴⍵}⊢'events'
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

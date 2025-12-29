@@ -7,9 +7,9 @@
  :If 0=≢arg
      result←was
  :Else
-     :If ¯1=new←⊃arg ⍝ Change my own value
+     :If ¯1=new←##.Single arg ⍝ Change my own value
          new←was×was≠1 ⍝ Zero out my own value only if it was 1 (as opposed to ¯1), otherwise leave it alone
      :EndIf
-     :If new=was ⋄ :Return ⋄ :EndIf ⍝ If we're not changing anything, just quietly exit
+     :If new=was ⋄ result←NoRes ⋄ :Return ⋄ :EndIf ⍝ If we're not changing anything, just quietly exit
      result←object(0 ¯1 _supp.modify)arg ⍝ Call our shared recursive routine with the property-change reason/relationship code
  :EndIf

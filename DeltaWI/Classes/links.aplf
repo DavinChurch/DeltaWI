@@ -1,18 +1,22 @@
  result←object links arg
 ⍝ Allow reading and writing a list of arbitrary pseudo-child aliases
 
- :If ×≢arg ⍝ If we have new data, validate and write it
-     '∆WI LENGTH ERROR: links'##.Error 2<≢arg
-     :If 1<≢arg ⋄ arg←1 2⍴arg ⋄ :EndIf ⍝ Allow a single link to be given as a vector
+ :If 0=≢arg←##.Single arg
+     result←object ⎕VGET⊂'_links'(0 2⍴⊂'')
+ :Else ⍝ We have new data, validate and write it
+     '∆WI RANK ERROR: links'##.Error~1 2∊⍨≢⍴arg
+     :If 1=≢⍴arg ⍝ If it's a vector
+         '∆WI LENGTH ERROR: links'##.Error 2≠≢arg ⍝ Then it better be a pair
+         arg←1 2⍴arg ⍝ Normalize it into a matrix
+     :EndIf
      '∆WI RANK ERROR: links'##.Error 2≠≢⍴arg
      '∆WI LENGTH ERROR: links'##.Error 2≠2⊃⍴arg
-     '∆WI DOMAIN ERROR: links'##.Error 0∊##.IsChar¨arg
+     '∆WI DOMAIN ERROR: links'##.Error 0∊##.IsChar¨arg←1/¨arg
      '∆WI RANK ERROR: links'##.Error 0∊1=≢¨⍴¨arg
-     arg←∆dlt¨arg ⍝ Ignore leading and trailing spaces
+     arg←##.∆dlt¨arg ⍝ Ignore leading and trailing spaces on each name
+     arg⌿⍨←~∧/arg∊⊂'' ⍝ Ignore blank rows
+     arg←1 0↓(⊂'')⍪arg ⍝ Normalize empty array
      '∆WI DOMAIN ERROR: links'##.Error 0∊##.IsValidName¨arg[;1]
-     :If 0∊⍴arg ⋄ arg←0 2⍴⊂'' ⋄ :EndIf ⍝ Normalize empty array
      object._links←arg
      result←NoRes
- :Else ⍝ Otherwise just read it
-     result←object ⎕VGET⊂'_links'(0 2⍴⊂'')
  :EndIf

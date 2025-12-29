@@ -1,0 +1,11 @@
+ onNew;MakeFF
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ ⎕FX'MakeFF' '{}∆WI ''New'' ''Form'',1↓∆WRES'
+ '#'∆WI Pass MT⊢'newclasses' 'FF'
+ '#'∆WI Pass MT⊢'onNew' 'MakeFF'
+ 'f'∆WI Pass(,'f')⊢'Create' 'FF'
+ 'f'∆WI Pass(,'f')⊢'name'
+ 'f'∆WI Pass'Form'⊢'class'
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

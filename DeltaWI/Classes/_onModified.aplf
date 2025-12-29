@@ -1,4 +1,4 @@
  ok←run _onModified message
  ⍝ Execute a generic onModified event handler
 
- ok←NoRes⊣message 0 ##.##.Run run ⍝ Always returns nothing, regardless of handler
+ ok←NoRes⊣message 0 ##.Run run ⍝ Always returns nothing, regardless of handler

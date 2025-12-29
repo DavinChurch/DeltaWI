@@ -61,7 +61,7 @@
      :Case 'Open' ⍝ Or none of the above
          object._opened←0 ⍝ Pretend that it's not open yet so we can call the standard routine
          object('Open'##.Invoke)aarg ⍝ Use its normal Open method which includes firing events
-         object ##.∆WSet⊂'Visible' 1
+         ⍝object ##.∆WSet⊂'Visible' 1
          ⍝object ⎕VSET('_opened' 1)('_visible' 1)('_enabled' 1)
      :EndSelect
  :EndFor

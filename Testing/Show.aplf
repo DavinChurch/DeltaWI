@@ -1,0 +1,21 @@
+ Show;shown
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f'∆WI Pass(,'f')⊢'New' 'Form' 'Close'
+ 'f'∆WI Pass 1⊢'visible'
+ 'f'∆WI Pass 1⊢'enabled'
+ 'f'∆WI Pass 0⊢'opened'
+
+ shown←0
+ 'f'∆WI Pass MT⊢'onShow' 'shown←1'
+ 'f'∆WI Pass {1∊shown}⊢'Show'
+ 'f'∆WI Pass 1⊢'visible'
+ 'f'∆WI Pass 1⊢'enabled'
+ 'f'∆WI Pass 1⊢'opened'
+
+ 'f'∆WI Pass(,'f')⊢'Create' 'Form' 'Show'
+ 'f'∆WI Pass 1⊢'visible'
+ 'f'∆WI Pass 1⊢'enabled'
+ 'f'∆WI Pass 1⊢'opened'
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

@@ -4,10 +4,10 @@
  (parent name)←object ⍝ Separate non-standard two-part argument
  class←##.∆dmu⊃arg
 
- onnew←GUIroot ⎕VGET⊂'_onNew' '' ⍝ Obtain application's "New" handler command from the root
+ onnew←##.GUIroot ⎕VGET⊂'_onNew' '' ⍝ Obtain application's "New" handler command from the root
  ('∆WI CLASS ERROR: Class "',class,'" not found')##.Error 0=≢onnew ⍝ If there's nothing to process this name, then it's an error
 
- wself←parent._self,'.',name ⍝ New object name to create
+ result←wself←{⍵↓⍨2×'#.'≡2↑⍵}parent._self,'.',name ⍝ New object name to create (below #)
  localize←##.Application ⎕VGET('∆WSELF' '')('∆WEVENT' '')('∆WARG'⍬)('∆WRES' 0) ⍝ Capture previous application quad-vars
  ##.Application.(∆WSELF ∆WEVENT ∆WARG ∆WRES)←wself'New'class((⊂'New'),arg) ⍝ Set application's GUI variables for onNew event processing
  ##.Run onnew ⍝ Execute the application's custom creation process!
@@ -16,5 +16,5 @@
  ('∆WI CLASS ERROR: Class "',class,'" not found')##.Error newobj≡⎕NULL
  ##.Application.(∆WSELF ∆WEVENT ∆WARG ∆WRES)←localize ⍝ Restore previous application quad-vars
 
- ⍝ Note: There will be no base GUI variables created here because the UDC process must use ∆WI itself to create the real objects
+ ⍝ Note: There will be no base GUI variables created during onNew execution because the UDC process must use ∆WI itself to create the real objects
  ⍝ Note: This function will not proceed to call Classes.New because all the creation steps will have already been done by ∆WI from within onNew.

@@ -1,18 +1,19 @@
- Form;MT;∆WSELF
-⍝ Test elements of the Form object support
-
- MT←0 0⍴'' ⍝ An empty return value for many ∆WI calls
+ Form;∆WSELF;hidden
+ ⍝ Test Form, plus New, Create, self, & Reset in general (other places will also check these)
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
- 'f'∆WI Pass(,'f')⊢'New' 'Form' ⍝? 'Hide'
- 'f'∆WI Pass MT⊢'caption' 'Testing'
- 'f'∆WI Pass'Testing'⊢'caption'
-
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'
+ 'f'∆WI Pass(,'f')⊢'Create' 'Form'
  'f'∆WI Pass(,'f')⊢'self'
  ∆WSELF←'f'
  ⍝ Can't test default 'where' because it will vary by monitor
 
-⍝ Check visibilities
+ ∆WI Pass 114⊢'border'
+ ∆WI Pass MT⊢'border' 2 16
+ ⍝? Dyalog does not let me actually change the display here
+ ∆WI Pass 18⊢'border'
+
+ ⍝ Check Form visibilities
  ∆WI Pass 1⊢'visible'
  ∆WI Pass MT⊢'visible' ¯1
  ∆WI Pass ¯1⊢'visible'
@@ -30,18 +31,23 @@
  ∆WI Pass 3⊢'visible'
  ∆WI Pass MT⊢'visible' 1
 
+ hidden←0
+ ∆WI Pass MT⊢'onHide' 'hidden←1'
+ ∆WI Pass{1∊hidden}⊢'Hide'
 
+ ∆WI Pass 0⊢'value'
+ ∆WI Pass MT⊢'value' 'Testing'
+ ∆WI Pass'Testing'⊢'value'
 
+∆WI Pass ''⊢'onWait'
+∆WI Pass MT⊢'onWait' 'something'
+∆WI Pass 'something'⊢'onWait'
+⍝? Cannot test onWait in operation until the Wait method has been coded
 
-
-
-
-
- 'f'∆WI Pass MT⊢'Delete' ⍝ Clean up after tests
-
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests
 
 ⍝ Also need early/initial support and testing for:
 ⍝   style
 ⍝   (icon), (state?)
-⍝   Close, (Focus), Wait
-⍝   [onPrompt], [onTooltip], (onFocus), (onUnfocus), onWait
+⍝   (Focus), Wait
+⍝   (onFocus), (onUnfocus), onWait

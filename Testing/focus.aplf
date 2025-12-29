@@ -1,0 +1,7 @@
+ focus
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'
+ '#'∆WI Pass''⊢'focus' ⍝? Focus isn't being set upon creation - should it be?
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

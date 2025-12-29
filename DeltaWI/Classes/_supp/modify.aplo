@@ -6,7 +6,7 @@
 ⍝   reason[2]←1=user-caused; ¯1=property-caused; ¯2=method-caused
 
  was←object ⎕VGET⊂'_modified' 0
- object._modified←new ⍝ We've got a new value
+ object._modified←⊃new ⍝ We've got a new value
 
  :Section ⍝ Cascade the changes upward or downward as appropriate
 ⍝? All this logic needs to be carefully checked to make sure it's complete & accurate
@@ -20,14 +20,14 @@
          :EndFor
      :Else ⍝ Turning it off, resets all descendants to 0 as well, and conditionally some of the ancestors as well
          ⍝ Reset all descendants
-         :For kid :In object ⎕VGET ##.##.LeafName¨object children ⍬
+         :For kid :In object ⎕VGET ##.##.LeafName¨object ##.children ⍬
              kid((1,reason[2])modify)0 ⍝ Recursively clear all my children's flags
          :EndFor
          ⍝ Check ancestors to see if they need resetting
          :If reason[1]≠1 ⍝ If my parent is being cleared then we don't need to bother because all the children's flags are going away
              parent←⊃object._Ancestry ⍝ Now we're going to see which of my ancestors also need adjusting
              done←,object ⍝ Branches we've already checked
-             :While parent≢GUIroot ⍝ Scan as far upwards as we need to
+             :While parent≢##.##.GUIroot ⍝ Scan as far upwards as we need to
                  flags←parent ⎕VGET('_modified' 0)('_modifystop' 0)
                  :If flags[1]≠¯1 ⋄ :Leave ⋄ :EndIf  ⍝ No more parents to do, including this one
                  ⍝ We're going to reset this parent if there are no other descendants that have been modified

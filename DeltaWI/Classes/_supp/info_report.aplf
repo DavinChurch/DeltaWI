@@ -5,7 +5,7 @@
 
  rpt←0 3⍴⊂''
  meths←{⍵/⍨⍵⊃¨⍛∊'⍙',1 ⎕C ⎕A}
- props←{((⊂'on'),¨events ⍵)~⍨⍵/⍨⍵⊃¨⍛∊⎕A}
+ props←{((⊂'on'),¨events ⍵)~⍨⍵/⍨⍵⊃¨⍛∊⎕C ⎕A}
  events←{⍵{⍺⍺∊⍨⊂'_on',⍵:⍵ ⋄ '(',⍵,')'}¨2↓¨⍵/⍨(⊂'on')≡¨2↑¨⍵}
  active←{⍵/⍨(⊂1 2 0)≡¨⊃¨⍺.⎕AT¨⍵} ⍝ Determine if these function definitions are "active"
  override←{⍵/⍨(⊂1 2 0)≢¨⊃¨⍺.⎕AT¨⍵} ⍝ Determine if these function definitions are class overrides

@@ -8,7 +8,7 @@
      ⍝ If the first item of ∆WARG is itself a namespace reference, then let's assume that they have not removed
      ⍝ the two message-prefix items before passing it to me, and do it automatically here.
      :If 0=≡1⊃parms ⋄ :AndIf 9=⎕NC 1⊃parms ⋄ (1⊃parms)↓⍨←2 ⋄ :EndIf ⍝ So they don't have to bother dropping this off every time
-     Application.∆WARG←{⍵⊃⍨⍳1=≢⍵}1↓0,1⊃parms    ⍝ Auto-disclose singleton
+     Application.∆WARG←Single 1⊃parms           ⍝ Auto-disclose singleton
      Application.∆WRES←wres←2⊃parms
  :Else
      wres←Application ⎕VGET⊂'∆WRES' 0           ⍝ Make an assumption about the default return value if it gets erased

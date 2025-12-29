@@ -1,0 +1,13 @@
+ Delete;deleted
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'
+ 'f'∆WI Pass(,'f')⊢'self' ⍝ Yes, it's here
+ 'f'∆WI Pass''⊢'onDelete'
+ deleted←0
+ 'f'∆WI Pass MT⊢'onDelete' 'deleted←1'
+ 'f'∆WI Pass{1∊deleted}⊢'Delete'
+ 'f'∆WI Pass''⊢'self' ⍝ Now it's gone
+ 'nothing'∆WI Pass MT⊢'Delete' ⍝ Deleting a non-existant object does not produce an error
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

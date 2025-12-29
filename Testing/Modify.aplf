@@ -1,0 +1,36 @@
+ Modify;modified
+ ⍝ Test Modify, modified, onModified, and modifystop
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'
+ 'f'∆WI Pass 0⊢'modified'
+ 'f.b'∆WI Pass'f.b'⊢'New' 'Button'
+ 'f.b'∆WI Pass 0⊢'modified'
+
+ 'f.b'∆WI Pass MT⊢'Modify' 1
+ 'f.b'∆WI Pass 1⊢'modified'
+ 'f'∆WI Pass ¯1⊢'modified'
+
+ modified←0
+ 'f.b'∆WI Pass MT⊢'onModified' 'modified←1'
+ 'f.b'∆WI Pass{1∊modified}⊢'Modify' 0
+ 'f.b'∆WI Pass 0⊢'modified'
+ 'f'∆WI Pass 0⊢'modified'
+
+ 'f.b'∆WI Pass MT⊢'Modify' 1
+ 'f'∆WI Pass MT⊢'Modify' ¯1
+ 'f'∆WI Pass ¯1⊢'modified'
+ 'f.b'∆WI Pass 1⊢'modified'
+
+ 'f'∆WI Pass MT⊢'Modify' 0
+ 'f'∆WI Pass 0⊢'modified'
+ 'f.b'∆WI Pass 0⊢'modified'
+
+ 'f.b'∆WI Pass 0⊢'modifystop'
+ 'f.b'∆WI Pass MT⊢'modifystop' 1
+ 'f.b'∆WI Pass 1⊢'modifystop'
+ 'f.b'∆WI Pass MT⊢'Modify' 1
+ 'f'∆WI Pass 0⊢'modified'
+ 'f.b'∆WI Pass 1⊢'modified'
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

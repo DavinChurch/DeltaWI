@@ -5,9 +5,7 @@
  :If 0=≢arg
      result←old
  :Else
-     :If 1=≢new←arg
-         new←⊃new
-     :EndIf
+     new←##.##.Single arg
      '∆WI DOMAIN ERROR: border'##.##.Error(1<|≡new)∨3≠10|⎕DR new
      new←+/∊arg ⍝ New border property
      '∆WI ATTRIBUTE ERROR: Invalid "border" attribute specified'##.##.Error(new<0)∨(new≥1024)∨∨/4 8∊##.##.BitVals new ⍝ Is it out of range?
@@ -27,6 +25,8 @@
      :If settings[3]≠64∊new ⋄ props,←⊂'MaxButton'(64∊new) ⋄ :EndIf
      :If settings[4]≠256∊new ⋄ props,←⊂'HelpButton'(256∊new) ⋄ :EndIf
      :If settings[5]≠moveable ⋄ props,←⊂'Moveable'moveable ⋄ :EndIf ⍝ This is as close as we can get, I think
+⍝? Dyalog is not letting me change these values after creation, but this is not documented
+⍝?     :If ×≢props ⋄ object ##.##.∆WSet props ⋄ :EndIf ⍝ Apply property changes
 
      :If ∨/old≠new ⍝ If we're actually changing things, reconstruct sizing
          {}object ##.where,⊂(object ⎕VGET⊂'_where'⍬) ⍝ Recalculate all sizing/border parameters

@@ -4,11 +4,12 @@
 ⍝ The operand specifies whether or not closing can be denied by the onClose event.
 
  :If result←~object._opened ⋄ :Return ⋄ :EndIf ⍝ If it's already closed, then we just tell them so
- result←force∨'Close'##.##.Event object ##.##.Application,arg ⍝ Run the onClose event handler (always return 0 or 1)
- :If result=0 ⋄ :Return ⋄ :EndIf ⍝ Closing was denied
+ result←'Close'##.##.Event object ##.##.Application,arg ⍝ Run the onClose event handler (always return 0 or 1)
+ :If 0≢result←##.##.Single result ⋄ result←1 ⋄ :EndIf ⍝ Assume 0 if there's no handler or there's an invalid result
+ :If 0=result←force∨result ⋄ :Return ⋄ :EndIf ⍝ Closing was explicitly denied
 
  ⍝ Proceed to close the object, starting by force-closing all its children
- :If ×≢kids←object children ⍬
+ :If ×≢kids←object ##.children ⍬
  :AndIf ×≢kids←object ⎕VGET ##.##.LeafName¨kids ⍝ Except our own tree
      kids(1 close)¨⊂⍬ ⍝ Force-close all my children recursively
  :EndIf

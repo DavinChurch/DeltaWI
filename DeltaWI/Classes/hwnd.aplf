@@ -4,5 +4,5 @@
 
  '∆WI ACTION ERROR: Property "hwnd" is read-only'##.Error×≢arg
  :If ~object._opened ⋄ result←0 ⍝ There is no hwnd if closed
- :Else ⋄ result←object ∆WGet'Handle'
+ :Else ⋄ result←object ##.∆WGet'Handle'
  :EndIf

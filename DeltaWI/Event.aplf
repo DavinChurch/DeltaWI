@@ -30,11 +30,11 @@
      'Exactly one event name required for synthetic events'⎕SIGNAL 11/⍨(2≠≡events)∨1≠≢events ⍝ Report improper usage directly
      Application←realevent ⍝ Use what we're given instead of looking for an external caller source
      message[2]←⊂realevent←'' ⍝ Signal everyone that this is a synthetic event and should be handled a little differently
-     suppress←object ⎕VGET⊂'_suppress' 0 ⍝ Have they asked to suppress this internal event?
+     suppress←0 ⍝ Internal events never get suppressed because they're invoked explicitly
      dq←Classes.NoRes ⍝ We'll have a different default return value for synthetic events (for when it is suppressed)
  :Else
      Application←⊃⎕THIS,⍨⎕THIS~⍨⎕RSI/⍨⎕THIS⍕⍛{(⊂⍺)≢¨⍵↑¨⍨≢⍺}⎕NSI ⍝ Global: What is the current application namespace (outside DeltaWI) when the event fires?
-     suppress←0 ⍝ External events never get suppressed
+     suppress←object ⎕VGET⊂'_suppress' 0 ⍝ Have they asked to suppress this normal event?
  :EndIf
  GUIroot←⊃object._Ancestry ⍝ Global: What is the root of our GUI object tree?
  localize←Application ⎕VGET('∆WSELF' '')('∆WEVENT' '')('∆WARG'⍬)('∆WRES' 0) ⍝ Capture previous application quad-vars

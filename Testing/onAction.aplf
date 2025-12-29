@@ -1,0 +1,17 @@
+ onAction;try1;try2;try3
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ ⎕FX'try1' '∆WRES←''This is try1'''
+ ⎕FX'try2' '∆WRES←∆WI ''*'''
+ ⎕FX'try3' '∆WRES←''This is try3'''
+
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'
+ 'f'∆WI Pass MT⊢'*onAction' 'try1'
+ 'f'∆WI Pass'This is try1'⊢'demo'
+ 'f' ∆WI Pass 'try1'⊢'*onAction'
+ 'f'∆WI Pass MT⊢'*onAction'('try2',(⎕UCS 13),'try3')
+ 'f'∆WI Pass'This is try3'⊢'demo'
+ 'f'∆WI Pass MT⊢'*onAction' ''
+ 'f' ∆WI Fail 870⊢'demo'
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

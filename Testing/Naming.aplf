@@ -1,4 +1,4 @@
- Naming;∆WSELF;name;NA
+ Naming;name;NA;∆WSELF
 ⍝ Run exhaustive tests of ∇ObjectName to make sure all the name-handling possibilities are working
 
 ⍝ Run over a hundred individual component tests that will connect together sequentially to allow for some thousands

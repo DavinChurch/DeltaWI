@@ -1,2 +1,2 @@
  result←object onDelete arg
- result←object(''##.SetEvent'Delete' '>Destroy')arg ⍝ This is never activated by a native Dyalog event
+ result←object(''##.SetEvent'Delete' '>Close' '>Destroy')arg ⍝ This is never activated by a native Dyalog event

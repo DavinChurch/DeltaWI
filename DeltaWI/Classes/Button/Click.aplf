@@ -1,0 +1,2 @@
+ result←object Click arg
+ result←##.NoRes⊣'Click'##.##.Event object ##.##.Application ⍝ Just run the onClick event handler without a result

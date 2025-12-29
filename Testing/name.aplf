@@ -1,0 +1,8 @@
+name
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ '#'∆WI Pass(,'#')⊢'name'
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'
+ 'f'∆WI Pass(,'f')⊢'name'
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

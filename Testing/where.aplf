@@ -1,7 +1,5 @@
- where;StopOnTest
+ where;∆WSELF
 ⍝ Test related location & size properties (where, extent, size, & scale)
-
- MT←0 0⍴'' ⍝ An empty return value for many ∆WI calls
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
  'f'∆WI Pass(,'f')⊢'New' 'Form'
@@ -53,4 +51,4 @@
 
 ⍝? Proportional scaling can't be tested until written
 
-quit:'f'∆WI Pass MT⊢'Delete' ⍝ Clean up after tests
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

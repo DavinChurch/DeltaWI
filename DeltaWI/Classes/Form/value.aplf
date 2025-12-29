@@ -4,7 +4,6 @@
  :If 0=≢arg
      result←object ⎕VGET⊂'_value' 0
  :Else
-     :If 1=≢arg ⋄ arg←⊃arg ⋄ :EndIf ⍝ Treat a single value as unnested
-     object._value←arg ⍝ New value to be stored
-     result←NoRes
+     object._value←##.##.Single arg ⍝ New value to be stored
+     result←##.NoRes
  :EndIf

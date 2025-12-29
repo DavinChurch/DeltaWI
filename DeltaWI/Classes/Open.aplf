@@ -17,7 +17,9 @@
  :EndIf
 
  object ##.∆WSet⊂'Active' 1 ⍝ Update Dyalog control properties
-
+ :If object._enabled∧object._visible>0
+     object ##.∆WSet⊂'Visible' 1 ⍝ Make sure it's shown
+ :EndIf
 
 
 

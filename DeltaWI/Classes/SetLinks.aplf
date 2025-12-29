@@ -1,18 +1,25 @@
  result←object SetLinks arg;was;t
 ⍝ Allow writing (add, delete, or update) of one or more pseudo-child aliases to the 'links' property
 
- '∆WI LENGTH ERROR: SetLinks'##.Error 2<≢arg
- :If 1<≢arg ⋄ arg←1 2⍴arg ⋄ :EndIf ⍝ Allow a single link to be given as a vector
+ arg←##.Single arg
+ '∆WI RANK ERROR: SetLinks'##.Error~1 2∊⍨≢⍴arg
+ :If 1=≢⍴arg ⍝ If it's a vector
+     '∆WI LENGTH ERROR: SetLinks'##.Error 2≠≢arg ⍝ Then it better be a pair
+     arg←1 2⍴arg ⍝ Normalize it into a matrix
+ :EndIf
  '∆WI RANK ERROR: SetLinks'##.Error 2≠≢⍴arg
  '∆WI LENGTH ERROR: SetLinks'##.Error 2≠2⊃⍴arg
- '∆WI DOMAIN ERROR: SetLinks'##.Error 0∊##.IsChar¨arg
+ '∆WI DOMAIN ERROR: SetLinks'##.Error 0∊##.IsChar¨arg←1/¨arg
  '∆WI RANK ERROR: SetLinks'##.Error 0∊1=≢¨⍴¨arg
- arg←∆dlt¨arg ⍝ Ignore leading and trailing spaces
+ arg←##.∆dlt¨arg ⍝ Ignore leading and trailing spaces on each name
+ arg⌿⍨←~∧/arg∊⊂'' ⍝ Ignore blank rows
+ arg←1 0↓(⊂'')⍪arg ⍝ Normalize empty array
  '∆WI DOMAIN ERROR: SetLinks'##.Error 0∊##.IsValidName¨arg[;1]
+
  was←object ⎕VGET⊂'_links'(0 2⍴⊂'')
  t←arg[;1]∊was[;1] ⋄ was[was[;1]⍳t/arg[;1];]←t⌿arg ⋄ arg⌿⍨←~t ⍝ Update changed links in-place
  was⍪←arg ⍝ Add new links to the bottom of the list
  was⌿⍨←0≠≢¨was[;2] ⍝ Throw away any links to be deleted
- :if 0∊⍴was ⋄ was←0 2⍴⊂'' ⋄ :endif ⍝ Normalize empty list
+ was←1 0↓(⊂'')⍪was ⍝ Normalize empty array
  object._links←was ⍝ Now we can put back the new list
  result←NoRes
