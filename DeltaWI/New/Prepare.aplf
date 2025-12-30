@@ -9,6 +9,7 @@
  object._self↓⍨←2×'#.'≡2↑object._self ⍝ Make sure that _self doesn't have a leading '#.' on it (may be created by top-level New functions)
 
  object ##.∆WSet('Coord' 'RealPixel')('AutoConf' 0)('Visible' 0) ⍝ Everybody needs these (that have them)
+ object.⎕WX←0 ⍝ Let's hide all GUI properties, etc., so that they won't be accidentally used directly - ∆WS/∆WG should be used instead
  :Select object._class
  :Case 'Menu'
      ⍝ An APL+Win Menu object may be any of four Dyalog object-types depending on context.
@@ -19,10 +20,12 @@
  :Case 'MDIForm'
      sub←⎕VGET((⍕object),'._mdi')##.∆WC'MDIClient'('Coord' 'RealPixel')('AutoConf' 0)
      sub._Owner←object
+     sub.⎕WX←0 ⍝ Also tell the invisible child to hide properties as well
  :Case 'Picture'
      object ##.∆WS'Coord' 'User' ⍝ A picture object's parent needs an exception to Coord
      sub←⎕VGET((⍕object),'._pic')##.∆WC'SubForm'('Coord' 'RealPixel')('AutoConf' 0)
      sub._Owner←object
+     sub.⎕WX←0 ⍝ Also tell the invisible child to hide properties as well
      ⍝? Now we're going to need to attach a file-less Bitmap object so this can be drawn on.
  :EndSelect
 

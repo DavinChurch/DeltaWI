@@ -11,7 +11,7 @@
      :If 0=≢steps←⊃queue ⍝ Are we done with this onAction queue?
          object._OnAction_queue←1↓queue ⍝ Remember that we've tried all these choices
          ok←NoRes
-         :Return ⍝ Return all the way out of the original ∆WI ⍝? -- I hope!
+         :Return ⍝ Return all the way out of the original ∆WI
      :EndIf
      run←⊃steps ⋄ queue[1]←⊂steps←1↓steps ⍝ We'll process the next expression this time through
      object._OnAction_queue←queue ⍝ And remember where we were for next time

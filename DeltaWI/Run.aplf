@@ -22,6 +22,6 @@
  :EndIf
 ⍝? Instead of just going back until we hit the application scope, should we instead be going all the way back to the ∆WI call itself?
 ⍝? Does it make a difference? (Only for interim-shadowed variables??)
+⍝? Maybe just going back to the most local application scope makes sense for events, since they may be called anytime?
 
  WRES←Application ⎕VGET⊂'∆WRES'wres             ⍝ Return result to the calling function for easier access (but shy so it won't just print)
- ⍝? What happens in APL+Win when ⎕WRES is erased during an event? What does it default back to (if anything)?

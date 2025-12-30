@@ -19,10 +19,10 @@
 
  ⎕TRAP←(870 'C' '⎕EN ⎕SIGNAL⍨⊃⎕DM')((0 1000)'S') ⍝ Trap event errors in the usual ∆WI way
  ⍝? Since this normally happens within an event callback rather than an application call, how do we really want to handle ∆WI-style (or other) errors??
- ⍝? And since we often call this implicitly during internal processing, do we want to do the same thing to report back to our internal code??
+ ⍝? And since we often call this implicitly during internal processing, do we want to do the same thing to report back to our internal code (probably OK?)?
 
  dq←1 ⍝ If nothing else, just continue APL/Windows processing normally
- :If 0=≢events←,⊆,events ⋄ :Return ⋄ :EndIf ⍝ If there are no APL+Win events to emulate, just exit
+ :If 0=≢events←,⊆,events ⋄ :Return ⋄ :EndIf ⍝ If there are no APL+Win events to emulate, just exit quickly
  (object realevent)←2↑message ⍝ What object/event are we processing? ("message" may be synthetic)
  :If 9=⎕NC'realevent' ⍝ Is this an internal (non-real) event call?
      ⍝ If our event message ia synthetic with an "event name" that's actually a namespace reference,
@@ -36,7 +36,7 @@
      Application←⊃⎕THIS,⍨⎕THIS~⍨⎕RSI/⍨⎕THIS⍕⍛{(⊂⍺)≢¨⍵↑¨⍨≢⍺}⎕NSI ⍝ Global: What is the current application namespace (outside DeltaWI) when the event fires?
      suppress←object ⎕VGET⊂'_suppress' 0 ⍝ Have they asked to suppress this normal event?
  :EndIf
- GUIroot←⊃object._Ancestry ⍝ Global: What is the root of our GUI object tree?
+ GUIroot←⊢/object._Ancestry ⍝ Global: What is the root of our GUI object tree?
  localize←Application ⎕VGET('∆WSELF' '')('∆WEVENT' '')('∆WARG'⍬)('∆WRES' 0) ⍝ Capture previous application quad-vars
  :For event :In events ⍝ Process each APL+Win event name, in listed order
      :If event≡'Event'
@@ -57,6 +57,7 @@
                      handler←Classes.⍎fn ⍝ Obtain a reference to the class event-processing function (I wish there was a non-⍎ way to do this)
                  :Else
                      ⍝? How should we be reporting this???
+                     ⍝? Should we instead just be ignoring the error and not processing the event?
                      Error'Required "',object._class,'" event handler for "',(1↓fn),'" is not defined'
                  :EndIf
 

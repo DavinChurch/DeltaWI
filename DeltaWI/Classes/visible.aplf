@@ -1,4 +1,4 @@
- result←object visible arg;was
+ result←object visible arg;was;resized
 ⍝ Request or modify the visibility of a GUI object
 
  result←was←object._visible ⍝ We'll need to know the previous setting in order to decide on event handlers
@@ -17,10 +17,12 @@
  '∆WI DOMAIN ERROR: visible'##.Error 1<|≡arg
  '∆WI DOMAIN ERROR: visible'##.Error~arg⊃⍛∊choices
  arg←⊃arg-(arg=0)∧object._class≢'Menu' ⍝ Convert 0s to ¯1s except Menus
+ resized←0 ⍝ Make a note about whether we've onResized this or not
 
  :If arg>⍥×was ⍝ Are we about to make it visible?
  :AndIf ~object._opened ⍝ See if it's currently closed
      object('Open'##.Invoke)⍬ ⍝ Force it open
+     resized←1 ⍝ Open will always resize it
      was←object._visible ⍝ In case it changed
  :EndIf
 
@@ -34,9 +36,15 @@
      :If arg>0 ⍝ If it is becoming visible
          'Show'##.Event object ##.Application ⍝ Run the onShow event handler
          'Resize'##.Event object ##.Application,object._size,arg-1 ⍝ Run the onResize event handler
+         resized←1 ⍝ Remember this
      :Else ⍝ It is becoming invisible
          'Hide'##.Event object ##.Application ⍝ Run the onHide event handler
      :EndIf
+ :EndIf
+
+ :If (arg≠was)∧(arg>0)∧~resized ⍝ If we haven't run onResize yet, and yet we've changed it, then we need to
+     'Resize'##.Event object ##.Application,object._size,arg-1 ⍝ Run the onResize event handler
+     resized←1 ⍝ Remember this (just in case)
  :EndIf
 
  result←NoRes

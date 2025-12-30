@@ -5,7 +5,7 @@
 ⍝ If the action is New or Create, have the GUI reference point to the object's parent (since the object itself likely will not exist).
 ⍝ If the action is Delete or self, and the object does not currently exist, return ⎕NULL instead of an object reference.
 ⍝ (Warning: Production of a composite object name uses a complex algorithm that encompasses many subtle edge conditions.)
-⍝ (Future: ActiveX pointers may eventually need to be accepted in place of names.)
+⍝ (Future: ActiveX pointers may eventually need to be accepted in place of existing names.)
 ⍝ Globals: GUIroot, Application, Application.∆WSELF
 
  :Section ⍝ Watch for testing scenarios
@@ -52,7 +52,7 @@
      object↓⍨←2×'#.'≡2↑object ⍝ Remove redundant #. prefix
      '∆WI OBJECT ERROR: Parent not found (too many ..''s)'Error'.'=⊃object
      '∆WI OBJECT ERROR: Current object undefined'Error 0=≢object ⍝ Make sure the final combined name has anything in it (is this actually needed?)
-     ⍝? Make sure that all these objects (at least non-leaf ones) actually exist
+     ⍝? Make sure that all these objects (at least non-leaf ones) actually exist? w/nametesting?
  :EndSection
 
  :Section ⍝ Resolve imbedded parentage signals just in case there's an error before we get to the next step
@@ -64,7 +64,7 @@
          :EndIf
          object←(object↑⍨t-2),t↓object ⍝ Remove parent pointer and matching parent's name
      :EndWhile
-     object←'.'∆sew object ⍝?1↓∊'.',¨object ⍝ Reconstitute name parts into current name for later use
+     object←'.'∆sew object ⍝ Reconstitute name parts into current name for later use
  :EndSection
 
  :Section ⍝ Now it's time to split apart any name-prefixes from the argument itself and deal with those
@@ -113,7 +113,7 @@
          :EndIf
          object←(object↑⍨t-2),t↓object ⍝ Remove parent pointer and matching parent's name
      :EndWhile
-     object←'.'∆sew object ⍝?1↓∊'.',¨object ⍝ Reconstitute name parts into final name for special case handling
+     object←'.'∆sew object ⍝ Reconstitute name parts into final name for special case handling
      object,←'#'/⍨0=≢object ⍝ If the parentage has gone all the way back to root, change it explicitly
      object↓⍨←2×'#.'≡2↑object ⍝ Remove redundant #. prefix
      :If ×nametesting ⋄ objref←⎕NULL ⋄ :Return ⋄ :EndIf ⍝ For testing the above processes independently, allow for an early exit to be requested

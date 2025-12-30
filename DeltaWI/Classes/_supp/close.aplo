@@ -15,9 +15,6 @@
  :EndIf
 
  ⍝ Now, let's "destroy" myself
- object._visible←(-object._visible)+object._class≡'Menu' ⍝ Menu objects can't be ¯1
-⍝? Should we actually be marking this hidden, even though closed objects typically aren't?
- 'Hide'##.##.Event object ##.##.Application ⍝ Run the onHide event handler
  'Destroy'##.##.Event object ##.##.Application ⍝ Run the onDestroy event handler
 
  ⍝ And now we can mark myself as gone, but not forgotten

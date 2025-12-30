@@ -5,5 +5,5 @@
  :For prop :In arg ⍝ Loop through properties sequentially
      '∆WI ACTION ERROR: Property-reference not permitted in this context'##.Error 2≠|≡prop
      'DOMAIN ERROR'##.Error~##.IsChar⊃prop
-     {}object._self ##.∆WI prop ⍝ Call ∆WI recursively for easiest access to relative naming ⍝? (Hopefully this is fast enough)
+     {}object._self ##.∆WI prop ⍝ Call ∆WI recursively for easiest access to relative naming
  :EndFor

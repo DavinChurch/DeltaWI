@@ -12,8 +12,7 @@
  ##.Application.(∆WSELF ∆WEVENT ∆WARG ∆WRES)←wself'New'class((⊂'New'),arg) ⍝ Set application's GUI variables for onNew event processing
  ##.Run onnew ⍝ Execute the application's custom creation process!
  newobj←parent ##.Locate,⊂name ⍝ Where can we find the newly-custom-created object?
-⍝? It must have created an object to have worked. I don't think there's any way that it can say "I don't want to do anything", right?
- ('∆WI CLASS ERROR: Class "',class,'" not found')##.Error newobj≡⎕NULL
+ ('∆WI CLASS ERROR: Class "',class,'" not found')##.Error newobj≡⎕NULL ⍝ It must have created some kind of object with the specified name
  ##.Application.(∆WSELF ∆WEVENT ∆WARG ∆WRES)←localize ⍝ Restore previous application quad-vars
 
  ⍝ Note: There will be no base GUI variables created during onNew execution because the UDC process must use ∆WI itself to create the real objects

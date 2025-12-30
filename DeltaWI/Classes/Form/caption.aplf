@@ -13,7 +13,7 @@
      :If ≠/×≢¨old new ⍝ Are we changing whether there's a caption or not?
          :If ×≢new ⍝ Adding a caption
          :AndIf 1>object ##.##.∆WG'Border'
-⍝? Border cannot be changed after creation, and it doesn't sound like it's worth Recreating it
+⍝? Border cannot be changed after creation, and it doesn't sound like it's worth Recreating it?
          :EndIf
          {}object ##.where,⊂(object ⎕VGET⊂'_where'⍬) ⍝ Recalculate all sizing/border parameters
      :EndIf

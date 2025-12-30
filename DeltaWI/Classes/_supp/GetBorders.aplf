@@ -1,13 +1,18 @@
  Borders←GetBorders object;borders;type;border
 ⍝ Retrieve the '∆Borders' class-specific information pseudo-global
  Borders←2 3 4⍴0 ⍝ Time to figure out what the border definitions are for this class (capitalized because it represents a global)
- :If 2 3∊⍨type←object._Class.⎕NC'_supp.∆Borders' ⋄ borders←object._Class._supp.∆Borders ⋄ :EndIf
- :If 0=1 2⊃⎕AT'borders'
-     Borders←borders ⍝ Just a value (one way or another), so return it as-is
- :Else
-     Borders←borders object ⍝ It's a function with an argument, execute it to get the proper values
+ Borders[1;1;]←1 ⍝? Can we assume a single-pixel "border" and nothing else if no values are provided?
+
+ :If 2 3∊⍨type←object._Class.⎕NC'_supp.∆Borders'
+     borders←object._Class._supp.∆Borders ⍝ Either a value or a function
+     :If 0=2⊃1 ⎕AT'borders'
+         Borders←borders ⍝ Just a value (one way or another), so return it as-is
+     :Else
+         Borders←borders object ⍝ It's a function with an argument, execute it to get the proper values
+     :EndIf
  :EndIf
- :If type=2 ⍝ Only if this was a fixed variable, as opposed to a function that can make its own decisions
+
+ :If type≠3 ⍝ Only if this was a fixed variable, as opposed to a function that can make its own decisions
      border←object ⎕VGET⊂'_border' 0
      Borders[1 2;1;]×←border>0 ⍝ Let's ignore the border-property thickness if it's turned off
  :EndIf

@@ -1,7 +1,7 @@
  result←{object}∆WI action;Application;objname;objref;args;name;⎕TRAP;GUIroot;nametesting;resume
 ⍝ Entry point of DeltaWI package -- emulates APL+Plus ⎕WI system function
 
- ⎕TRAP←(870 'C' '⎕DM ⊃⍛⎕SIGNAL ⎕EN')((0 1000)'S')
+ ⎕TRAP←(870 'C' '⎕DM⊃⍛⎕SIGNAL ⎕EN')((0 1000)'S')                   ⍝? We'll eventually add production-level trapping here, but how?
  Application←⊃⎕THIS,⍨⎕THIS~⍨⎕RSI/⍨⎕THIS⍕⍛{(⊂⍺)≢¨⍵↑¨⍨≢⍺}⎕NSI         ⍝ Global: Where are we being called from (outside DeltaWI)?
  :If 0=⎕NC'#.⍙WI' ⋄ CreateRoot'#.⍙WI' ⋄ :EndIf                      ⍝ On our first call, create a root from which everything GUI grows
  GUIroot←#.⍙WI                                                      ⍝ Global: A reference to our GUI structure root (for later use)

@@ -8,8 +8,7 @@
 
  object._opened←1
  result←'Open'##.Event object ##.Application,arg ⍝ Run the onOpen event handler
-⍝? Does onResize run if the size isn't changed by opening?
- 'Resize'##.Event object ##.Application,object._size,0 ⍝ Run the onResize event handler
+ 'Resize'##.Event object ##.Application,object._size,0 ⍝ Run the onResize event handler (always)
 ⍝? What do we need to do about hidden internal objects while opening?
 
  :If ×≢kids←object children ⍬
@@ -23,6 +22,7 @@
 
 
 
+⍝? Old coding I want to remember for a while...
 ⍝ :Section ⍝ Get rid of hidden objects
 ⍝     hidden←'_mb' '_mdi' '_pic'
 ⍝     :For hidden :In (9=object.⎕NC↑hidden)/hidden ⍝ See about getting rid of any hidden Dyalog immediate children

@@ -1,23 +1,26 @@
- result←object Show arg;hidden;kids;kid
+ result←object Show arg;hidden;kids;kid;resized;was;new
 ⍝ Show a GUI object
 
+ resized←0 ⍝ Make a note about whether we've onResized this or not
  :If ~object._opened
      object('Open'##.Invoke)⍬ ⍝ If it's not opened yet, Open it
+     resized←1 ⍝ Open will always resize it
  :EndIf
 
- :If ~object._visible
-     object._visible←1⌈|object._visible ⍝ Mark the object as visible
+ :If 0≥was←new←object._visible
+     object._visible←new←1⌈|was ⍝ Mark the object as visible
      object ##.∆WSet⊂'Visible' 1 ⍝ Update Dyalog control property
  :EndIf
 
  result←'Show'##.Event object ##.Application,arg ⍝ Run the onShow event handler
-
-⍝? Shouldn't this also show it's kids??
- :If ×≢kids←object children ⍬
-     (object ⎕VGET ##.LeafName¨kids)('Show'##.Invoke)¨⊂⍬ ⍝ Recursively Show all my children
+ :If (new≠was)∧(new>0)∧~resized ⍝ If we haven't run onResize yet, and yet we've changed it, then we need to
+     'Resize'##.Event object ##.Application,object._size,new-1 ⍝ Run the onResize event handler
+     resized←1 ⍝ Remember this (just in case)
  :EndIf
 
 
+
+⍝? Old coding I want to remember for a while...
 ⍝? Should this do anything to internal objects?
 ⍝ :Section ⍝ Get rid of hidden objects
 ⍝     hidden←'_mb' '_mdi' '_pic'

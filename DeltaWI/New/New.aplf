@@ -2,6 +2,7 @@
 ⍝ Create a brand-new GUI object, as specified
 
 ⍝? Future support: We should be able to pass a GUI 'def' variable as the argument. (This will probably be a ⎕OR under Dyalog)
+⍝? Future support: We should be able to pass an ActiveX pointer as the argument to give an APL name to an unnamed object. ⍝? Do we need this syntax, really?
 
  :Section ⍝ Analyze arguments to see what kind of processing decisions we need to make below
      (parent name)←object ⍝ Separate non-standard two-part argument

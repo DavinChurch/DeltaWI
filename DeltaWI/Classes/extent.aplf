@@ -1,4 +1,4 @@
- result←object extent arg;size;extent;where;scale;border;pscale;units;psize;dthick;Borders;margins;t;tunits;punits;dysize
+ result←object extent arg;size;extent;where;scale;border;pscale;units;psize;dthick;Borders;margins;t;tunits;punits;dysize;oldsize
 ⍝ Request or modify the size of a GUI object
 
 ⍝ Note: 'where' is outside dimensions, relative to parent and using parent's scale
@@ -27,6 +27,7 @@
          tunits←(1⍪units)[1+⊃scale;] ⍝ Compute unit-conversions for this object's 'scale'
          punits←(1⍪units)[1+⊃pscale;] ⍝ Compute unit-conversions for the parent object's 'scale'
          Borders←_supp.GetBorders object ⍝ Time to figure out what the border definitions are for this class (capitalized because it represents a global)
+         oldsize←size ⍝ Remember this
      :EndSection
 
      :Section ⍝ Recompute APL+Win 'extent'
@@ -58,8 +59,9 @@
          object ##.∆WSet⊂'Size'dysize
      :EndSection
 
-     'Resize'##.Event object ##.Application,object._size,0 ⍝ Run the onResize event handler
-⍝? Does onResize run anyway if the size doesn't actually change?
+     :If size≢oldsize ⍝ Only if the size is changing
+         'Resize'##.Event object ##.Application,object._size,0 ⍝ Run the onResize event handler
+     :EndIf
      result←NoRes
 
  :Else
