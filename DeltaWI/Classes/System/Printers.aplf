@@ -7,13 +7,13 @@
      result←↑2↑¨','##.##.∆cuts¨'.'##.##.∆WG'PrintList'
  :ElseIf (1=≢arg)∧'Tree'≡⍥⎕C⊃arg
      ⍝ Return recursive list of printers available anywhere on the network
-     ##.##.Error'Printer tree operation not yet written' ⍝?
+     ##.##.Error'Printer tree operation cannot be supported'
  :ElseIf (1=≢arg)∧'Default'≡⍥⎕C⊃arg
      ⍝ Return default printer name & port
-     ##.##.Error'Printer default operation not yet written' ⍝?
+     result←2↑','##.##.∆cuts⊃'.'##.##.∆WG'PrintList'
  :ElseIf (2=≢arg)∧'Default'≡⍥⎕C⊃arg
      ⍝ Change the default printer to the one named
-     ##.##.Error'Printer change default operation not yet written' ⍝?
+     ##.##.Error'Printer change default operation cannot be supported'
  :Else
      ##.##.Error'∆WI ACTION ERROR: Invalid operation for "Printers" method'
  :EndIf

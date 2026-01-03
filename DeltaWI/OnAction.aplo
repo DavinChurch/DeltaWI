@@ -1,4 +1,4 @@
- result←action(obj OnAction resume)args
+ result←obj (action OnAction resume)args
 ⍝ Check object to see if it has any onAction processing to perform
 ⍝ If so, perform it and return any result (often NoRes). Otherwise just return a continuation signal (⎕NULL).
 ⍝ If resume=1, then this is a '*' continuation after (partial) onAction processing that should be resumed.
@@ -7,6 +7,8 @@
 ⍝ sequence for this object/action. After all the expressions (usually just 1) in the top item of the queue are
 ⍝ complete, remove it from the queue and just return to ∆WI for immediate exit with nothing done.
 ⍝? Have I got those exit procedures right?
+
+⍝? What have I done with the nesting for "action"? Is it right? Should I be doing the 1↑ (or equivalent) inside here?
 
  :If '*'≠⊃⊃action ⍝ A '*' prefix means to ignore any onAction handling
  :AndIf ×≢(⎕UCS 13 32)∆dlt obj ⎕VGET⊂'_onAction' '' ⍝ Is there any processing to do?

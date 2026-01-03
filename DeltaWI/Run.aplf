@@ -12,13 +12,14 @@
      Application.∆WRES←wres←2⊃parms
  :Else
      wres←Application ⎕VGET⊂'∆WRES' 0           ⍝ Make an assumption about the default return value if it gets erased
+     ⍝ The event callback better not have erased the values of ∆WARG & ∆WRES
  :EndIf
 
  :If ×≢expression
      requote←'''[^'']*''' '"[^"]*"'⎕R{⍵.('\"' ''''⎕R'''' ''''''⍣PatternNum⊢Match)} ⍝ Convert any double-quotes into single-quotes before execution
      back←Application⍕⍛,'.'                     ⍝ Which namespace are we looking for?
      back←1-⍨back⍳⍨⍥⊆⎕XSI↑¨⍨≢back               ⍝ How far back is it in the )SI?
-     back(86⌶)requote expression                ⍝ Execute the expression at the correct point of the application
+     back(86⌶)requote expression                ⍝ Execute the expression at the correct (most recent) point of the application
  :EndIf
 ⍝? Instead of just going back until we hit the application scope, should we instead be going all the way back to the ∆WI call itself?
 ⍝? Does it make a difference? (Only for interim-shadowed variables??)

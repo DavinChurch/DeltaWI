@@ -11,6 +11,8 @@
  object ##.∆WSet('Coord' 'RealPixel')('AutoConf' 0)('Visible' 0) ⍝ Everybody needs these (that have them)
  object.⎕WX←0 ⍝ Let's hide all GUI properties, etc., so that they won't be accidentally used directly - ∆WS/∆WG should be used instead
  :Select object._class
+⍝? We'd better watch out here! If we have to create our own hidden sub-objects, how will we know what creation-only parms we should be using?
+⍝? Do we need to require the class to define these for us? And if so, how do we keep it simple enough for them to build (if possible/needed)?
  :Case 'Menu'
      ⍝ An APL+Win Menu object may be any of four Dyalog object-types depending on context.
      ⍝ That much should have been handled by Menu.New by now.

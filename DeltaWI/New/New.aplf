@@ -22,6 +22,7 @@
      ⍝ Note that an _mb cannot yet exist on a new object, so we won't worry about them here
      :If ×≢hidden←(9⍳⍨parent.⎕NC↑hidden)⊃hidden,⊂'' ⍝ Do one of these exist here?
          object[1]←parent ⎕VGET hidden ⍝ If so, change the future actual parent reference to that object instead
+         object[1].(_self _Ancestry)←parent.(_self _Ancestry) ⍝ Temporarily replicate this information for creation-only use
      :EndIf
  :EndSection
 
@@ -84,4 +85,8 @@
 
  :Else
      ##.Error'∆WI CLASS ERROR: Class "',class,'" not found'
+ :EndIf
+
+ :If ×≢hidden ⍝ Did we find a hidden sub-object in our parent?
+     object[1].⎕EX'_self' '_Ancestry' ⍝ Remove our temporary creation-only information from above
  :EndIf

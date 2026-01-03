@@ -1,4 +1,4 @@
- result←object where arg;size;extent;where;scale;border;pscale;units;psize;dthick;Borders;margins;t;tunits;punits;dyposn;dysize;oldsize
+ result←object where arg;size;extent;where;scale;border;pscale;units;psize;dthick;Borders;margins;t;tunits;punits;dyposn;dysize;resize;ppxsize;pxsize
 ⍝ Request or modify the location and size of a GUI object
 
 ⍝ Note: 'where' is outside dimensions, relative to parent and using parent's scale
@@ -23,13 +23,13 @@
  :CaseList 2 4
      '∆WI DOMAIN ERROR: where'##.Error∨/0>2↑2↓arg
      :Section ⍝ Get all our basic information
-         (where extent size scale border)←object ⎕VGET('_where'⍬)('_extent'⍬)('_size'⍬)('_scale' 1)('_border' 0) ⍝ My current settings
-         (psize pscale)←(⊃object._Ancestry)⎕VGET('_size'⍬)('_scale' 1) ⍝ Parent's size & scale (for use by where and extent)
+         (where extent size scale border pxsize)←object ⎕VGET('_where'⍬)('_extent'⍬)('_size'⍬)('_scale' 1)('_border' 0)('_PixelSize'(0 0)) ⍝ My current settings
+         (psize pscale ppxsize)←(⊃object._Ancestry)⎕VGET('_size'⍬)('_scale' 1)('_PixelSize'(0 0)) ⍝ Parent's size & scale (for use by where and extent)
          units←##.GUIroot._units ⍝ Get system conversion factors
-         tunits←(1⍪units)[1+⊃scale;] ⍝ Compute unit-conversions for this object's scale
-         punits←(1⍪units)[1+⊃pscale;] ⍝ Compute unit-conversions for the parent object's scale
+         tunits←(1⍪units)[1+⊃scale;] ⍝ Compute unit-conversions for this object's scale ⍝? Need scale=0 adjusting
+         punits←(units⍪⍨ppxsize÷|2↑3↓pscale)[1+⊃pscale;] ⍝ Compute unit-conversions for the parent object's scale
          Borders←_supp.GetBorders object ⍝ Time to figure out what the border definitions are for this class (capitalized because it represents a global)
-         oldsize←size ⍝ Remember this
+         resize←size ⍝ Remember this
 ⍝         :If 0 ⍝ Don't use this code - ignore it until we capture any comments in new "Form" code
 ⍝             ⍝ [Strange notes:
 ⍝             ⍝  Border=2 (w/caption) shifts the visible image up and left by a few pixels and leaves a little
@@ -66,6 +66,7 @@
          :If (2=≢where)∧(×≢size)∧0≠⊃scale ⍝ If we need where completed and have a size, work from that
              margins←+/2 2⍴+⌿Borders[1;1 2 3;] ⍝ Differences between size and where (in pixels)
              where,←punits÷⍨margins+size×tunits ⍝ We'll just compute the rest of where, rescaling as needed
+⍝? This isn't working when converting units??
          :EndIf
      :EndSection
      :Section ⍝ Recompute APL+Win 'extent'
@@ -103,7 +104,7 @@
          object ##.∆WSet('Posn'dyposn)('Size'dysize)
      :EndSection
 
-     :If size≢oldsize ⍝ Only if the size is changing
+     :If size≢resize ⍝ Only if the size is changing
          'Resize'##.Event object ##.Application,object._size,0 ⍝ Run the onResize event handler
      :EndIf
      result←NoRes

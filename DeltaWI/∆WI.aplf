@@ -16,8 +16,8 @@
  :EndIf
  (name args)←Normalize action                                       ⍝ Separate action name from its arguments and standardize structure
  name←objref Canonize name                                          ⍝ In cases where capitalization is optional, adjust it to standard
- :If ⎕NULL≢result←name(objref Immediate)args ⋄ :Return ⋄ :EndIf     ⍝ Perform any out-of-band "instant" processing
- :If ⎕NULL≢result←(1↑action)(objref OnAction resume)args ⋄ :Return ⋄ :EndIf ⍝ Perform any application-specified alternative onAction processing
+ :If ⎕NULL≢result←objref(name Immediate)args ⋄ :Return ⋄ :EndIf     ⍝ Perform any out-of-band "instant" processing
+ :If ⎕NULL≢result←objref((1↑action)OnAction resume)args ⋄ :Return ⋄ :EndIf ⍝ Perform any application-specified alternative onAction processing
 
 ⍝ Time to execute the requested operation
 ⍝ Handle object creation cases separately; otherwise start up the normal action processing by class

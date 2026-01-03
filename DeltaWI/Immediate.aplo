@@ -1,4 +1,4 @@
- result←action(obj Immediate)args
+ result←obj (action Immediate)args
 ⍝ Certain operations do not care about real class-based operations, so take care of them here.
 ⍝ This includes UDP assignments or references, handling non-existent objects, or operating on certain global synthetic actions.
 ⍝ If nothing needs to be performed here, return ⎕NULL. Otherwise return the correct ∆WI result.

@@ -13,7 +13,7 @@
 
  :Section  ⍝ Are they just asking for the current setting?
      :If 0=≢arg
-         '''scale'' has not been initialized'##.Halt 0=≢result←scale ⍝ How is it currently set?
+         result←scale
          :If ×⊃scale ⍝ If it's a fixed scale, make sure we return the proper final four items
              result←(1↑scale),0 0,size
          :Else
@@ -39,7 +39,7 @@
          :Else
              ##.Error'∆WI LENGTH ERROR: scale'
          :EndSelect
-         '∆WI DOMAIN ERROR: scale'##.Error 0∊scale[4 5]
+         '∆WI DOMAIN ERROR: scale'##.Error 0∊arg[4 5]
      :EndIf
  :EndSection
 
@@ -52,9 +52,11 @@
          margins←+/2 2⍴+⌿Borders[1;,2;] ⍝ Differences between 'extent' and 'size' (in pixels)
          size←tunits×margins-⍨extent×punits ⍝ Convert to new units
      :Case 1 0 ⍝ Converting from fixed to proportional
+         ⍝ This needs to create an actual pixel-size notation for later use
+         object._PixelSize←size×(1⍪units)[1+⊃scale;] ⍝ How big is this object in pixels? Remember it for later sizing needs.
          size←arg[4 5] ⍝ Just directly setting new 'size' values
      :Case 1 1 ⍝ Remaining fixed, but maybe changing units
-         size←units[⊃arg;]÷⍨size×units[⊃scale;] ⍝ Convert to new units
+         size←(1⍪units)[1+⊃arg;]÷⍨size×(1⍪units)[1+⊃scale;] ⍝ Convert to new units
      :EndSelect
  :EndSection
 

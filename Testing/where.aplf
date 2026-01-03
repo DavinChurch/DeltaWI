@@ -48,7 +48,6 @@
  ∆WI Pass 16 80⊢'extent'
  ∆WI Pass 2 20⊢'size'
 
-
-⍝? Proportional scaling can't be tested until written
+⍝ Scale=0 testing done in ∇scale0
 
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

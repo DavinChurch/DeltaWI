@@ -10,11 +10,10 @@
 ⍝? Do we want a New.* subroutine to auto-calculate centering a new object on its parent?
  :If 4≠≢where←1⊃given ⍝ If they're not giving us a full 4⍴ "where", generate a default they can modify later
      :If 2≠≢size←2⊃given ⋄ size←_size ⋄ :EndIf ⍝ Default button size (always in character units)
-     (psize pscale)←parent.(_size _scale) ⍝ What's the parent's size & scale?
-     'How do we figure the new position when the parent (and maybe their parent) is proportional?'##.##.Halt 0=⊃pscale ⍝? A New.RealSize function?
+     (psize pscale)←parent.(_size _scale) ⍝ What's the parent's size & scale? ⍝? Does this give us the right data for scale=0?
      :If 2≠≢extent←3⊃given ⍝ Use an extent they gave us if we have one, otherwise calculate it
          ⍝ For some reason, an APL+Win button is centered using an extent that is 1/16 of a character too big? Is it to leave room for a old-style drop shadow?
-         extent←size×÷⌿units[1,⊃pscale;] ⍝ Compute extent using parent's scale
+         extent←size×÷⌿(1⍪units)[1+1,⊃pscale;] ⍝ Compute extent using parent's scale
      :EndIf
      :If 2=≢where ⍝ If they've supplied a partial 'where' (2⍴), then just modify it in-place to append the extent to it
          arg←(⊂'where'(where,extent))@(actions⍳⊂'where')⊢arg
@@ -29,7 +28,7 @@
  :EndIf
 
  props←'Button'('Style' 'Push')('Visible' 0) ⍝ Properties that must be used during creation
- newobj←⎕VGET((⍕parent),'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
+ newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
  ⍝ While we have the object creation data in hand, let's set up the required identification and connectivity variables
  newobj.(_self _name _class)←(parent._self,'.',name)name'Button' ⍝ Set ∆WI control information
  newobj.(_Ancestry _Class)←(parent,parent._Ancestry)⎕THIS ⍝ Set ∆WI control information

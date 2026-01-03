@@ -1,0 +1,35 @@
+ scale0
+⍝ Test scale=0 relationships
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ ⍝ Put a character-scale button on a character-scale form (the normal way)
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'('where' 30 100)('extent' 10 30) ⍝ In character units
+ 'f.b'∆WI Pass'f.b'⊢'Create' 'Button'('where' 8.5 18)('size' 1.5 12)('caption' 'Corner') ⍝ Put it in the corner of the form
+ 'f.b'∆WI Pass 8.5 18 1.5 12⊢'where'
+ 'f.b'∆WI Pass 1.5 12⊢'extent'
+ 'f.b'∆WI Pass 1.5 12⊢'size'
+
+ ⍝ Put a character-scale button on a percentage-scale form
+ 'f'∆WI Pass MT⊢'scale' 0 0 0 100 100 ⍝ Change to percentage scaling (1.6 2.4 px/%)
+ 'f.b'∆WI Pass'f.b'⊢'Create' 'Button'('where' 85 60)('size' 1.5 12)('caption' 'Corner') ⍝ Put it in the corner of the form
+ 'f.b'∆WI Pass 85 60 15 40⊢'where'
+ 'f.b'∆WI Pass 15 40⊢'extent'
+ 'f.b'∆WI Pass 1.5 12⊢'size'
+
+ ⍝ Change it to a percentage-scale button and check it out
+ 'f.b' ∆WI Pass MT⊢'scale' 0 0 0 100 100
+ 'f.b'∆WI Pass 85 60 15 40⊢'where'
+ 'f.b'∆WI Pass 15 40⊢'extent'
+ 'f.b' ∆WI Pass 100 100⊢'size'
+
+ ⍝ Now let's trying working on a reversed-axis percentage-scale form
+⍝ 'f'∆WI Pass MT⊢'scale' 0 100 0 ¯100 100 ⍝ Change to percentage scaling (1.6 2.4 px/%)
+⍝ 'f.b'∆WI Pass'f.b'⊢'Create' 'Button'('where' 15 60)('size' 1.5 12)('caption' 'Corner') ⍝ Put it in the corner of the form
+⍝ 'f.b'∆WI Pass 15 60 15 40⊢'where'
+⍝ 'f.b'∆WI Pass 15 40⊢'extent'
+⍝ 'f.b'∆WI Pass 1.5 12⊢'size'
+
+⍝ Also try changing where+ after setting to percentage
+
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests
