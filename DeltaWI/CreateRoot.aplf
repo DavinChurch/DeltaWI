@@ -12,6 +12,7 @@
  this.AspectRatio←÷/⌽2⊃devcaps ⍝ The ratio (W÷H) of inch-size of the screen; estimated; used for visual concerns like square- and circle-drawing
  ⍝inches←(2⊃devcaps)÷25.4 ⍝ How big is the screen in inches (h,w); estimated
  tpp←15 ⍝?1440÷25.4×⊃÷/2↑devcaps ⍝ Twips/pixel ⍝ Override calculated tpp with an assumed value (should we be doing this?)
+ ⍝ _units definition (including any post-computed scale=0 factors), and variables derived from them, are always in real-pixels-per-unit
  this._units←1 2⍴16 8 ⍝ Pixels per system character unit (constant; assumed)
  this._units⍪←this._units[1;]÷8 4 ⍝ Dialog units
  this._units⍪←2⍴20÷tpp ⍝ screensize÷inches÷72 ⍝ Points (72/in)

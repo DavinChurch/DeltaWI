@@ -21,8 +21,8 @@
  :Case 2
      '∆WI DOMAIN ERROR: extent'##.Error∨/0>arg
      :Section ⍝ Get all our basic information
-         (where extent size scale border pxsize)←object ⎕VGET('_where'⍬)('_extent'⍬)('_size'⍬)('_scale' 1)('_border' 0)('_PixelSize'(0 0)) ⍝ My current settings
-         (psize pscale ppxsize)←(⊃object._Ancestry)⎕VGET('_size'⍬)('_scale' 1)('_PixelSize'(0 0)) ⍝ Parent's size & scale (for use by where and extent)
+         (where extent size scale border pxsize)←object ⎕VGET('_where'⍬)('_extent'⍬)('_size'⍬)('_scale' 1)('_border' 0)('_pix_size'(0 0)) ⍝ My current settings
+         (psize pscale ppxsize)←(⊃object._Ancestry)⎕VGET('_size'⍬)('_scale' 1)('_pix_size'(0 0)) ⍝ Parent's size & scale (for use by where and extent)
          units←##.GUIroot._units ⍝ Get system conversion factors
          tunits←(1⍪units)[1+⊃scale;] ⍝ Compute unit-conversions for this object's scale ⍝? Need scale=0 adjusting
          punits←(units⍪⍨ppxsize÷|2↑3↓pscale)[1+⊃pscale;] ⍝ Compute unit-conversions for the parent object's scale

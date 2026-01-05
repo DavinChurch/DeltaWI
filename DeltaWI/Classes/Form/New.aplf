@@ -1,4 +1,4 @@
- result←object New arg;parent;name;actions;where;newobj;given;props;border;nocaption
+ result←object New arg;parent;name;actions;where;newobj;props;border;nocaption;∆where;∆caption;∆border
 ⍝ Create a new Form object
 
  (parent name)←object ⍝ Separate non-standard two-part argument
@@ -8,15 +8,15 @@
  ⍝(border style)←0~⍨¨##.##.BitVals¨+/¨∊¨(0,⍨1↓¨arg)[actions⍳'border' 'style'] ⍝ Get the bit-flag values they've provided on this line
 
  ⍝ Optionally prepend object defaults (in reverse order) to be handled
- given←((1↓¨arg),⊂⍬)[actions⍳'where' 'caption' 'border'] ⍝ Which of our defaults are they giving us anyway (so we can skip the defaults)
- :If 4≠≢∊1⊃given
+ (∆where ∆caption ∆border)←((1↓¨arg),⊂⍬)[actions⍳'where' 'caption' 'border'] ⍝ Which of our defaults are they giving us anyway (so we can skip the defaults)
+ :If 4≠≢∊∆where
      where←,parent._size÷⍤1⊢2 2⍴4 4 2 2 ⍝ Default APL+Win Form size and position ⍝? Does this give us the right data for scale=0?
      arg,⍨←⊂'where'where ⍝ [2] Start us with a default 'where' size and position (APL+Win measure) -- will usually be overridden later
  :EndIf
- :If ~'caption'⊂⍛∊actions ⍝ If they're not setting a caption immediately, we'll put in a default
+ :If ~'caption'⊂⍛∊actions ⍝ If they're not setting a caption at all immediately, we'll put in a default
      arg,⍨←⊂'caption'name ⍝ [1] Use the object name as a caption, though this will almost certainly be changed later by the application
  :EndIf
- :If 0=≢border←3⊃given
+ :If 0=≢border←∆border
      border←_border
  :Else
      border←+/border
@@ -24,7 +24,7 @@
  ⍝? This sequence may cause a little flickering, but see if it's a problem before we look into changing it
 
  props←'Form'('Visible' 0)
- nocaption←''≡2⊃given
+ nocaption←∆caption≡'' ⍝ (This won't match a ⍬ default, thus it's been provided this way)
  :If nocaption∧16>border ⍝ No border; no title bar
      props,←('Sizeable' 0)('Moveable' 0)('SysMenu' 0)('MinButton' 0)('MaxButton' 0)('Border' 0)
  :ElseIf nocaption∧1∊border←##.##.BitVals border ⍝ Thin border; no title bar
