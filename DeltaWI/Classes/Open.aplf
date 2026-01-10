@@ -1,15 +1,16 @@
  result←object Open arg;hidden;kids
 ⍝ Open a closed GUI object
 
- :If object._opened ⍝ If it's already opened, then we have nothing to do here
+ :If 0≠object._opened ⍝ If it's already opened/opening, then we have nothing to do here
      result←NoRes
      :Return
  :EndIf
 
- object._opened←1
+ object._opened←¯1 ⍝ Mark it as "opening", briefly
  result←'Open'##.Event object ##.Application,arg ⍝ Run the onOpen event handler
  'Resize'##.Event object ##.Application,object._size,0 ⍝ Run the onResize event handler (always)
 ⍝? What do we need to do about hidden internal objects while opening?
+ object._opened←1 ⍝ Now it's fully open
 
  :If ×≢kids←object children ⍬
      result←(object ⎕VGET ##.LeafName¨kids)('Open'##.Invoke)¨⊂⍬ ⍝ Recursively Open all my children

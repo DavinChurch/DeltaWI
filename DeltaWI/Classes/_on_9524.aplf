@@ -1,0 +1,9 @@
+ result←_on_9524 message
+⍝ A deferred event has been triggered - it's time to pass it along for usual processing
+⍝ Accept "message" in this form: object 9524 ##.Application,DeferArgs.
+⍝ Asynchronous results (not "ok" code) are never used and will always be NoRes.
+
+ result←'⍎Defer'##.Event message[1],2↓message ⍝ Remove #9524 when calling and it should then be in standard synthetic event-message form
+
+⍝ After this has been processed, we may remove the event 9524 trapping from the object, but why bother?
+⍝ We'll leave it there in case more Defers are used on the object.

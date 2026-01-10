@@ -2,7 +2,7 @@
 ⍝ Show a GUI object
 
  resized←0 ⍝ Make a note about whether we've onResized this or not
- :If ~object._opened
+ :If 0=object._opened
      object('Open'##.Invoke)⍬ ⍝ If it's not opened yet, Open it
      resized←1 ⍝ Open will always resize it
  :EndIf

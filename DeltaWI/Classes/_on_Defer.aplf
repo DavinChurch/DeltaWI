@@ -1,0 +1,7 @@
+ result←run _on_Defer message;force;allow
+⍝ Execute a 'Defer' method handler
+⍝ ∆WSELF, ∆WEVENT, ∆WARG, & ∆WRES have already been pre-set to the requested values.
+⍝ Nothing is in "message" - everything has already been dealt with.
+⍝ The result (actual data, not "ok" code) is returned directly from the method call.
+
+ result←NoRes⊣##.Run run ⍝ Never return any real data from here because it was called asynchronously

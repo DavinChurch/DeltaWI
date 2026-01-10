@@ -3,7 +3,7 @@
 ⍝ Return a 1 for successfully closed or 0 if denied (and not forced).
 ⍝ The operand specifies whether or not closing can be denied by the onClose event.
 
- :If result←~object._opened ⋄ :Return ⋄ :EndIf ⍝ If it's already closed, then we just tell them so
+ :If result←0=object._opened ⋄ :Return ⋄ :EndIf ⍝ If it's already closed, then we just tell them so
  result←'Close'##.##.Event object ##.##.Application,arg ⍝ Run the onClose event handler (always return 0 or 1)
  :If 0≢result←##.##.Single result ⋄ result←1 ⋄ :EndIf ⍝ Assume 0 if there's no handler or there's an invalid result
  :If 0=result←force∨result ⋄ :Return ⋄ :EndIf ⍝ Closing was explicitly denied

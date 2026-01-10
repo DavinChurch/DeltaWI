@@ -1,0 +1,9 @@
+ result←object capture arg
+⍝ A dummy property that hasn't been used since APL+Win v3.x, but just in case some application still tries to call it...
+
+ :If 0=≢arg
+     result←'' ⍝ Return null result
+ :Else
+     'DOMAIN ERROR'##.##.Error(1≠≢arg)∨~##.##.IsChar 1⊃arg
+     result←##.NoRes ⍝ Ignore anything they give us and exit
+ :EndIf

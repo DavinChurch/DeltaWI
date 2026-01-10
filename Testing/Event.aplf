@@ -1,0 +1,40 @@
+ Event;∆WSELF;data
+ ⍝ Test Event and Defer methods
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'
+ ∆WSELF←'f'
+
+ ⍝ Test null handlers
+ ∆WI Pass MT⊢'Event' 0
+ ∆WI Pass'nope'⊢'Event' 0 'nothing' 'here' 'nope'
+ ∆WI Pass MT⊢'Defer' 0
+ ∆WI Pass MT⊢'Defer' 0 'nothing' 'here' 'nope'
+
+ ⍝ Test empty handlers
+ ∆WI Pass MT⊢'Event' ''
+ ∆WI Pass'nope'⊢'Event' '' 'nothing' 'here' 'nope'
+ ∆WI Pass MT⊢'Defer' ''
+ ∆WI Pass MT⊢'Defer' '' 'nothing' 'here' 'nope'
+
+ ⍝ Test pass-thru handlers
+ ∆WI Pass ⍬⊢'Event' '∆WRES←∆WARG'
+ ∆WI Pass'here'⊢'Event' '∆WRES←∆WARG' 'nothing' 'here' 'nope'
+ ∆WI Pass MT⊢'Defer' '∆WRES←∆WARG'
+ ∆WI Pass MT⊢'Defer' '∆WRES←∆WARG' 'nothing' 'here' 'nope'
+
+ ⍝ Test global assignment handlers (using side effects)
+ data←'nope'
+ ∆WI Pass{data≡'yep'}⊢'Event' 'data←''yep'''
+ data←'nope'
+ ∆WI Pass{data≡'yep'}⊢'Event' 'data←∆WEVENT' 'yep'
+ ⍝ *** Manual intervention required for this test ***
+ ⍝ In order to test deferred execution manually, uncomment the following three testing lines and allow the third one to fail (stop execution).
+ ⍝ Then →⎕LC to resume on the same (third) line, after which the local value should have been changed and testing should continue.
+ ⍝ I haven't figured out a way to do this automatically without a programmed ⎕WGIVE.
+⍝      data←'nope'
+⍝      ∆WI Pass MT⊢'Defer' 'data←''yep''' '' ⍬ MT 4
+⍝      ⊢Pass'yep'⊢data ⍝ Did the global get assigned?
+
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

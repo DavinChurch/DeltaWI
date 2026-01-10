@@ -3,7 +3,7 @@
 
  was←object._visible
  :If was>0 ⍝ Is it visible?
-     :If ~object._opened ⍝ Is it a closed object?
+     :If 0=object._opened ⍝ Is it a closed object?
          ⍝ We have to run the Open method first, before we do anything else
          object('Open'##.Invoke)⍬ ⍝ Force it open
          was←object._visible ⍝ In case it changed

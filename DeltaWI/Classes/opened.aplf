@@ -2,4 +2,4 @@
 ⍝ Is the object opened for activity?
 
  '∆WI ACTION ERROR: Property "opened" is read-only'##.Error×≢arg
- result←object._opened
+ result←|object._opened

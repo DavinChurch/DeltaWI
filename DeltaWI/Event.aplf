@@ -1,6 +1,6 @@
- {dq}←events Event message;event;object;realevent;localize;fn;action;run;Application;handler;⎕TRAP;GUIroot;suppress
+ {dq}←events Event message;event;object;realevent;localize;fn;action;run;Application;handler;⎕TRAP;GUIroot;suppress;warg;wres;wevent;force
 ⍝ When any needed Dyalog event is signalled, execute this function directly to perform the appropriate operations.
-⍝ Important: This function operates independently of ∆WI and allows a separate access point into the DeltaWI system when events call it.
+⍝ Important: This function often operates independently of ∆WI and allows a separate access point into the DeltaWI system when system events call it.
 ⍝
 ⍝ The right argument and result are the standard Dyalog ⎕DQ event message and action.
 ⍝ The left argument is a list of APL+Win event names (w/o 'on') that should respond to this Dyalog event, in order.
@@ -21,7 +21,6 @@
  ⍝? Since this normally happens within an event callback rather than an application call, how do we really want to handle ∆WI-style (or other) errors??
  ⍝? And since we often call this implicitly during internal processing, do we want to do the same thing to report back to our internal code (probably OK?)?
 
- dq←1 ⍝ If nothing else, just continue APL/Windows processing normally
  :If 0=≢events←,⊆,events ⋄ :Return ⋄ :EndIf ⍝ If there are no APL+Win events to emulate, just exit quickly
  (object realevent)←2↑message ⍝ What object/event are we processing? ("message" may be synthetic)
  :If 9=⎕NC'realevent' ⍝ Is this an internal (non-real) event call?
@@ -31,10 +30,12 @@
      Application←realevent ⍝ Use what we're given instead of looking for an external caller source
      message[2]←⊂realevent←'' ⍝ Signal everyone that this is a synthetic event and should be handled a little differently
      suppress←0 ⍝ Internal events never get suppressed because they're invoked explicitly
-     dq←Classes.NoRes ⍝ We'll have a different default return value for synthetic events (for when it is suppressed)
+     dq←Classes.NoRes ⍝ We'll have a different default return value for synthetic events (for when it is suppressed) ⍝? What? This is never suppressed!
  :Else
      Application←⊃⎕THIS,⍨⎕THIS~⍨⎕RSI/⍨⎕THIS⍕⍛{(⊂⍺)≢¨⍵↑¨⍨≢⍺}⎕NSI ⍝ Global: What is the current application namespace (outside DeltaWI) when the event fires?
      suppress←object ⎕VGET⊂'_suppress' 0 ⍝ Have they asked to suppress this normal event?
+⍝? 'suppress' still needs testing, when get get to an object that can use it
+     dq←1 ⍝ If nothing else, just continue APL/Windows processing normally
  :EndIf
  GUIroot←⊢/object._Ancestry ⍝ Global: What is the root of our GUI object tree?
  localize←Application ⎕VGET('∆WSELF' '')('∆WEVENT' '')('∆WARG'⍬)('∆WRES' 0) ⍝ Capture previous application quad-vars
@@ -43,21 +44,41 @@
          :Section ⍝ This is a Dyalog-direct event rather than an APL+Win event
 ⍝? This needs a whole new style of event processing (for either Dyalog or non-Dyalog classes)
          :EndSection
+     :ElseIf '⍎'=⊃event ⍝ Are we asking for some direct-execution facilities here (e.g. 'Event' or 'Defer')?
+         :Section ⍝ This is special Event and Defer method processing
+             ⍝ Only for these two cases, '⍎Event' and '⍎Defer' will call functions Classes._on_Event and Classes._on_Defer
+             ⍝ (non-standard names), with an expected (fixed) argument syntax.
+             ⍝ '⍎Event' is called directly from Classes.Event; '⍎Defer' is called indirectly via _on_9524.
+             ⍝ The event-calling arguments (beyond the first two prefixed items) will be: handler, [event, [arg, [res, [force]]]],
+             ⍝ all have been pre-validated.
+             fn←'_on_',1↓event
+             ('Required "',fn,'" event handler is not defined')Error 3≠Classes.⎕NC fn
+             ('Required "',fn,'" event handler has incorrect syntax')Error 1 2 0≢⊃Classes.⎕AT fn
+             (wevent warg wres force)←4↑3↓message,(≢message)↓⍬ ⍬'' ''⍬ Classes.NoRes 0 ⍝ System variables to pass in, with defaults
+             force←BitVals⊃force ⍝ Do they want to allow firing during special conditions?
+             :If ((2-object._opened)⊃1,1 2∊force)∧(4∊force)∨~'*'∊¯1↓⎕STACK[;2] ⍝ Are we allowed to run the event?
+                 Application.(∆WSELF ∆WEVENT ∆WARG ∆WRES)←object._self wevent warg wres ⍝ Assign values from fixed-syntax method input
+                 handler←Classes.⍎fn ⍝ Obtain a reference to the special event-processing function (I wish there was a non-⍎ way to do this)
+                 dq←(3⊃message)handler ⍬ ⍝ Execute the one special event-processing function, with an empty argument
+             :EndIf
+         :EndSection
      :ElseIf suppress
          ⍝ If they've asked for implicit events to be suppressed, then we don't do anything at all here
      :Else
          :Section ⍝ This is a standard APL+Win event
              Application.(∆WSELF ∆WEVENT ∆WARG ∆WRES)←object._self event ⍬ 0 ⍝ Pre-set standard names
-
              fn←'_on',event ⍝ This will be both the class-defined event handler function name and also the GUI variable name containing the handler text
              :If ×≢run←object ⎕VGET⊂fn'' ⍝ Do we have some handler text to execute?
                  :If 3=object._Class.⎕NC fn ⍝ Is there a class-specific handler?
+                     ('Required "',object._class,'" event handler for "',(1↓fn),'" uses incorrect syntax')Error 1 2 0≢⊃object._Class.⎕AT fn
                      handler←object._Class.⍎fn ⍝ Obtain a reference to the class event-processing function (I wish there was a non-⍎ way to do this)
                  :ElseIf 3=Classes.⎕NC fn ⍝ Is there a class-generic handler?
+                     ('Required "',object._class,'" event handler for "',(1↓fn),'" uses incorrect syntax')Error 1 2 0≢⊃Classes.⎕AT fn
                      handler←Classes.⍎fn ⍝ Obtain a reference to the class event-processing function (I wish there was a non-⍎ way to do this)
                  :Else
-                     ⍝? How should we be reporting this???
+                     ⍝? How should we be reporting this??? (Here and above?)
                      ⍝? Should we instead just be ignoring the error and not processing the event?
+                     ⍝? Or should be be using Halt for the developer?
                      Error'Required "',object._class,'" event handler for "',(1↓fn),'" is not defined'
                  :EndIf
 

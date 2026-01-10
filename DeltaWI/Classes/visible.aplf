@@ -20,7 +20,7 @@
  resized←0 ⍝ Make a note about whether we've onResized this or not
 
  :If arg>⍥×was ⍝ Are we about to make it visible?
- :AndIf ~object._opened ⍝ See if it's currently closed
+ :AndIf 0=object._opened ⍝ See if it's currently closed
      object('Open'##.Invoke)⍬ ⍝ Force it open
      resized←1 ⍝ Open will always resize it
      was←object._visible ⍝ In case it changed
