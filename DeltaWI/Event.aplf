@@ -1,4 +1,4 @@
- {dq}←events Event message;event;object;realevent;localize;fn;action;run;Application;handler;⎕TRAP;GUIroot;suppress;warg;wres;wevent;force
+ {dq}←events Event message;event;object;realevent;localize;fn;action;run;Application;handler;⎕TRAP;GUIroot;suppress;warg;wres;wevent;force;mousing;mouseonce
 ⍝ When any needed Dyalog event is signalled, execute this function directly to perform the appropriate operations.
 ⍝ Important: This function often operates independently of ∆WI and allows a separate access point into the DeltaWI system when system events call it.
 ⍝
@@ -68,7 +68,22 @@
          :Section ⍝ This is a standard APL+Win event
              Application.(∆WSELF ∆WEVENT ∆WARG ∆WRES)←object._self event ⍬ 0 ⍝ Pre-set standard names
              fn←'_on',event ⍝ This will be both the class-defined event handler function name and also the GUI variable name containing the handler text
+             :Section ⍝ Watch out for transparent mouse events here (on Frames or Labels)
+                 :If mouseonce←event⊂⍛∊mousing←(⊂'Mouse'),¨'Down' 'Double' 'Up' 'Drag' 'Move' 'Enter' 'Leave' ⍝ Only mouse-events
+                 :AndIf mouseonce←object._class⊂⍛∊'Frame' 'Label' ⍝ Only these classes are transparent
+                 :AndIf mouseonce←∧/0=≢¨object ⎕VGET(↑(⊂'_on'),¨mousing)(⊂'') ⍝ And only if no mouse-events are defined here
+                 :AndIf mouseonce←0=object ⎕VGET⊂'_pointer' 0 ⍝ And they aren't using a customized pointer (APL+Win rules)
+                     ⍝ Then this object has transparent mouse event handlers
+                     ⍝ Look for a handler in either the parent or an overlapping sibling, as appropriate
+                     ⍝? Checking overlapping controls is going to be tough and I expect to be rarely used, so we'll ignore those for now
+                     :If mouseonce←×≢run←(⊃object._Ancestry)⎕VGET⊂fn'' ⍝ Does my parent object have this handler?
+                         object ⎕VSET⊂fn run ⍝ If so, duplicate it here temporarily so we can execute it
+⍝? Needs testing, at least manually
+                     :EndIf
+                 :EndIf
+             :EndSection
              :If ×≢run←object ⎕VGET⊂fn'' ⍝ Do we have some handler text to execute?
+                 :If mouseonce ⋄ object ⎕VSET⊂fn'' ⋄ :EndIf ⍝ If we created a temporary event handler, we can kill it now that we've grabbed it
                  :If 3=object._Class.⎕NC fn ⍝ Is there a class-specific handler?
                      ('Required "',object._class,'" event handler for "',(1↓fn),'" uses incorrect syntax')Error 1 2 0≢⊃object._Class.⎕AT fn
                      handler←object._Class.⍎fn ⍝ Obtain a reference to the class event-processing function (I wish there was a non-⍎ way to do this)
