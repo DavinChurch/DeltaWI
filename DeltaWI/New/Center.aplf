@@ -1,0 +1,30 @@
+ arg←opts Center arg;from;actions;units;∆where;∆size;∆extent;where;size;parent;offset;psize;pscale;ppxsize;punits;extent;Borders;where_extent
+⍝ Generic routine to auto-center new objects on their parent by modifying the provided argument list before ∆WI execution
+⍝ opts← namespace with optional controlling variables
+⍝       parent: reference to parent object [required]
+⍝       offset: pretend new object is this many pixels bigger (vertical, horizontal) for centering calculations
+
+ from←⊃⎕RSI ⍝ Immediate source namespace calling me (where I can find settings)
+ actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
+ units←##.GUIroot._units ⍝ We'll want this for scale conversions
+ (parent offset)←opts ⎕VGET'parent'('offset'(0 0)) ⍝ obtain named parameters
+
+ ⍝ If needed, modify or prepend a default 'where' for object creation
+ (∆where ∆size ∆extent)←∊¨((1↓¨arg),⊂⍬)[actions⍳'where' 'size' 'extent'] ⍝ Which of our defaults are they giving us anyway (so we can skip adding defaults)
+ :If 4≠≢where←∆where ⍝ If they're not giving us a full 4⍴ "where", generate a default they can modify later
+     :If 2≠≢size←∆size ⋄ size←from._size ⋄ :EndIf ⍝ Default object size (always in character units); required for centering
+     (psize pscale ppxsize)←parent ⎕VGET'_size' '_scale'('_pix_size'(0 0)) ⍝ What's the parent's size & scale? ⍝? Does this give us the right data for scale=0?
+     punits←(units⍪⍨ppxsize÷|2↑3↓pscale)[1+⊃pscale;] ⍝ Compute unit-conversions for the parent object's scale
+     :If 2≠≢extent←∆extent ⍝ Use an extent they gave us if we have one, otherwise calculate it
+         extent←size×units[1;]÷punits ⍝ Compute an extent using parent's scale
+     :EndIf
+     Borders←##.Classes._supp.GetBorders(_Class:from)
+     where_extent←extent+punits÷⍨+/2 2⍴Borders[1;3;] ⍝ Add border-spacing between extent and where
+     :If 2=≢where ⍝ If they've supplied a partial 'where' (2⍴), then just modify it in-place to append the extent to it
+         arg←(⊂'where'(where,where_extent))@(actions⍳⊂'where')⊢arg
+     :Else ⍝ Otherwise, prepend a full default value
+         where←(2÷⍨|psize-where_extent+offset÷punits),where_extent ⍝ For some reason, some objects aren't exactly centered by default
+         arg,⍨←⊂'where'where ⍝ [2] Start us with a default 'where' extent and position (APL+Win measure) -- will usually be overridden later
+     :EndIf
+     ⍝? We may also remove any existing 'extent' (or 'size') from their command line so we don't re-execute it? But is it worth it?
+ :EndIf
