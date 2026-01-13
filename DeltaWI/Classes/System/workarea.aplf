@@ -1,0 +1,5 @@
+ result←object workarea arg
+⍝ Return the size of the screen less the space taken up by the task bar
+
+ '∆WI ACTION ERROR: Property "workarea" is read-only'##.##.Error×≢arg
+  result←object._workarea

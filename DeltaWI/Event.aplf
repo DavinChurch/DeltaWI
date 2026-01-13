@@ -26,15 +26,18 @@
  :If 9=⎕NC'realevent' ⍝ Is this an internal (non-real) event call?
      ⍝ If our event message ia synthetic with an "event name" that's actually a namespace reference,
      ⍝ then that is a previous "Application" pointer being passed in from an internal (implied) event.
+     ⍝ All implicit (code-driven) events are potentially suppressable.
      'Exactly one event name required for synthetic events'⎕SIGNAL 11/⍨(2≠≡events)∨1≠≢events ⍝ Report improper usage directly
      Application←realevent ⍝ Use what we're given instead of looking for an external caller source
      message[2]←⊂realevent←'' ⍝ Signal everyone that this is a synthetic event and should be handled a little differently
-     suppress←0 ⍝ Internal events never get suppressed because they're invoked explicitly
-     dq←Classes.NoRes ⍝ We'll have a different default return value for synthetic events (for when it is suppressed) ⍝? What? This is never suppressed!
+     suppress←object ⎕VGET⊂'_suppress' 0 ⍝ Have they asked to suppress this implied event?
+⍝? 'suppress' still needs testing, when get get to an object that can use it like Edit
+⍝? What do we do about methods that directly cause events? Can they be suppressed or not?
+     dq←Classes.NoRes ⍝ We'll have a different default return value for synthetic events (e.g. for when it is suppressed)
  :Else
-     Application←⊃⎕THIS,⍨⎕THIS~⍨⎕RSI/⍨⎕THIS⍕⍛{(⊂⍺)≢¨⍵↑¨⍨≢⍺}⎕NSI ⍝ Global: What is the current application namespace (outside DeltaWI) when the event fires?
-     suppress←object ⎕VGET⊂'_suppress' 0 ⍝ Have they asked to suppress this normal event?
-⍝? 'suppress' still needs testing, when get get to an object that can use it
+     Application←⎕←⊃⎕THIS,⍨⎕RSI/⍨⎕←⎕THIS⍕⍛{(⊂⍺,'.')≢¨⍵↑¨⍨1+≢⍺}⎕←⎕NSI,¨'.' ⍝ Global: What is the current application namespace (outside DeltaWI) when the event fires?
+⍝? This has a minor loophole if another namespace is named with #.DeltaWIxxx (see also ∆WI) ⍝? Does this change fix it??
+     suppress←0 ⍝ User (real) events never get suppressed
      dq←1 ⍝ If nothing else, just continue APL/Windows processing normally
  :EndIf
  GUIroot←⊢/object._Ancestry ⍝ Global: What is the root of our GUI object tree?
@@ -51,11 +54,12 @@
              ⍝ '⍎Event' is called directly from Classes.Event; '⍎Defer' is called indirectly via _on_9524.
              ⍝ The event-calling arguments (beyond the first two prefixed items) will be: handler, [event, [arg, [res, [force]]]],
              ⍝ all have been pre-validated.
+             ⍝ Since these are explicitly requested, they cannot be auto-suppressed.
              fn←'_on_',1↓event
              ('Required "',fn,'" event handler is not defined')Error 3≠Classes.⎕NC fn
              ('Required "',fn,'" event handler has incorrect syntax')Error 1 2 0≢⊃Classes.⎕AT fn
              (wevent warg wres force)←4↑3↓message,(≢message)↓⍬ ⍬'' ''⍬ Classes.NoRes 0 ⍝ System variables to pass in, with defaults
-             force←BitVals⊃force ⍝ Do they want to allow firing during special conditions?
+             force←3 BitVals⊃force ⍝ Do they want to allow firing during special conditions?
              :If ((2-object._opened)⊃1,1 2∊force)∧(4∊force)∨~'*'∊¯1↓⎕STACK[;2] ⍝ Are we allowed to run the event?
                  Application.(∆WSELF ∆WEVENT ∆WARG ∆WRES)←object._self wevent warg wres ⍝ Assign values from fixed-syntax method input
                  handler←Classes.⍎fn ⍝ Obtain a reference to the special event-processing function (I wish there was a non-⍎ way to do this)
@@ -75,10 +79,10 @@
                  :AndIf mouseonce←0=object ⎕VGET⊂'_pointer' 0 ⍝ And they aren't using a customized pointer (APL+Win rules)
                      ⍝ Then this object has transparent mouse event handlers
                      ⍝ Look for a handler in either the parent or an overlapping sibling, as appropriate
-                     ⍝? Checking overlapping controls is going to be tough and I expect to be rarely used, so we'll ignore those for now
+⍝? Checking overlapping controls is going to be tough and I expect to be rarely used, so we'll ignore those for now
                      :If mouseonce←×≢run←(⊃object._Ancestry)⎕VGET⊂fn'' ⍝ Does my parent object have this handler?
                          object ⎕VSET⊂fn run ⍝ If so, duplicate it here temporarily so we can execute it
-⍝? Needs testing, at least manually
+⍝? Transparent events need testing, at least manually
                      :EndIf
                  :EndIf
              :EndSection

@@ -1,4 +1,4 @@
- CreateRoot root;inches;this;tpp;devcaps
+ CreateRoot root;inches;this;tpp;devcaps;wa
 ⍝ The first time that ∆WI is used, we need to create and populate the root of the GUI structure
 
  this←⎕VGET root ⎕NS'' ⍝ Create the root GUI namespace that we can build from
@@ -26,7 +26,9 @@
  ⍝ Dyalog GUI objects need a parent's Coord in order to measure Posn (at least)
  ⍝ The usual default for a Dyalog root is 'Prop', so convert it to/from pixels to match up (unless it has been changed)
 
- ⍝? We may eventually set up something here to make sure that onTooltip and onPrompt can be supported?
+⍝ Figure out the screen space available exclusive of the task bar by constructing an ephemeral, invisible, maximized form
+ wa←(this⍕⍛,'_wa')∆WC'Form'('Visible' 0)('Coord' 'RealPixel')('State' 2)
+ this._workarea←0 0,wa ∆WG'Size' ⋄ ⎕EX⍕wa ⍝ Assume that taskbar is not in the top-left corner ⍝? I don't know how to get actual starting point
 
  ⍝ Assign class default properties
  this ⎕VSET Classes.System ⎕VGET ¯2
