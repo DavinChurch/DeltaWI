@@ -1,0 +1,16 @@
+(
+ 'border'
+ 'color'
+ 'edge'
+ 'font'
+ 'limit'
+ 'onChange'
+ 'onKeyPress'
+ 'onLimit'
+ 'onScroll'
+ 'range'
+ 'selection'
+ 'seltext'
+ 'style'
+ 'text'
+)
