@@ -1,0 +1,23 @@
+ ok←run _onKeyPress message;key
+⍝ Execute the Edit:onKeyPress event handler
+
+ :If 1=≢key←3⊃message
+     :Select ok←key 0 ##.##.Run run
+     :Case 0
+         ok←1 ⍝ Just process normally
+     :Case ¯1
+         ok←0 ⍝ Abort
+     :Case ¯2
+         ok←0 ⍝ Abort and beep
+⍝? How do we beep in a portable way??
+     :Else
+⍝? This had better be a singleton positive integer - how should we report problems?
+         ok←(⎕UCS ok)@3⊢message ⍝ Change the character by returning a new message
+⍝? Test this to see how well modifications of messages work
+     :EndSelect
+ :Else
+     ⍝ This isn't a "key" as far as APL+Win is concerned
+     ok←0 ⍝ Abort
+ :EndIf
+
+ ⍝? Add a check for exceeding the limit - do we do that here or do we need it somewhere else, or can we get Dyalog to do it?

@@ -6,7 +6,9 @@
      result←old
  :Else
      '∆WI DOMAIN ERROR: caption'##.##.Error 1≠≢arg
-     '∆WI DOMAIN ERROR: caption'##.##.Error(1≠≡new)∨1≠≢⍴new←1/##.##.Single arg ⍝ New caption to be shown
+     new←1/##.##.Single arg
+     '∆WI RANK ERROR: caption'##.##.Error 1≠≢⍴new
+     '∆WI DOMAIN ERROR: caption'##.##.Error 1≠≡new
      '∆WI DOMAIN ERROR: caption'##.##.Error~##.##.IsChar new
      object._caption←new ⍝ Update the APL+Win record
      object ##.##.∆WS'caption'((⎕UCS 10)@{⍵=⎕UCS 13}⊢new) ⍝ Change the Dyalog object so the screen actually changes

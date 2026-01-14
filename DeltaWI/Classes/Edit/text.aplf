@@ -1,0 +1,23 @@
+ result←object text arg;old;new
+⍝ Read or change the text in the Edit box
+⍝ This property is not stored as an APL variable, but directly references the native object
+
+ :If 0=≢arg
+     result←,object ##.##.∆WG⊂'Text'
+     :If 2=≢⍴result ⋄ result←##.##.∆dtr¨↓result ⋄ :EndIf
+     :If 1≠≡result ⋄ result←(⎕UCS 13)##.##.∆sew result ⋄ :EndIf
+ :Else
+     '∆WI DOMAIN ERROR: text'##.##.Error 1≠≢arg
+     new←1/##.##.Single arg
+     '∆WI RANK ERROR: text'##.##.Error 1≠≢⍴new
+     '∆WI DOMAIN ERROR: text'##.##.Error 1≠≡new
+     '∆WI DOMAIN ERROR: text'##.##.Error~##.##.IsChar new
+     :If 2 ##.##.BitOf object ⎕VGET⊂'style' 0
+         new←(⎕UCS 13)##.##.∆cuts new ⍝ Turn it into a Dyalog multi-line structure
+     :EndIf
+     object ##.##.∆WS⊂'Text'new
+     result←##.NoRes
+
+     ⍝ Now we need to fire an implied onChange event for them
+     'Change'##.##.Event object ##.##.Application
+ :EndIf

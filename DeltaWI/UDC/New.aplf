@@ -16,4 +16,4 @@
  ##.Application.(∆WSELF ∆WEVENT ∆WARG ∆WRES)←localize ⍝ Restore previous application quad-vars
 
  ⍝ Note: There will be no base GUI variables created during onNew execution because the UDC process must use ∆WI itself to create the real objects
- ⍝ Note: This function will not proceed to call Classes.New because all the creation steps will have already been done by ∆WI from within onNew.
+ ⍝ Note: This function will not proceed to call New.Initialize because all the creation steps will have already been done by ∆WI from within onNew.
