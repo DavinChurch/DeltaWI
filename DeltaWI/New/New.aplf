@@ -1,19 +1,23 @@
- result←object New arg;name;parent;class;meta;ismeta;isreal;isnew;isnative;in;subclass;hidden
+ result←object New arg;name;parent;class;meta;ismeta;isreal;isnew;isnative;in;subclass;hidden;isdef;definition;newname
 ⍝ Create a brand-new GUI object, as specified
 
-⍝? Future support: We should be able to pass a GUI 'def' variable as the argument. (This will probably be a ⎕OR under Dyalog)
 ⍝? Future support: We should be able to pass an ActiveX pointer as the argument to give an APL name to an unnamed object. ⍝? Do we need this syntax, really?
 
  :Section ⍝ Analyze arguments to see what kind of processing decisions we need to make below
      (parent name)←object ⍝ Separate non-standard two-part argument
      '∆WI OBJECT ERROR: Object already exists'##.Error(⊂name)∊parent ##.Classes.children ⍬ ⍝ Make sure the name does not yet exist
      'LENGTH ERROR'##.Error 0=≢arg
-     '∆WI CLASS NAME ERROR: Improperly formed class name'##.Error 0=≢class←##.∆dmu⊃arg
-     class↓⍨←isnative←'*'=⊃class ⍝ Are we signalling a bypass of newclasses?
-     ismeta←×≢meta←(' '∊class)/⊃subclass←' '##.∆cut class ⍝ Look for the first word in a multi-word class name to see if it needs special group (meta-class) handling
-     subclass←1↓subclass ⍝ Hang onto the second word (if present) so we can try to use it for additional authorization checking
-     isreal←(⊂class)∊##.GUIroot ##.Classes.System.classes ⍬ ⍝ Standard system class names
-     isnew←(⊂class)∊##.GUIroot ##.Classes.System.newclasses ⍬ ⍝ Application-named UDC classes
+     :If isdef←(0=≢⍴⊃arg)∧1=≠≡⊃arg ⍝ Is this a 'def' (⎕OR) variable -- that needs special casing
+         definition←⊃arg ⍝ We'll use this as our source for object creation
+         arg←0,¯1↓1↓arg,0 ⍝ Remove definition from argument list for further processing
+     :Else
+         '∆WI CLASS NAME ERROR: Improperly formed class name'##.Error 0=≢class←##.∆dmu⊃arg
+         class↓⍨←isnative←'*'=⊃class ⍝ Are we signalling a bypass of newclasses?
+         ismeta←×≢meta←(' '∊class)/⊃subclass←' '##.∆cut class ⍝ Look for the first word in a multi-word class name to see if it needs special group (meta-class) handling
+         subclass←1↓subclass ⍝ Hang onto the second word (if present) so we can try to use it for additional authorization checking
+         isreal←(⊂class)∊##.GUIroot ##.Classes.System.classes ⍬ ⍝ Standard system class names
+         isnew←(⊂class)∊##.GUIroot ##.Classes.System.newclasses ⍬ ⍝ Application-named UDC classes
+     :EndIf
      arg←1↓⍬⊂⍛,1↓,¨⊆¨arg ⍝ Pre-nest & ravel entire argument list (except class) for passing to .New routines
  :EndSection
 
@@ -27,7 +31,19 @@
  :EndSection
 
  ⍝ Check all the different combination possibilities to see how we should analyze this
- :If ismeta ⍝ We have a special *type* of class
+ :If isdef ⍝ Do we have a pre-constructed object
+     ⍝? This will not work with the portable GUI framework!
+     newname←parent⍕⍛,name ⍝ Where will this be created (eventually)
+     class←definition ⎕VGET⊂'_class' '' ⍝ Peek into definition to determine the class name
+     '∆WI DEF ERROR: Invalid object definition'##.Error 0=≢class
+     in←##.def ⍝ Just for easier reference
+     :If parent ChildOK in class ⍝ Determine if we can place this child here
+         result←(object,⊂definition)in.New arg ⍝ Call the def-specific New function to (re-)create the real object
+     :Else
+         ##.Error'∆WI PARENTAGE ERROR: Invalid parentage for class "',class,'"'
+     :EndIf
+
+ :ElseIf ismeta ⍝ We have a special *type* of class
      :Section ⍝ This needs to be processed as a meta-class
          :Select meta ⍝ Must be a case-sensitive type-name that we support
          :CaseList 'ActiveControl' 'ActiveObject' ⍝? These spellings aren't case-insensitive, are they?

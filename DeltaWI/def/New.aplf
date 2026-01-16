@@ -1,0 +1,12 @@
+ result←object New arg;parent;name;definition;newobj
+⍝ Create an object using a previously-defined 'def' (⎕OR) value
+⍝ This will NOT work with the portable GUI framework! (Don't forget the children when working out any new process.)
+⍝ object←Parent, Name, 'def'-value
+
+ (parent name definition)←object ⍝ Separate non-standard three-part argument
+ newobj←⎕VGET(parent⍕⍛,'.',name)##.∆WC definition ⍝ Create the actual Dyalog object from a previous namespace definition
+ result←parent newobj ##.New.Initialize arg ⍝ Complete standard class-initialization procedure (on top of previous definition)
+
+ ⍝ After normal initialization, follow through the remainder of the tree that was just created
+ ⍝ and repair all the object control information in _self and _Ancestry.
+ newobj.(⎕THIS _self _Ancestry)Relocate newobj ⍝ Recursively find all the children and fix each of them

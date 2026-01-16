@@ -1,0 +1,12 @@
+ parentinfo Relocate object;child;self;ancestry;parent
+⍝ Recursively adjust all this object's children to properly point back to the parental object with their references
+
+ (parent self ancestry)←parentinfo ⍝ From parental APL+Win object
+ :For child :In object ⎕VGET object.⎕NL ¯9 ⍝ Loop through all child namespace references
+     :If ×≢child ⎕VGET⊂'_class' '' ⍝ Is this an APL+Win object (which needs adjusting)?
+         child.(_self _Ancestry)←(self,'.',##.LeafName⍕child)(parent,ancestry)
+         child.(⎕THIS _self _Ancestry)Relocate child
+     :Else ⍝ Don't change anything here, just pass it on down to the next level
+         parentinfo Relocate child
+     :EndIf
+ :EndFor

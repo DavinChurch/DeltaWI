@@ -1,0 +1,23 @@
+ result←object def arg;holding;class;in
+⍝ Return or replace an object's complete definition
+⍝? This will not work with the portable GUI framework?!
+
+ :If 0=≢arg
+     result←⎕OR⍕object
+ :Else
+     '∆WI DEF ERROR: Invalid object definition'##.Error 1≠≢arg
+     arg←⊃arg
+     '∆WI DEF ERROR: Invalid object definition'##.Error(0≠≢⍴arg)∨1≠≡arg
+     holding←object ⍝ Make a copy to refer to later ⍝? Does this work?
+     ##.∆EX⍕object ⍝ Have to dispose of the original before it can be replaced
+     class←arg ⎕VGET⊂'_class' '' ⍝ Peek into definition to determine the class name
+     in←⎕VGET class ⍝ We'll want a pointer to the class definition
+     :If (⊃holding._Ancestry)##.New.ChildOK in class ⍝ Determine if we can logically place this child here
+         (⍕holding)⎕NS arg ⍝ Recreate the entire object by replacing it in situ
+     :Else
+         ##.Error'∆WI PARENTAGE ERROR: Invalid parentage for class "',class,'"'
+     :EndIf
+     object.(_self _name _Ancestry)←holding.(_self _name _Ancestry) ⍝ Reconstruct system control data
+⍝? What else do we need to do here???
+     result←NoRes
+ :EndIf

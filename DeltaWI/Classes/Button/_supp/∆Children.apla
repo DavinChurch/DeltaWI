@@ -1,6 +1,6 @@
 (
- 'Imagelist'
- 'Menu'
+ '~Imagelist'
+ '~Menu'
  'Timer'
  '~Form'
  '~MDIForm'

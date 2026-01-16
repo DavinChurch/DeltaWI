@@ -1,6 +1,7 @@
- result←object Initialize arg;parent;class;name;this;sub;illegal;final;v0;vars;acts;action;aarg
+ result←object Initialize arg;parent;class;name;this;sub;illegal;final;v0;vars;acts;action;aarg;isdef
 ⍝ Properly set up a newly-created object, starting with it's required system control information
 ⍝ It must be called directly(!) from the creating-class namespace.
+⍝? (Watch out if it's a special-case class type such as ActiveX or Dyalog)
 ⍝
 ⍝ "object" should be a two-item vector containing the following items:
 ⍝       [1] Reference to the parent object
@@ -9,20 +10,25 @@
  (parent object)←object ⍝ Separate object references
  name←##.LeafName⍕object ⍝ The text name of the object that I just created
  class←##.LeafName⍕this←⊃⎕RSI ⍝ Namespace that I'm being called from gives me the name of the class and a reference to it
+ :If isdef←class≡'def' ⍝ But if we're redefining a class from a 'def' variable, go get the previous settings instead of inferring them
+     (class this)←object.(_class _Class) ⍝ This is how it was defined in the past - we'll keep it that way
+ :EndIf
  object.(_self _name _class)←(parent._self,'.',name)name class ⍝ Set ∆WI system control information
  object.(_Ancestry _Class)←(parent,parent._Ancestry)this ⍝ Set ∆WI system control information
  object._self↓⍨←2×'#.'≡2↑object._self ⍝ Make sure that _self doesn't have a leading '#.' on it
 
  object ##.∆WSet('Coord' 'RealPixel')('AutoConf' 0)('Visible' 0) ⍝ Everybody needs these set (where they exist)
  object.⎕WX←0 ⍝ Let's hide all GUI properties, etc., so that they won't be accidentally used directly - ∆WS/∆WG should be used instead
- object.(_scale _opened _visible _enabled)←1 0 1 1 ⍝ All new objects default to scale=1, not-yet-logically-open, but otherwise visible
+ :If ~isdef ⍝ If we're restoring from a 'def', don't initialize base settings normally
+     object.(_scale _opened _visible _enabled)←1 0 1 1 ⍝ All new objects default to scale=1, not-yet-logically-open, but otherwise visible
+ :EndIf
 
  :Section ⍝ Now it's time to finish setting up the object as requested.
      ⍝ Watch out for things that can't be handled on a New-command
      illegal←'Create' 'New' ⍝? What else might be illegal here (by name)?
      '∆WI OBJECT ERROR: Object already exists'##.Error∨/illegal∊⊃¨⊆¨arg
 
-     :Select object._class ⍝ Create any needed "hidden" sub-objects
+     :Select isdef~⍛/object._class ⍝ Create any needed "hidden" sub-objects (if not from a 'def')
 ⍝? We'd better watch out here! If we have to create our own hidden sub-objects, how will we know what creation-only parms we should be using?
 ⍝? Do we need to require the class to define these for us? And if so, how do we keep it simple enough for them to build (if possible/needed)?
      :Case 'Menu'
@@ -43,10 +49,12 @@
 ⍝? Now we're going to need to attach a file-less Bitmap object so this can be drawn on.
      :EndSelect
 
+     :If ~isdef ⍝ If we're creating from a 'def', then all the values should already be set
      ⍝ Assign class default pseudo-properties and variables
-     vars←this.⎕NL ¯2.1 ⍝ What variables are in this namespace (including currently-executing locals)
-     vars←(~1∊¨⊃¨this.⎕STATE¨vars)/vars ⍝ Remove currently-executing locals to leave only globals (there better not be any shadowed ones!)
-     object ⎕VSET(↑vars)(this ⎕VGET vars) ⍝ Replicate them in the new object
+         vars←this.⎕NL ¯2.1 ⍝ What variables are in this namespace (including currently-executing locals)
+         vars←(~1∊¨⊃¨this.⎕STATE¨vars)/vars ⍝ Remove currently-executing locals to leave only globals (there better not be any shadowed ones!)
+         object ⎕VSET(↑vars)(this ⎕VGET vars) ⍝ Replicate them in the new object
+     :EndIf
 
      ⍝ Apply list of application-specific properties and methods to this new object
      final←'Close' 'Hide' 'Show' 'Open' ⍝ Methods that are not done until the very end (the ⊢/ of these being the default)
@@ -60,6 +68,7 @@
      object._opened←1 ⍝ It will end up opened after completion, unless 'Close' turns it off below
      :For action :In final∩⍨acts,(~∨/final∊acts)/¯1↑final ⍝ There should usually only be one of these at most; default=Open
 ⍝? Watch out for possible inheriting from parentage?
+⍝? This will still work for 'def', won't it?
          aarg←1↓(acts⍳⊂action)⊃arg,⊂⍬
          v0←-object._class⊂⍛∊'Form' 'MDIForm' 'Menu' ⍝ "Invisible" setting for this class
          :Select action

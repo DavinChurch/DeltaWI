@@ -39,15 +39,9 @@
  ∆WI Pass MT⊢'value' 'Testing'
  ∆WI Pass'Testing'⊢'value'
 
-∆WI Pass ''⊢'onWait'
-∆WI Pass MT⊢'onWait' 'something'
-∆WI Pass 'something'⊢'onWait'
+ ∆WI Pass''⊢'onWait'
+ ∆WI Pass MT⊢'onWait' 'something'
+ ∆WI Pass'something'⊢'onWait'
 ⍝? Cannot test onWait in operation until the Wait method has been coded
 
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests
-
-⍝ Also need early/initial support and testing for:
-⍝   style
-⍝   (icon), (state?)
-⍝   (Focus), Wait
-⍝   (onFocus), (onUnfocus), onWait
