@@ -1,6 +1,5 @@
 (
  'Focus'
- 'Send'
  'keys'
  'onExit'
  'onExitError'
@@ -18,7 +17,6 @@
  'onPaint'
  'onReopen'
  'onResize'
- 'onSend'
  'onUnfocus'
  'prompt'
  'state'

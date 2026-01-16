@@ -1,0 +1,2 @@
+ result←object onSend arg
+ result←object(''##.SetEvent'Send')arg ⍝ This is never activated by a native Dyalog event

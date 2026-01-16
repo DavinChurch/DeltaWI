@@ -1,0 +1,4 @@
+ ok←run _onSend message
+ ⍝ Execute the application's onSend event handler
+
+ ok←message NoRes ##.Run run

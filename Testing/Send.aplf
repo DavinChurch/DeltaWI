@@ -1,0 +1,10 @@
+ Send
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'
+ 'f'∆WI Pass MT⊢'onSend' '∆WRES←∆WARG'
+ 'f'∆WI Pass'∆WRES←∆WARG'⊢'onSend'
+ 'f'∆WI Pass'hello'⊢'Send' 'hello'
+ 'f'∆WI Pass'hello' 'there'⊢'Send' 'hello' 'there'
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

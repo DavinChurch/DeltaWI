@@ -1,0 +1,4 @@
+ result←object Send arg
+⍝ Send an arbitrary message to a GUI object
+
+ result←'Send'##.Event object ##.Application,arg ⍝ Run the onSend event handler, and that's all we need
