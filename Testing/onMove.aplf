@@ -1,0 +1,13 @@
+ onMove;wh;done;wh2
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f'∆WI Pass(,'f')⊢'Create' 'Form'
+ wh←'f'∆WI'where' ⍝ Capture current location
+ wh2←¯2+2↑wh
+ done←⍬
+ 'f'∆WI Pass MT⊢'onMove' 'done←∆WARG'
+ 'f'∆WI Pass MT⊢'where'wh2
+ 'f'∆WI Pass(wh2,2↓wh)⊢'where' ⍝ Did it move correctly?
+ ⊢Pass wh2⊢done ⍝ Did the event fire showing where it was going?
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

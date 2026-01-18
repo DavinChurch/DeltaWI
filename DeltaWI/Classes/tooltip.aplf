@@ -1,0 +1,13 @@
+ result←object tooltip arg
+⍝ Allow reading and writing a text vector to be used by onToolTip
+⍝ (This is supposed to be just a character vector, but apparently APL+Win allows arbitrary data, so we will too.)
+⍝? onToolTip is not presently working in Dyalog
+⍝? Toolbox objects use this a different way
+⍝? Watch out for classes that need to suppress this
+
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_tooltip' ''
+ :Else
+     object._tooltip←##.Single arg
+     result←NoRes
+ :EndIf

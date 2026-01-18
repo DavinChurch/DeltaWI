@@ -1,6 +1,5 @@
 (
  'Focus'
- 'keys'
  'onExit'
  'onExitError'
  'onFocus'
@@ -13,12 +12,8 @@
  'onMouseLeave'
  'onMouseMove'
  'onMouseUp'
- 'onMove'
  'onPaint'
  'onReopen'
- 'onResize'
  'onUnfocus'
- 'prompt'
  'state'
- 'tooltip'
 )

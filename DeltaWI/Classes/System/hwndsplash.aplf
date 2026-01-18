@@ -1,0 +1,10 @@
+result←object hwndsplash arg
+⍝ This is only used by an APL+Win start-up parameter that isn't available for Dyalog.
+⍝ This is here simply to prevent applications that try to use it from crashing.
+
+ :If 0=≢arg
+     result←0
+ :Else
+     'DOMAIN ERROR'##.##.Error ~arg⊂⍛∊⍬ 1⍴¨0
+     result←##.NoRes ⍝ Ignore anything they give us and exit
+ :EndIf

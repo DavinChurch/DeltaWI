@@ -1,0 +1,11 @@
+ result←object prompt arg
+⍝ Allow reading and writing arbitrary data to be used by onPrompt
+⍝? onPrompt is not presently working in Dyalog
+⍝? Watch out for classes that need to suppress this
+
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_prompt' ''
+ :Else
+     object._prompt←##.Single arg
+     result←NoRes
+ :EndIf

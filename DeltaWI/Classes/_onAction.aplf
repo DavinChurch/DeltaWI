@@ -24,5 +24,4 @@
      run←⊃run ⍝ We'll start with the first (usually only) expression
  :EndIf
 
-
  ok←(3↓message)NoRes ##.Run run ⍝ Pass along the original action as data

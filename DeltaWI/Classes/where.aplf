@@ -1,4 +1,4 @@
- result←object where arg;size;extent;where;scale;border;pscale;units;psize;dthick;Borders;margins;t;tunits;punits;dyposn;dysize;resize;ppxsize;pxsize;at
+ result←object where arg;size;extent;where;scale;border;pscale;units;psize;dthick;Borders;margins;t;tunits;punits;dyposn;dysize;resize;ppxsize;pxsize;at;rewhere
 ⍝ Request or modify the location and size of a GUI object
 
 ⍝ Note: 'where' is outside dimensions, relative to parent and using parent's scale
@@ -29,7 +29,7 @@
          tunits←(1⍪units)[1+⊃scale;] ⍝ Compute unit-conversions for this object's scale ⍝? Need scale=0 adjusting
          punits←(units⍪⍨ppxsize÷|2↑3↓pscale)[1+⊃pscale;] ⍝ Compute unit-conversions for the parent object's scale
          Borders←_supp.GetBorders object ⍝ Time to figure out what the border definitions are for this class (capitalized because it represents a global)
-         resize←size ⍝ Remember this
+         (rewhere resize)←where size ⍝ Remember these
 ⍝         :If 0 ⍝ Don't use this code - ignore it until we capture any comments in new "Form" code
 ⍝             ⍝ [Strange notes:
 ⍝             ⍝  Border=2 (w/caption) shifts the visible image up and left by a few pixels and leaves a little
@@ -105,6 +105,9 @@
          object ##.∆WSet('Posn'dyposn)('Size'dysize)
      :EndSection
 
+     :If (2↑where,'⊢⊣')≢2↑rewhere,'⊣⊢'
+         'Move'##.Event object ##.Application,where[1 2] ⍝ Run the onMove event handler
+     :EndIf
      :If size≢resize ⍝ Only if the size is changing
          'Resize'##.Event object ##.Application,object._size,0 ⍝ Run the onResize event handler
      :EndIf

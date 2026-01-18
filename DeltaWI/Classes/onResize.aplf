@@ -1,0 +1,3 @@
+ result←object onResize arg
+ result←object('Configure'##.SetEvent'Resize' '>Move')arg
+ result←object('StateChange'##.SetEvent'Resize')arg
