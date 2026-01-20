@@ -1,0 +1,4 @@
+ rpt←showonly types
+⍝ Call showactions but restrict the list to only those classes or categories listed in the argument
+ rpt←showactions
+ rpt←rpt⌿⍨∨/(rpt[;1 2]~¨⊂'()')∊⍥⎕C(,¨⊆types)~¨⊂'()'

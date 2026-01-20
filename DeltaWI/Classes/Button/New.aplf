@@ -5,7 +5,7 @@
  actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
 
  arg,⍨←(~'caption'⊂⍛∊actions)/⊂'caption'name ⍝ If they're not setting a caption immediately at all, we'll put in a default
- arg←(parent:parent ⋄ offset:1 0)##.##.New.Center arg ⍝ Default 'where' to center
+ arg←(parent:parent ⋄ stretch:1 0)##.##.New.Center arg ⍝ Default 'where' to center
 
  props←'Button'('Style' 'Push')('Visible' 0) ⍝ Properties that must be used during creation
  newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object

@@ -21,7 +21,7 @@ rpt←showactions;class;common;meths;props;events;active;override;cls;fns;sort;n
      rpt⍪←class'properties'(except sort(nofns~⍨2⊃common),props fns)
      rpt⍪←class'events'(except sort(((⊂'()')~¨⍨events nofns)~⍨3⊃common),events fns)
      rpt⍪←class'defaults'(cls.⎕NL ¯2)
-     rpt⍪←class'(planned)'(except sort('Create' 'data' '∆',¨⍛,planning Classes){(⍵~⍺),'~',¨(⍺∩⍵),¨'~'}planning cls)
+     rpt⍪←class'(planned)'(except sort('Create' 'data' '∆',¨⍛,(⊃,/common),(planning Classes)~¨⊂'()'){(⍵~⍺),'(',¨(⍺∩⍵),¨')'}planning cls)
  :EndFor
  rpt←(×≢¨rpt[;3])⌿rpt ⍝ Skip missing types
  pw←⎕PW-2+2⊃⍴⍕rpt[;1 2] ⍝ Figure out maximum wrapping width within ⎕PW

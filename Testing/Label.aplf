@@ -1,0 +1,12 @@
+ Label
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f'∆WI Pass(,'f')⊢'Create' 'Form'
+ 'f.l'∆WI Pass'f.l'⊢'New' 'Label'
+ 'f.l'∆WI Pass 1.5 10⊢'size'
+ 'f.l'∆WI Pass 14.875 54 1.5 10⊢'where'
+ 'f.l'∆WI Pass(,'l')⊢'caption'
+ 'f.l'∆WI Pass MT⊢'caption' 'Testing'
+ 'f.l'∆WI Pass'Testing'⊢'caption'
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

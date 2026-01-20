@@ -16,4 +16,5 @@
  'onReopen'
  'onUnfocus'
  'state'
+ 'Resize'
 )

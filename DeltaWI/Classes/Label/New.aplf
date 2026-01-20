@@ -1,13 +1,12 @@
- result←object New arg;parent;name;actions;∆style;props;newobj
-⍝ Create a new Edit object
+ result←object New arg;parent;name;props;newobj;actions
+⍝ Create a new Label object
 
  (parent name)←object ⍝ Separate non-standard two-part argument
  actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
 
- ∆style←⊃((1↓¨arg),⊂⍬)[actions⍳⊂'style']
+ arg,⍨←(~'caption'⊂⍛∊actions)/⊂'caption' name
  arg←(parent:parent ⋄ stretch:1 0)##.##.New.Center arg
 
- props←'Edit'('FieldType' 'Char')('Visible' 0) ⍝ Properties that must be used during creation
- props,←⊂'Style'('Single' 'Multi'⊃⍨1+2 ##.##.BitOf+/∊∆style) ⍝ Set the starting style if we know it ⍝? This cannot be changed once created!
+ props←'Label'('FieldType' 'Char')('Visible' 0) ⍝ Properties that must be used during creation
  newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
  result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure
