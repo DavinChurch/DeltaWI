@@ -2,7 +2,7 @@
 ⍝ Allow the application to simulate processing an immediate event; return the result from the event
 
  'LENGTH ERROR'##.Error~arg≢⍛∊⍳5
- '∆WI DOMAIN ERROR: Event'##.Error~11 83 323∊⍨⎕DR force←5⊃arg,5⍴0
+ '∆WI DOMAIN ERROR: Event'##.Error~##.IsInt force←5⊃arg,5⍴0
  '∆WI LENGTH ERROR: Event'##.Error~force⍴⍛∊,¨⍬ 1
  :If arg[1]∊⍬ 1⍴¨0 ⋄ result←4⊃arg,4⍴⊂NoRes ⋄ :Return ⋄ :EndIf ⍝ Don't bother doing anything if no handler is given
  'DOMAIN ERROR'##.Error~##.IsChar 1⊃arg

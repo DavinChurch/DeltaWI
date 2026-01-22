@@ -1,0 +1,49 @@
+ ok←run _onKeyDown message;key;warg
+⍝ Execute the Edit:onKeyDown event handler
+
+⍝ ∆WARG needs:
+⍝   [1] Key scan code (hardware dependent) [Not in Dyalog]
+⍝   [2] Repeat count [Not in Dyalog]
+⍝   [3] Shift state (1=Shift, 2=Ctrl, 4=Alt)
+⍝   [4] CapsLock (1=On, 0=Off) [Not in Dyalog]
+⍝   [5] Extended key, such as an arrow key (1=Yes) [Not in Dyalog]
+⍝   [6] Key is being repeated (1=Yes) [Not in Dyalog]
+⍝   [7] Windows virtual key code (hardware independent)
+⍝ ∆WRES can be assigned a new value of ∆WARG[7]
+
+ :If 1=≢key←3⊃message
+ :AndIf 27≠message[7] ⍝ Don't handle a KeyDown event for Escape, but ONLY in an Edit box (I don't know what else might be restricted)
+     warg←¯1 ¯1,message[6],¯1 ¯1 ¯1,message[4]
+     :Select ok←warg 0 ##.##.Run run
+     :Case 0
+         ok←1 ⍝ Just process normally
+     :Case ¯1
+         ok←0 ⍝ Abort
+     :Case ¯2
+         ok←0 ⍝ Abort and beep
+         ##.Beep
+     :Else
+⍝? This had better be a singleton positive integer - how should we report problems?
+         ok←(ok,⍨⎕UCS ok)@3 4⊢message ⍝ Change the character by returning a new message ⍝? This probably doesn't work for Dyalog
+⍝? However, [3 4] may need a different value and [5 6] may need to be synthesized if possible, assuming that Dyalog cares about them?
+⍝? Test this to see how well modifications of messages work
+     :EndSelect
+ :Else
+     ⍝? This isn't a key as far as APL+Win is concerned, but perhaps we can generate something for [7] with a simulated key-code?
+     ⍝   1 Left mouse button    33 Page Up key          48-57   0 through 9, respectively
+     ⍝   2 Right mouse button   34 Page Down key        65-90   A through Z, respectively
+     ⍝   3 Control+Break        35 End key              91      Left Windows key
+     ⍝   4 Middle mouse button  36 Home key             92      Right Windows key
+     ⍝   8 Backspace key        37 Left arrow key       93      Application key
+     ⍝   9 Tab key              38 Up arrow key         96-105  Numeric keypad 0 thru 9, respectively
+     ⍝  12 Clear key            39 Right arrow key      106     Keypad Multiply key
+     ⍝  13 Enter key            40 Down arrow key       107     Keypad Add key
+     ⍝  16 Shift key            41 Select key           108     Keypad Separator key
+     ⍝  17 Ctrl key             43 Execute key          109     Keypad Subtract key
+     ⍝  18 Alt key              44 Print Screen key     110     Keypad Decimal key
+     ⍝  19 Pause key            45 Insert key           111     Keypad Divide key
+     ⍝  20 Caps Lock key        46 Delete key           112-135 F1 through F24, respectively
+     ⍝  27 Esc key              47 Help key             144     Num Lock key
+     ⍝  32 Spacebar                                     145     Scroll Lock key
+     ok←0 ⍝ Abort
+ :EndIf

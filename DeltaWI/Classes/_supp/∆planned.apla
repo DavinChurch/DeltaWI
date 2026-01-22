@@ -3,8 +3,6 @@
  'onExit'
  'onExitError'
  'onFocus'
- 'onKeyDown'
- 'onKeyUp'
  'onMouseDouble'
  'onMouseDown'
  'onMouseDrag'

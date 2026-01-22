@@ -1,0 +1,27 @@
+ result←object style arg;bits
+⍝ Label:style
+
+⍝   0=Left justified
+⍝   1=Centered
+⍝   2=Right justified
+⍝   4=Inhibit prefix ("&" access character)
+⍝   8=Inhibit word wrap (with 0)
+⍝   32=Ellipsis at end of visible caption
+⍝   64=Ellipsis in the middle of visible caption (for file paths)
+
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_style' 0
+ :Else
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<≡arg)∨1≠≢arg
+     arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<≡arg)∨~##.##.IsInt arg
+     bits←##.##.BitVals+/∊arg
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∧/1 2∊bits
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error×≢bits~0 1 2 4 8 32 64
+     object._style←+/bits
+     object ##.##.∆WS⊂'Justify'(⊃'Center' 'Right' 'Left'/⍨1,⍨1 2∊bits)
+⍝? styles>2 are not supported by Dyalog
+⍝? However, we might use the Accelerator property to simulate (or not) access characters, though they won't be underlined.
+⍝? We can probably simulate style≠8 by wrapping words ourselves.
+⍝? I don't have any idea if we can reasonably simulate 32 or 64.
+ :EndIf

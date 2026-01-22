@@ -11,7 +11,7 @@ rpt←showactions;class;common;meths;props;events;active;override;cls;fns;sort;n
  override←{⍵/⍨(⊂1 2 0)≢¨⊃¨⍺.⎕AT¨⍵} ⍝ Determine if these function definitions are class overrides
  planning←{plan←⍵ ⎕VGET⊂'_supp.∆planned'(0⍴⊂'') ⋄ {'(',¨⍵,¨')'}@(⍸plan∊⍵.⎕NL ¯3)⊢plan} ⍝ What's our to-do list for this class?
  common←{((⊂'New')~⍨meths ⍵)(props ⍵)(events ⍵)}Classes.⎕NL ¯3 ⍝ [1]←methods, [2]←properties, [3]←events
- sort←{∪⍵[⍋⍵~¨⊂'()']~⍺}
+ sort←{∪⍵[⍋⍵~¨⊂'()']~⍺,⊂''}
  except←'supress' '(onNew)' ⍝ Names I don't want to be carrying around everywhere, such as obsolete spellings or things w/o event handler fns
  rpt⍪←'(shared)' '(planned)' (planning Classes)
  :For class :In 'System'⊂⍛,(Classes.⎕NL ¯9)~'System' 'ActiveX' 'Dyalog' '_supp'

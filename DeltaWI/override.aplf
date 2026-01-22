@@ -1,0 +1,5 @@
+ rpt←namespace override fnname
+⍝ Create an override function in the given namespace - for personal/temporary use
+ 'Function already exists'⎕SIGNAL 16/⍨0≠namespace.⎕NC fnname
+ 'Function definition error'⎕SIGNAL 16/⍨fnname≢namespace.⎕FX(1,⍴fnname)⍴fnname
+ rpt←⎕SE.Link.Add namespace⍕⍛,'.',fnname ⍝ Try to use ]Link to let it know there's a new function

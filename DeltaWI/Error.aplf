@@ -4,5 +4,5 @@
 ⍝ If the {condition} left argument is character data (a message) then reverse the arguments (a la ⍨) before processing.
 
  :If 0=⎕NC'condition' ⋄ condition←1 ⋄ :EndIf
- :If 0 2∊⍨10|⎕DR condition ⋄ (condition message)←message condition ⋄ :EndIf
+ :If IsChar condition ⋄ (condition message)←message condition ⋄ :EndIf
  message ⎕SIGNAL 870/⍨1∊condition

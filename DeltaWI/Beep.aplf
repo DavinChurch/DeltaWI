@@ -1,0 +1,8 @@
+Beep;⎕using
+⍝ Produce a simple system "beep" sound
+⍝? Hopefully this will be portable across platforms
+⍝? Help - I can't get this to produce a sound, even on Windows 8.1
+
+⎕using←'System'
+Console.Beep⍬ ⍝? Why doesn't this work?
+⍝?Media.SystemSounds.Beep.Play⍬

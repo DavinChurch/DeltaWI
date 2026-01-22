@@ -1,6 +1,6 @@
  result←object text arg;old;new
 ⍝ Read or change the text in the Edit box
-⍝ This property is not stored as an APL variable, but directly references the native object
+⍝ This property is not stored as an APL variable, but directly references the native object which the user can control
 
  :If 0=≢arg
      result←,object ##.##.∆WG⊂'Text'
@@ -12,7 +12,7 @@
      '∆WI RANK ERROR: text'##.##.Error 1≠≢⍴new
      '∆WI DOMAIN ERROR: text'##.##.Error 1≠≡new
      '∆WI DOMAIN ERROR: text'##.##.Error~##.##.IsChar new
-     :If 2 ##.##.BitOf object ⎕VGET⊂'style' 0
+     :If 2 ##.##.BitOf object ⎕VGET⊂'_style' 0
          new←(⎕UCS 13)##.##.∆cuts new ⍝ Turn it into a Dyalog multi-line structure
      :EndIf
      object ##.##.∆WS⊂'Text'new

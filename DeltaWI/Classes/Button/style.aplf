@@ -1,0 +1,39 @@
+ result←object style arg;bits;props
+⍝ Button:style
+
+⍝   1=Default (Ok) button
+⍝   2=Cancel button
+⍝   4=Button does not get the focus (not ∊ 1 2; tabstop←0)
+⍝   8=Button toggles between normal and selected (not ∊ 1 2; usually ∊ 4)
+⍝   16=Do not grey image when button is disabled
+⍝   32=Use foreground color of color property for text; ignore background color
+⍝   65536=Wrap caption
+⍝
+⍝   128=Force Win98-style button (default for buttons with images)
+⍝   256=Left justify text and image
+⍝   512=Right justify text and image
+⍝   768=Center justify text and image
+⍝
+⍝   4096=Align image to right of text
+⍝   8192=Align image above text
+⍝   12288=Align image below text
+⍝? Not trying to support images on buttons just yet
+
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_style' 0
+ :Else
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<≡arg)∨1≠≢arg
+     arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<≡arg)∨~##.##.IsInt arg
+     bits←##.##.BitVals+/∊arg
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error(∨/1 2∊bits)∧∨/4 8∊bits
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error×≢bits~0 1 2 4 8 16 32 65536,128 256 512,4096 8192
+     object._style←+/bits
+     props←('Default'(1∊bits))('Cancel'(2∊bits))
+     props,←⊂'Justify'(⊃'Center' 'Right' 'Left'[1⍳⍨(=/256 512∊bits),256 512∊bits])
+     object ##.##.∆WS props
+⍝? styles bits 4,16,128,65536 are not supported by Dyalog
+⍝? We can probably simulate style=65536 by wrapping words ourselves.
+⍝? style=8 requires us to manually set State←1 when pressed the first time - watch out, use the new 'Click!' event syntax
+⍝? style=32 requires support in 'color'
+ :EndIf

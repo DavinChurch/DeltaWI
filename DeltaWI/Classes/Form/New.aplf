@@ -4,11 +4,12 @@
  (parent name)←object ⍝ Separate non-standard two-part argument
  actions←⊃¨arg ⍝ The names of the actions that we'll be using to create this object with
  ⍝? Just reminders for us to use elsewhere - not needed here
- ⍝only←'VScroll' 'HScroll' ⍝ These properties may only be set during ∆WC
+ ⍝only←'VScroll' 'HScroll' ⍝ These properties may only be set during ∆WC; but only used for Pictures[SubForms] and things like that
  ⍝(border style)←0~⍨¨##.##.BitVals¨+/¨∊¨(0,⍨1↓¨arg)[actions⍳'border' 'style'] ⍝ Get the bit-flag values they've provided on this line
 
  ⍝ Optionally prepend object defaults (in reverse order) to be handled
  (∆where ∆caption ∆border)←((1↓¨arg),⊂⍬)[actions⍳'where' 'caption' 'border'] ⍝ Which of our defaults are they giving us anyway (so we can skip the defaults)
+ ⍝? Is where supposed to be centered on the screen? If so, can we use New.Center in some way?
  :If 4≠≢∊∆where
      where←,parent._size÷⍤1⊢2 2⍴4 4 2 2 ⍝ Default APL+Win Form size and position ⍝? Does this give us the right data for scale=0?
      arg,⍨←⊂'where'where ⍝ [2] Start us with a default 'where' size and position (APL+Win measure) -- will usually be overridden later

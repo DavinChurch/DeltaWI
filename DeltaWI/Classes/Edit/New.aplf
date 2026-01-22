@@ -1,13 +1,20 @@
- result←object New arg;parent;name;actions;∆style;props;newobj
+ result←object New arg;parent;name;actions;∆style;props;newobj;∆border
 ⍝ Create a new Edit object
 
  (parent name)←object ⍝ Separate non-standard two-part argument
  actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
 
- ∆style←⊃((1↓¨arg),⊂⍬)[actions⍳⊂'style']
+ (∆style ∆border)←((1↓¨arg),⊂⍬)[actions⍳'style' 'border']
+ ∆style←##.##.BitVals+/∊∆style
  arg←(parent:parent ⋄ stretch:1 0)##.##.New.Center arg
+ :If ×≢∆border ⋄ object._border←+/∊∆border ⋄ :EndIf ⍝ Update APL+Win value if given (even though it will be done again later)
 
- props←'Edit'('FieldType' 'Char')('Visible' 0) ⍝ Properties that must be used during creation
- props,←⊂'Style'('Single' 'Multi'⊃⍨1+2 ##.##.BitOf+/∊∆style) ⍝ Set the starting style if we know it ⍝? This cannot be changed once created!
- newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
+ props←'Edit'('FieldType' 'Char')('Visible' 0) ⍝ Define properties that must be used during creation
+ props,←⊂'Style'('Single' 'Multi'⊃⍨1+4∊∆style) ⍝? Create-only style
+ props,←⊂'Justify'('Center' 'Right' 'Left'⊃⍨1⍳⍨1 2∊∆style) ⍝? Create-only style
+ ⍝? Center or Right justification forces word-wrapping and disables horizontal scrolling (32∊∆style)
+ props,←⊂'VScroll'((>/4 8∊∆style)×¯2+16∊∆style) ⍝? Create-only style
+ props,←⊂'HScroll'((>/4 32∊∆style)×¯2+64∊∆style) ⍝? Create-only style
+ props,←(~'border'⊂⍛∊actions)/⊂'Border'(0⌈×+/∆border) ⍝ Set border upon creation if we have it ⍝? It cannot be changed later
+ newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object with required parameters
  result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure

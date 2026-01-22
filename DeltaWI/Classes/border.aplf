@@ -1,0 +1,22 @@
+ result←object border arg;new;old
+⍝ Return or change the border property for most controls (must override in classes where not available)
+
+ old←object ⎕VGET⊂'_border' '' ⍝ Existing border setting
+ :If 0=≢arg
+     result←old
+ :Else
+     new←##.##.Single arg
+     '∆WI DOMAIN ERROR: border'##.Error(1<|≡new)∨~##.IsInt new
+     new←+/∊arg ⍝ New border property
+     '∆WI ATTRIBUTE ERROR: Invalid "border" attribute specified'##.##.Error~new∊0 1
+     object._border←new ⍝ Update APL+Win value
+
+     ⍝ Adjust Dyalog setting
+     ⍝? Dyalog never allows setting any border property after creation
+     ⍝object ##.∆WS 'Border' new
+
+     :If ∨/old≠new ⍝ If we're actually changing things, reconstruct sizing
+         {}object where,⊂(object ⎕VGET⊂'_where'⍬) ⍝ Recalculate all sizing/border parameters
+     :EndIf
+     result←##.NoRes
+ :EndIf
