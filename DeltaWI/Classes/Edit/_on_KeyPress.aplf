@@ -1,0 +1,16 @@
+ ok←run _on_KeyPress message;style;key
+⍝ Internal handling of the Edit:onKeyPress event
+
+ :If 0≠⍴⍴key←3⊃message ⍝ Get the keystroke (if it's a single key)
+     ok←1 ⍝ Don't mess with key-commands at all
+     :Return
+ :EndIf
+⍝? Do we want to beep whenever there's a prohibited keystroke? How does APL+Win handle it? Does Dyalog do the same for built-in checks?
+ style←##.##.BitVals message[1]⎕VGET⊂'_style' 0
+ :If 256∊style ⋄ key←¯1 ⎕C key ⋄ :EndIf ⍝ Force lowercase
+ :If 512∊style ⋄ key←1 ⎕C key ⋄ :EndIf ⍝ Force uppercase
+ :If (~2048∊style)∧~key ⎕UCS⍛∊31+⍳96 ⋄ ok←0 ⋄ ##.##.Beep ⋄ :Return ⋄ :EndIf ⍝ Allow more than plain ASCII
+⍝? If ~8192∊style, disable Ctrl+Enter key (how?)
+
+ ok←key@3⊢message ⍝ Return modified message
+ :If 3=##.⎕NC'_on_KeyPress' ⋄ ok←run ##._on_Keypress ok ⋄ :EndIf ⍝ Also call generic version if it exists

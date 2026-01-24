@@ -88,4 +88,6 @@
      :EndFor
  :EndSection
 
+ SysEvents object ⍝ Set up any system-level events that need to be included
+
  result←object._self ⍝ Finally, give them back the full GUI name of the object that they created

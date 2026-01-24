@@ -1,4 +1,4 @@
-ok←run _onKeyUp message;key;warg
+ ok←run _onKeyUp message;key;warg
 ⍝ Execute the Edit:onKeyUp event handler
 
 ⍝ ∆WARG needs:

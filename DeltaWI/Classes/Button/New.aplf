@@ -4,7 +4,7 @@
  (parent name)←object ⍝ Separate non-standard two-part argument
  actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
 
- (∆border ∆style)←⊃((1↓¨arg),⊂⍬)[actions⍳'border' 'style']
+ (∆border ∆style)←((1↓¨arg),⊂⍬)[actions⍳'border' 'style']
  ∆style←##.##.BitVals ∆style
  arg,⍨←(~'caption'⊂⍛∊actions)/⊂'caption'name ⍝ If they're not setting a caption immediately at all, we'll put in a default
  arg←(parent:parent ⋄ stretch:1 0)##.##.New.Center arg ⍝ Default 'where' to center

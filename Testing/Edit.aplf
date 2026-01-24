@@ -15,4 +15,11 @@
  ⊢Pass 1⊢changes ⍝ Has the global not changed?
  ⍝ We can't event test this manually without a ⎕DQ
 
+ ⍝ Now, let's check out some internal-event processing - but this has to be completed by hand
+ ⍝ To test, uncomment this section, run it, and type in "test" (lower case), and close the form
+⍝ 'f.e' ∆WI Pass MT⊢'style' 512
+⍝ 'f.e' ∆WI Pass MT⊢'text' ''
+⍝ 'f' ∆WI MT⊢'Wait'
+⍝ 'f.e' ∆WI Pass 'TEST'⊢'text'
+
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

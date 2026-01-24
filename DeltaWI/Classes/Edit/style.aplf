@@ -16,7 +16,7 @@
 ⍝   4096=Read only
 ⍝   8192=Allow Enter in text (only ∊ 4)
 ⍝   16384=Do not select text when tabbing back to control (often ∊ 4+1024)
-⍝   524288=Disable Paste menu item in context (only ∊ 4096)
+⍝   524288=Disable Paste menu item in context (only ∊ 4096)                    ⍝? What happens here in Dyalog?
 
  :If 0=≢arg
      result←object ⎕VGET⊂'_style' 0
@@ -26,6 +26,7 @@
      '∆WI DOMAIN ERROR: style'##.##.Error(1<≡arg)∨~##.##.IsInt arg
      bits←##.##.BitVals+/∊arg
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error(∧/1 2∊bits)∨(~4∊bits)∧∨/1 2 8 16 8192∊bits ⍝ Interactions w/1,2,4
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∧/256 512∊bits
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∨/(bits>16384)∧bits≠524288
      object._style←+/bits
      props←0/⊂'Style'('Single' 'Multi'⊃⍨1+4∊bits) ⍝? Can only be set during creation
@@ -33,13 +34,15 @@
      ⍝? Center or Right justification forces word-wrapping and disables horizontal scrolling (32∊bits)
      props,←0/⊂'VScroll'((>/4 8∊bits)×¯2+16∊bits) ⍝? Can only be set during creation
      props,←0/⊂'HScroll'((>/4 32∊bits)×¯2+64∊bits) ⍝? Can only be set during creation
-     props,←⊂'Password' ((128∊bits)/'*')
+     props,←⊂'Password'((128∊bits)/'*')
      ⍝? 256,512=Force case - simulate in our event handler
      ⍝? 1024=Keep highlighted - not supported by Dyalog, but may be simulated during onUnfocus?
      ⍝? 2048=APL symbols - Dyalog always allows APL symbols, can we force printable ASCII under other conditions?
-     props,←⊂'ReadOnly' (4096∊bits)
+     props,←⊂'ReadOnly'(4096∊bits)
+     props,←0/⊂'WantsReturn'(8192∊bits) ⍝? This can only be set during creation
      ⍝? 8192=Allow Enter in text; but Dyalog requires this to be Ctrl-Enter and is always available for Multi. Is there something we can do about it?
      ⍝? 16384=Don't select text - not supported by Dyalog, but may be simulated during onFocus?
      ⍝? 524288=Disable Paste - Dyalog gives us no control here, but it may be that we can't get a context menu at all anyway?
      object ##.##.∆WS props
+     result←##.NoRes
  :EndIf
