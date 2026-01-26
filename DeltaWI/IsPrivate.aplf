@@ -1,0 +1,1 @@
+ IsPrivate←{{('_'=⊃⍵)∧∧/1↓⍵∊⎕D}LeafName ⍵}

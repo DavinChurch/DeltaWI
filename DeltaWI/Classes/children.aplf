@@ -8,7 +8,7 @@
      here←1↓(⊂''),⍕¨##.∆WN object ⎕VGET hidden
      result←((at-1)↑result),here,at↓result
  :EndFor
- result/⍨←~('_'=⊃¨result)∧∧/¨result∊¨⊂⎕D ⍝ Eliminate numbered invisible children
- ⍝result↓¨⍨←1+≢⍕object ⍝ Don't include Dyalog's prefixes of this object ⍝? (is this the same as ##.LeafName, or possible worse?)
- result←##.LeafName¨result ⍝ Don't include any prefixes of these names ⍝? Trying LeafName to see how it works
- result,⍨¨←⊂2↓object._self,'.' ⍝ Result must return full APL+Win GUI names (including APL+Win parentage), except '#.'
+ result/⍨←~##.IsPrivate¨result ⍝ Eliminate numbered invisible children
+ result←##.LeafName¨result ⍝ Don't include any prefixes of these names
+ result,⍨¨←⊂{⍵↓⍨2×'#.'≡2↑⍵}object._self,'.' ⍝ Result must return full APL+Win GUI names (including APL+Win parentage), except '#.'
+ result←1↓''⊂⍛,result ⍝ Make sure empty list has the right prototype

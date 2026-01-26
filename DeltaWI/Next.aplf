@@ -1,0 +1,5 @@
+ next←Next object;nums
+⍝ Find the next-available numbered-only child object name
+
+ nums←2⊃¨⎕VFI¨{(∧/¨⍵∊¨⊂⎕D)/⍵}1↓¨'_'object.⎕NL ¯9
+ next←'_',⍕⊃nums~⍨⍳1+⌈/0,nums

@@ -11,7 +11,7 @@
 ⍝       Scale≠0 just doesn't store elements #2-#5
 ⍝       Upon opening, all are resynchronized ⍝? Do we need to do this?
 
- :If (1=≢arg)∧1<|≡arg ⋄ arg←⊃arg ⋄ :EndIf ⍝ Make sure a nested argument is disclosed
+ arg←##.Single arg ⍝ Make sure a nested argument is disclosed
 
  :Select ≢arg
 

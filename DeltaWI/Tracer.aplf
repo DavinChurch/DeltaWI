@@ -27,7 +27,7 @@
  :Trap 0
      T__vars←((×≢¨T__ttls)/¨T__ttls,¨':'),⍪⍎¨T__vars ⍝ Obtain the data values to be shown
  :Else
-     'Error in traced expression'⎕SIGNAL ⎕EN
+     ('Error in traced expression: ',⎕DMX.Message)⎕SIGNAL ⎕EN
  :EndTrap
  T__vars[;2]←⍕¨⊃¨⍪/¨↑¨¨(⎕UCS 13)(≠⊆⊢)¨¨⊂⍤1¨1/¨⍕¨T__vars[;2] ⍝ Watch out for NL-wrapped data
  T__vars←((1⌈⊃¨¯2↑¨1,¨⍴¨T__vars[;2])/(0=≢¨T__vars[;1])×2+2⊃⍴↑T__vars[;1])⌽0 1↓⍕T__vars ⍝ Un-indent "⎕←" lines

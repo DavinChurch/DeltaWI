@@ -1,7 +1,7 @@
  result←object scale arg;size;units;scale;border;Borders;psize;pscale;tunits;punits;margins;ppxsize;extent
 ⍝ Request or modify the scaling factor of a GUI object
 
- :If (1=≢arg)∧1<|≡arg ⋄ arg←⊃arg ⋄ :EndIf ⍝ Make sure a nested argument is disclosed
+ arg←##.Single arg ⍝ Make sure a nested argument is disclosed
 
  :Section ⍝ Get all our basic information
      (extent size scale border)←object ⎕VGET('_extent'⍬)('_size'⍬)('_scale'⍬)('_border' 0) ⍝ My current settings
@@ -51,7 +51,7 @@
          tunits←(1⍪units)[1+⊃arg;] ⍝ Compute new-scale unit-conversions for this object's 'scale'
          margins←+/2 2⍴+⌿Borders[1;,2;] ⍝ Differences between 'extent' and 'size' (in pixels)
          size←tunits×margins-⍨extent×punits ⍝ Convert to new units
-         object.⎕ex '_pix_size' ⍝ This isn't valid any more
+         object.⎕EX'_pix_size' ⍝ This isn't valid any more
      :Case 1 0 ⍝ Converting from fixed to proportional
          ⍝ This needs to create an actual pixel-size notation for later use
          object._pix_size←size×(1⍪units)[1+⊃scale;] ⍝ How big is this object in pixels? Remember it for later sizing needs.

@@ -5,10 +5,10 @@
  :If 0=≢arg
      result←old
  :Else
-     new←##.##.Single arg
+     new←##.Single arg
      '∆WI DOMAIN ERROR: border'##.Error(1<|≡new)∨~##.IsInt new
      new←+/∊arg ⍝ New border property
-     '∆WI ATTRIBUTE ERROR: Invalid "border" attribute specified'##.##.Error~new∊0 1
+     '∆WI ATTRIBUTE ERROR: Invalid "border" attribute specified'##.Error~new∊0 1
      object._border←new ⍝ Update APL+Win value
 
      ⍝ Adjust Dyalog setting
@@ -18,5 +18,5 @@
      :If ∨/old≠new ⍝ If we're actually changing things, reconstruct sizing
          {}object where,⊂(object ⎕VGET⊂'_where'⍬) ⍝ Recalculate all sizing/border parameters
      :EndIf
-     result←##.NoRes
+     result←NoRes
  :EndIf
