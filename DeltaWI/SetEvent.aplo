@@ -94,6 +94,7 @@
  :EndSection
 
  :Section ⍝ Replace Dyalog-native event definition
+     pseudo←pseudo[⍋'_'=⊢/¨pseudo] ⍝ Make sure all terminal-event processors always happen last (e.g. ∇_on_KeyPress_)
      (3⊃event)←pseudo ⍝ Replace list of APL+Win event names to process
      object ∆WS'Event'event ⍝ Set new or updated native-event specification (merges with existing list)
  :EndSection

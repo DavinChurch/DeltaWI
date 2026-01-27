@@ -1,7 +1,8 @@
  {WRES}←{parms}Run expression;back;requote;wres;ns
 ⍝ Execute the given expression in the Application's calling name scope (no explicit result from expression, just ∆WRES)
-⍝ Allow setting of both (not just one) ∆WARG and ∆WRES in the optional argument.
-⍝ Return the application's ∆WRES value.
+⍝ Allow setting of both (not just one) ∆WARG and ∆WRES (in that order) in the optional argument. Or alternatively, a
+⍝ namespace containing either or both of these variables may be supplied.
+⍝ Return the application expression's ∆WRES value, shyly.
 
  :If 2=⎕NC'parms'                               ⍝ Let's allow them to set both event variables via the left argument
  :AndIf 2=≢parms                                ⍝ (Both must be included to make the correct nesting assumptions)

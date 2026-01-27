@@ -1,0 +1,10 @@
+ ok←run _on_KeyPress_ message;style;key
+⍝ Internal handling of any onKeyPress event, but as a terminal process so characters can be changed at the last minute
+
+ :If 0≠⍴⍴key←3⊃message ⍝ Get the keystroke (if it's a single key)
+     ok←1 ⍝ Don't mess with key-commands at all
+     :Return
+ :EndIf
+ key←(⊃message[1]⎕VGET⊂'_font' '')##.QuadAV key ⍝ Does it need to be converted to ⎕AV subscripts before being displayed on the screen?
+
+ ok←key@3⊢message ⍝ Return potentially-modified message

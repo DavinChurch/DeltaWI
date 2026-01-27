@@ -11,6 +11,7 @@
      '∆WI DOMAIN ERROR: caption'##.##.Error 1≠≡new
      '∆WI DOMAIN ERROR: caption'##.##.Error~##.##.IsChar new
      object._caption←new ⍝ Update the APL+Win record
+     new←(⊃object ⎕VGET⊂'_font' '')##.##.QuadAV new ⍝ Allow ⎕AV fonts
      object ##.##.∆WS'caption'((⎕UCS 10)@{⍵=⎕UCS 13}⊢new) ⍝ Change the Dyalog object so the screen actually changes
      result←##.NoRes
  :EndIf

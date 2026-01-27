@@ -6,6 +6,7 @@
      result←,object ##.##.∆WG⊂'Text'
      :If 2=≢⍴result ⋄ result←##.##.∆dtr¨↓result ⋄ :EndIf
      :If 1≠≡result ⋄ result←(⎕UCS 13)##.##.∆sew result ⋄ :EndIf
+     result←('←',⊃object ⎕VGET⊂'_font' '') ##.##.QuadAV result ⍝ Reverse-engineer the on-screen font back to Unicode, as best possible, if needed
  :Else
      '∆WI DOMAIN ERROR: text'##.##.Error 1≠≢arg
      new←1/##.##.Single arg
@@ -15,6 +16,7 @@
      :If 2 ##.##.BitOf object ⎕VGET⊂'_style' 0
          new←(⎕UCS 13)##.##.∆cuts new ⍝ Turn it into a Dyalog multi-line structure
      :EndIf
+     new←(⊃object ⎕VGET⊂'_font' '') ##.##.QuadAV new ⍝ Convert Unicode to ⎕AV as best we can if we're using one of those fonts
      object ##.##.∆WS⊂'Text'new
      result←##.NoRes
 

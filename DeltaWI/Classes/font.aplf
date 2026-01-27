@@ -1,0 +1,87 @@
+ result←object font arg;units;scale;pxsize;tunits;t;was;def;props;style;charset;font;fname;oldname;newname;old
+⍝ Request or modify the object's font
+
+⍝ Use the APL+Win structure (usually)
+⍝   [1]←Font name
+⍝   [2]←Font size (scale-relative)
+⍝   [3]←Font style
+⍝       Formats         Pitch           Family          Quality
+⍝       -------         -----           ------          -------
+⍝       1=Bold          32=Fixed        128=Roman       1024=Draft
+⍝       2=Italic        64=Variable     256=Swiss       2048=Proof
+⍝       4=Underline                     384=Modern
+⍝       8=Strikeout                     512=Script
+⍝                                       640=Decorative
+⍝   [4]←Font charset
+⍝       'ansi', 'oem', 'symbol', 'default',
+⍝       or a number selected from the LOGFONT lfCharSet enumeration
+⍝ Or alternatively the entire 14-element Windows LOGFONT structure
+
+ units←##.GUIroot._units
+ (scale pxsize)←object ⎕VGET('_scale' 1)('_pix_size'(0 0))
+ tunits←(units⍪⍨pxsize÷|2↑3↓scale)[1+⊃scale;] ⍝ Compute unit-conversions for the this object's scale ⍝? Does scale=0 work here?
+ oldname←⊃was←object ⎕VGET⊂'_font' ''
+ :If 0=≢arg
+     result←was
+     :Return
+ :EndIf
+ arg←,⊆##.Single arg ⍝ Make sure a nested singleton is flattened
+ :If (14=≢arg)∧1<|≡arg
+⍝? LOGFONT support needs to be written
+     :Section ⍝ Update the font description using the LOGFONT format
+         ##.Error'LOGFONT structure not yet supported'
+     :EndSection
+ :Else
+     :Section ⍝ Update the APL+Win font description
+         '∆WI LENGTH ERROR: font'##.Error~arg≢⍛∊⍳4
+         arg←arg,arg≢⍛↓def←'' 1 0 'ansi' ⍝ Assume defaults
+         :If (×≢was)∧∨/t←0=≢¨arg ⋄ (t/arg)←t/was ⋄ :EndIf ⍝ Allow ⍬ to leave as-is
+         :If ∨/t←0=≢¨arg ⋄ (t/arg)←t/def ⋄ :EndIf ⍝ Allow ⍬ with no previous value to fill in with defaults
+         '∆WI DOMAIN ERROR: font'##.Error~##.IsChar 1⊃arg
+         '∆WI DOMAIN ERROR: font'##.Error~1 3 5∊⍨10|⎕DR 2⊃arg
+         '∆WI DOMAIN ERROR: font'##.Error~##.IsInt 3⊃arg
+         '∆WI DOMAIN ERROR: font'##.Error(arg[3]<0)∨arg[3]>4095
+         '∆WI DOMAIN ERROR: font'##.Error(~##.IsInt 4⊃arg)∧~arg[4]∊⍥⎕C'ansi' 'oem' 'symbol' 'default'
+         style←##.BitVals 3⊃arg
+         '∆WI ATTRIBUTE ERROR: Invalid "font" attribute specified'##.Error∧/32 64∊style
+
+         result←NoRes
+         :If arg≡object ⎕VGET⊂'_font' '' ⋄ :Return ⋄ :EndIf ⍝ If it hasn't changed, don't do anything
+         object._font←arg ⍝ Set the APL+Win memory
+         :If ##.IsChar charset←4⊃arg ⍝ Convert a standard name into a charset number
+             ⍝ ANSI_CHARSET=0, OEM_CHARSET=255, SYMBOL_CHARSET=2, DEFAULT_CHARSET=1
+             arg[4]←0 255 2 1['ansi' 'oem' 'symbol' 'default'⍳⍥⎕C arg[4]]
+         :EndIf
+         props←'Font'('Coord' 'RealPixel')('PName'(newname←1⊃arg))('Size'(⊃tunits×2⊃arg))('Fixed'(>/32 64∊style))
+         props,←('Italic'(2∊style))('Underline'(4∊style))('Weight'(400 700[1+1∊style]))('CharSet'(4⊃arg))('Rotate' 0)
+         ##.∆EX⍕object ##.∆WGet⊂'FontObj' '' ⍝ Destroy any previous font object
+         fname←##.Next object ⍝ Find the next available sequentially-numbered object name
+         font←⎕VGET(object⍕⍛,'.',fname)##.∆WC props ⍝ Create an internal Font object to be used
+         font._Owner←object ⍝ Mark ownership of internal object
+         object ##.∆WSet⊂'FontObj'font ⍝ Attach this font to this object
+     :EndSection
+ :EndIf
+
+ :Section ⍝ Modify contents of object to match new font (if necessary)
+     :If oldname≢newname ⍝ If the font name has changed
+     :AndIf ≠/oldname newname ##.QuadAV¨'⍺' ⍝ And the old and new fonts represent APL symbols differently
+     :AndIf ~object._class⊂⍛∊'Form' 'MDIForm' ⍝ Avoiding exceptional classes
+         :If 3=object._Class.⎕NC'caption' ⍝ If this class defines 'caption' (it will never be found in Classes)
+             :If ×≢old←object object._Class.caption ⍬ ⍝ And it has something there
+             :AndIf ∨/~old∊⎕UCS 31↓⍳126 ⍝ And we have any non-ASCII symbols in it (which might be different)
+                 {}object object._Class.caption,⊂old ⍝ Then it needs to be rebuilt using the standard process
+             :EndIf
+         :EndIf
+         :If 3=object._Class.⎕NC'text' ⍝ If this class defines 'text' (it will never be found in Classes)
+             :If ×≢old←object object._Class.text ⍬ ⍝ And it has something there
+             :AndIf ∨/~old∊⎕UCS 31↓⍳126 ⍝ And we have any non-ASCII symbols in it (which might be different)
+                 {}object object._Class.text,⊂old ⍝ Then it needs to be rebuilt using the standard process
+             :EndIf
+         :EndIf
+     :EndIf
+ :EndSection
+
+
+ ⍝? What happens to existing text if we change the font size?
+ ⍝? What about typing in an Edit field with an APL font?
+ ⍝? Something is wrong when displaying ⎕AV subscripts with APLPLUS font.
