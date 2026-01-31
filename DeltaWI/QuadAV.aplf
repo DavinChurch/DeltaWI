@@ -1,4 +1,4 @@
- av←font QuadAV unicode;t;reverse;letter
+ av←font QuadAV unicode;t;reverse;letter;fnt
 ⍝ If the font is an APL+Win font (based on ⎕AV), then convert the Unicode right argument to ⎕AV-based text
 ⍝ Only ⎕AV characters can be converted in this way. Non-⎕AV characters produce "default" results.
 ⍝ Unicode characters that are not in ⎕AV produce ¯1↑⎕AV as a result.
@@ -7,11 +7,17 @@
 
 ⍝ Provide the font name with a '←' prefix in order to signal that ⎕AV characters are to be convert back to Unicode.
 ⍝ (An optional '→' prefix is allowed for the "forward" conversion, but it is ignored.)
+⍝ In the usual case of supplying a font name, an object reference may be supplied instead for the _font to be extracted from it.
 
  av←unicode ⍝ Normally just return whatever they gave us, since most applications won't be using APL+Win fonts
- reverse←'←'∊font←∆dmu font ⋄ font~←'←→' ⍝ Watch out for switching it back to Unicode
+ :If 9=⎕NC'font'
+     fnt←∆dmu⊃font ⎕VGET⊂'_font' '' ⍝ Get it directly from the object (but can't reverse it this way)
+ :Else
+     fnt←∆dmu font
+ :EndIf
 
- :If font⊂⍛∊⍥⎕C'APL+Win' 'APL2000' 'APLHELP' 'APLPLUS' 'APLPLUSI' ⍝ List of known APL+Win font names
+ :If fnt⊂⍛∊⍥⎕C'APL+Win' 'APL2000' 'APLHELP' 'APLPLUS' 'APLPLUSI' ⍝ List of known APL+Win font names
+     reverse←'←'∊fnt ⋄ fnt~←'←→' ⍝ Watch out for switching it back to Unicode
      letter←0≢¨⊃0⍴⊂unicode
      :If reverse
          av←letter\TranslateAV[⎕IO+255⌊⎕UCS letter/unicode] ⍝ Return the ⎕UCS character that matches the selected ⎕AV glyph

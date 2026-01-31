@@ -1,0 +1,18 @@
+Option;clicked
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f'∆WI Pass(,'f')⊢'Create' 'Form'
+ 'f.o'∆WI Pass'f.o'⊢'New' 'Option'
+ 'f.o'∆WI Pass 1.5 10⊢'size'
+ 'f.o'∆WI Pass 14.875 54 1.5 10⊢'where'
+ 'f.o'∆WI Pass(,'o')⊢'caption'
+ 'f.o'∆WI Pass MT⊢'caption' 'Testing'
+ 'f.o'∆WI Pass'Testing'⊢'caption'
+
+ clicked←0
+ 'f.o' ∆WI Pass MT⊢'onClick' 'clicked←1'
+ 'f.o' ∆WI Pass 0⊢'value'
+ 'f.o' ∆WI Pass MT⊢'value' 1
+ ⊢Pass 1⊢clicked
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

@@ -1,9 +1,8 @@
  result←object style arg;bits
-⍝ Check:style
+⍝ Option:style
 
-⍝   0=Box on left side
-⍝   1=Box on right side
-⍝   2=Three-state checkbox ⍝? Unavailable in Dyalog
+⍝   0=Button on left side
+⍝   1=Button on right side
 
  :If 0=≢arg
      result←object ⎕VGET⊂'_style' 0
@@ -12,8 +11,7 @@
      arg←##.##.Single arg
      '∆WI DOMAIN ERROR: style'##.##.Error(1<≡arg)∨~##.##.IsInt arg
      bits←##.##.BitVals+/∊arg
-     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error×≢bits~0 1 2
-     'Unable to support style=2 checkboxes'##.##.Error 2∊bits
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error×≢bits~0 1
      object._style←+/bits
      object ##.##.∆WS 0/⊂'Align'(⊃'Left' 'Right'/⍨1,⍨1∊bits) ⍝? Can only be done during object creation
      result←##.NoRes

@@ -7,12 +7,12 @@
  from←⊃⎕RSI ⍝ Immediate source namespace calling me (where I can find settings)
  actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
  units←##.GUIroot._units ⍝ We'll want this for scale conversions
- (parent stretch)←opts ⎕VGET'parent'('stretch'(0 0)) ⍝ obtain named parameters
+ (parent stretch)←opts ⎕VGET'parent'('stretch'(1 0)) ⍝ Obtain named parameters
 
  ⍝ If needed, modify or prepend a default 'where' for object creation
  (∆where ∆size ∆extent)←∊¨((1↓¨arg),⊂⍬)[actions⍳'where' 'size' 'extent'] ⍝ Which of our defaults are they giving us anyway (so we can skip adding defaults)
  :If 4≠≢where←∆where ⍝ If they're not giving us a full 4⍴ "where", generate a default they can modify later
-     :If 2≠≢size←∆size ⋄ size←from._size ⋄ :EndIf ⍝ Default object size (always in character units); required for centering
+     :If 2≠≢size←∆size ⋄ size←from ⎕vget⊂'_size' (1.5 10) ⋄ :EndIf ⍝ Default object size (always in character units); required for centering
      (psize pscale ppxsize)←parent ⎕VGET'_size' '_scale'('_pix_size'(0 0)) ⍝ What's the parent's size & scale? ⍝? Does this give us the right data for scale=0?
      punits←(units⍪⍨ppxsize÷|2↑3↓pscale)[1+⊃pscale;] ⍝ Compute unit-conversions for the parent object's scale
      :If 2≠≢extent←∆extent ⍝ Use an extent they gave us if we have one, otherwise calculate it

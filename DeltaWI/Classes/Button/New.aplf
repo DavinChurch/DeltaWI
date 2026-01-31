@@ -7,11 +7,11 @@
  (∆border ∆style)←((1↓¨arg),⊂⍬)[actions⍳'border' 'style']
  ∆style←##.##.BitVals ∆style
  arg,⍨←(~'caption'⊂⍛∊actions)/⊂'caption'name ⍝ If they're not setting a caption immediately at all, we'll put in a default
- arg←(parent:parent ⋄ stretch:1 0)##.##.New.Center arg ⍝ Default 'where' to center
+ arg←(parent:parent)##.##.New.Center arg
  :If ×≢∆border ⋄ object._border←+/∊∆border ⋄ :EndIf ⍝ Update APL+Win value if given (even though it will be done again later)
 
  props←'Button'('Style' 'Push')('Visible' 0) ⍝ Properties that should be used during creation
  props,←(~'border'⊂⍛∊actions)/⊂'Border'(0⌈×+/∆border) ⍝ Set border upon creation if we have it
- props,←⊂'Justify'(⊃'Center' 'Right' 'Left'[1⍳⍨(=/256 512∊∆style),256 512∊∆style]) ⍝? This can only be specified upon creation
+ props,←⊂'Align'(⊃'Center' 'Right' 'Left'[1⍳⍨(=/256 512∊∆style),256 512∊∆style]) ⍝? This can only be specified upon creation
  newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
  result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure

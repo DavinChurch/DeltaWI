@@ -1,5 +1,5 @@
  result←object caption arg;old;new
-⍝ Read or change the caption on the Check box
+⍝ Read or change the caption on the Option button
 
  old←object ⎕VGET⊂'_caption' '' ⍝ Existing caption
  :If 0=≢arg

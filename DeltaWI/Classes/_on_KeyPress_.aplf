@@ -5,6 +5,6 @@
      ok←1 ⍝ Don't mess with key-commands at all
      :Return
  :EndIf
- key←(⊃message[1]⎕VGET⊂'_font' '')##.QuadAV key ⍝ Does it need to be converted to ⎕AV subscripts before being displayed on the screen?
+ key←message[1] ##.QuadAV key ⍝ Does it need to be converted to ⎕AV subscripts before being displayed on the screen?
 
  ok←key@3⊢message ⍝ Return potentially-modified message
