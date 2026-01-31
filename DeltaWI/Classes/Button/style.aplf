@@ -32,8 +32,8 @@
      props←('Default'(1∊bits))('Cancel'(2∊bits))
      props,←0/⊂'Align'(⊃'Center' 'Right' 'Left'[1⍳⍨(=/256 512∊bits),256 512∊bits]) ⍝? Can only be specified during creation
      object ##.##.∆WS props
+     result←##.NoRes
 ⍝? styles bits 4,16,128,65536 are not supported by Dyalog
 ⍝? We can probably simulate style=65536 by wrapping words ourselves.
-⍝? style=8 requires us to manually set State←1 when pressed the first time - watch out, use the new 'Click!' event syntax
 ⍝? style=32 requires support in 'color'
  :EndIf

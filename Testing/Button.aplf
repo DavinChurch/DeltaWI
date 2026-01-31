@@ -3,7 +3,11 @@
 
  'f'∆WI Pass(,'f')⊢'New' 'Form'
  'f.b'∆WI Pass'f.b'⊢'New' 'Button'
- 'f.b' ∆WI Pass 14.875 54 1.5 10⊢'where'
+ 'f.b'∆WI Pass 14.875 54 1.5 10⊢'where'
+ 'f.b'∆WI Pass 0⊢'value'
+ 'f.b'∆WI Pass MT⊢'value' 1
+ 'f.b'∆WI Pass 1⊢'value'
+
  clicked←0
  'f.b'∆WI Pass MT⊢'onClick' 'clicked←1'
  'f.b'∆WI Pass{1∊clicked}⊢'Click'

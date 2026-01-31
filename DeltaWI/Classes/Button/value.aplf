@@ -1,0 +1,15 @@
+result←object value arg
+⍝ Allow reading and writing the state of the Button
+
+ :If 0=≢arg
+     result←object ⎕vget⊂'_value' 0
+ :Else
+     arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: value'##.##.Error~##.##.IsInt arg
+     '∆WI LENGTH ERROR: value'##.##.Error 1≠≢arg
+     '∆WI DOMAIN ERROR: value'##.##.Error~arg⊂⍛∊0 1
+     object._value←⊃arg ⍝ Keep track of it ourselves because State sometimes doesn't do it
+     object ##.##.∆WS⊂'State'arg ⍝ Update Dyalog
+
+     result←##.NoRes⊣'Click'##.##.Event object ##.##.Application ⍝ Just run the onClick event handler without a result
+ :EndIf

@@ -1,0 +1,10 @@
+ok←run _on_Select message;val
+ ⍝ Process special Button-style handling
+
+ :If 8∊##.##.BitVals message[1]⎕VGET⊂'_style' 0 ⍝ This is a "toggle" button that stays depressed
+    val←message[1] ⎕vget⊂'_value' 0 ⍝ We'll track the APL+Win value status
+     message[1]##.##.∆WS'State' (~val) ⍝ Switch State
+     message[1]._value←~val ⍝ And update our copy
+ :EndIf
+
+ ok←1
