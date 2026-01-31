@@ -9,7 +9,7 @@
  'DOMAIN ERROR'##.Error~##.IsChar 1⊃arg
 
  ⍝ Must pre-set 'Event' on Dyalog object to capture #9524
- :If ~'on9524'⊂⍛∊⊃¨object ##.∆WG⊂'Event' ⍝ If it's not set up yet, we need to add trapping for it
+ :If ~'on9524'⊂⍛∊⊃¨object ##.∆WG 'Event' ⍝ If it's not set up yet, we need to add trapping for it
      object ##.∆WS⊂'Event' 'on9524'(⎕THIS⍕⍛,'._on_9524') ⍝ Add this special event to the object
  :EndIf
  result←NoRes⊣0 ##.∆NQ object 9524 ##.Application,arg ⍝ Enqueue the event for later execution by ##.Event, passing the Defer argument as an event message

@@ -1,0 +1,14 @@
+result←object limit arg
+⍝ Edit:limit
+
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_limit' 0
+ :Else
+     '∆WI DOMAIN ERROR: limit'##.##.Error(1<≡arg)∨1≠≢arg
+     arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: limit'##.##.Error(1<≡arg)∨~##.##.IsInt arg
+     '∆WI LENGTH ERROR: limit'##.##.Error 1<≢arg
+     '∆WI DOMAIN ERROR: limit'##.##.Error arg<0
+     object._limit←⊃arg
+     result←##.NoRes
+ :EndIf

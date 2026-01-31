@@ -1,8 +1,4 @@
 (
- 'limit'
- 'onLimit'
  'onScroll'
  'range'
- 'selection'
- 'seltext'
 )

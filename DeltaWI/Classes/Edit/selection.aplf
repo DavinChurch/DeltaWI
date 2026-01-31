@@ -1,0 +1,28 @@
+ result←object selection arg;seltext;text;start;t
+⍝ Edit:selection
+
+ :If 0=≢arg
+     (text seltext)←object ##.##.∆WG'Text' 'SelText' ⍝ Get the native text data and highlight positioning (not stored in variables)
+     ⍝ seltext[1]←First character # (origin 1); seltext[2]←Last character # + 1
+     :If 1<≡seltext ⍝ Is this for a multi-line control? (Assume we never use matrices)
+         start←+\¯1↓0,1+≢¨text ⍝ The number of characters before each line
+         seltext←start[1⊃¨seltext]+2⊃¨seltext ⍝ Convert to linear numbers
+     :EndIf
+     ⍝ Now we can just calculate with linear numbers
+     result←(seltext[1]-1),--/seltext ⍝ [1]←Offset; [2]←Length
+ :Else
+     arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: selection'##.##.Error(1<≡arg)∨~##.##.IsInt arg
+     '∆WI LENGTH ERROR: selection'##.##.Error~arg≢⍛∊1 2
+     arg←2↑arg ⍝ Allow default singleton to specify only insertion point
+     '∆WI DOMAIN ERROR: selection'##.##.Error arg<0 ¯1
+     text←object ##.##.∆WG'Text' ⍝ We'll need to know what form and size this is
+     arg[2]+←(arg[2]=¯1)×1++/1+≢¨text ⍝ Re-point ¯1 to end-of-text
+     seltext←1++\arg ⍝ Calculate the linear form
+     :If 1<≡text ⍝ Is this a multi-line control? (Assume we never use matrices)
+         start←+\¯1↓0,1+≢¨text ⍝ The number of characters before each line
+         t←(start+1)⍸seltext ⋄ seltext←t,¨seltext-start[t] ⍝? Make sure this calculation is correct?
+     :EndIf
+     object ##.##.∆WS⊂'SelText'seltext
+     result←##.NoRes
+ :EndIf

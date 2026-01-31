@@ -35,7 +35,7 @@
 ⍝? What do we do about methods that directly cause events? Can they be suppressed or not?
      dq←Classes.NoRes ⍝ We'll have a different default return value for synthetic events (e.g. for when it is suppressed)
  :Else
-     :If 1<≢⎕RSI ⍝? This is for debugging internal event calls - delete before production
+     :If (1<≢⎕RSI)∧∧/1,2≡/⎕NSI ⍝? This is for debugging internal event calls - delete before production
          'Messages from ⎕RSI determination when called from within DeltaWI'Tracer')SI'
          Application←⎕←⊃⎕THIS,⍨⎕RSI/⍨⎕←⎕THIS⍕⍛{(⊂⍺,'.')≢¨⍵↑¨⍨1+≢⍺}⎕←⎕NSI,¨'.' ⍝ Global: What is the current application namespace (outside DeltaWI) when the event fires?
      :Else

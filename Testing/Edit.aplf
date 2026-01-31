@@ -1,4 +1,4 @@
- Edit;changes
+ Edit;changes;bump;w
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
  'f'∆WI Pass(,'f')⊢'New' 'Form'
@@ -21,5 +21,25 @@
 ⍝ 'f.e' ∆WI Pass MT⊢'text' ''
 ⍝ 'f' ∆WI MT⊢'Wait'
 ⍝ 'f.e' ∆WI Pass 'TEST'⊢'text'
+
+ bump←0
+ 'f.e'∆WI Pass MT⊢'onLimit' 'bump←1'
+ 'f.e'∆WI Pass MT⊢'limit' 10
+⍝? There's no way to simulate the user typing in too many characters to show that this works
+
+ 'f.e'∆WI Pass 0 0⊢'selection'
+ 'f.e'∆WI Pass MT⊢'selection' 1 3
+ 'f.e'∆WI Pass 1 3⊢'selection'
+ 'f.e'∆WI Pass MT⊢'selection' 4 ¯1
+ 'f.e'∆WI Pass 4 3⊢'selection'
+ w←'f.e'∆WI'where'
+ 'f.g'∆WI Pass'f.g'⊢'New' 'Edit'('style' 4 8192)('where'(2 0+2↑w))('extent' 3 10) ⍝ Now let's try it multi-line
+ 'f.g'∆WI Pass MT⊢'text'('this is',(⎕UCS 13),'a test')
+ 'f.g'∆WI Pass MT⊢'selection' 3 8
+ 'f.g'∆WI Pass 3 8⊢'selection'
+ 'f.g'∆WI Pass ('s is',(⎕UCS 13),'a t')⊢'seltext'
+ 'f.g' ∆WI Pass MT⊢'seltext' 'xyz'
+ 'f.g'∆WI Pass 3 3⊢'selection'
+ 'f.g' ∆WI Pass 'thixyzest'⊢'text'
 
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests
