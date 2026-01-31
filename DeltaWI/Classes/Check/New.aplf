@@ -1,0 +1,16 @@
+ result←object New arg;parent;name;props;newobj;actions;∆border;∆style
+⍝ Create a new Check object
+
+ (parent name)←object ⍝ Separate non-standard two-part argument
+ actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
+
+ (∆border ∆style)←((1↓¨arg),⊂⍬)[actions⍳'border' 'style']
+ arg,⍨←(~'caption'⊂⍛∊actions)/⊂'caption'name
+ arg←(parent:parent ⋄ stretch:1 0)##.##.New.Center arg
+ :If ×≢∆border ⋄ object._border←+/∊∆border ⋄ :EndIf ⍝ Update APL+Win value if given (even though it will be done again later)
+ ∆style←##.##.BitVals+/∊∆style
+
+ props←'Button'('Style' 'Check'),(~2∊∆style)↓('Justify' 'Right')('Visible' 0) ⍝ Properties that must be used during creation
+ props,←(~'border'⊂⍛∊actions)/⊂'Border'(0⌈×+/∆border) ⍝ Set border upon creation if we have it ⍝? It cannot be changed later
+ newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
+ result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure

@@ -1,0 +1,17 @@
+ result←object caption arg;old;new
+⍝ Read or change the caption on the Check box
+
+ old←object ⎕VGET⊂'_caption' '' ⍝ Existing caption
+ :If 0=≢arg
+     result←old
+ :Else
+     '∆WI DOMAIN ERROR: caption'##.##.Error 1≠≢arg
+     new←1/##.##.Single arg
+     '∆WI RANK ERROR: caption'##.##.Error 1≠≢⍴new
+     '∆WI DOMAIN ERROR: caption'##.##.Error 1≠≡new
+     '∆WI DOMAIN ERROR: caption'##.##.Error~##.##.IsChar new
+     object._caption←new ⍝ Update the APL+Win record
+     new←(⊃object ⎕VGET⊂'_font' '')##.##.QuadAV new ⍝ Convert APL+Win fonts to ⎕AV order
+     object ##.##.∆WS'Caption'((⎕UCS 10)@{⍵=⎕UCS 13}⊢new) ⍝ Change the Dyalog object so the screen actually changes
+     result←##.NoRes
+ :EndIf

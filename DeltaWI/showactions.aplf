@@ -4,7 +4,7 @@ rpt←showactions;class;common;meths;props;events;active;override;cls;fns;sort;n
 ⍝ rpt[;1]←Class (namespace) name; rpt[;2]←'methods' 'properties' 'events' 'defaults'; rpt[;3]←list of names
 
  rpt←0 3⍴⊂''
- meths←{'Create'⊂⍛,⍵/⍨⍵⊃¨⍛∊'⍙',1 ⎕C ⎕A}
+ meths←{'Create' 'Delete',⍵/⍨⍵⊃¨⍛∊'⍙',1 ⎕C ⎕A}
  props←{'data' '∆',¨⍛,(events ⍵)~⍨⍵/⍨⍵⊃¨⍛∊⎕C ⎕A}
  events←{⍵{⍺⍺∊⍨⊂'_',⍵:⍵ ⋄ '(',⍵,')'}¨⍵/⍨(⊂'on')≡¨2↑¨⍵}
  active←{⍵/⍨(⊂1 2 0)≡¨⊃¨⍺.⎕AT¨⍵} ⍝ Determine if these function definitions are "active"

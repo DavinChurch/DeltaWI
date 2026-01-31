@@ -1,0 +1,20 @@
+ result←object style arg;bits
+⍝ Check:style
+
+⍝   0=Left justified
+⍝   1=Right justified
+⍝   2=Three-state checkbox ⍝? Unavailable in Dyalog
+
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_style' 0
+ :Else
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<≡arg)∨1≠≢arg
+     arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<≡arg)∨~##.##.IsInt arg
+     bits←##.##.BitVals+/∊arg
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error×≢bits~0 1 2
+     'Unable to support style=2 checkboxes'##.##.Error 2∊bits
+     object._style←+/bits
+     object ##.##.∆WS 0/⊂'Justify'(⊃'Right' 'Left'/⍨1,⍨2∊bits) ⍝? Can only be done during object creation
+     result←##.NoRes
+ :EndIf

@@ -18,5 +18,7 @@
  'f.l'∆WI Pass MT⊢'font' 'APLPLUS' 2 0 'symbol'
  'f.l'∆WI Pass'APLPLUS' 2 0 'symbol'⊢'font'
  'f.l'∆WI Pass MT⊢'caption' '⍺⌈⌊⍛∇∆∘''⎕⍎⍕'
+ 'f.l'∆WI Pass '⍺⌈⌊⍛∇∆∘''⎕⍎⍕'⊢'caption'
+
 
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

@@ -19,7 +19,7 @@
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∧/1 2∊bits
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error×≢bits~0 1 2 4 8 32 64
      object._style←+/bits
-     object ##.##.∆WS⊂'Justify'(⊃'Center' 'Right' 'Left'/⍨1,⍨1 2∊bits)
+     object ##.##.∆WS 0/⊂'Justify'(⊃'Center' 'Right' 'Left'/⍨1,⍨1 2∊bits)
 ⍝? styles>2 are not supported by Dyalog
 ⍝? However, we might use the Accelerator property to simulate (or not) access characters, though they won't be underlined.
 ⍝? We can probably simulate style≠8 by wrapping words ourselves.
