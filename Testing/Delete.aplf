@@ -1,7 +1,7 @@
  Delete;deleted
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
- 'f'∆WI Pass(,'f')⊢'New' 'Form'
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
  'f'∆WI Pass(,'f')⊢'self' ⍝ Yes, it's here
  'f'∆WI Pass''⊢'onDelete'
  deleted←0

@@ -3,8 +3,9 @@
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
  'f'∆WI Pass(,'f')⊢'New' 'Form'
- 'f'∆WI Pass(,'f')⊢'Create' 'Form'
+ 'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
  'f'∆WI Pass(,'f')⊢'self'
+ 'f'∆WI Pass 30 100⊢'size'
  ∆WSELF←'f'
  ⍝ Can't test default 'where' because it will vary by monitor
 

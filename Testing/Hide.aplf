@@ -1,12 +1,12 @@
  Hide
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
- 'f'∆WI Pass(,'f')⊢'New' 'Form'
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
  'f'∆WI Pass 1⊢'visible'
  'f'∆WI Pass MT⊢'Hide'
  'f'∆WI Pass ¯1⊢'visible'
 
- 'f'∆WI Pass(,'f')⊢'Create' 'Form' 'Hide'
+ 'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)'Hide'
  'f'∆WI Pass ¯1⊢'visible'
 
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

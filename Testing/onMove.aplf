@@ -1,7 +1,7 @@
  onMove;wh;done;wh2
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
- 'f'∆WI Pass(,'f')⊢'Create' 'Form'
+ 'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
  wh←'f'∆WI'where' ⍝ Capture current location
  wh2←¯2+2↑wh
  done←⍬

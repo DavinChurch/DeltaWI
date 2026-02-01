@@ -1,10 +1,9 @@
- hwnd
+ Frame
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
- '#'∆WI Fail'∆WI ACTION ERROR: Action "hwnd" not found'⊢'hwnd'
  'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
- 'f'∆WI Pass{0≠⍵}⊢'hwnd'
- 'f'∆WI Pass 1⊢'Close'
- 'f'∆WI Pass 0⊢'hwnd'
+ 'f.f'∆WI Pass'f.f'⊢'New' 'Frame'
+ 'f.f'∆WI Pass 12.96875 44 4 12⊢'where'
+
 
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

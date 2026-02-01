@@ -1,24 +1,24 @@
  onResize;sz;done;sz2
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
- 'f'∆WI Pass(,'f')⊢'Create' 'Form'
+ 'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
  sz←'f'∆WI'size' ⍝ Capture current size
  sz2←sz+2
  done←⍬
  'f'∆WI Pass MT⊢'onResize' 'done←∆WARG'
  'f'∆WI Pass MT⊢'size'sz2 ⍝ Explicitly change the size
  'f'∆WI Pass sz2⊢'size' ⍝ Did it resize correctly?
- ⊢Pass (sz2,0)⊢done ⍝ Did the event fire showing that it was changing?
+ ⊢Pass(sz2,0)⊢done ⍝ Did the event fire showing that it was changing?
 
  done←⍬
- 'f' ∆WI Pass MT⊢'visible' 2 ⍝ Minimize
- ⊢Pass (sz2,1)⊢done ⍝ Did it reset?
+ 'f'∆WI Pass MT⊢'visible' 2 ⍝ Minimize
+ ⊢Pass(sz2,1)⊢done ⍝ Did it reset?
  done←⍬
- 'f' ∆WI Pass MT⊢'visible' 3 ⍝ Maximize
- ⊢Pass (sz2,2)⊢done ⍝ Did it reset?
+ 'f'∆WI Pass MT⊢'visible' 3 ⍝ Maximize
+ ⊢Pass(sz2,2)⊢done ⍝ Did it reset?
  done←⍬
- 'f' ∆WI Pass MT⊢'visible' 1 ⍝ Restore
- ⊢Pass (sz2,0)⊢done ⍝ Did it reset?
+ 'f'∆WI Pass MT⊢'visible' 1 ⍝ Restore
+ ⊢Pass(sz2,0)⊢done ⍝ Did it reset?
 
  ⍝? Do we also want to check that it happens during creation?
 

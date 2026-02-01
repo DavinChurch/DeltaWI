@@ -1,0 +1,15 @@
+ result←object New arg;parent;name;props;newobj;actions;∆border
+⍝ Create a new Frame object
+
+ (parent name)←object ⍝ Separate non-standard two-part argument
+ actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
+
+ ∆border←⊃((1↓¨arg),⊂⍬)[actions⍳⊂'border']
+ arg,⍨←(~'caption'⊂⍛∊actions)/⊂'caption'name
+ arg←(parent:parent)##.##.New.Center arg
+ :If ×≢∆border ⋄ object._border←+/∊∆border ⋄ :EndIf ⍝ Update APL+Win value if given (even though it will be done again later)
+
+ props←'Group'('Visible' 0) ⍝ Properties that must be used during creation
+ props,←(~'border'⊂⍛∊actions)/⊂'Border'(0⌈×+/∆border) ⍝ Set border upon creation if we have it ⍝? It cannot be changed later
+ newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
+ result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure

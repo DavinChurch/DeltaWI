@@ -1,18 +1,18 @@
-def;a
+ def;a
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
 ⍝ This testing will not work properly because Edits cannot own Buttons - rewrite when more classes (such as Frames) are available to stack
- 'f'∆WI Pass(,'f')⊢'New' 'Form'
- 'f.a' ∆WI Pass 'f.a'⊢'New' 'Edit'
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
+ 'f.a'∆WI Pass'f.a'⊢'New' 'Edit'
  ⍝'f.a.a' ∆WI Pass 'f.a.a'⊢'New' 'Button'
- 'f.b' ∆WI Pass 'f.b'⊢'New' 'Edit'
- 'f.c' ∆WI Pass 'f.c'⊢'New' 'Button'
- a←'f.a' ∆WI 'def'
- 'f.b' ∆WI Pass MT⊢'def' a
+ 'f.b'∆WI Pass'f.b'⊢'New' 'Edit'
+ 'f.c'∆WI Pass'f.c'⊢'New' 'Button'
+ a←'f.a'∆WI'def'
+ 'f.b'∆WI Pass MT⊢'def'a
  ⍝'f.b' ∆WI Pass (,⊂'f.b.a')⊢'children'
- 'f.c' ∆WI Pass MT⊢'def' a
+ 'f.c'∆WI Pass MT⊢'def'a
  ⍝'f.c' ∆WI Pass (,⊂'f.c.a')⊢'children'
- 'f.d' ∆WI Pass 'f.d'⊢'New' a
+ 'f.d'∆WI Pass'f.d'⊢'New'a
  ⍝'f.d' ∆WI Pass (,⊂'f.d.a')⊢'children'
 
 

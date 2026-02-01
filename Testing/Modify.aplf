@@ -2,7 +2,7 @@
  ⍝ Test Modify, modified, onModified, and modifystop
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
- 'f'∆WI Pass(,'f')⊢'New' 'Form'
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
  'f'∆WI Pass 0⊢'modified'
  'f.b'∆WI Pass'f.b'⊢'New' 'Button'
  'f.b'∆WI Pass 0⊢'modified'

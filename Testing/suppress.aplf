@@ -1,10 +1,10 @@
  suppress
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
- 'f'∆WI Pass(,'f')⊢'New' 'Form'
- 'f' ∆WI Pass 0⊢'suppress'
- 'f' ∆WI Pass MT⊢'suppress' 1
- 'f' ∆WI Pass 1⊢'suppress'
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
+ 'f'∆WI Pass 0⊢'suppress'
+ 'f'∆WI Pass MT⊢'suppress' 1
+ 'f'∆WI Pass 1⊢'suppress'
 
 ⍝? This tester needs to wait until more classes are added that produce implicit events for us to test activation with
 

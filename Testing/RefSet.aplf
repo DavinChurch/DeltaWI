@@ -1,7 +1,7 @@
  RefSet
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
- 'f'∆WI Pass(,'f')⊢'New' 'Form' 'Hide'
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)'Hide'
  'f'∆WI Pass ¯1 1⊢'Ref' 'visible' 'enabled'
  'f'∆WI Pass MT⊢'Set'('visible' 2)('enabled' 0)
  'f'∆WI Pass 2 0⊢'Ref' 'visible' 'enabled'

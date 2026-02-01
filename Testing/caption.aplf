@@ -1,7 +1,7 @@
  caption
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
- 'f'∆WI Pass(,'f')⊢'New' 'Form'
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
  'f'∆WI Pass(,'f')⊢'caption'
  'f'∆WI Pass MT⊢'caption' 'Testing'
  'f'∆WI Pass'Testing'⊢'caption'

@@ -1,8 +1,8 @@
-enabled;MT;∆WSELF;∆WARG;∆WEVENT;∆WRES;closeme;killme;destroyed
+ enabled;MT;∆WSELF;∆WARG;∆WEVENT;∆WRES;closeme;killme;destroyed
  MT←0 0⍴'' ⍝ An empty return value for many ∆WI calls
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
- 'f'∆WI Pass(,'f')⊢'New' 'Form'
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
  'f'∆WI Pass 1⊢'enabled'
  'f'∆WI Pass MT⊢'enabled' 0
  'f'∆WI Pass 0⊢'enabled'

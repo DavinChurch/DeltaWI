@@ -1,7 +1,7 @@
  Open;opened
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
- 'f'∆WI Pass(,'f')⊢'New' 'Form' 'Close'
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)'Close'
  'f'∆WI Pass 1⊢'visible'
  'f'∆WI Pass 1⊢'enabled'
  'f'∆WI Pass 0⊢'opened'
@@ -13,7 +13,7 @@
  'f'∆WI Pass 1⊢'enabled'
  'f'∆WI Pass 1⊢'opened'
 
- 'f'∆WI Pass(,'f')⊢'Create' 'Form' 'Open'
+ 'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)'Open'
  'f'∆WI Pass 1⊢'visible'
  'f'∆WI Pass 1⊢'enabled'
  'f'∆WI Pass 1⊢'opened'

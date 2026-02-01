@@ -2,7 +2,7 @@
 ⍝ Test related location & size properties (where, extent, size, & scale)
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
- 'f'∆WI Pass(,'f')⊢'New' 'Form'
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
  ∆WSELF←'f'
  ∆WI Pass(,'f')⊢'self'
  ∆WI Pass MT⊢'where' 0 0 10 10

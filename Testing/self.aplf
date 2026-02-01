@@ -1,8 +1,8 @@
-self
+ self
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
  '#'∆WI Pass(,'#')⊢'self'
- 'f'∆WI Pass(,'f')⊢'New' 'Form'
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
  'f'∆WI Pass(,'f')⊢'self'
 
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests
