@@ -1,0 +1,43 @@
+ result←object Wait arg;hidden;kids;message;off;waiting
+⍝ Wait on Form object
+
+⍝? Watch out for different ways for the Form's style to interact with this Wait
+
+ 'Cannot Wait on an object that is already part of another Wait'##.##.Error 0≠object.⎕NC'_WaitOn' ⍝? Verify how this happens
+ :If 0=object._opened ⋄ {}object ##.Open ⍬ ⋄ :EndIf ⍝ If it hasn't been opened yet, then open it first
+ :If 0≥object._visible ⋄ {}object ##.Show ⍬ ⋄ :EndIf ⍝ If it's invisible, force it to be shown
+
+ :If ×≢object ⎕VGET⊂'_onWait' '' ⍝ If we have an onWait event defined here, run it (with the arguments they gave)
+     'Wait'##.##.Event object ##.Application,arg ⍝ Run the onWait event handler
+ :ElseIf ×≢arg ⍝ If not, but we're giving it some arguments anyway, then execute them as actions on the Form before waiting
+     {}(⊂object._self)##.##.∆WI¨arg ⍝ Call ∆WI recursively to process an action list
+ :EndIf
+
+ ⍝ Prepare an escape hatch to be able to add or subtract objects to this active ⎕DQ (9258 ← +/⎕UCS '⎕DQ')
+ :If ~'on9258'⊂⍛∊⊃¨object ##.##.∆WG'Event' ⍝ If it's not set up yet, we need to add event trapping for it
+     object ##.##.∆WS⊂'Event' 'on9258' 1 ⍝ Add this special event to the object to simply exit from ⎕DQ temporarily
+ :EndIf
+ ##.##.GUIroot._Waiting←object,##.##.GUIroot ⎕VGET⊂'_Waiting'⍬ ⍝ Make a (stacked) system note that we're starting a new 'Wait'
+ waiting←,object ⍝ Keep a list of all objects that we're waiting on at present - it may be modified during the Wait with above escape hatch exit
+ ⍝? Would we rather remove object from the _Waiting list for simplicity? We'll still have to deal with empty vectors here and there.
+
+ :Repeat
+     :If 1<≢waiting ⋄ (1↓waiting)._WaitOn←object ⋄ :EndIf ⍝ Mark all secondary objects as co-waiting
+     message←##.##.∆DQ waiting
+⍝? Do we need to trap and report a Value Error (if a callback fn is somehow undefined somewhere?)
+     :If 9258≡2⊃message,0 0 ⍝ If they're signalling a change to the ⎕DQ list, process it here
+         waiting←(waiting∪3⊃message,⍬ ⍬)~off←object~⍨4⊃message,⍬ ⍬ ⍝ Add and remove GUI names from the waiting-list
+         :If ×≢off ⋄ off.⎕EX'._WaitOn' ⋄ :EndIf ⍝ Remove currently-waiting flags of removed objects
+     :EndIf
+ :Until 9258≢2⊃message,0 0 ⍝ Keep looping as long as we're just modifying the ⎕DQ list
+⍝? Oops - the Wait can be ended by a Hide as well as a Close, but does not affect the wait-list(??) - how do we handle that?
+
+ ⍝ When this Wait ends, also Close+Destroy anything that was Created/Opened afterwards
+ ⍝? But what about Hiding the primary Form??
+ :If 1<≢waiting
+     result←(1↓waiting)(1 ##._supp.close)¨⊂⍬ ⍝ Force-close everything secondary to the main form
+     (1↓waiting).⎕EX'._WaitOn' ⍝ Remove the last of currently-waiting flags from these now-closed objects
+ :EndIf
+ ##.##.GUIroot._Waiting←{⍵↓⍨object≡⊃⍵}##.##.GUIroot ⎕VGET⊂'_Waiting'⍬ ⍝ Remove myself from the system 'Wait' stack since we're done
+
+ result←object ⎕VGET⊂'_value' 0 ⍝ Return the 'value' of the primary Form as a result from the Wait

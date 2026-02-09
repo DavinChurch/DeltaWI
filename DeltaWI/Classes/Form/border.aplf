@@ -27,6 +27,7 @@
      :If settings[5]≠moveable ⋄ props,←⊂'Moveable'moveable ⋄ :EndIf ⍝ This is as close as we can get, I think
 ⍝? Dyalog is not letting me change these values after creation, but this is not documented
 ⍝?     :If ×≢props ⋄ object ##.##.∆WSet props ⋄ :EndIf ⍝ Apply property changes
+⍝? Watch out! If we're changing a border-style that requires the underlying Windows control to be recreated, we must explicitly fire the onReopen event too!
 
      :If ∨/old≠new ⍝ If we're actually changing things, reconstruct sizing
          {}object ##.where,⊂(object ⎕VGET⊂'_where'⍬) ⍝ Recalculate all sizing/border parameters

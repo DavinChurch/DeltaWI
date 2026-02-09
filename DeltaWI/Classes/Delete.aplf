@@ -4,7 +4,7 @@
 
  '∆WI ACTION ERROR: Method "Delete" does not accept an argument'##.Error×≢arg
  :If ×≢kids←object children ⍬
-     result←(object ⎕VGET ##.LeafName¨kids)('Delete' ##.Invoke)¨⊂⍬ ⍝ Recursively delete all my children
+     result←(object ⎕VGET ##.LeafName¨kids)('Delete'##.Invoke)¨⊂⍬ ⍝ Recursively delete all my children
  :EndIf
 
  :Section ⍝ Make sure it's closed first
@@ -44,6 +44,11 @@
  :EndSection
 
  'Delete'##.Event object ##.Application ⍝ Run the onDelete event handler
+
+ ⍝ If the object being deleted was created/opened within an active Wait, then we need to note that it's no longer part of the Wait
+ :If ⎕NULL≢under←object ⎕VGET⊂'_WaitWith'⎕NULL
+     0 ##.∆NQ under 9258 ⍬ object ⍝ Remove myself from the active waiting list using the special on9258 event.
+ :EndIf
 
 ⍝? Anything else to clean up?
 

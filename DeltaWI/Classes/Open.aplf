@@ -1,4 +1,4 @@
- result←object Open arg;hidden;kids
+ result←object Open arg;hidden;kids;waiting
 ⍝ Open a closed GUI object
 
  :If 0≠object._opened ⍝ If it's already opened/opening, then we have nothing to do here
@@ -21,6 +21,17 @@
  :If object._enabled∧object._visible>0
      object ##.∆WSet⊂'Visible' 1 ⍝ Make sure it's shown
  :EndIf
+
+ ⍝ If we're Opening a new top-level Form/MDIForm while a Wait is ongoing, then we need to add ourselves in as part of the Wait
+ ⍝ (Hopefully this shouldn't be possible if it's already a member of another Wait.)
+ :If object._class⊂⍛∊'Form' 'MDIForm' ⍝ I think only these can join a Wait
+ :AndIf ×≢waiting←##.GUIroot ⎕VGET⊂'_Waiting'⍬ ⍝ If there's something currently waiting
+ :AndIf ⎕NULL≡object ⎕VGET⊂'_WaitOn'⎕NULL ⍝ (Just in case; we'd better not be able to be Waiting with another Form)
+     0 ##.∆NQ(⊃waiting)9258 object ⍬ ⍝ Add me to their active waiting list using the special on9258 event.
+ :EndIf
+
+
+
 
 
 

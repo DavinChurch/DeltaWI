@@ -1,0 +1,19 @@
+ Wait dummy;create
+⍝ Allow for testing the 'Wait' method, which cannot be done automatically
+⍝ A dummy argument was added to prevent ∇Test from running it when human input is required
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f1'∆WI Pass'f1'⊢'New' 'Form'('where' 5 10 10 20)
+ 'f1.e'∆WI Pass'f1.e'⊢'New' 'Edit'('where' 1 1 1.5 10)
+ 'f1.b1'∆WI Pass'f1.b1'⊢'New' 'Button'('where' 5 1 1.5 8)('caption' 'Create')('onClick' 'create')
+ ⎕FX'create' '''f2''∆WI''Open''' ⍝ Open the second Form with this button-push
+⍝? style=2 broken: 'f1.b2'∆WI Pass'f1.b2'⊢'New' 'Button'('where' 5 10 1.5 6)('caption' 'Close')('style' 2)
+
+ 'f2'∆WI Pass'f2'⊢'New' 'Form'('where' 5 50 10 20)'Close'
+ 'f2.e'∆WI Pass'f2.e'⊢'New' 'Edit'('where' 1 1 1.5 10)
+⍝? style=2 broken: 'f2.b2'∆WI Pass'f2.b2'⊢'New' 'Button'('where' 5 10 1.5 6)('caption' 'Close')('style' 2)
+
+ 'f1'∆WI Pass 0⊢'Wait' ⍝ Wait for the user to do things
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

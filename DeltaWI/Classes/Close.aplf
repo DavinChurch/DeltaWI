@@ -1,4 +1,11 @@
- result←object Close arg
+ result←object Close arg;under
 ⍝ Close a GUI object and its children, if allowed, but do not delete it completely
 
- result←object (0 _supp.close) arg ⍝ Call the master processor code, but don't force it to close
+ :If 0≡result←object(0 _supp.close)arg ⍝ Call the master processor code, but don't force it to close
+     :Return ⍝ If close was rejected, just leave now
+ :EndIf
+
+ ⍝ If the object being closed was created/opened within an active Wait, then we need to note that it's no longer part of the Wait
+ :If ⎕NULL≢under←object ⎕VGET⊂'_WaitOn'⎕NULL
+     0 ##.∆NQ under 9258 ⍬ object ⍝ Remove myself from the active waiting list using the special on9258 event.
+ :EndIf
