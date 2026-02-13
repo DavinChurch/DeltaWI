@@ -1,10 +1,18 @@
-ok←run _on_Select message;val
+ ok←run _on_Select message;val;bits;object;form
  ⍝ Process special Button-style handling
 
- :If 8∊##.##.BitVals message[1]⎕VGET⊂'_style' 0 ⍝ This is a "toggle" button that stays depressed
-    val←message[1] ⎕vget⊂'_value' 0 ⍝ We'll track the APL+Win value status
-     message[1]##.##.∆WS'State' (~val) ⍝ Switch State
-     message[1]._value←~val ⍝ And update our copy
+ object←⊃message ⋄ bits←##.##.BitVals object ⎕VGET⊂'_style' 0
+ :If 8∊bits ⍝ This is a "toggle" button that stays depressed
+     val←object ⎕VGET⊂'_value' 0 ⍝ We'll track the APL+Win value status
+     object ##.##.∆WS'State'(~val) ⍝ Switch State
+     object._value←~val ⍝ And update our copy
  :EndIf
 
- ok←1
+ :If 2∊bits ⍝ This is a "Cancel" button
+ :AndIf 0=≢object ⎕VGET⊂'_onClick' '' ⍝ In APL+Win, if a Cancel button has no onClick handler, then it defaults to closing the form
+ :AndIf ×≢form←object._Ancestry
+     form←form⊃⍨(⊂'Form')⍳⍨form._class ⍝ Find this button's parent Form (there better be one)
+     form(1 ##._supp.close)⍬ ⍝ Call the master close-processor code on the Form; it doesn't have an onClose handler so it can never refuse anyway
+ :EndIf
+
+ ok←1 ⍝ Go ahead with everything else

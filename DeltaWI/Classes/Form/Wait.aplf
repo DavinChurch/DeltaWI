@@ -1,9 +1,10 @@
- result←object Wait arg;hidden;kids;message;off;waiting
+ result←object Wait arg;message;off;waiting
 ⍝ Wait on Form object
 
 ⍝? Watch out for different ways for the Form's style to interact with this Wait
 
- 'Cannot Wait on an object that is already part of another Wait'##.##.Error 0≠object.⎕NC'_WaitOn' ⍝? Verify how this happens
+ 'Cannot Wait on an object that is already part of another Wait'##.##.Error 0≠object.⎕NC'_WaitOn' ⍝? Verify how this happens in APL+Win
+ 'Cannot Wait if it is already Waiting itself'##.##.Error object∊waiting←##.##.GUIroot ⎕VGET⊂'_Waiting'⍬
  :If 0=object._opened ⋄ {}object ##.Open ⍬ ⋄ :EndIf ⍝ If it hasn't been opened yet, then open it first
  :If 0≥object._visible ⋄ {}object ##.Show ⍬ ⋄ :EndIf ⍝ If it's invisible, force it to be shown
 
@@ -17,27 +18,35 @@
  :If ~'on9258'⊂⍛∊⊃¨object ##.##.∆WG'Event' ⍝ If it's not set up yet, we need to add event trapping for it
      object ##.##.∆WS⊂'Event' 'on9258' 1 ⍝ Add this special event to the object to simply exit from ⎕DQ temporarily
  :EndIf
- ##.##.GUIroot._Waiting←object,##.##.GUIroot ⎕VGET⊂'_Waiting'⍬ ⍝ Make a (stacked) system note that we're starting a new 'Wait'
- waiting←,object ⍝ Keep a list of all objects that we're waiting on at present - it may be modified during the Wait with above escape hatch exit
- ⍝? Would we rather remove object from the _Waiting list for simplicity? We'll still have to deal with empty vectors here and there.
+ ##.##.GUIroot._Waiting←object,waiting ⍝ Make a (stacked) system note that we're starting a new 'Wait'
+ object._WaitWith←⍬ ⍝ Keep a list of all other objects that we're waiting on at present - it may be modified during the Wait with above escape hatch exit or connected function
 
  :Repeat
-     :If 1<≢waiting ⋄ (1↓waiting)._WaitOn←object ⋄ :EndIf ⍝ Mark all secondary objects as co-waiting
-     message←##.##.∆DQ waiting
+     :If ×≢object._WaitWith ⋄ object._WaitWith._WaitOn←object ⋄ :EndIf ⍝ Mark all secondary objects as co-waiting
+     message←##.##.∆DQ object,object._WaitWith
 ⍝? Do we need to trap and report a Value Error (if a callback fn is somehow undefined somewhere?)
+     :If ×≢object._WaitWith
+⍝? What happens if a secondary Form that we're waiting on is Hidden (but not closed) - is it still part of the Wait?
+         off←object._WaitWith/⍨object._WaitWith._opened≠1 ⍝ Find waiting secondary Forms that aren't really around any more
+         :If ×≢off ⋄ off.⎕EX'_WaitOn' ⋄ :EndIf ⍝ Remove currently-waiting flags of dead Forms
+         object._WaitWith~←off ⍝ And remove them from the list of secondary Forms
+     :EndIf
      :If 9258≡2⊃message,0 0 ⍝ If they're signalling a change to the ⎕DQ list, process it here
-         waiting←(waiting∪3⊃message,⍬ ⍬)~off←object~⍨4⊃message,⍬ ⍬ ⍝ Add and remove GUI names from the waiting-list
-         :If ×≢off ⋄ off.⎕EX'._WaitOn' ⋄ :EndIf ⍝ Remove currently-waiting flags of removed objects
+⍝? Watch out for hiding the primary form! Doesn't that allow the Wait to continue invisibly? Don't I use that in some of my tools? Yep: style=4 explicitly does this!
+         object._WaitWith∪←object~⍨3⊃message,⍬ ⍝ Add any new GUI name to the waiting-list
      :EndIf
  :Until 9258≢2⊃message,0 0 ⍝ Keep looping as long as we're just modifying the ⎕DQ list
-⍝? Oops - the Wait can be ended by a Hide as well as a Close, but does not affect the wait-list(??) - how do we handle that?
+ :OrIf object._opened≠1 ⍝ And the main form is still open ⍝? Closing the main Form should have already gotten rid of all the WaitWiths?
+ ⍝?:OrIf (0=≢object._WaitWith)∧object._visible≤0 ⍝ And as long as there are Forms left to Wait on ⍝? Oops! Fix invisible - it doesn't stop!
 
- ⍝ When this Wait ends, also Close+Destroy anything that was Created/Opened afterwards
- ⍝? But what about Hiding the primary Form??
- :If 1<≢waiting
-     result←(1↓waiting)(1 ##._supp.close)¨⊂⍬ ⍝ Force-close everything secondary to the main form
-     (1↓waiting).⎕EX'._WaitOn' ⍝ Remove the last of currently-waiting flags from these now-closed objects
+ ⍝ When this Wait finally ends, also Close anything that was Created/Opened afterwards
+ :If ×≢object._WaitWith
+⍝? Has this already been done now?
+     'This section shouldn''t be getting used any more, should it?'##.##.Tracer'object._WaitWith'
+     object._WaitWith(1 ##._supp.close)¨⊂⍬ ⍝ Force-close everything that was secondary to the main form
+     object._WaitWith.⎕EX'_WaitOn' ⍝ Remove the last of currently-waiting flags from these now-closed objects
  :EndIf
- ##.##.GUIroot._Waiting←{⍵↓⍨object≡⊃⍵}##.##.GUIroot ⎕VGET⊂'_Waiting'⍬ ⍝ Remove myself from the system 'Wait' stack since we're done
+ object.⎕EX'_WaitWith' ⍝ There are no secondary Forms to keep track of any more
+ ##.##.GUIroot._Waiting←{⍵↓⍨object≡⊃⍵}##.##.GUIroot ⎕VGET⊂'_Waiting'⍬ ⍝ Remove myself from the system 'Wait' stack now that we're done
 
  result←object ⎕VGET⊂'_value' 0 ⍝ Return the 'value' of the primary Form as a result from the Wait

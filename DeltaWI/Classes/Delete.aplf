@@ -14,7 +14,7 @@
              object ##.∆WSet⊂'Visible' 0
              'Hide'##.Event object ##.Application ⍝ Run the onHide event handler
          :EndIf
-         object.(_opened _enabled)←0 0 ⍝ Just in case something wonders about this before it's gone
+         object.(_opened _enabled)←0 0 ⍝ Just in case something wonders about this before it's gone (or after it's a ghost)
          object ##.∆WSet⊂'Active' 0
          'Destroy'##.Event object ##.Application ⍝ Run the onDestroy event handler
      :EndIf
@@ -45,10 +45,7 @@
 
  'Delete'##.Event object ##.Application ⍝ Run the onDelete event handler
 
- ⍝ If the object being deleted was created/opened within an active Wait, then we need to note that it's no longer part of the Wait
- :If ⎕NULL≢under←object ⎕VGET⊂'_WaitWith'⎕NULL
-     0 ##.∆NQ under 9258 ⍬ object ⍝ Remove myself from the active waiting list using the special on9258 event.
- :EndIf
+_supp.waitoff object ⍝ Clean up any waiting-form situations
 
 ⍝? Anything else to clean up?
 

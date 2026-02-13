@@ -1,0 +1,10 @@
+ waiton object;waiting
+⍝ Supply a new secondary object to be attached to the current wait of a primary object
+
+ :If ~object._class⊂⍛∊'Form' 'MDIForm' ⋄ :Return ⋄ :EndIf ⍝ If it's not capable of waiting, don't bother
+ ⍝ If we're Opening a new top-level Form/MDIForm while a Wait is ongoing, then we need to add ourselves in as part of the Wait
+ ⍝ (Hopefully this shouldn't be possible if it's already a member of another Wait.)
+ :If ×≢waiting←##.##.GUIroot ⎕VGET⊂'_Waiting'⍬ ⍝ If there's something currently waiting
+ :AndIf ⎕NULL≡object ⎕VGET⊂'_WaitOn'⎕NULL ⍝ (Just in case; we'd better not be able to be Waiting with another Form)
+     0 ##.##.∆NQ(⊃waiting)9258 object ⍝ Add me to their active waiting list using the special on9258 event.
+ :EndIf

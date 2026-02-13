@@ -1,0 +1,9 @@
+ ok←run _on_Close message;under;object;all
+⍝ Intercept a system Close event on a Form, and process it the way APL+Win would instead of Dyalog.
+⍝ Return 0 to prevent Dyalog from auto-deleting the Form.
+
+ ok←0 ⋄ object←⊃message ⍝ Always deny Dyalog's real-event default action (destroying the Form)
+ :If 0≡object(0 ##._supp.close)⍬ ⍝ Call the master close-processor code, but don't force it to close
+     :Return ⍝ If close was rejected, just leave now
+ :EndIf
+ ⍝? Otherwise, do we need to do anything else??

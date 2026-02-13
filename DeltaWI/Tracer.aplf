@@ -1,4 +1,4 @@
- {T__msg}Tracer T__vars;T__t;T__SI;T__TIME;T__ttls;⎕PW;⎕ML;T__u;T__x
+ {T__msg}Tracer T__vars;T__t;T__SI;T__TIME;T__ttls;⎕PW;⎕ML;T__u;T__x;T__XSI
  ⍝ Provide a way to insert logic-tracing messages within code
  ⍝ These can be switched on/off with a semi-global boolean variable "Tracing"
  ⍝ Right argument: Potentially-nested list of expressions (typically variable names) to be displayed on the session
@@ -8,22 +8,24 @@
  ⍝ Expressions may begin with "]" (for a user command), ")" (for special commands), or "⎕←" (to skip labelling & indents)
  ⍝      ("⎕←" may be used as a prefix to "]" or ")" as well)
  ⍝ Special "commands" currently available (this list may be extended in the future):
- ⍝      )SI     )TIME
+ ⍝      )SI     )TIME   )XSI
 
  :If 0≠⎕NC'Tracing' ⋄ :AndIf ~1∊Tracing ⋄ :Return ⋄ :EndIf ⍝ If not tracing, just exit (default = tracing on)
  :If 2≠⎕NC'T__msg' ⋄ T__msg←0⍴⊂'' ⋄ :EndIf
  ⎕ML←1 ⋄ ⎕PW←1000 ⍝ Allow almost anything to display without any wrapping (may be modified to suit)
  T__TIME←{' '~⍨,'I2,2(<:>,ZI2),<.>,ZI3'⎕FMT 1 4⍴12 0 0 0|3↓⎕TS} ⍝ Show formatted current timestamp for )TIME
+ T__XSI←1↓∊',',¨1↓,¨(⎕LC{⍵,'[',(⍕⍺),']'}¨(⊂'{}')@(0∘=≢¨)⊢⎕XSI)@(' '∘≡¨)⊢⎕STACK[;2] ⍝ Support for )XSI
  T__SI←1↓∊',',¨T__t←1↓,¨(⎕LC{⍵,'[',(⍕⍺),']'}¨(⊂'{}')@(0∘=≢¨)⊢⎕SI)@(' '∘≡¨)⊢⎕STACK[;2] ⍝ Current line & support for )SI
- ⎕←'*** ',⊃T__t~,¨'⍎' '*' ⍝ Show executing code location (e.g. top line of ⎕SI that called this)
+ ⎕←'*** ',⊃((1 ⎕C⊃¨T__t)∊¨⊂⎕A,'_∆')/T__t ⍝ Show executing code location (e.g. top line of ⎕SI that called this)
  ⎕←↑(⊂'→→→ '),¨⊃,/(⎕UCS 13)(≠⊆⊢)¨⊃,/⊂⍤1¨,⊆T__msg ⍝ Display any location messages (in any format)
  :If 0∊⍴T__ttls←T__vars←(,¨⊆T__vars)~⊂'' ⋄ :Return ⋄ :EndIf ⍝ What data items will we be showing?
  T__t←(⊂'⎕←')≡¨2↑¨T__vars ⋄ (T__t/T__ttls)←⊂'' ⋄ (T__t/T__vars)←2↓¨T__t/T__vars ⍝ Remove "⎕←" titles
- T__t←')'=⊃¨T__vars ⋄ (T__t/T__vars)←'T__SI' 'T__TIME⍬' '⍬'['si' 'time'⍳⎕C' '~⍨¨1↓¨T__t/T__vars] ⍝ Substitute in special ")" command values
+ T__t←')'=⊃¨T__vars ⋄ (T__t/T__vars)←'T__SI' 'T__TIME⍬' 'T__XSI' '⍬'['si' 'time' 'xsi'⍳⎕C' '~⍨¨1↓¨T__t/T__vars] ⍝ Substitute in special ")" command values
  T__t←']'=⊃¨T__vars ⋄ T__x←{⍵↑⍨¯1+⍵⍳' '}¨⎕C T__t/T__vars ⍝ Prepare for "]" commands (may need some individual substitutions)
  T__x←('⎕SE.UCMD' '⎕SE.Dyalog.Utils.disp' '⎕SE.Dyalog.Utils.display')[1+T__u←3|']disp' ']display'⍳T__x] ⍝ Override general spellings
  ((T__t\T__u>0)/T__vars)←(T__x/⍨T__u>0),¨{⍵↓⍨¯1+⍵⍳' '}¨T__vars/⍨T__t\T__u>0 ⍝ Spell out overridden user-command code
  ((T__t\T__u=0)/T__vars)←(T__x/⍨T__u=0),¨' ',¨'''',¨'''',¨⍨(T__t\T__u=0)/T__vars/¨⍨1+T__vars='''' ⍝ Spell out executable user-command code
+ ⎕CS⊃⎕RSI ⍝ Let's refer to all their expressions from within the calling namespace
  :Trap 0
      T__vars←((×≢¨T__ttls)/¨T__ttls,¨':'),⍪⍎¨T__vars ⍝ Obtain the data values to be shown
  :Else

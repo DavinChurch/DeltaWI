@@ -68,6 +68,7 @@
      object._opened←1 ⍝ It will end up opened after completion, unless 'Close' turns it off below
      :For action :In final∩⍨acts,(~∨/final∊acts)/¯1↑final ⍝ There should usually only be one of these at most; default=Open
 ⍝? Watch out for possible inheriting from parentage?
+⍝? For one thing, you can't Open an object whose parent is not yet open!
 ⍝? This will still work for 'def', won't it?
          aarg←1↓(acts⍳⊂action)⊃arg,⊂⍬
          v0←-object._class⊂⍛∊'Form' 'MDIForm' 'Menu' ⍝ "Invisible" setting for this class

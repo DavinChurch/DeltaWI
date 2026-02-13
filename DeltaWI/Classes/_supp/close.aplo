@@ -1,4 +1,4 @@
- {result}←object(force close)arg;hidden;kids
+ {result}←object(force close)arg;hidden;kids;all;under
 ⍝ Close a GUI object and its children, if not denied, but do not delete it completely
 ⍝ Return a 1 for forced or successfully closed, or 0 if closing was application-denied.
 ⍝ The "force" operand specifies whether (0) or not (1) to run the onClose event and allow it to deny closing.
@@ -6,7 +6,10 @@
  :If result←0=object._opened ⋄ :Return ⋄ :EndIf ⍝ If it's already closed, then we just tell them so
  :If ~result←force ⍝ Do not run the onClose handler if closing is forced
      result←'Close'##.##.Event object ##.##.Application,arg ⍝ Run the onClose event handler (always return 0 or 1)
+     'What happened?'##.##.Halt~result∊0 1
+⍝? Why is this returning NoRes?? Internal events always do by default! Should I just be ignoring it? Probably. What do I return? Can't they give me a result?
  :EndIf
+
  :If 0≢result←##.##.Single result ⋄ result←1 ⋄ :EndIf ⍝ Assume it was 1 if there's no handler or there's an invalid result
  :If 0=result ⋄ :Return ⋄ :EndIf ⍝ Closing was explicitly denied
 
@@ -15,6 +18,8 @@
  :AndIf ×≢kids←object ⎕VGET ##.##.LeafName¨kids ⍝ Except our own tree
      kids(1 close)¨⊂⍬ ⍝ Force-close all my children recursively
  :EndIf
+
+ waitoff object ⍝ Make sure Waits are satisfied
 
  ⍝ Now, let's "destroy" myself
  'Destroy'##.##.Event object ##.##.Application ⍝ Run the onDestroy event handler

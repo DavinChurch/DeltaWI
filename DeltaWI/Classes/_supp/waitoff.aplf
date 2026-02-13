@@ -1,0 +1,24 @@
+ waitoff object;under;over
+⍝ Given an object reference that is no longer active, remove it from the list of waiting objects.
+⍝ This might be a primary object or a secondary object, each of which need to be processed differently.
+⍝ Call this before actually ⎕EXing the Form. Expect the Close or Delete process to always happen after this runs.
+
+ :If ~object._class⊂⍛∊'Form' 'MDIForm' ⋄ :Return ⋄ :EndIf ⍝ If it's not capable of waiting, don't bother
+ :If ×≢under←##.##.GUIroot ⎕VGET⊂'_Waiting'⎕NULL
+ :AndIf object≡⊃under ⍝ Are we the primary Form that we are currently waiting on?
+     :If ⎕NULL≢under←object ⎕VGET⊂'_WaitWith'⎕NULL ⍝ Do we have any secondary Forms that need to go away, too?
+     :AndIf ×≢under
+         ⍝ Now we need to clean everything up explicitly because there may not be anything left in ∆DQ to send a ∆NQ to
+         under.⎕EX'_WaitOn' ⍝ Make sure none of them are still pointing back to the Wait
+         under(1 close)¨arg ⍝ Force all the secondary Forms to close immediately (which will leave nothing left to continue the ∆DQ)
+         object._WaitWith←⍬ ⍝ Note that we don't have any Forms any more that are dependent on our Wait
+     :EndIf
+     ⍝ That should clean up everything related to the Wait, except for removing it from _Waiting, which the ∇Wait function will do upon exit
+ :EndIf
+
+ :If ⎕NULL≢over←object ⎕VGET⊂'_WaitOn'⎕NULL ⍝ Are we a secondary Form going away that needs to be disconnected from the primary?
+     object.⎕EX'_WaitOn' ⍝ Note that we're disconnecting ourselves from the Wait
+     :If ⎕NULL≢under←over ⎕VGET⊂'_WaitWith'⎕NULL ⍝ Get the primary Form's list of secondary Forms
+         over._WaitWith←under~object ⍝ Explicitly remove ourselves from their list
+     :EndIf
+ :EndIf
