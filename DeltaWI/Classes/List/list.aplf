@@ -1,0 +1,26 @@
+ result←object list arg;new
+⍝ List:list
+
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_list'(0 0⍴'')
+ :Else
+     :If 1<|≡arg←1/##.##.Single arg ⍝ This must be an in-line vector of vectors
+         '∆WI DOMAIN ERROR: text'##.##.Error~∧/##.##.IsChar¨arg
+     :Else ⍝ Anything else must have been given in a single item
+         '∆WI DOMAIN ERROR: text'##.##.Error~##.##.IsChar arg
+     :EndIf
+     object._list←arg ⍝ Store it exactly the way they gave it to us
+
+     :If 1=≡new←arg ⍝ Is it now unnested?
+         :Select ≢⍴new
+         :Case 1 ⍝ Is it a vector with embedded CR's?
+             new←##.##.∆dtr¨(⎕UCS 13)##.##.∆cuts new
+         :Case 2 ⍝ Is it a matrix of lines?
+             new←##.##.∆dtr¨↓new
+         :Else
+             new←,,¨↓new
+         :EndSelect
+     :EndIf
+     object ##.##.∆WS('Items'new)('SelItems'((≢new)⍴0))
+     result←##.NoRes
+ :EndIf

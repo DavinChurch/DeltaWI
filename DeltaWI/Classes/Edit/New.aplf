@@ -5,9 +5,8 @@
  actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
 
  (∆style ∆border)←((1↓¨arg),⊂⍬)[actions⍳'style' 'border']
- ∆style←##.##.BitVals+/∊∆style
- arg←(parent:parent ⋄ stretch:1 0)##.##.New.Center arg
- :If ×≢∆border ⋄ object._border←+/∊∆border ⋄ :EndIf ⍝ Update APL+Win value if given (even though it will be done again later)
+ ∆border←0⌈×+/∊∆border ⋄ ∆style←##.##.BitVals+/∊∆style
+ arg←(parent:parent ⋄ border:∆border)##.##.New.Center arg
 
  props←'Edit'('FieldType' 'Char')('Visible' 0) ⍝ Define properties that must be used during creation
  props,←⊂'Style'('Single' 'Multi'⊃⍨1+4∊∆style) ⍝? Create-only style
@@ -15,7 +14,7 @@
  ⍝? Center or Right justification forces word-wrapping and disables horizontal scrolling (32∊∆style)
  props,←⊂'VScroll'((>/4 8∊∆style)×¯2+16∊∆style) ⍝? Create-only style
  props,←⊂'HScroll'((>/4 32∊∆style)×¯2+64∊∆style) ⍝? Create-only style
- props,←(~'border'⊂⍛∊actions)/⊂'Border'(0⌈×+/∆border) ⍝ Set border upon creation if we have it ⍝? It cannot be changed later
- props,←⊂'WantsReturn' (8192∊∆style)
+ props,←(~'border'⊂⍛∊actions)/⊂'Border'∆border ⍝ Set border upon creation if we have it ⍝? It cannot be changed later
+ props,←⊂'WantsReturn'(8192∊∆style)
  newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object with required parameters
  result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure

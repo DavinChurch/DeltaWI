@@ -1,0 +1,12 @@
+Sizes←GetSizes object;sizes
+⍝ Retrieve the '∆Sizes' class-specific information pseudo-global
+ Sizes←2⍴0 ⍝ Time to figure out what the size difference definitions are for this class (capitalized because it represents a global)
+
+ :If 2 3∊⍨object._Class.⎕NC'_supp.∆Sizes'
+     sizes←object._Class._supp.∆Sizes ⍝ Either a value or a function
+     :If 0=2⊃1 ⎕AT'sizes'
+         Sizes←sizes ⍝ Just a value (one way or another), so return it as-is
+     :Else
+         Sizes←sizes object ⍝ It's a function with an argument, execute it to get the proper values
+     :EndIf
+ :EndIf

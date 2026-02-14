@@ -1,0 +1,2 @@
+ result←object onDblClick arg
+ result←object('MouseDblClick'##.##.SetEvent'DblClick')arg

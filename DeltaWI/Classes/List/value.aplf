@@ -1,0 +1,10 @@
+ result←object value arg
+⍝ Allow reading and setting the list of highlighted items
+⍝ This is not managed with a variable but reads and writes the object property directly
+
+ :If 0=≢arg
+     result←⍸object ##.##.∆WG'SelItems'
+ :Else
+     object ##.##.∆WS'SelItems'((⍳≢object ##.##.∆WG'Items')∊∊##.##.Single arg) ⍝ Write the new value directly to Dyalog
+     result←##.NoRes
+ :EndIf

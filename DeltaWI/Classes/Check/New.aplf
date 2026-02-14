@@ -5,12 +5,11 @@
  actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
 
  (∆border ∆style)←((1↓¨arg),⊂⍬)[actions⍳'border' 'style']
+ ∆border←0⌈×+/∊∆border ⋄ ∆style←##.##.BitVals+/∊∆style
  arg,⍨←(~'caption'⊂⍛∊actions)/⊂'caption'name
- arg←(parent:parent)##.##.New.Center arg
- :If ×≢∆border ⋄ object._border←+/∊∆border ⋄ :EndIf ⍝ Update APL+Win value if given (even though it will be done again later)
- ∆style←##.##.BitVals+/∊∆style
+ arg←(parent:parent ⋄ border:∆border)##.##.New.Center arg
 
  props←'Button'('Style' 'Check'),(~1∊∆style)↓('Align' 'Left')('Visible' 0) ⍝ Properties that must be used during creation
- props,←(~'border'⊂⍛∊actions)/⊂'Border'(0⌈×+/∆border) ⍝ Set border upon creation if we have it ⍝? It cannot be changed later
+ props,←(~'border'⊂⍛∊actions)/⊂'Border'∆border ⍝ Set border upon creation if we have it ⍝? It cannot be changed later
  newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
  result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure

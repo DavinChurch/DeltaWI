@@ -1,0 +1,5 @@
+ ok←run _onDblClick message
+ ⍝ Execute the List:onDblClick event handler
+ ⍝ No arguments or results are used for this event.
+
+ ok←1⊣##.##.Run run

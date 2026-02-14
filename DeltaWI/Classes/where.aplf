@@ -96,7 +96,7 @@
      :Section ⍝ Compute and set Dyalog positioning properties
          at←|(where[1 2]-(2↑1↓pscale)×psize>0)+psize×psize<0 ⍝ Figure the Dyalog-relative positioning for offset & inverted axes
          dyposn←(+⌿Borders[2;1 3;1 3])+punits×at ⍝ Where should the Dyalog Posn start?
-         dysize←punits×extent
+         dysize←(punits×extent)+_supp.GetSizes object
          :If 'User'≡object ##.∆WG'Coord' ⍝ In this case, we've got to do something about using custom coordinates (used for Pictures)
              ##.Halt'How do we need to handle this??'
              ⍝? How can I relocate the Picture parent when its Coord=User? Does it use the parent's Coord?

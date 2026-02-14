@@ -1,0 +1,27 @@
+ result←object style arg;bits;props
+⍝ List:style
+
+⍝   1=Multiple selections
+⍝   2=Show vertical fraction of a line
+⍝   16=Vertical scroll bar
+⍝   32=Multiple columns (must also set limit)
+⍝   64=Horizontal scroll bar (must also set limit) [Not in Dyalog]
+⍝   128=Hide (the) scroll bar if not needed [Always auto-hidden in Dyalog]
+⍝   256=Disable extended selection (only ∊ 1; can't use shift-click selection)
+
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_style' 0
+ :Else
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<≡arg)∧1≠≢arg
+     arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<≡arg)∨~##.##.IsInt arg
+     bits←##.##.BitVals+/∊arg
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error(arg≥512)∨(arg<0)∨×≢bits~0 1 2 16 32 64 128 256
+     object._style←+/bits
+     props←0/⊂'Style'('Single' 'Multi'⊃⍨1+1∊bits) ⍝? Can only be set during creation
+     props,←0/⊂'VScroll'(-16∊bits) ⍝? Can only be set during creation (¯2=Never, ¯1=If needed, 0=Never)
+     ⍝props,←0/⊂'HScroll'(-64∊bits) ⍝? Dyalog does not allow this property
+     props,←0/⊂'MultiColumn'(32∊bits) ⍝? Can only be set during creation
+     object ##.##.∆WS props
+     result←##.NoRes
+ :EndIf

@@ -50,7 +50,7 @@
      :EndSection
 
      :Section ⍝ Compute and set Dyalog sizing properties
-         dysize←extent×punits
+         dysize←(extent×punits)+_supp.GetSizes object
          :If 'User'≡object ##.∆WG'Coord' ⍝ In this case, we've got to do something about using custom coordinates (used for Pictures)
              ##.Halt'How do we need to handle this??'
              ⍝? How can I relocate the Picture parent when its Coord=User? Does it use the parent's Coord?

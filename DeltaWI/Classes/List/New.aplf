@@ -1,16 +1,18 @@
  result←object New arg;parent;name;actions;props;newobj;∆border;∆style
-⍝ Create a new Button object
+⍝ Create a new List object
 
  (parent name)←object ⍝ Separate non-standard two-part argument
  actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
 
  (∆border ∆style)←((1↓¨arg),⊂⍬)[actions⍳'border' 'style']
  ∆border←0⌈×+/∊∆border ⋄ ∆style←##.##.BitVals+/∊∆style
- arg,⍨←(~'caption'⊂⍛∊actions)/⊂'caption'name ⍝ If they're not setting a caption immediately at all, we'll put in a default
- arg←(parent:parent ⋄ border:∆border)##.##.New.Center arg
+ arg←(parent:parent ⋄ stretch:30 0 ⋄ border:∆border)##.##.New.Center arg ⍝ (No idea why APL+Win doesn't center this well.)
 
- props←'Button'('Style' 'Push')('Visible' 0) ⍝ Properties that should be used during creation
+ props←'List'('Visible' 0)('EdgeStyle' 'Recess') ⍝ Properties that should be used during creation
+ props,←⊂'Style'('Single' 'Multi'⊃⍨1+1∊∆style)
+ props,←⊂'VScroll'(-16∊∆style)
+ ⍝props,←⊂'HScroll'(-64∊∆style) ⍝? Dyalog does not allow this property!
+ props,←⊂'MultiColumn'(32∊∆style)
  props,←(~'border'⊂⍛∊actions)/⊂'Border'∆border ⍝ Set border upon creation if we have it
- props,←⊂'Align'(⊃'Center' 'Right' 'Left'[1⍳⍨(=/256 512∊∆style),256 512∊∆style]) ⍝? This can only be specified upon creation
  newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
  result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure

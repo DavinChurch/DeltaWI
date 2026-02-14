@@ -2,7 +2,7 @@
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
  'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
- 'f.l'∆WI Pass'f.l'⊢'New' 'Label'
+ 'f.l'∆WI Pass'f.l'⊢'New' 'Label' ('border' 1)
  'f.l'∆WI Pass 1.5 10⊢'size'
  'f.l'∆WI Pass 14.21875 45 1.5 10⊢'where'
  'f.l'∆WI Pass(,'l')⊢'caption'
@@ -10,7 +10,7 @@
  'f.l'∆WI Pass'Testing'⊢'caption'
 
  'f.l'∆WI Pass MT⊢'where' 1 5 5 50
- 'f.l'∆WI Pass MT⊢'border' 1
+ 'f.l'∆WI Pass MT⊢'border' 1 ⍝ (doesn't actually change in Dyalog)
  'f.l'∆WI Pass''⊢'font'
  'f.l'∆WI Pass MT⊢'font' 'APLPLUS'
  'f.l'∆WI Pass'APLPLUS' 1 0 'ansi'⊢'font'
