@@ -8,6 +8,9 @@
 ⍝       [2] Reference to the just-created object (not its name at this point)
 
  (parent object)←object ⍝ Separate object references
+ :While 0≠parent.⎕NC'_Owner' ⍝ If this is an intermediate hidden parent object...
+     parent←parent._Owner ⍝ Redirect parentage up to its APL+Win parent
+ :EndWhile
  name←##.LeafName⍕object ⍝ The text name of the object that I just created
  class←##.LeafName⍕this←⊃⎕RSI ⍝ Namespace that I'm being called from gives me the name of the class and a reference to it
  :If isdef←class≡'def' ⍝ But if we're redefining a class from a 'def' variable, go get the previous settings instead of inferring them
@@ -50,7 +53,7 @@
      :EndSelect
 
      :If ~isdef ⍝ If we're creating from a 'def', then all the values should already be set
-     ⍝ Assign class default pseudo-properties and variables
+         ⍝ Assign class default pseudo-properties and variables
          vars←this.⎕NL ¯2.1 ⍝ What variables are in this namespace (including currently-executing locals)
          vars←(~1∊¨⊃¨this.⎕STATE¨vars)/vars ⍝ Remove currently-executing locals to leave only globals (there better not be any shadowed ones!)
          object ⎕VSET(↑vars)(this ⎕VGET vars) ⍝ Replicate them in the new object
@@ -67,8 +70,6 @@
      ⍝ Activate/show the new object as requested
      object._opened←1 ⍝ It will end up opened after completion, unless 'Close' turns it off below
      :For action :In final∩⍨acts,(~∨/final∊acts)/¯1↑final ⍝ There should usually only be one of these at most; default=Open
-⍝? Watch out for possible inheriting from parentage?
-⍝? For one thing, you can't Open an object whose parent is not yet open!
 ⍝? This will still work for 'def', won't it?
          aarg←1↓(acts⍳⊂action)⊃arg,⊂⍬
          v0←-object._class⊂⍛∊'Form' 'MDIForm' 'Menu' ⍝ "Invisible" setting for this class
@@ -81,10 +82,16 @@
              'Hide'##.Event object ##.Application,aarg ⍝ Run the onHide event handler with arguments
              object ##.∆WSet('Active' 1)('Visible' 0)
          :Case 'Show'
-             object('Show'##.Invoke)aarg ⍝ Use its normal Show method which includes firing events
+             :If parent≡##.GUIroot
+             :OrIf ∧/parent.(_visible _opened)>0 ⍝ Only if the parent object is already being shown
+                 object('Show'##.Invoke)aarg ⍝ Use its normal Show method which includes firing events
+             :EndIf
          :Case 'Open' ⍝ Or none of the above
-             object._opened←0 ⍝ Pretend that it's not open yet so we can call the standard routine
-             object('Open'##.Invoke)aarg ⍝ Use its normal Open method which includes firing events
+             :If parent≡##.GUIroot
+             :OrIf parent._opened>0 ⍝ Only if the parent object is already open
+                 object._opened←0 ⍝ Pretend that it's not open yet so we can call the standard routine
+                 object('Open'##.Invoke)aarg ⍝ Use its normal Open method which includes firing events
+             :EndIf
          :EndSelect
      :EndFor
  :EndSection

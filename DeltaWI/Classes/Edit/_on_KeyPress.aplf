@@ -1,24 +1,25 @@
- ok←run _on_KeyPress message;style;key;limit;txt
+ ok←run _on_KeyPress message;style;key;limit;txt;object
 ⍝ Internal handling of the Edit:onKeyPress event
 
+ object←⊃message
  :If 0≠⍴⍴key←3⊃message ⍝ Get the keystroke (if it's a single key)
      ok←1 ⍝ Don't mess with key-commands at all
      :Return
  :EndIf
 
  ⍝ Check to see if they're typing too much text
- :If 0<limit←message[1]⎕VGET⊂'_limit' 0
- :AndIf ×≢txt←message[1]text ⍬ ⍝ Call 'text' property to obtain characters
+ :If 0<limit←object ⎕VGET⊂'_limit' 0
+ :AndIf ×≢txt←object text ⍬ ⍝ Call 'text' property to obtain characters
  :AndIf limit<(1+key=⎕UCS 13)+txt≢⍛++/txt=⎕UCS 13 ⍝ Are they adding a character when it's already full? ⍝? (Doesn't detect when overtyping - not sure it can.)
      ##.##.Beep ⍝? Do we want to beep here?
-     'Limit'##.##.Event message[1],##.##.Application ⍝ Fire the application's event handler
+     'Limit'##.##.Event object,##.##.Application ⍝ Fire the application's event handler
      ok←0 ⍝ Abandon further processing
      :Return ⍝ Exit immediately
  :EndIf
 
 ⍝? Do we want to beep whenever there's a prohibited keystroke? How does APL+Win handle it? Does Dyalog do the same for built-in checks?
  ⍝ Modify keystroke as specified in 'style'
- style←##.##.BitVals message[1]⎕VGET⊂'_style' 0
+ style←##.##.BitVals object ⎕VGET⊂'_style' 0
  ⍝   256=Force lowercase
  ⍝   512=Force uppercase
  ⍝   2048=APL symbols allowed

@@ -68,14 +68,17 @@
      :AndIf ~object._class⊂⍛∊'Form' 'MDIForm' ⍝ Avoiding exceptional classes
          :If 3=object._Class.⎕NC'caption' ⍝ If this class defines 'caption' (it will never be found in Classes)
              :If ×≢old←object object._Class.caption ⍬ ⍝ And it has something there
-             :AndIf ∨/~old∊⎕UCS 31↓⍳126 ⍝ And we have any non-ASCII symbols in it (which might be different)
                  {}object object._Class.caption,⊂old ⍝ Then it needs to be rebuilt using the standard process
              :EndIf
          :EndIf
          :If 3=object._Class.⎕NC'text' ⍝ If this class defines 'text' (it will never be found in Classes)
              :If ×≢old←object object._Class.text ⍬ ⍝ And it has something there
-             :AndIf ∨/~old∊⎕UCS 31↓⍳126 ⍝ And we have any non-ASCII symbols in it (which might be different)
                  {}object object._Class.text,⊂old ⍝ Then it needs to be rebuilt using the standard process
+             :EndIf
+         :EndIf
+         :If 3=object._Class.⎕NC'list' ⍝ If this class defines 'list' (it will never be found in Classes)
+             :If ×≢old←object object._Class.list ⍬ ⍝ And it has something there
+                 {}object object._Class.list,⊂old ⍝ Then it needs to be rebuilt using the standard process
              :EndIf
          :EndIf
      :EndIf
@@ -83,5 +86,4 @@
 
 
  ⍝? What happens to existing text if we change the font size?
- ⍝? What about typing in an Edit field with an APL font?
- ⍝? Something is wrong when displaying ⎕AV subscripts with APLPLUS font.
+ ⍝? What about typing in an Edit field with an APL font? - Need fix for bug # 18847

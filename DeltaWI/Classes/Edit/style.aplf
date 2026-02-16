@@ -33,7 +33,7 @@
      props,←0/⊂'Justify'('Center' 'Right' 'Left'⊃⍨1⍳⍨1 2∊bits) ⍝? Can only be set during creation
      ⍝? Center or Right justification forces word-wrapping and disables horizontal scrolling (32∊bits)
      props,←0/⊂'VScroll'((>/4 8∊bits)×¯2+16∊bits) ⍝? Can only be set during creation
-     props,←0/⊂'HScroll'((>/4 32∊bits)×¯2+64∊bits) ⍝? Can only be set during creation
+     props,←0/⊂'HScroll'((~32∊bits)×¯2+64∊bits) ⍝? Can only be set during creation
      props,←⊂'Password'((128∊bits)/'*')
      ⍝? 256,512=Force case - simulate in our event handler
      ⍝? 1024=Keep highlighted - not supported by Dyalog, but may be simulated during onUnfocus?

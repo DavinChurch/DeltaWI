@@ -4,7 +4,7 @@
 
  events←('_'object._Class.⎕NL ¯3),'_'##.Classes.⎕NL ¯3
  events←∪'Event' 'Defer' '9524'~⍨4↓¨((4↑¨events)∊⊂'_on_')/events ⍝ Find all available system event handlers (except ⍎Event & ⍎Defer)
- events∩←object ##.∆WG'EventList' ⍝ Only set up events that this object can produce
+ events←events/⍨('_'##.∆dtr¨events)∊object ##.∆WG'EventList' ⍝ Only set up events that this object can produce
  :For event :In events
-     {}object(event ##.SetEvent(':',event))'' ⍝ Set up event-catching for everything that may need it
+     {}object(('_'##.∆dtr event)##.SetEvent(':',event))'' ⍝ Set up event-catching for everything that may need it
  :EndFor

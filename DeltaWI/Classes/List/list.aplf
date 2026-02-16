@@ -21,6 +21,8 @@
              new←,,¨↓new
          :EndSelect
      :EndIf
+
+     new←object ##.##.QuadAV¨new ⍝ Convert Unicode to ⎕AV as best we can if we're using one of those fonts
      object ##.##.∆WS('Items'new)('SelItems'((≢new)⍴0))
      result←##.NoRes
  :EndIf
