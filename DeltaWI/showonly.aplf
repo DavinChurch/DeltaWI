@@ -1,4 +1,13 @@
- rpt←showonly types
+ rpt←showonly types;all;t;x
 ⍝ Call showactions but restrict the list to only those classes or categories listed in the argument
- rpt←showactions
- rpt←rpt⌿⍨∨/(rpt[;1 2]~¨⊂'()')∊⍥⎕C(,¨⊆types)~¨⊂'()'
+ all←showactions
+ :If ∨/'⍴≢'∊types ⍝ Return a count of available classes and actions
+     rpt←0 2⍴0
+     rpt⍪←(≢∪all[;1]~⊂'(shared)')'Classes'
+     t←'Methods' 'Properties' 'Events'
+     x←(t ⎕C⍛⍳all[;2]){⍺,≢⊃,/⍵}⌸(⊂⊂'')~¨⍨,¨all[;3]
+     rpt⍪←t,⍨⍪x←x[x[;1]⍳⍳≢t;2]
+     rpt⍪←(+/x) 'Total actions'
+ :Else
+     rpt←all⌿⍨∨/(all[;1 2]~¨⊂'()')∊⍥⎕C(,¨⊆types)~¨⊂'()'
+ :EndIf

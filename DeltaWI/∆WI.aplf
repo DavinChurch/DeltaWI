@@ -1,28 +1,32 @@
  result←{object}∆WI action;Application;objname;objref;args;name;⎕TRAP;GUIroot;nametesting;resume
 ⍝ Entry point of DeltaWI package -- emulates APL+Plus ⎕WI system function
 
- ⎕TRAP←(870 'C' '⎕DM⊃⍛⎕SIGNAL ⎕EN')((0 1000)'S')                   ⍝? We'll eventually add production-level trapping here, but how?
- Application←⊃⎕THIS,⍨⎕THIS~⍨⎕RSI/⍨⎕THIS⍕⍛{(⊂⍺)≢¨⍵↑¨⍨≢⍺}⎕NSI         ⍝ Global: Where are we being called from (outside DeltaWI)?
- :If 0=⎕NC'#.⍙WI' ⋄ CreateRoot'#.⍙WI' ⋄ :EndIf                      ⍝ On our first call, create a root from which everything GUI grows
- GUIroot←#.⍙WI                                                      ⍝ Global: A reference to our GUI structure root (for later use)
+ ⎕TRAP←(870 'C' '⎕DM⊃⍛⎕SIGNAL ⎕EN')((0 1000)'S')                        ⍝? We'll eventually add production-level trapping here, but how?
+ Application←⊃⎕THIS,⍨⎕THIS~⍨⎕RSI/⍨⎕THIS⍕⍛{(⊂⍺)≢¨⍵↑¨⍨≢⍺}⎕NSI             ⍝ Global: Where are we being called from (outside DeltaWI)?
+ :If 0=⎕NC'#.⍙WI' ⋄ CreateRoot'#.⍙WI' ⋄ :EndIf                          ⍝ On our first call, create a root from which everything GUI grows
+ GUIroot←#.⍙WI                                                          ⍝ Global: A reference to our GUI structure root (for later use)
 
-⍝ Pre-process the ∆WI call
- nametesting←⎕NULL∊action                                           ⍝ Allow for name-parsing-only internal testing to be performed
- :If 0=⎕NC'object' ⋄ object←⊢ ⋄ :EndIf                              ⍝ Allow monadic use
- (objname objref action)←object ObjectName action                   ⍝ Parse out object name to which this call applies
- :If nametesting ⋄ result←objname ⋄ :Return ⋄ :EndIf                ⍝ Allow for name-parsing-only internal testing to be performed
- :If resume←action≡,⊂,'*'                                           ⍝ Resume from within onAction handler?
-     action←Application ⎕VGET⊂'∆WARG'⍬                              ⍝ Reconstitute the original command and pass it back into onAction for resumption
- :EndIf
- (name args)←Normalize action                                       ⍝ Separate action name from its arguments and standardize structure
- name←objref Canonize name                                          ⍝ In cases where capitalization is optional, adjust it to standard
- :If ⎕NULL≢result←objref(name Immediate)args ⋄ :Return ⋄ :EndIf     ⍝ Perform any out-of-band "instant" processing
- :If ⎕NULL≢result←objref((1↑action)OnAction resume)args ⋄ :Return ⋄ :EndIf ⍝ Perform any application-specified alternative onAction processing
+ :Hold (0∧⍱/('.∆WI' '.Event',¨⍨⊂⍕⎕THIS)∊1↓⎕XSI)/⊂'∆WI'                    ⍝ Make sure we stay single-threaded (as best we can)! ⍝? This fails due to 86⌶
 
-⍝ Time to execute the requested operation
-⍝ Handle object creation cases separately; otherwise start up the normal action processing by class
- :Select name
- :Case 'Create' ⋄ result←objref(LeafName objname)New.Create args    ⍝ Delete any existing GUI object and then recreate it
- :Case 'New' ⋄ result←objref(LeafName objname)New.New args          ⍝ Create a new GUI object as a child of its parent objref
- :Else ⋄ result←objref(name Invoke)args                             ⍝ Call the standard processing routine (by proxy), passing standard arguments
- :EndSelect
+     ⍝ *** Pre-process the ∆WI call
+     nametesting←⎕NULL∊action                                           ⍝ Allow for name-parsing-only internal testing to be performed
+     :If 0=⎕NC'object' ⋄ object←⊢ ⋄ :EndIf                              ⍝ Allow monadic use
+     (objname objref action)←object ObjectName action                   ⍝ Parse out object name to which this call applies
+     :If nametesting ⋄ result←objname ⋄ :Return ⋄ :EndIf                ⍝ Allow for name-parsing-only internal testing to be performed
+     :If resume←action≡,⊂,'*'                                           ⍝ Resume from within onAction handler?
+         action←Application ⎕VGET⊂'∆WARG'⍬                              ⍝ Reconstitute the original command and pass it back into onAction for resumption
+     :EndIf
+     (name args)←Normalize action                                       ⍝ Separate action name from its arguments and standardize structure
+     name←objref Canonize name                                          ⍝ In cases where capitalization is optional, adjust it to standard
+     :If ⎕NULL≢result←objref(name Immediate)args ⋄ :Return ⋄ :EndIf     ⍝ Perform any out-of-band "instant" processing
+     :If ⎕NULL≢result←objref((1↑action)OnAction resume)args ⋄ :Return ⋄ :EndIf ⍝ Perform any application-specified alternative onAction processing
+
+     ⍝ *** Time to execute the requested operation
+     ⍝ Handle object creation cases separately; otherwise start up the normal action processing by class
+     :Select name
+     :Case 'Create' ⋄ result←objref(LeafName objname)New.Create args    ⍝ Delete any existing GUI object and then recreate it
+     :Case 'New' ⋄ result←objref(LeafName objname)New.New args          ⍝ Create a new GUI object as a child of its parent objref
+     :Else ⋄ result←objref(name Invoke)args                             ⍝ Call the standard processing routine (by proxy), passing standard arguments
+     :EndSelect
+
+ :EndHold

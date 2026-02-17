@@ -21,129 +21,133 @@
  ⍝? Since this normally happens within an event callback rather than an application call, how do we really want to handle ∆WI-style (or other) errors??
  ⍝? And since we often call this implicitly during internal processing, do we want to do the same thing to report back to our internal code (probably OK?)?
 
- :If 0=≢events←,⊆,events ⋄ :Return ⋄ :EndIf ⍝ If there are no APL+Win events to emulate, just exit quickly
- (object realevent)←2↑message ⍝ What object/event are we processing? ("message" may be synthetic)
- :If 9=⎕NC'realevent' ⍝ Is this an internal (non-real) event call?
-     ⍝ If our event message ia synthetic with an "event name" that's actually a namespace reference,
-     ⍝ then that is a previous "Application" pointer being passed in from an internal (implied) event.
-     ⍝ All implicit (code-driven) events are potentially suppressable.
-     'Exactly one event name required for synthetic events'⎕SIGNAL 11/⍨(2≠≡events)∨1≠≢events ⍝ Report improper usage directly
-     Application←realevent ⍝ Use what we're given instead of looking for an external caller source
-     message[2]←⊂realevent←'' ⍝ Signal everyone that this is a synthetic event and should be handled a little differently
-     suppress←object ⎕VGET⊂'_suppress' 0 ⍝ Have they asked to suppress this implied event?
+ :Hold (0∧⍱/('.∆WI' '.Event',¨⍨⊂⍕⎕THIS)∊1↓⎕XSI)/⊂'∆WI'                    ⍝ Make sure we stay single-threaded (as best we can)! ⍝? This fails due to 86⌶
+
+     :If 0=≢events←,⊆,events ⋄ :Return ⋄ :EndIf ⍝ If there are no APL+Win events to emulate, just exit quickly
+     (object realevent)←2↑message ⍝ What object/event are we processing? ("message" may be synthetic)
+     :If 9=⎕NC'realevent' ⍝ Is this an internal (non-real) event call?
+         ⍝ If our event message ia synthetic with an "event name" that's actually a namespace reference,
+         ⍝ then that is a previous "Application" pointer being passed in from an internal (implied) event.
+         ⍝ All implicit (code-driven) events are potentially suppressable.
+         'Exactly one event name required for synthetic events'⎕SIGNAL 11/⍨(2≠≡events)∨1≠≢events ⍝ Report improper usage directly
+         Application←realevent ⍝ Use what we're given instead of looking for an external caller source
+         message[2]←⊂realevent←'' ⍝ Signal everyone that this is a synthetic event and should be handled a little differently
+         suppress←object ⎕VGET⊂'_suppress' 0 ⍝ Have they asked to suppress this implied event?
 ⍝? 'suppress' still needs testing, when get get to an object that can use it like Edit
 ⍝? What do we do about methods that directly cause events? Can they be suppressed or not?
-     dq←Classes.NoRes ⍝ We'll have a different default return value for synthetic events (e.g. for when it is suppressed)
- :Else
-     :If (1<≢⎕RSI)∧∧/1,2≡/⎕NSI ⍝? This is for debugging internal event calls - delete before production
-         'Messages from ⎕RSI determination when called from within DeltaWI'Tracer')SI'
-         Application←⎕←⊃⎕THIS,⍨⎕RSI/⍨⎕←⎕THIS⍕⍛{(⊂⍺,'.')≢¨⍵↑¨⍨1+≢⍺}⎕←⎕NSI,¨'.' ⍝ Global: What is the current application namespace (outside DeltaWI) when the event fires?
+         dq←Classes.NoRes ⍝ We'll have a different default return value for synthetic events (e.g. for when it is suppressed)
      :Else
-         Application←⊃⎕THIS,⍨⎕RSI/⍨⎕THIS⍕⍛{(⊂⍺,'.')≢¨⍵↑¨⍨1+≢⍺}⎕NSI,¨'.' ⍝ Global: What is the current application namespace (outside DeltaWI) when the event fires?
+         :If (1<≢⎕RSI)∧∧/1,2≡/⎕NSI ⍝? This is for debugging internal event calls - delete before production
+             'Messages from ⎕RSI determination when called from within DeltaWI'Tracer')SI'
+             Application←⎕←⊃⎕THIS,⍨⎕RSI/⍨⎕←⎕THIS⍕⍛{(⊂⍺,'.')≢¨⍵↑¨⍨1+≢⍺}⎕←⎕NSI,¨'.' ⍝ Global: What is the current application namespace (outside DeltaWI) when the event fires?
+         :Else
+             Application←⊃⎕THIS,⍨⎕RSI/⍨⎕THIS⍕⍛{(⊂⍺,'.')≢¨⍵↑¨⍨1+≢⍺}⎕NSI,¨'.' ⍝ Global: What is the current application namespace (outside DeltaWI) when the event fires?
 ⍝? There was a minor loophole if another namespace is named with #.DeltaWIxxx (see also ∆WI) ⍝? Does this change fix it??
+         :EndIf
+         suppress←0 ⍝ User (real) events never get suppressed
+         dq←1 ⍝ If nothing else, just continue APL/Windows processing normally
      :EndIf
-     suppress←0 ⍝ User (real) events never get suppressed
-     dq←1 ⍝ If nothing else, just continue APL/Windows processing normally
- :EndIf
- GUIroot←⊢/object._Ancestry ⍝ Global: What is the root of our GUI object tree?
- localize←Application ⎕VGET('∆WSELF' '')('∆WEVENT' '')('∆WARG'⍬)('∆WRES' 0) ⍝ Capture previous application quad-vars
- :For event :In events ⍝ Process each APL+Win event name, in listed order
-     :If event≡'Event'
-         :Section ⍝ This is a Dyalog-direct event rather than an APL+Win event
+     GUIroot←⊢/object._Ancestry ⍝ Global: What is the root of our GUI object tree?
+     localize←Application ⎕VGET('∆WSELF' '')('∆WEVENT' '')('∆WARG'⍬)('∆WRES' 0) ⍝ Capture previous application quad-vars
+     :For event :In events ⍝ Process each APL+Win event name, in listed order
+         :If event≡'Event'
+             :Section ⍝ This is a Dyalog-direct event rather than an APL+Win event
 ⍝? This needs a whole new style of event processing (for either Dyalog or non-Dyalog classes)
-         :EndSection
-     :ElseIf '⍎'=⊃event ⍝ Are we asking for some direct-execution facilities here (e.g. 'Event' or 'Defer')?
-         :Section ⍝ This is special Event and Defer method processing
-             ⍝ Only for these two cases, '⍎Event' and '⍎Defer' will call functions Classes._on_Event and Classes._on_Defer
-             ⍝ (non-standard names), with an expected (fixed) argument syntax.
-             ⍝ '⍎Event' is called directly from Classes.Event; '⍎Defer' is called indirectly via _on_9524.
-             ⍝ The event-calling arguments (beyond the first two prefixed items) will be: handler, [event, [arg, [res, [force]]]],
-             ⍝ all have been pre-validated.
-             ⍝ Since these are explicitly requested, they cannot be auto-suppressed.
-             fn←'_on','_'@{'⍎'=⍵}⊢event
-             ('Required "',fn,'" event handler is not defined')Error 3≠Classes.⎕NC fn
-             ('Required "',fn,'" event handler has incorrect syntax')Error 1 2 0≢⊃Classes.⎕AT fn
-             (wevent warg wres force)←4↑3↓message,(≢message)↓⍬ ⍬'' ''⍬ Classes.NoRes 0 ⍝ System variables to pass in, with defaults
-             force←3 BitVals⊃force ⍝ Do they want to allow firing during special conditions?
-             :If ((2-object._opened)⊃1,1 2∊force)∧(4∊force)∨~'*'∊¯1↓⎕STACK[;2] ⍝ Are we allowed to run the event?
-                 Application.(∆WSELF ∆WEVENT ∆WARG ∆WRES)←object._self wevent warg wres ⍝ Assign values from fixed-syntax method input
-                 handler←Classes.⍎fn ⍝ Obtain a reference to the special event-processing function (I wish there was a non-⍎ way to do this)
-                 dq←(3⊃message)handler ⍬ ⍝ Execute the one special event-processing function, with an empty argument
-             :EndIf
-         :EndSection
-     :ElseIf suppress
-         ⍝ If they've asked for implicit events to be suppressed, then we don't do anything at all here
-     :Else
-         :Section ⍝ This is a standard APL+Win event
-             Application.(∆WSELF ∆WEVENT ∆WARG ∆WRES)←object._self event ⍬ 0 ⍝ Pre-set standard names
-             fn←'_on','_'@{':'=⍵}⊢event ⍝ This will be both the class-defined event handler function name and also the GUI variable name containing the handler text
-             :Section ⍝ Watch out for transparent mouse events here (on Frames or Labels)
-                 :If mouseonce←event⊂⍛∊mousing←(⊂'Mouse'),¨'Down' 'Double' 'Up' 'Drag' 'Move' 'Enter' 'Leave' ⍝ Only mouse-events
-                 :AndIf mouseonce←object._class⊂⍛∊'Frame' 'Label' ⍝ Only these classes are transparent
-                 :AndIf mouseonce←∧/0=≢¨object ⎕VGET(↑(⊂'_on'),¨mousing)(⊂'') ⍝ And only if no mouse-events are defined here
-                 :AndIf mouseonce←0=object ⎕VGET⊂'_pointer' 0 ⍝ And they aren't using a customized pointer (APL+Win rules)
-                     ⍝ Then this object has transparent mouse event handlers
-                     ⍝ Look for a handler in either the parent or an overlapping sibling, as appropriate
+             :EndSection
+         :ElseIf '⍎'=⊃event ⍝ Are we asking for some direct-execution facilities here (e.g. 'Event' or 'Defer')?
+             :Section ⍝ This is special Event and Defer method processing
+                 ⍝ Only for these two cases, '⍎Event' and '⍎Defer' will call functions Classes._on_Event and Classes._on_Defer
+                 ⍝ (non-standard names), with an expected (fixed) argument syntax.
+                 ⍝ '⍎Event' is called directly from Classes.Event; '⍎Defer' is called indirectly via _on_9524.
+                 ⍝ The event-calling arguments (beyond the first two prefixed items) will be: handler, [event, [arg, [res, [force]]]],
+                 ⍝ all have been pre-validated.
+                 ⍝ Since these are explicitly requested, they cannot be auto-suppressed.
+                 fn←'_on','_'@{'⍎'=⍵}⊢event
+                 ('Required "',fn,'" event handler is not defined')Error 3≠Classes.⎕NC fn
+                 ('Required "',fn,'" event handler has incorrect syntax')Error 1 2 0≢⊃Classes.⎕AT fn
+                 (wevent warg wres force)←4↑3↓message,(≢message)↓⍬ ⍬'' ''⍬ Classes.NoRes 0 ⍝ System variables to pass in, with defaults
+                 force←3 BitVals⊃force ⍝ Do they want to allow firing during special conditions?
+                 :If ((2-object._opened)⊃1,1 2∊force)∧(4∊force)∨~'*'∊¯1↓⎕STACK[;2] ⍝ Are we allowed to run the event?
+                     Application.(∆WSELF ∆WEVENT ∆WARG ∆WRES)←object._self wevent warg wres ⍝ Assign values from fixed-syntax method input
+                     handler←Classes.⍎fn ⍝ Obtain a reference to the special event-processing function (I wish there was a non-⍎ way to do this)
+                     dq←(3⊃message)handler ⍬ ⍝ Execute the one special event-processing function, with an empty argument
+                 :EndIf
+             :EndSection
+         :ElseIf suppress
+             ⍝ If they've asked for implicit events to be suppressed, then we don't do anything at all here
+         :Else
+             :Section ⍝ This is a standard APL+Win event
+                 Application.(∆WSELF ∆WEVENT ∆WARG ∆WRES)←object._self event ⍬ 0 ⍝ Pre-set standard names
+                 fn←'_on','_'@{':'=⍵}⊢event ⍝ This will be both the class-defined event handler function name and also the GUI variable name containing the handler text
+                 :Section ⍝ Watch out for transparent mouse events here (on Frames or Labels)
+                     :If mouseonce←event⊂⍛∊mousing←(⊂'Mouse'),¨'Down' 'Double' 'Up' 'Drag' 'Move' 'Enter' 'Leave' ⍝ Only mouse-events
+                     :AndIf mouseonce←object._class⊂⍛∊'Frame' 'Label' ⍝ Only these classes are transparent
+                     :AndIf mouseonce←∧/0=≢¨object ⎕VGET(↑(⊂'_on'),¨mousing)(⊂'') ⍝ And only if no mouse-events are defined here
+                     :AndIf mouseonce←0=object ⎕VGET⊂'_pointer' 0 ⍝ And they aren't using a customized pointer (APL+Win rules)
+                         ⍝ Then this object has transparent mouse event handlers
+                         ⍝ Look for a handler in either the parent or an overlapping sibling, as appropriate
 ⍝? Checking overlapping controls is going to be tough and I expect to be rarely used, so we'll ignore those for now
-                     :If mouseonce←×≢run←(⊃object._Ancestry)⎕VGET⊂fn'' ⍝ Does my parent object have this handler?
-                         object ⎕VSET⊂fn run ⍝ If so, duplicate it here temporarily so we can execute it
+                         :If mouseonce←×≢run←(⊃object._Ancestry)⎕VGET⊂fn'' ⍝ Does my parent object have this handler?
+                             object ⎕VSET⊂fn run ⍝ If so, duplicate it here temporarily so we can execute it
 ⍝? Transparent events need testing, at least manually
+                         :EndIf
+                     :EndIf
+                 :EndSection
+                 :If ×≢run←object ⎕VGET⊂fn'' ⍝ Do we have some handler text to execute?
+                 :OrIf ':'∊event ⍝ Or this is a system event that doesn't use handler text?
+                     :If mouseonce ⋄ object ⎕VSET⊂fn'' ⋄ :EndIf ⍝ If we created a temporary event handler, we can kill it now that we've grabbed it
+                     :If 3=object._Class.⎕NC fn ⍝ Is there a class-specific handler?
+                         ('Required "',object._class,'" event handler for "',(1↓fn),'" uses incorrect syntax')Error 1 2 0≢⊃object._Class.⎕AT fn
+                         handler←object._Class.⍎fn ⍝ Obtain a reference to the class event-processing function (I wish there was a non-⍎ way to do this)
+                     :ElseIf 3=Classes.⎕NC fn ⍝ Is there a class-generic handler?
+                         ('Required "',object._class,'" event handler for "',(1↓fn),'" uses incorrect syntax')Error 1 2 0≢⊃Classes.⎕AT fn
+                         handler←Classes.⍎fn ⍝ Obtain a reference to the class event-processing function (I wish there was a non-⍎ way to do this)
+                     :Else
+                         ⍝? How should we be reporting this??? (Here and above?)
+                         ⍝? Should we instead just be ignoring the error and not processing the event?
+                         ⍝? Or should be be using Halt for the developer?
+                         Error'Required "',object._class,'" event handler for "',(1↓fn),'" is not defined'
+                     :EndIf
+
+                     action←run handler message ⍝ Execute the class event-processing function
+
+                     :If 0=≢2⊃message ⍝ Was this a synthetic event being processed?
+                         dq←action ⍝ If so, then the result is always special
+                         ⍝ The explicit result here is a value to be returned to the caller, not a new message to send to ⎕DQ
+                         ⍝ (The handler code must know to return a result value from this event because message[2]≡'')
+                         ⍝? If a synthetic event needs to return an abort signal, use ⎕NULL since 0 might be meaningful data
+                     :Else
+                         :Select action ⍝ What have they told us to do?
+                         :CaseList 0 ⎕NULL ⍝ Abort this event handling and remainder of processing sequence
+                             dq←0 ⍝ Cancel the event at the Dyalog level
+                             :Leave ⍝ And exit processing
+                         :Case 1 ⍝ Proceed normally
+                             :If 0=⎕NC⍕object ⍝ But has my own object disappeared out from under me anyway?
+                                 dq←0 ⍝ This also means that nothing else can operate on it from now on, so abort remaining loops & processing
+                                 ⍝? We're aborting here even though "object" still has a local copy of contents - I assume that's a good idea?
+                                 :Leave ⍝ Exit processing
+                             :EndIf
+                         :Else ⍝? Process an alternate version of the event message?? Will this work?
+                             dq←action ⍝ Return new-message to Dyalog
+                             ⍝ Ok, this is a real event and we're getting back a new ⎕DQ message to pass back to it
+                             ⍝ But since we're also handling a sequence of events to deal with, we need to keep going.
+                             ⍝ In such a case, I think it's best to modify the message being passed to following events
+                             ⍝ so they can operate on the modified version. In addition, any further changes they decide
+                             ⍝ to make will apply against the modified message and create a new modification to replace
+                             ⍝ the previous one.
+                             ⍝? Will this reasonably satisfy the need to modify messages in this chained-handler environment?
+                             object←⊃message←action ⍝ Potentially move to a different object ⍝? Is this OK?
+                         :EndSelect
                      :EndIf
                  :EndIf
              :EndSection
-             :If ×≢run←object ⎕VGET⊂fn'' ⍝ Do we have some handler text to execute?
-             :OrIf ':'∊event ⍝ Or this is a system event that doesn't use handler text?
-                 :If mouseonce ⋄ object ⎕VSET⊂fn'' ⋄ :EndIf ⍝ If we created a temporary event handler, we can kill it now that we've grabbed it
-                 :If 3=object._Class.⎕NC fn ⍝ Is there a class-specific handler?
-                     ('Required "',object._class,'" event handler for "',(1↓fn),'" uses incorrect syntax')Error 1 2 0≢⊃object._Class.⎕AT fn
-                     handler←object._Class.⍎fn ⍝ Obtain a reference to the class event-processing function (I wish there was a non-⍎ way to do this)
-                 :ElseIf 3=Classes.⎕NC fn ⍝ Is there a class-generic handler?
-                     ('Required "',object._class,'" event handler for "',(1↓fn),'" uses incorrect syntax')Error 1 2 0≢⊃Classes.⎕AT fn
-                     handler←Classes.⍎fn ⍝ Obtain a reference to the class event-processing function (I wish there was a non-⍎ way to do this)
-                 :Else
-                     ⍝? How should we be reporting this??? (Here and above?)
-                     ⍝? Should we instead just be ignoring the error and not processing the event?
-                     ⍝? Or should be be using Halt for the developer?
-                     Error'Required "',object._class,'" event handler for "',(1↓fn),'" is not defined'
-                 :EndIf
+         :EndIf
+     :EndFor
 
-                 action←run handler message ⍝ Execute the class event-processing function
-
-                 :If 0=≢2⊃message ⍝ Was this a synthetic event being processed?
-                     dq←action ⍝ If so, then the result is always special
-                     ⍝ The explicit result here is a value to be returned to the caller, not a new message to send to ⎕DQ
-                     ⍝ (The handler code must know to return a result value from this event because message[2]≡'')
-                     ⍝? If a synthetic event needs to return an abort signal, use ⎕NULL since 0 might be meaningful data
-                 :Else
-                     :Select action ⍝ What have they told us to do?
-                     :CaseList 0 ⎕NULL ⍝ Abort this event handling and remainder of processing sequence
-                         dq←0 ⍝ Cancel the event at the Dyalog level
-                         :Leave ⍝ And exit processing
-                     :Case 1 ⍝ Proceed normally
-                         :If 0=⎕NC⍕object ⍝ But has my own object disappeared out from under me anyway?
-                             dq←0 ⍝ This also means that nothing else can operate on it from now on, so abort remaining loops & processing
-                             ⍝? We're aborting here even though "object" still has a local copy of contents - I assume that's a good idea?
-                             :Leave ⍝ Exit processing
-                         :EndIf
-                     :Else ⍝? Process an alternate version of the event message?? Will this work?
-                         dq←action ⍝ Return new-message to Dyalog
-                         ⍝ Ok, this is a real event and we're getting back a new ⎕DQ message to pass back to it
-                         ⍝ But since we're also handling a sequence of events to deal with, we need to keep going.
-                         ⍝ In such a case, I think it's best to modify the message being passed to following events
-                         ⍝ so they can operate on the modified version. In addition, any further changes they decide
-                         ⍝ to make will apply against the modified message and create a new modification to replace
-                         ⍝ the previous one.
-                         ⍝? Will this reasonably satisfy the need to modify messages in this chained-handler environment?
-                         object←⊃message←action ⍝ Potentially move to a different object ⍝? Is this OK?
-                     :EndSelect
-                 :EndIf
-             :EndIf
-         :EndSection
+     :If ×≢⊃localize
+     :AndIf ⎕NULL≡GUIroot Locate⊃localize ⍝ Has the previous ∆WSELF-named object gone away?
+         localize[1]←⊂'' ⍝ The previous ∆WSELF object has disappeared - reset ∆WSELF to '' when it's restored
      :EndIf
- :EndFor
+     Application.(∆WSELF ∆WEVENT ∆WARG ∆WRES)←localize ⍝ Restore previous application quad-vars as if de-localizing
 
- :If ×≢⊃localize
- :AndIf ⎕NULL≡GUIroot Locate⊃localize ⍝ Has the previous ∆WSELF-named object gone away?
-     localize[1]←⊂'' ⍝ The previous ∆WSELF object has disappeared - reset ∆WSELF to '' when it's restored
- :EndIf
- Application.(∆WSELF ∆WEVENT ∆WARG ∆WRES)←localize ⍝ Restore previous application quad-vars as if de-localizing
+ :EndHold

@@ -1,4 +1,4 @@
- Wait dummy;create
+ Wait dummy;create2;create3
 ⍝ Allow for manually testing the 'Wait' method, which cannot be done automatically
 ⍝ A dummy argument was added to prevent ∇Test from running it when human input is required
 
@@ -6,13 +6,19 @@
 
  'f1'∆WI Pass'f1'⊢'New' 'Form'('where' 5 10 10 20)
  'f1.e'∆WI Pass'f1.e'⊢'New' 'Edit'('where' 1 1 1.5 10)
- 'f1.b1'∆WI Pass'f1.b1'⊢'New' 'Button'('where' 5 1 1.5 8)('caption' 'Create')('style' 1)('onClick' 'create')
- ⎕FX'create' '''f2''∆WI''Open''' ⍝ Open the second Form with this button-push
-'f1.b2'∆WI Pass'f1.b2'⊢'New' 'Button'('where' 5 10 1.5 6)('caption' 'Close')('style' 2)
+ 'f1.b2'∆WI Pass'f1.b2'⊢'New' 'Button'('where' 3 1 1.5 8)('caption' 'Open 2')('style' 1)('onClick' 'create2')
+ ⎕FX'create2' '''f2''∆WI''Open''' ⍝ Open the second Form with this button-push
+ 'f1.b3'∆WI Pass'f1.b3'⊢'New' 'Button'('where' 5 1 1.5 8)('caption' 'Open 3')('style' 1)('onClick' 'create3')
+ ⎕FX'create3' '''f3''∆WI''Open''' ⍝ Open the third Form with this button-push
+ 'f1.b1'∆WI Pass'f1.b1'⊢'New' 'Button'('where' 5 10 1.5 6)('caption' 'Close')('style' 2)
 
  'f2'∆WI Pass'f2'⊢'New' 'Form'('where' 5 50 10 20)'Close'
  'f2.e'∆WI Pass'f2.e'⊢'New' 'Edit'('where' 1 1 1.5 10)
-'f2.b2'∆WI Pass'f2.b2'⊢'New' 'Button'('where' 5 10 1.5 6)('caption' 'Close')('style' 2)
+ 'f2.b1'∆WI Pass'f2.b1'⊢'New' 'Button'('where' 5 10 1.5 6)('caption' 'Close')('style' 2)
+
+ 'f3'∆WI Pass'f3'⊢'New' 'Form'('where' 5 90 10 20)'Close'
+ 'f3.e'∆WI Pass'f3.e'⊢'New' 'Edit'('where' 1 1 1.5 10)
+ 'f3.b1'∆WI Pass'f3.b1'⊢'New' 'Button'('where' 5 10 1.5 6)('caption' 'Close')('style' 2)
 
  'f1'∆WI Pass 0⊢'Wait' ⍝ Wait for the user to do things
 

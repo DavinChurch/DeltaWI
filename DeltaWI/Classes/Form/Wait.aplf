@@ -1,18 +1,34 @@
- result←object Wait arg;message;off;waiting
+ result←object Wait arg;message;off;waiting;style
 ⍝ Wait on Form object
 
 ⍝? Watch out for different ways for the Form's style to interact with this Wait
+⍝?  2∊style     Make Form independent of any other Form that is Waiting ⍝? What does "independent" mean?
+⍝?  8∊style     Do not disable for Wait on a secondary Form - A second Wait adds to the current one instead of starting a new one - how do Closes interact?
 
  'Cannot Wait on an object that is already part of another Wait'##.##.Error 0≠object.⎕NC'_WaitOn' ⍝? Verify how this happens in APL+Win
  'Cannot Wait if it is already Waiting itself'##.##.Error object∊waiting←##.##.GUIroot ⎕VGET⊂'_Waiting'⍬
+ style←##.##.BitVals object ⎕VGET⊂'_style' 0
+
+ :If 1∊style ⍝ They've asked to run onWait before showing the Form
+     :If ×≢object ⎕VGET⊂'_onWait' '' ⍝ If we have an onWait event defined here, run it (with the arguments they gave)
+         'Wait'##.##.Event object ##.Application,arg ⍝ Run the onWait event handler
+     :ElseIf ×≢arg ⍝ If not, but we're giving it some arguments anyway, then execute them as actions on the Form before waiting
+         {}(⊂object._self)##.##.∆WI¨arg ⍝ Call ∆WI recursively to process an action list
+     :EndIf
+ :EndIf
+
  :If 0=object._opened ⋄ {}object ##.Open ⍬ ⋄ :EndIf ⍝ If it hasn't been opened yet, then open it first
  :If 0≥object._visible ⋄ {}object ##.Show ⍬ ⋄ :EndIf ⍝ If it's invisible, force it to be shown
 
- :If ×≢object ⎕VGET⊂'_onWait' '' ⍝ If we have an onWait event defined here, run it (with the arguments they gave)
-     'Wait'##.##.Event object ##.Application,arg ⍝ Run the onWait event handler
- :ElseIf ×≢arg ⍝ If not, but we're giving it some arguments anyway, then execute them as actions on the Form before waiting
-     {}(⊂object._self)##.##.∆WI¨arg ⍝ Call ∆WI recursively to process an action list
+ :If ~1∊style ⍝ They're allowing us to run onWait at the usual time
+     :If ×≢object ⎕VGET⊂'_onWait' '' ⍝ If we have an onWait event defined here, run it (with the arguments they gave)
+         'Wait'##.##.Event object ##.Application,arg ⍝ Run the onWait event handler
+     :ElseIf ×≢arg ⍝ If not, but we're giving it some arguments anyway, then execute them as actions on the Form before waiting
+         {}(⊂object._self)##.##.∆WI¨arg ⍝ Call ∆WI recursively to process an action list
+     :EndIf
  :EndIf
+
+ :If 4∊style ⋄ {}object ##.Hide ⍬ ⋄ :EndIf ⍝ They want the Form hidden before Waiting on it
 
  ⍝ Prepare an escape hatch to be able to add or subtract objects to this active ⎕DQ (9258 ← +/⎕UCS '⎕DQ')
  :If ~'on9258'⊂⍛∊⊃¨object ##.##.∆WG'Event' ⍝ If it's not set up yet, we need to add event trapping for it
@@ -28,7 +44,7 @@
      :If ×≢object._WaitWith
 ⍝? What happens if a secondary Form that we're waiting on is Hidden (but not closed) - is it still part of the Wait?
          off←object._WaitWith/⍨object._WaitWith._opened≠1 ⍝ Find waiting secondary Forms that aren't really around any more
-         :If ×≢off ⋄ off.⎕EX'_WaitOn' ⋄ :EndIf ⍝ Remove currently-waiting flags of dead Forms
+         :If ×≢off ⋄ off.⎕EX⊂'_WaitOn' ⋄ :EndIf ⍝ Remove currently-waiting flags of dead Forms
          object._WaitWith~←off ⍝ And remove them from the list of secondary Forms
      :EndIf
      :If 9258≡2⊃message,0 0 ⍝ If they're signalling a change to the ⎕DQ list, process it here
@@ -44,7 +60,7 @@
 ⍝? Has this already been done now?
      'This section shouldn''t be getting used any more, should it?'##.##.Tracer'object._WaitWith'
      object._WaitWith(1 ##._supp.close)¨⊂⍬ ⍝ Force-close everything that was secondary to the main form
-     object._WaitWith.⎕EX'_WaitOn' ⍝ Remove the last of currently-waiting flags from these now-closed objects
+     object._WaitWith.⎕EX⊂'_WaitOn' ⍝ Remove the last of currently-waiting flags from these now-closed objects
  :EndIf
  object.⎕EX'_WaitWith' ⍝ There are no secondary Forms to keep track of any more
  ##.##.GUIroot._Waiting←{⍵↓⍨object≡⊃⍵}##.##.GUIroot ⎕VGET⊂'_Waiting'⍬ ⍝ Remove myself from the system 'Wait' stack now that we're done

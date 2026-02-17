@@ -82,11 +82,14 @@
              'Hide'##.Event object ##.Application,aarg ⍝ Run the onHide event handler with arguments
              object ##.∆WSet('Active' 1)('Visible' 0)
          :Case 'Show'
+             object._visible←0⌈×parent ⎕VGET⊂'_visible' 1 ⍝ Inherit the parent's visible status to start it off with the right assumption
              :If parent≡##.GUIroot
              :OrIf ∧/parent.(_visible _opened)>0 ⍝ Only if the parent object is already being shown
+                 object._visible←0 ⍝ Pretend that it's not shown yet so we can call the standard routine
                  object('Show'##.Invoke)aarg ⍝ Use its normal Show method which includes firing events
              :EndIf
          :Case 'Open' ⍝ Or none of the above
+             object._opened←parent ⎕VGET⊂'_opened' 1 ⍝ Inherit the parent's opened status to start it off with the right assumption
              :If parent≡##.GUIroot
              :OrIf parent._opened>0 ⍝ Only if the parent object is already open
                  object._opened←0 ⍝ Pretend that it's not open yet so we can call the standard routine

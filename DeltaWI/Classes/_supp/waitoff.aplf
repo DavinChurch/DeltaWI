@@ -9,8 +9,8 @@
      :If ⎕NULL≢under←object ⎕VGET⊂'_WaitWith'⎕NULL ⍝ Do we have any secondary Forms that need to go away, too?
      :AndIf ×≢under
          ⍝ Now we need to clean everything up explicitly because there may not be anything left in ∆DQ to send a ∆NQ to
-         under.⎕EX'_WaitOn' ⍝ Make sure none of them are still pointing back to the Wait
-         under(1 close)¨arg ⍝ Force all the secondary Forms to close immediately (which will leave nothing left to continue the ∆DQ)
+         under.⎕EX⊂'_WaitOn' ⍝ Make sure none of them are still pointing back to the Wait
+         under(1 close)¨⊂arg ⍝ Force all the secondary Forms to close immediately (which will leave nothing left to continue the ∆DQ)
          object._WaitWith←⍬ ⍝ Note that we don't have any Forms any more that are dependent on our Wait
      :EndIf
      ⍝ That should clean up everything related to the Wait, except for removing it from _Waiting, which the ∇Wait function will do upon exit
