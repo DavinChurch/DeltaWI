@@ -1,0 +1,43 @@
+ result←object color arg;was;new;bcol;fcol;inherit;parent;t
+⍝ Request or modify the object's background and foreground colors
+
+ was←object ⎕VGET⊂'_color'(¯1 ¯1)
+ :If 0=≢arg
+     result←was
+     :Return
+ :EndIf
+
+ :If (1=≢arg)∧1<|≡arg ⋄ arg←,⊃arg ⋄ :EndIf ⋄ new←arg
+ :If (2=≢⍴arg)∧(⊢/⍴1/arg)∊0,⍳3 ⋄ new←↓arg ⋄ :EndIf
+ '∆WI LENGTH ERROR: color'##.Error 1<≢⍴new
+ was←object ⎕VGET⊂'_color_'was ⍝ Retrieve already-parsed version of color to modify
+ :Select ≢new
+ :Case 1 ⍝ A single background color
+     :If 1<|≡new ⍝ A nested 3⍴ color singleton
+         '∆WI LENGTH ERROR: color'##.Error~(⍴1/⊃new)∊,¨1 3
+         new←new,⊂⍬ ⍝ It's just a background color, add a default foreground
+     :Else
+         new←new ⍬ ⍝ It's just a background color, add a default foreground
+     :EndIf
+ :Case 2 ⍝ This better already be a background+foreground color
+ :Case 3 ⍝ This should be a single background color
+     '∆WI LENGTH ERROR: color'##.Error 1<|≡new
+     new←new ⍬ ⍝ It's just a background color, add a default foreground
+ :Case 6 ⍝ This is both a background + foreground color, but not nested
+     new←(3/1 2)⊆new
+ :Else
+     ##.Error'∆WI LENGTH ERROR: color'
+ :EndSelect
+
+ new←was _supp.color1¨new ⍝ Now break down each one into standard form
+ inherit←¯1×¯1∊¨new ⍝ We may need to search for an inherited color back through the ancestors
+ :for parent :in ¯1↓object._Ancestry
+    :if ∧/inherit≠¯1 ⋄ :leave ⋄ :endif ⍝ Once we have inherited colors we can stop
+    t←inherit=¯1 ⋄ (t/inherit)←t/parent ⎕vget⊂'_color_' (¯1 ¯1)
+ :endfor
+((inherit=¯1)/inherit)←¯101 ⍝ If there are no ancestral defaults, use the desktop background color
+ (bcol fcol)←inherit _supp.color2¨new ⍝ Convert to Dyalog color codes
+
+ object._color←arg ⋄ object._color_←new ⍝ Store the exact value they gave us as well as a parsed value for future use
+ object ##.∆WSet('BCol'bcol)('FCol'fcol)
+ result←NoRes

@@ -1,0 +1,38 @@
+ color
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
+ 'f.l'∆WI Pass'f.l'⊢'New' 'Label'
+ 'f.l'∆WI Pass MT⊢'color'(1 2 3)(4 5 6)
+ 'f.l'∆WI Pass(1 2 3)(4 5 6)⊢'color'
+ ⊢Pass(1 2 3)(4 5 6)⊢#.⍙WI.f.l._color_ ⍝ Check internal parsing and storage
+ ⊢Pass(1 2 3)(4 5 6)⊢#.⍙WI.f.l ⎕WG'BCol' 'FCol' ⍝ Check internal assignment
+ 'f.l'∆WI Pass MT⊢'color' 1 2 3 4 5 6
+ ⊢Pass(1 2 3)(4 5 6)⊢#.⍙WI.f.l._color_ ⍝ Check internal parsing and storage
+ 'f.l'∆WI Pass MT⊢'color'(1 2 3 4 5 6)
+ ⊢Pass(1 2 3)(4 5 6)⊢#.⍙WI.f.l._color_ ⍝ Check internal parsing and storage
+ 'f.l'∆WI Pass MT⊢'color'(7 8 9)
+ ⊢Pass(7 8 9)(4 5 6)⊢#.⍙WI.f.l._color_ ⍝ Check internal parsing and storage
+ 'f.l'∆WI Pass MT⊢'color' 7 8 9
+ ⊢Pass(7 8 9)(4 5 6)⊢#.⍙WI.f.l._color_ ⍝ Check internal parsing and storage
+ 'f.l'∆WI Pass MT⊢'color' ¯1
+ ⊢Pass ¯1(4 5 6)⊢#.⍙WI.f.l._color_ ⍝ Check internal parsing and storage
+ ⊢Pass ¯2(4 5 6)⊢#.⍙WI.f.l ⎕WG'BCol' 'FCol' ⍝ Check internal assignment
+ 'f.l'∆WI Pass MT⊢'color' ¯2
+ ⊢Pass ¯2(4 5 6)⊢#.⍙WI.f.l._color_ ⍝ Check internal parsing and storage
+ ⊢Pass 0(4 5 6)⊢#.⍙WI.f.l ⎕WG'BCol' 'FCol' ⍝ Check internal assignment
+ 'f.l'∆WI Pass MT⊢'color' ¯2 ¯105
+ ⊢Pass ¯2 ¯105⊢#.⍙WI.f.l._color_ ⍝ Check internal parsing and storage
+ 'f.l'∆WI Pass MT⊢'color'⍬ ¯115
+ ⊢Pass ¯2 ¯115⊢#.⍙WI.f.l._color_ ⍝ Check internal parsing and storage
+ 'f.l'∆WI Pass MT⊢'color'(2 3⍴1 2 3 4 5 6)
+ ⊢Pass(1 2 3)(4 5 6)⊢#.⍙WI.f.l._color_ ⍝ Check internal parsing and storage
+ 'f.l'∆WI Pass MT⊢'color'⍬(7 8 9)
+ ⊢Pass(1 2 3)(7 8 9)⊢#.⍙WI.f.l._color_ ⍝ Check internal parsing and storage
+ 'f.l'∆WI Pass MT⊢'color'⍬(256⊥⌽10 20 30)
+ ⊢Pass(1 2 3)(10 20 30)⊢#.⍙WI.f.l._color_ ⍝ Check internal parsing and storage
+ 'f.l'∆WI Fail'∆WI DOMAIN ERROR: color'⊢'color' ¯7
+ 'f.l'∆WI Fail'∆WI DOMAIN ERROR: color'⊢'color' 999999999
+ 'f.l'∆WI Fail'∆WI DOMAIN ERROR: color'⊢'color'(0 0 999)
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

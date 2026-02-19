@@ -1,0 +1,15 @@
+ std←previous color1 user
+⍝ Standardize user-color specification
+ :If 0=≢user ⍝ Empty vector defaults to previous value
+     std←previous
+ :ElseIf (1=≢user)∧0>⊃user ⍝ Negative number is a special color #
+     std←⊃user
+ :ElseIf 3=≢user ⍝ Already in RGB form
+     '∆WI DOMAIN ERROR: color'##.##.Error∨/(user<0)∨user≥256
+     std←user
+ :ElseIf 1=≢user
+     '∆WI DOMAIN ERROR: color'##.##.Error(user<0)∨user≥256*3
+     std←⌽(3⍴256)⊤⊃user ⍝ Convert composite color value into RGB
+ :Else
+     'Internal usage error'⎕SIGNAL 5
+ :EndIf

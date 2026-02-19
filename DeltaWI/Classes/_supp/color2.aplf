@@ -1,0 +1,14 @@
+ dyalog←inherit color2 aplwin
+⍝ If the given APL+Win code is a special color value, convert it to Dyalog's list of codes
+
+ :If 3=≢dyalog←aplwin ⋄ :Return ⋄ :EndIf ⍝ If it's 3⍴ then it's already in RGB form - leave it alone
+
+ :If ¯1∊aplwin
+     dyalog←¯2 color2 inherit ⍝ Convert the inherited APL+Win code to Dyalog
+ :ElseIf ¯2∊aplwin
+     dyalog←0
+ :Else
+     '∆WI DOMAIN ERROR: color'##.##.Error aplwin>¯100
+     'Dyalog does not provide that special color definition'##.##.Error aplwin<¯120
+     dyalog←aplwin+99
+ :EndIf
