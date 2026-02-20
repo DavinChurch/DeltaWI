@@ -1,9 +1,10 @@
- enabled
+ edge
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
  'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
- 'f'∆WI Pass 1⊢'enabled'
- 'f'∆WI Pass MT⊢'enabled' 0
- 'f'∆WI Pass 0⊢'enabled'
+ 'f.l'∆WI Pass'f.l'⊢'New' 'Label'
+ 'f.l'∆WI Pass 0⊢'edge'
+ 'f.l'∆WI Pass MT⊢'edge' 2
+ 'f.l'∆WI Pass 2⊢'edge'
 
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

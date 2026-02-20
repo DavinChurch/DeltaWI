@@ -7,6 +7,7 @@
  (∆style ∆border)←((1↓¨arg),⊂⍬)[actions⍳'style' 'border']
  ∆border←0⌈×+/∊∆border ⋄ ∆style←##.##.BitVals+/∊∆style
  arg←(parent:parent ⋄ border:∆border)##.##.New.Center arg
+ arg,←(~'edge'⊂⍛∊actions)/⊂'edge' 1 ⍝ Only Edit boxes have a default 'edge'
 
  props←'Edit'('FieldType' 'Char')('Visible' 0) ⍝ Define properties that must be used during creation
  props,←⊂'Style'('Single' 'Multi'⊃⍨1+4∊∆style) ⍝? Create-only style
