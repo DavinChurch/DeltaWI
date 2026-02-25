@@ -1,0 +1,66 @@
+ result←object list arg;new;style;items;indents;imageindex;selimageindex
+⍝ Combo:list
+
+⍝ Incoming structures:
+⍝   The argument may be a vector of vectors, a NL-delimited vector, or a simple character matrix.
+⍝   It may also be a nested matrix (nominally 3- or 5-column), but that is only useful if 4096∊style.
+⍝   Trailing blanks are stripped. Result is returned as you specified it.
+⍝   In the matrix form:
+⍝       [;1]←Item text ⋄ [;2]←Indent level ⋄ [;3]←Unselected image ⋄ [;4]←Selected image ⋄ [;5]←Overlay image
+⍝ Dyalog output structures:
+⍝   Items, Indents, ImageIndex, SelImageIndex ⍝? Overlay image not supported?
+
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_list'(0 0⍴'') ⍝ Always the same default if undefined
+ :Else
+     style←##.##.BitVals object ⎕VGET⊂'_style' 0
+
+     :Section ⍝ Validate incoming structure first so it can be stored as-is
+         arg←1/##.##.Single arg ⍝ Simplify nested singleton
+         :Select (|≡arg),⍴⍴arg ⍝ Look at combinations of depth and rank
+         :Case 1 1 ⍝ Unnested vector (with or without NL's)
+             '∆WI DOMAIN ERROR: list'##.##.Error~##.##.IsChar arg
+         :Case 1 2 ⍝ Unnested matrix
+             '∆WI DOMAIN ERROR: list'##.##.Error~##.##.IsChar arg
+         :Case 2 1 ⍝ Nested vector
+             '∆WI DOMAIN ERROR: list'##.##.Error~∧/##.##.IsChar¨arg
+         :Case 2 2 ⍝ Nested matrix
+             'DOMAIN ERROR'##.##.Error 5<⊢/⍴arg
+             '∆WI DOMAIN ERROR: list'##.##.Error~∧/##.##.IsChar¨(arg,⊂'')[;1]
+             '∆WI DOMAIN ERROR: list'##.##.Error~∧/##.##.IsInt¨,0 1↓arg
+         :Else
+             ##.##.Error'∆WI DOMAIN ERROR: list'
+         :EndSelect
+         object._list←arg ⍝ Store it exactly the way they gave it to us
+     :EndSection
+
+     :Section ⍝ Now parse out the data we need from the various structures
+         items←indents←imageindex←selimageindex←⍬ ⍝ Predefine properties
+         :Select (|≡arg),⍴⍴arg ⍝ Rexamine the same structures for parsing
+         :Case 1 1 ⍝ Unnested vector (with or without NL's)
+             :If 13 ⎕UCS⍛∊arg ⍝ Does it contain NL's?
+                 items←13 ⎕UCS⍛##.##.∆cuts arg ⍝ Split it up into lines
+             :Else ⍝ Then this is just a single item to show
+                 items←,⊂arg
+             :EndIf
+         :Case 1 2 ⍝ Unnested matrix
+             items←↓arg
+         :Case 2 1 ⍝ Nested vector
+             items←arg
+         :Case 2 2 ⍝ Nested matrix
+             :If ~0∊⍴arg ⍝ Are there any items at all for the list?
+                 arg←1↓[2]5↑[2]0,arg ⍝ Fill it out to 4 columns ⍝? The 5th column isn't supported in Dyalog
+                 (items indents imageindex selimageindex)←⊂[1]arg ⍝ Assign to my property variables
+             :EndIf
+         :EndSelect
+         items←##.##.∆dtr¨items ⍝ Always trim the text
+         (indents imageindex selimageindex)←(≢items)↑¨indents imageindex selimageindex ⍝ Matching lengths
+         :If ~4096∊style ⍝ If they don't allow extended-combo features, turn them off
+             indents[]←imageindex[]←selimageindex[]←0
+         :EndIf
+     :EndSection
+
+     items←object ##.##.QuadAV¨items ⍝ Convert Unicode to ⎕AV as best we can if we're using one of those fonts
+     object ##.##.∆WS('Items'items)('Indents'indents)('ImageIndex'imageindex)('SelImageIndex'selimageindex)
+     result←##.NoRes
+ :EndIf

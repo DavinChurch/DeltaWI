@@ -13,7 +13,7 @@
      :If ×≢object ⎕VGET⊂'_onWait' '' ⍝ If we have an onWait event defined here, run it (with the arguments they gave)
          'Wait'##.##.Event object ##.Application,arg ⍝ Run the onWait event handler
      :ElseIf ×≢arg ⍝ If not, but we're giving it some arguments anyway, then execute them as actions on the Form before waiting
-         {}(⊂object._self)##.##.∆WI¨arg ⍝ Call ∆WI recursively to process an action list
+         {}object._self⊂⍛##.##.∆WI¨arg ⍝ Call ∆WI recursively to process an action list
      :EndIf
  :EndIf
 
@@ -24,7 +24,7 @@
      :If ×≢object ⎕VGET⊂'_onWait' '' ⍝ If we have an onWait event defined here, run it (with the arguments they gave)
          'Wait'##.##.Event object ##.Application,arg ⍝ Run the onWait event handler
      :ElseIf ×≢arg ⍝ If not, but we're giving it some arguments anyway, then execute them as actions on the Form before waiting
-         {}(⊂object._self)##.##.∆WI¨arg ⍝ Call ∆WI recursively to process an action list
+         {}object._self⊂⍛##.##.∆WI¨arg ⍝ Call ∆WI recursively to process an action list
      :EndIf
  :EndIf
 

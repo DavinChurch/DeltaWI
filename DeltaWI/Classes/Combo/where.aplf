@@ -1,0 +1,34 @@
+ result←object where arg;tunits;units;scale;size;punits;extent;ppxsize;pscale;where;border;pxsize;psize;fsize
+⍝ Special handling for the where of a Combo box
+
+ (where extent size scale border pxsize)←object ⎕VGET('_where'⍬)('_extent'⍬)('_size'⍬)('_scale' 1)('_border' 0)('_pix_size'(0 0)) ⍝ My current settings
+ (psize pscale ppxsize)←(⊃object._Ancestry)⎕VGET('_size'⍬)('_scale' 1)('_pix_size'(0 0)) ⍝ Parent's size & scale (for use by where and extent)
+ units←##.##.GUIroot._units ⍝ Get system conversion factors
+ tunits←(1⍪units)[1+⊃scale;] ⍝ Compute unit-conversions for this object's scale ⍝? Need scale=0 adjusting
+ punits←(units⍪⍨ppxsize÷|2↑3↓pscale)[1+⊃pscale;] ⍝ Compute unit-conversions for the parent object's scale
+⍝? Note: We might need to use ∆Border for some of these calculations?? Or won't it matter?
+
+ :If 4≠≢arg←##.##.Single arg ⍝ Make sure a nested argument is disclosed
+     result←object ##.where arg ⍝ Handle any other situations directly with the common routine
+
+ :ElseIf 1∊##.##.BitVals object ⎕VGET⊂'_style' 0 ⍝ Is this an always-dropped-down "simple" box?
+     ⍝ Simple boxes respect height setting of size/extent/where, with a minimum height of 5 character units
+     ⍝ The Dyalog 'Rows' property is therefore read-only
+     arg[3]⌈←5×⊃punits÷units[1;] ⍝ Assign minimum size for box ⍝? Is this conversion backwards??
+     result←object ##.where arg ⍝ Now handle the adjusted size with the common routine
+
+ :Else ⍝ Then it's a collapsing combo box with special sizing rules
+     ⍝ The vertical size is always determined only by the font size and changes are ignored
+     ⍝ The height of the control with the drop-down is set to fill as many rows as possible up to
+     ⍝ 22 character units, by default; but how do we deal with this when ∇range get changed?
+     ⍝ The font size is then used to determine the number of 'Rows' in the native control
+     fsize←⊃object ##._supp.GetTextSize'Xy' ⍝ Determine font size to tell us how big each row will be
+     :If 4=≢where ⋄ arg[3]←where[3] ⍝ Force height not to change (it had better already match the font in use)
+     :ElseIf 2=≢extent ⋄ arg[3]←extent[1]
+     :ElseIf 2=≢size ⋄ arg[3]←size[1] ⍝? Does this conversion work? Will we even ever need to resort to this property?
+     :Else ⋄ ##.##.Error'Unable to determine standard Combo size'
+     :EndIf
+⍝? They're allowed to change how many Rows to show, so 22 isn't a constant!
+     object ##.##.∆WS'Rows'(1⌈⌈fsize÷⍨1⌈22-size[1]) ⍝ Tell Dyalog how many Rows to show
+     result←object ##.where arg ⍝ Now handle the adjusted size with the common routine
+ :EndIf

@@ -1,0 +1,15 @@
+ result←object value arg
+⍝ Allow reading and setting the number of the item selected from the list
+⍝ This is not managed with a variable but reads and writes the object property directly
+
+ :If 0=≢arg
+     result←⊃⍸object ##.##.∆WG'SelItems'
+ :Else
+     '∆WI DOMAIN ERROR: value'##.##.Error 1<|≡arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: value'##.##.Error~##.##.IsInt arg
+     '∆WI LENGTH ERROR: value'##.##.Error 1≠≢arg
+     object ##.##.∆WS'SelItems'(arg∊⍨⍳≢object ##.##.∆WG'Items') ⍝ Write the new value directly to Dyalog
+     result←##.NoRes
+
+     'Click'##.##.Event object ##.##.Application ⍝ Process onClick for them
+ :EndIf

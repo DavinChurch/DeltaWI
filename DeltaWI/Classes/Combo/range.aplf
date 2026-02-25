@@ -1,0 +1,29 @@
+ result←object range arg;style;rows;rowcnt;fsize
+⍝ Combo:range
+⍝ In APL+Win:
+⍝   I cannot get range[1] to do anything, it always shows ¯1 and ignores whatever you set it to.
+⍝   All range[2] does is set the number of rows in the drop-down box, changing control size instead if needed for style=1.
+⍝ So we'll never bother to store a variable representing this data.
+⍝? Note: Dyalog Rows does not seem to be working properly, which this depends on
+
+ :If 0=≢arg
+     result←¯1 ⍝ result[1] is always given as ¯1
+     result,←object ##.##.∆WG'Rows' ⍝ result[2] is the actual # of Rows as shown on the screen
+ :Else
+     arg←##.##.Single arg
+     style←##.##.BitVals object ⎕VGET⊂'_style' 0
+     '∆WI DOMAIN ERROR: range'##.##.Error(1<|≡arg)∨~1 2∊⍨≢arg
+     '∆WI DOMAIN ERROR: range'##.##.Error~##.##.IsInt arg
+     :If 2=≢arg ⍝ If they give us 2⍴
+         '∆WI DOMAIN ERROR: range'##.##.Error 0≥rows←2⊃arg
+         :If 1∊style ⍝ A simple box only changes the size (APL+Win & Dyalog) and we just have to make room for the new row count
+             rowcnt←object ##.##.∆WG'Rows'
+             fsize←⊃object ##._supp.GetTextSize'Xy' ⍝ Determine old font size to tell us how big each row will be
+             {}object size object._size+2↑fsize×rows-rowcnt ⍝ Modify the object's size directly
+         :Else ⍝ A drop-down box leaves the APL+Win size alone and changes the row count
+             object ##.##.∆WS'Rows'rows
+         :EndIf
+⍝? These changes mean that the default size aren't dependent on 22 rows any more - what do we do?
+     :EndIf
+     result←##.NoRes
+ :EndIf

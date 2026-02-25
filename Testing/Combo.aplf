@@ -1,0 +1,91 @@
+ Combo
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
+ 'f.c'∆WI Pass'f.c'⊢'Create' 'Combo'('style' 0)
+ 'f.c'∆WI Pass 1.3125 20⊢'size'
+ 'f.c'∆WI Pass 1.3125 20⊢'extent'
+ 'f.c'∆WI Pass 12.46875 40 1.3125 20⊢'where'
+ 'f.c'∆WI Pass MT⊢'font'⍬ 2
+ 'f.c'∆WI Pass 2.5 20⊢'size'
+ 'f.c'∆WI Pass 2.5 20⊢'extent'
+ 'f.c'∆WI Pass 12.46875 40 2.5 20⊢'where'
+ 'f.c'∆WI Pass MT⊢'list' 'hello' 'world'
+ 'f.c'∆WI Pass'hello' 'world'⊢'list'
+ 'f.c'∆WI Pass 0⊢'value'
+ 'f.c'∆WI Fail'∆WI LENGTH ERROR: value'⊢'value'⍬
+ 'f.c'∆WI Fail'∆WI LENGTH ERROR: value'⊢'value' 1 2
+ 'f.c'∆WI Fail'∆WI DOMAIN ERROR: value'⊢'value'(⊂⍳5)
+ 'f.c'∆WI Fail'∆WI DOMAIN ERROR: value'⊢'value' 'xyz'
+ 'f.c'∆WI Pass MT⊢'value' 1
+ 'f.c'∆WI Pass 1⊢'value'
+ 'f.c'∆WI Pass'hello'⊢'text'
+ 'f.c'∆WI Pass MT⊢'text' 'world'
+ 'f.c'∆WI Pass 0⊢'value'
+ 'f.c'∆WI Pass''⊢'text'
+ 'f.c'∆WI Pass MT⊢'value' 2
+ 'f.c'∆WI Pass'world'⊢'text'
+ 'f.c'∆WI Pass MT⊢'text' 'goodbye'
+ 'f.c'∆WI Pass 0⊢'value'
+ 'f.c'∆WI Pass''⊢'text'
+
+ 'f.c'∆WI Pass'f.c'⊢'Create' 'Combo'('style' 2)
+ 'f.c'∆WI Pass 1.3125 20⊢'size'
+ 'f.c'∆WI Pass 1.3125 20⊢'extent'
+ 'f.c'∆WI Pass 12.46875 40 1.3125 20⊢'where'
+ 'f.c'∆WI Pass MT⊢'font'⍬ 2
+ 'f.c'∆WI Pass 2.5 20⊢'size'
+ 'f.c'∆WI Pass 2.5 20⊢'extent'
+ 'f.c'∆WI Pass 12.46875 40 2.5 20⊢'where'
+ 'f.c'∆WI Pass MT⊢'list' 'hello' 'world'
+ 'f.c'∆WI Pass'hello' 'world'⊢'list'
+ 'f.c'∆WI Pass 0⊢'value'
+ 'f.c'∆WI Fail'∆WI LENGTH ERROR: value'⊢'value'⍬
+ 'f.c'∆WI Fail'∆WI LENGTH ERROR: value'⊢'value' 1 2
+ 'f.c'∆WI Fail'∆WI DOMAIN ERROR: value'⊢'value'(⊂⍳5)
+ 'f.c'∆WI Fail'∆WI DOMAIN ERROR: value'⊢'value' 'xyz'
+ 'f.c'∆WI Pass MT⊢'value' 1
+ 'f.c'∆WI Pass 1⊢'value'
+ 'f.c'∆WI Pass'hello'⊢'text'
+ 'f.c'∆WI Pass MT⊢'text' 'world'
+ 'f.c'∆WI Pass 2⊢'value'
+ 'f.c'∆WI Pass'world'⊢'text'
+ 'f.c'∆WI Pass MT⊢'value' 2
+ 'f.c'∆WI Pass'world'⊢'text'
+ 'f.c'∆WI Pass MT⊢'text' 'goodbye'
+ 'f.c'∆WI Pass 0⊢'value'
+ 'f.c'∆WI Pass''⊢'text'
+
+ 'f.c'∆WI Pass'f.c'⊢'Create' 'Combo'('style' 1)
+ 'f.c'∆WI Pass 5 20⊢'size'
+ 'f.c'∆WI Pass 5 20⊢'extent'
+ 'f.c'∆WI Pass 12.5 40 5 20⊢'where'
+ 'f.c'∆WI Pass MT⊢'font'⍬ 2
+ 'f.c'∆WI Pass 5 20⊢'size'
+ 'f.c'∆WI Pass 5 20⊢'extent'
+ 'f.c'∆WI Pass 12.5 40 5 20⊢'where'
+ 'f.c'∆WI Pass MT⊢'list' 'hello' 'world'
+ 'f.c'∆WI Pass'hello' 'world'⊢'list'
+ 'f.c'∆WI Pass 0⊢'value'
+ 'f.c'∆WI Fail'∆WI LENGTH ERROR: value'⊢'value'⍬
+ 'f.c'∆WI Fail'∆WI LENGTH ERROR: value'⊢'value' 1 2
+ 'f.c'∆WI Fail'∆WI DOMAIN ERROR: value'⊢'value'(⊂⍳5)
+ 'f.c'∆WI Fail'∆WI DOMAIN ERROR: value'⊢'value' 'xyz'
+ 'f.c'∆WI Pass MT⊢'value' 1
+ 'f.c'∆WI Pass 1⊢'value'
+ 'f.c'∆WI Pass'hello'⊢'text'
+ 'f.c'∆WI Pass MT⊢'text' 'world'
+ 'f.c'∆WI Pass 0⊢'value'
+ 'f.c'∆WI Pass''⊢'text'
+ 'f.c'∆WI Pass MT⊢'value' 2
+ 'f.c'∆WI Pass'world'⊢'text'
+ 'f.c'∆WI Pass MT⊢'text' 'goodbye'
+ 'f.c'∆WI Pass 0⊢'value'
+ 'f.c'∆WI Pass''⊢'text'
+
+ 'f.c'∆WI Pass'f.c'⊢'Create' 'Combo'('style' 4096)
+ 'f.c'∆WI Pass MT⊢'list'('hello' 'there' 'world' 'this' 'is' 'a' 'longer' 'test' 'list',(9⍴0 1 2),[1.5]0)
+ 'f.c'∆WI Pass{9 3≡⍴⍵}⊢'list'
+ ⍝ 'f.c' ∆WI Pass ¯1 ¯1⊢'range' ⍝? This doesn't work because Dyalog 'Rows' isn't giving the right result
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

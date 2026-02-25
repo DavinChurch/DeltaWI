@@ -12,6 +12,7 @@
  ∆WI Pass 114⊢'border'
  ∆WI Pass MT⊢'border' 2 16
  ⍝? Dyalog does not let me actually change the display here
+ ⍝? Many of these bits should now be able to be changed - add tests for them here
  ∆WI Pass 18⊢'border'
 
  ⍝ Check Form visibilities

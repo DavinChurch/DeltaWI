@@ -19,7 +19,7 @@
      ok←⎕NULL ⍝ Pass it back to the normal ∆WI procssing sequence to report it for us ⍝? Will this work?
      :Return
  :Else
-     run←##.∆dim ##.∆dlt¨(⎕UCS 13)##.∆cut run ⍝ What to do, but watch for multiple actions to perform
+     run←##.∆dim ##.∆dlt¨13 ⎕UCS⍛##.∆cut run ⍝ What to do, but watch for multiple actions to perform
      object._OnAction_queue←(⊂2↓⍬⊂⍛,run),queue ⍝ And remember that we're starting up something new
      run←⊃run ⍝ We'll start with the first (usually only) expression
  :EndIf

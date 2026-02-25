@@ -46,7 +46,7 @@
          '∆WI ATTRIBUTE ERROR: Invalid "font" attribute specified'##.Error∧/32 64∊style
 
          result←NoRes
-         :If arg≡object ⎕VGET⊂'_font' '' ⋄ :Return ⋄ :EndIf ⍝ If it hasn't changed, don't do anything
+         :If arg≡object ⎕VGET⊂'_font'def ⋄ :Return ⋄ :EndIf ⍝ If it hasn't changed, don't do anything
          object._font←arg ⍝ Set the APL+Win memory
          :If ##.IsChar charset←4⊃arg ⍝ Convert a standard name into a charset number
              ⍝ ANSI_CHARSET=0, OEM_CHARSET=255, SYMBOL_CHARSET=2, DEFAULT_CHARSET=1

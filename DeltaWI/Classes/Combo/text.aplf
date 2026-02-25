@@ -1,10 +1,9 @@
- result←object text arg;old;new
-⍝ Read or change the text in the Edit box
+ result←object text arg;new;style;items
+⍝ Read or change the text in the Combo box edit-area
 ⍝ This property is not stored as an APL variable, but directly references the native object which the user can control
 
  :If 0=≢arg
      result←,object ##.##.∆WG'Text'
-     :If 1<≡result ⋄ result←13 ⎕UCS⍛##.##.∆sew result ⋄ :EndIf ⍝ Assume that we never use matrix-form
      result←('←',⊃object ⎕VGET⊂'_font' '')##.##.QuadAV result ⍝ Reverse-engineer the on-screen font back to Unicode, as best possible, if needed
  :Else
      '∆WI DOMAIN ERROR: text'##.##.Error 1≠≢arg
@@ -12,13 +11,18 @@
      '∆WI RANK ERROR: text'##.##.Error 1≠≢⍴new
      '∆WI DOMAIN ERROR: text'##.##.Error 1≠≡new
      '∆WI DOMAIN ERROR: text'##.##.Error~##.##.IsChar new
-     :If 2 ##.##.BitOf object ⎕VGET⊂'_style' 0
-         new←13 ⎕UCS⍛##.##.∆cuts new ⍝ Turn it into a Dyalog multi-line structure (we'll never use matrix-form)
-     :EndIf
      new←object ##.##.QuadAV new ⍝ Convert Unicode to ⎕AV as best we can if we're using one of those fonts
      object ##.##.∆WS⊂'Text'new
      result←##.NoRes
 
-     ⍝ Now we need to fire an implied onChange event for them
-     'Change'##.##.Event object ##.##.Application
+     ⍝ Now we need to cause any side effects (including events) for them
+     style←##.##.BitVals object ⎕VGET⊂'_style' 0
+     items←object ##.##.∆WG'Items'
+     :If 2∊style
+         {}object value,items⍳⊂new ⍝ For style=2 boxes, this updates the current selection to match the new text
+     :Else
+         {}object value,0 ⍝ For style=0,1 boxes, this resets any current selection
+     :EndIf
+     ⍝ onClick is already run by ∇value
+     'Change'##.##.Event object ##.##.Application ⍝ Process onChange for them
  :EndIf

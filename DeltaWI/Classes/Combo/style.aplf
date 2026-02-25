@@ -1,0 +1,47 @@
+ result←object style arg;bits;props;type;was
+⍝ Combo:style
+
+⍝   0=Drop-down list
+⍝   1=Simple (always down)
+⍝   2=Drop-down list with non-editable field
+⍝   4=Automatically sorts strings
+⍝   8=Inhibit automatic (horizontal) scrolling in the edit field
+⍝   16=Vertical scroll bar
+⍝   128=Hide scroll bar on short lists ⍝? Unavailable in Dyalog
+⍝   256=Update text in edit window before onClick
+⍝   2048=APL symbols allowed
+⍝   4096=Indents and images enabled
+
+⍝? style=256 needs support added
+
+ was←object ⎕VGET⊂'_style' 0
+ :If 0=≢arg
+     result←was
+ :Else
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<≡arg)∧1≠≢arg
+     arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<≡arg)∨~##.##.IsInt arg
+     bits←##.##.BitVals+/∊arg
+     was←##.##.BitVals was
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∧/1 2∊bits
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error(arg≥8192)∨(arg<0)∨×≢bits~0 1 2 4 8 16 128 256 2048 4096
+     object._style←+/bits
+     props←⍬
+     props,←0/⊂type←'Style'('Drop' 'Simple' 'DropEdit'⊃⍨0 1 2⍳⊃1 2∩bits) ⍝? Create-only style
+⍝ The code below isn't used because the Style cannot be changed:
+⍝     :If type≢was←object ##.##.∆WG'Style' ⍝ Are we changing the Style?
+⍝     :AndIf ≠/type was∊⊂'Simple' ⍝ Is it changing to or from a Style=Simple?
+⍝         ⍝ We must recalculate the size and/or Rows with the new Style
+⍝?props,←(~1∊∆style)/⊂'Rows' 4 ⍝ Set the default size for non-Simple types ⍝? Need to rework this
+⍝     :EndIf
+     props,←0/⊂'HScroll'(¯2×~8∊bits) ⍝? Create-only style
+     props,←0/⊂'VScroll'(¯1×16∊bits) ⍝? Create-only style
+     ⍝? 2048=APL symbols - Dyalog always allows APL symbols, can we force printable ASCII under other conditions?
+     :If ×≢props ⋄ object ##.##.∆WS props ⋄ :EndIf ⍝ Anything we can change here?
+
+     :If ≠/4096∊¨was bits ⍝ Are we changing the extended-combo bit?
+         {}object list,⊂object ⎕VGET⊂'_list'(0 0⍴'') ⍝ Recalculate internal structures
+     :EndIf
+
+     result←##.NoRes
+ :EndIf

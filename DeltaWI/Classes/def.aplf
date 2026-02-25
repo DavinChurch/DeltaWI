@@ -12,7 +12,7 @@
      ##.∆EX⍕object ⍝ Have to dispose of the original before it can be replaced
      class←arg ⎕VGET⊂'_class' '' ⍝ Peek into definition to determine the class name
      in←⎕VGET class ⍝ We'll want a pointer to the class definition
-     :If (⊃holding._Ancestry)##.New.ChildOK in class ⍝ Determine if we can logically place this child here
+     :If holding._Ancestry⊃⍛##.New.ChildOK in class ⍝ Determine if we can logically place this child here
          (⍕holding)⎕NS arg ⍝ Recreate the entire object by replacing it in situ
      :Else
          ##.Error'∆WI PARENTAGE ERROR: Invalid parentage for class "',class,'"'

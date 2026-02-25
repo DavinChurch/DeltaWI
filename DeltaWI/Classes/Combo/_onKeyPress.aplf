@@ -1,0 +1,24 @@
+ ok←run _onKeyPress message;key;keys
+⍝ Execute the Combo:onKeyPress event handler
+
+ :If 1=≢key←3⊃message
+     :Select ok←key 0 ##.##.Run run
+     :Case 0
+         ok←1 ⍝ Just process normally
+     :Case ¯1
+         ok←0 ⍝ Abort
+     :Case ¯2
+         ok←0 ⍝ Abort and beep
+         ##.Beep
+     :Else
+⍝? This had better be a singleton positive integer - how should we report problems?
+         ok←(ok,⍨⎕UCS ok)@3 4⊢message ⍝ Change the character by returning a new message ⍝? This probably doesn't work for Dyalog
+⍝? However, [3 4] may need a different value and [5 6] may need to be synthesized if possible, assuming that Dyalog cares about them?
+⍝? Test this to see how well modifications of messages work
+     :EndSelect
+ :Else
+     ⍝ This isn't a "key" as far as APL+Win is concerned
+     ok←0 ⍝ Abort
+ :EndIf
+
+ ⍝? For a Combo, do we need to worry about scrolling the list by typing or will Dyalog handle that for us?

@@ -1,0 +1,27 @@
+ok←run _on_KeyPress message;style;key;limit;txt;object
+⍝ Internal handling of the Combo:onKeyPress event
+
+ object←⊃message
+ :If 0≠⍴⍴key←3⊃message ⍝ Get the keystroke (if it's a single key)
+     ok←1 ⍝ Don't mess with key-commands at all
+     :Return
+ :EndIf
+
+ ⍝ Check to see if they're typing too much text
+ :If 0<limit←object ⎕VGET⊂'_limit' 0
+ :AndIf ×≢txt←object text ⍬ ⍝ Call 'text' property to obtain characters
+ :AndIf limit<(1+key=⎕UCS 13)+txt≢⍛++/txt=⎕UCS 13 ⍝ Are they adding a character when it's already full? ⍝? (Doesn't detect when overtyping - not sure it can.)
+     ##.##.Beep ⍝? Do we want to beep here?
+     'Limit'##.##.Event object,##.##.Application ⍝ Fire the application's event handler
+     ok←0 ⍝ Abandon further processing
+     :Return ⍝ Exit immediately
+ :EndIf
+
+⍝? Do we want to beep whenever there's a prohibited keystroke? How does APL+Win handle it? Does Dyalog do the same for built-in checks?
+ ⍝ Modify keystroke as specified in 'style'
+ style←##.##.BitVals object ⎕VGET⊂'_style' 0
+ ⍝   2048=APL symbols allowed
+ :If (~2048∊style)∧~key ⎕UCS⍛∊31+⍳96 ⋄ ok←0 ⋄ ##.##.Beep ⋄ :Return ⋄ :EndIf ⍝ Allow more than plain ASCII?
+
+ ok←key@3⊢message ⍝ Return modified message
+ :If 3=##.⎕NC'_on_KeyPress' ⋄ ok←run ##._on_Keypress ok ⋄ :EndIf ⍝ Also call generic version if it exists

@@ -1,0 +1,5 @@
+ ok←run _onClick message
+ ⍝ Execute the Combo:onClick event handler
+ ⍝ No arguments or results are used for this event.
+
+ ok←1⊣##.##.Run run

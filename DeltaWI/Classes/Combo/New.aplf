@@ -1,0 +1,28 @@
+ result←object New arg;parent;name;actions;∆style;props;newobj;∆border;t;size;stretch
+⍝ Create a new Combo object
+
+⍝ Note that for style∊0 2, any heights are ignored and all vertical sizing is determined solely by font size and row count.
+⍝ For style∊1, size/extent determine total height (minimum 5 char-units, no maximum)
+⍝ Maximum number of rows displayed (style≠1) keeps total default control height ≤22 char-units for whatever font is in use
+
+ (parent name)←object ⍝ Separate non-standard two-part argument
+ actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
+
+ (∆style ∆border)←((1↓¨arg),⊂⍬)[actions⍳'style' 'border']
+ ∆border←0⌈×+/∊∆border ⋄ ∆style←##.##.BitVals+/∊∆style
+ size←_size⌈5 0×1∊∆style ⍝ style=1 has a different default size, override it
+ stretch←60 0×~1∊∆style ⍝ Centering will need to happen as if it is sized for style=1, so adjust for default 'size'
+ arg←(parent:parent ⋄ border:∆border ⋄ stretch:stretch ⋄ size:size)##.##.New.Center arg
+
+⍝ We'll try always using a ComboEx and hope there are no incompatibilities that require old Combo.
+ props←'ComboEx'('Visible' 0) ⍝ Define properties that must be used during creation
+ props,←('border'⊂⍛∊actions)/⊂'Border'∆border ⍝ Set border upon creation if we have it ⍝? It cannot be changed later
+ props,←⊂'Style'('Drop' 'Simple' 'DropEdit'⊃⍨0 1 2⍳⊃1 2∩∆style) ⍝? Create-only style?
+ props,←(~1∊∆style)/⊂'Rows' 4 ⍝ Set the default size for non-Simple types
+ props,←⊂'HScroll'(¯2×~8∊∆style) ⍝? Create-only style
+ props,←⊂'VScroll'(¯1×16∊∆style) ⍝? Create-only style
+ ⍝? style=128 (hide scroll bar) is not available in Dyalog
+
+ newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object with required parameters
+ newobj._style←+/∆style ⍝ Pre-set the _style so 'where' & friends can use it during initializatin
+ result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure

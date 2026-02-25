@@ -1,0 +1,3 @@
+ result←object onDblClick arg
+⍝ Dyalog doesn't have a DblClick event, so we're having to steal MouseDblClick
+ result←object('MouseDblClick'##.##.SetEvent'DblClick' '>MouseDown' '>MouseUp' '>Click')arg

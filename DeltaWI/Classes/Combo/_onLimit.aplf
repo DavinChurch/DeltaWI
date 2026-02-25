@@ -1,0 +1,3 @@
+ ok←run _onLimit message
+⍝ Execute the Combo:onLimit event handler (no ⎕WARG)
+ ok←1⊣##.##.Run run

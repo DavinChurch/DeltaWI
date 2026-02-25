@@ -1,5 +1,8 @@
  Event;∆WSELF;data
  ⍝ Test Event and Defer methods
+
+ ⍝ These tests will fail if there is any )SI left suspended before starting the current part of the stack due to lack of suspended-forcing
+
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
  'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)

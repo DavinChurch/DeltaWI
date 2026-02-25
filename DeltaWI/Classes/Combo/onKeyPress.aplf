@@ -1,0 +1,2 @@
+ result←object onKeyPress arg
+ result←object('KeyPress'##.##.SetEvent'KeyPress' '>KeyDown' '<KeyUp' '<Change')arg

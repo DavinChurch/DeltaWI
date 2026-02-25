@@ -1,6 +1,16 @@
  result←object border arg;old;new;props;settings;bad;moveable
 ⍝ Read or change the border style of the Form
 
+⍝ 0 = No border
+⍝ 1 = Thin border
+⍝ 2 = Thick (sizable) border
+⍝ 3 = (no longer used)
+⍝ 16 = System menu
+⍝ 32 = Minimize box
+⍝ 64 = Maximize box
+⍝ 256 = Help ("?") button
+⍝ 512 = Tool palette (no longer used?)
+
  old←object ⎕VGET⊂'_border' '' ⍝ Existing border
  :If 0=≢arg
      result←old
@@ -12,8 +22,7 @@
      object._border←new ⍝ Update APL+Win value
 
      ⍝ Adjust Dyalog settings
-     ⍝ Modifiable: SysMenu, MinButton, MaxButton, HelpButton, Moveable
-     ⍝ Not modifiable: Border, Sizeable
+     ⍝? Not modifiable: Border, Sizeable
      (old new)←##.##.BitVals¨old new ⍝ Let's watch out for changing individual bit values
      bad←((2↑old≠new)/1 2),new∩128 512
      ('Unsupported Form border value: ','&'##.##.∆commalist bad)##.##.Error×≢bad
@@ -25,9 +34,7 @@
      :If settings[3]≠64∊new ⋄ props,←⊂'MaxButton'(64∊new) ⋄ :EndIf
      :If settings[4]≠256∊new ⋄ props,←⊂'HelpButton'(256∊new) ⋄ :EndIf
      :If settings[5]≠moveable ⋄ props,←⊂'Moveable'moveable ⋄ :EndIf ⍝ This is as close as we can get, I think
-⍝? Dyalog is not letting me change these values after creation, but this is not documented
-⍝?     :If ×≢props ⋄ object ##.##.∆WSet props ⋄ :EndIf ⍝ Apply property changes
-⍝? Watch out! If we're changing a border-style that requires the underlying Windows control to be recreated, we must explicitly fire the onReopen event too!
+     :If ×≢props ⋄ object ##.##.∆WSet props ⋄ :EndIf ⍝ Apply property changes
 
      :If ∨/old≠new ⍝ If we're actually changing things, reconstruct sizing
          {}object ##.where,⊂(object ⎕VGET⊂'_where'⍬) ⍝ Recalculate all sizing/border parameters

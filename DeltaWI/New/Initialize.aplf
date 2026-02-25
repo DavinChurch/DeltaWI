@@ -41,12 +41,12 @@
 ⍝? Can we look backwards (up the stack) to handle this properly?
 ⍝? Is there anything else we need to do specially here?
      :Case 'MDIForm'
-         sub←⎕VGET((⍕object),'._mdi')##.∆WC'MDIClient'('Coord' 'RealPixel')('AutoConf' 0)
+         sub←⎕VGET(object⍕⍛,'._mdi')##.∆WC'MDIClient'('Coord' 'RealPixel')('AutoConf' 0)
          sub._Owner←object
          sub.⎕WX←0 ⍝ Also tell the invisible child to hide properties as well
      :Case 'Picture'
          object ##.∆WS'Coord' 'User' ⍝ A picture object's parent needs an exception to Coord
-         sub←⎕VGET((⍕object),'._pic')##.∆WC'SubForm'('Coord' 'RealPixel')('AutoConf' 0)
+         sub←⎕VGET(object⍕⍛,'._pic')##.∆WC'SubForm'('Coord' 'RealPixel')('AutoConf' 0)
          sub._Owner←object
          sub.⎕WX←0 ⍝ Also tell the invisible child to hide properties as well
 ⍝? Now we're going to need to attach a file-less Bitmap object so this can be drawn on.

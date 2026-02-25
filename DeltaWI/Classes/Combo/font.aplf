@@ -1,0 +1,21 @@
+ result←object font arg;nsz;ex;wh;osz;fsize1;fsize2;sz;oldfont;newfont;t
+⍝ Request or modify the Combo's font; just the special handling of size/extent/where based on the new font size
+
+
+ oldfont←object ⎕VGET⊂'_font'('System' 1 0 '')
+ newfont←arg,(≢arg)↓oldfont ⋄ t←0=≢¨newfont ⋄ (t/newfont)←t/oldfont ⍝ Assume defaults for this calculation
+ :If ×≢arg
+ :AndIf ~1∊##.##.BitVals object ⎕VGET⊂'_style' 0 ⍝ Only worry about non-Simple boxes
+ :AndIf (2↑oldfont)≢2↑newfont ⍝ Are they changing anything (pertinent)?
+     osz←⊃object._size ⍝ What edit-box size are we currently using?
+     fsize1←⊃object ##._supp.GetTextSize'Xy' ⍝ Determine old font size
+     fsize2←⊃object ##._supp.GetTextSize'Xy'(2↑newfont) ⍝ Determine new font size
+     nsz←osz+fsize2-fsize1 ⍝ Compute new edit-box size based on the difference between old and new font sizes
+     (sz ex wh)←object ⎕VGET'_size' '_extent' '_where' ⍝ We'll change the APL+Win definitions internally
+     sz[1]←ex[1]←wh[3]←nsz ⍝ Direct modifications because the regular property routines don't know the font is changing
+     object.(_size _extent _where)←sz ex wh ⍝? Will this suffice for what we need?
+     ⍝ We don't have to change the Dyalog Size property because it changes automatically with the font in use
+     ⍝? Note that Dyalog's edit-box height does not quite match what APL+Win needs it to be, but I'm not sure what else to do about it
+ :EndIf
+
+ result←object ##.font arg ⍝ Just call the common routine to do the font work

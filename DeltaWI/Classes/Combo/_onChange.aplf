@@ -1,0 +1,3 @@
+ ok←run _onChange message
+⍝ Execute the Combo:onChange event handler (no ⎕WARG)
+ ok←1⊣##.##.Run run

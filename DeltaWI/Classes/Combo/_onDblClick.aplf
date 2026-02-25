@@ -1,0 +1,10 @@
+ ok←run _onDblClick message;style;object
+ ⍝ Execute the Combo:onDblClick event handler
+ ⍝ No arguments or results are used for this event.
+
+ object←⊃message
+ style←##.##.BitVals object ⎕VGET⊂'_Style' 0
+ :If 1∊style ⍝ This only runs when 1∊style, so we'll ignore it otherwise
+     ##.##.Run run
+ :EndIf
+ ok←1

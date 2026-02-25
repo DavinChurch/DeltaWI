@@ -1,0 +1,4 @@
+ result←object onChange arg
+ result←object('KeyPress'##.##.SetEvent'Change' '>KeyDown' '>KeyPress' '<KeyUp')arg
+
+ ⍝? This better not be firing for a style=2 combo when they just use a keystroke to scroll the list (if it works that way)

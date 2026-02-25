@@ -14,7 +14,7 @@
      :If 1=≡new←arg ⍝ Is it now unnested?
          :Select ≢⍴new
          :Case 1 ⍝ Is it a vector with embedded CR's?
-             new←##.##.∆dtr¨(⎕UCS 13)##.##.∆cuts new
+             new←##.##.∆dtr¨13 ⎕UCS⍛##.##.∆cuts new
          :Case 2 ⍝ Is it a matrix of lines?
              new←##.##.∆dtr¨↓new
          :Else
