@@ -15,3 +15,6 @@
      object ##.##.∆WS'caption'((⎕UCS 10)@{⍵=⎕UCS 13}⊢new) ⍝ Change the Dyalog object so the screen actually changes
      result←##.NoRes
  :EndIf
+
+
+ ⍝? If style=65536, manually wrap the caption to fit the button size.

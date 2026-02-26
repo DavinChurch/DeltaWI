@@ -16,6 +16,6 @@
  props,←⊂'VScroll'((>/4 8∊∆style)×¯2+16∊∆style) ⍝? Create-only style
  props,←⊂'HScroll'((~32∊∆style)×¯2+64∊∆style) ⍝? Create-only style
  props,←(~'border'⊂⍛∊actions)/⊂'Border'∆border ⍝ Set border upon creation if we have it ⍝? It cannot be changed later
- props,←⊂'WantsReturn'(8192∊∆style)
+ props,←⊂'WantsReturn'(8192∊∆style) ⍝? Create-only style
  newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object with required parameters
  result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure
