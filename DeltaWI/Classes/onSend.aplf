@@ -1,2 +1,2 @@
  result←object onSend arg
- result←object(''##.SetEvent'Send')arg ⍝ This is never activated by a native Dyalog event
+ result←object(9503 ##.SetEvent'Send')arg ⍝ This is never activated by a native Dyalog event, but may be by a custom event

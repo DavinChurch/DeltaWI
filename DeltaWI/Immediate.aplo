@@ -1,4 +1,4 @@
- result←obj (action Immediate)args
+ result←obj(action Immediate)args
 ⍝ Certain operations do not care about real class-based operations, so take care of them here.
 ⍝ This includes UDP assignments or references, handling non-existent objects, or operating on certain global synthetic actions.
 ⍝ If nothing needs to be performed here, return ⎕NULL. Otherwise return the correct ∆WI result.
@@ -45,6 +45,15 @@
 
  ⍝ Disallow deletion of the System (root) object
  ('∆WI ACTION ERROR: Action "',action,'" not found')Error(obj≡GUIroot)∧action≡'Delete'
+
+ :If action≡⍥⎕C'⎕Send' ⍝ (I'll be flexible with capitalization here)
+     ⍝ Allow an out-of-thread command to 'Send' a one-way message to an object in the primary thread!
+     ⍝ This will function OUTSIDE of the usual :Hold, permitting execution while ∆WI is in use elsewhere!
+     ⍝ Note that ∇ObjectName is therefore not being protected from changes elsewhere while it runs, but
+     ⍝ hopefully that will not present an effective problem.
+     result←0 0⍴''⊣0 ∆NQ obj 9503,args ⍝ Fire an onSend event from "outside" the system
+     :Return
+ :EndIf
 
  ⍝ Other "instant" processing may be added here
 

@@ -1,4 +1,4 @@
- ref←{leaf}(root Locate)name;next;class;to;links;link
+ ref←{leaf}(root Locate)name;next;class;to;links;link;t
 ⍝ Traverse each level in the composite name to find the GUI object defined for it and return a reference to the ultimate object.
 ⍝ Watch out for invisible layers (_mb, _mdi, _pic) in the Dyalog GUI structure,
 ⍝ Return ⎕NULL if a named object does not exist at any point in the traversal.

@@ -1,4 +1,4 @@
- {dq}←events Event message;event;object;realevent;localize;fn;action;run;Application;handler;⎕TRAP;GUIroot;suppress;warg;wres;wevent;force;mousing;mouseonce
+ {dq}←events Event message;event;object;realevent;localize;fn;action;run;Application;handler;⎕TRAP;GUIroot;suppress;warg;wres;wevent;force;mousing;mouseonce;top
 ⍝ When any needed Dyalog event is signalled, execute this function directly to perform the appropriate operations.
 ⍝ Important: This function often operates independently of ∆WI and allows a separate access point into the DeltaWI system when system events call it.
 ⍝
@@ -21,7 +21,8 @@
  ⍝? Since this normally happens within an event callback rather than an application call, how do we really want to handle ∆WI-style (or other) errors??
  ⍝? And since we often call this implicitly during internal processing, do we want to do the same thing to report back to our internal code (probably OK?)?
 
- :Hold (0∧⍱/('.∆WI' '.Event',¨⍨⊂⍕⎕THIS)∊1↓⎕XSI)/⊂'∆WI'                    ⍝ Make sure we stay single-threaded (as best we can)! ⍝? This fails due to 86⌶
+ :Hold '∆WI#',⍕⎕TID ⋄ top←1 ⋄ :Else ⋄ top←0 ⋄ :EndHold                  ⍝ Is this a recursive call? ⍝? This sequence could be interrupted by an in-thread event that might happen any time (high-priority??)
+ :Hold top/'∆WI'('∆WI#',⍕⎕TID)                                          ⍝ Make sure we stay single-threaded!
 
      :If 0=≢events←,⊆,events ⋄ :Return ⋄ :EndIf ⍝ If there are no APL+Win events to emulate, just exit quickly
      (object realevent)←2↑message ⍝ What object/event are we processing? ("message" may be synthetic)

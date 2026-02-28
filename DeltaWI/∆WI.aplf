@@ -1,4 +1,4 @@
- result←{object}∆WI action;Application;objname;objref;args;name;⎕TRAP;GUIroot;nametesting;resume
+ result←{object}∆WI action;Application;objname;objref;args;name;⎕TRAP;GUIroot;nametesting;resume;top
 ⍝ Entry point of DeltaWI package -- emulates APL+Plus ⎕WI system function
 
  ⎕TRAP←(870 'C' '⎕DM⊃⍛⎕SIGNAL ⎕EN')((0 1000)'S')                        ⍝? We'll eventually add production-level trapping here, but how?
@@ -6,7 +6,9 @@
  :If 0=⎕NC'#.⍙WI' ⋄ CreateRoot'#.⍙WI' ⋄ :EndIf                          ⍝ On our first call, create a root from which everything GUI grows
  GUIroot←#.⍙WI                                                          ⍝ Global: A reference to our GUI structure root (for later use)
 
- :Hold (0∧⍱/('.∆WI' '.Event',¨⍨⊂⍕⎕THIS)∊1↓⎕XSI)/⊂'∆WI'                    ⍝ Make sure we stay single-threaded (as best we can)! ⍝? This fails due to 86⌶
+ :Hold '∆WI#',⍕⎕TID ⋄ top←1 ⋄ :Else ⋄ top←0 ⋄ :EndHold                  ⍝ Is this a recursive call? ⍝? This sequence could theoretically be interrupted by an in-thread event that might happen any time (high-priority??)
+ top,⍨←0/⍨top∧'⎕Send'≡⍥⎕C⊃⊆action                                       ⍝ Allow a ⎕Send to execute even while another thread is using ∆WI!
+ :Hold top/'∆WI'('∆WI#',⍕⎕TID)                                          ⍝ Make sure we stay single-threaded!
 
      ⍝ *** Pre-process the ∆WI call
      nametesting←⎕NULL∊action                                           ⍝ Allow for name-parsing-only internal testing to be performed
