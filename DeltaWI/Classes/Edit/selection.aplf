@@ -12,7 +12,7 @@
      result←(seltext[1]-1),--/seltext ⍝ [1]←Offset; [2]←Length
  :Else
      arg←##.##.Single arg
-     '∆WI DOMAIN ERROR: selection'##.##.Error(1<≡arg)∨~##.##.IsInt arg
+     '∆WI DOMAIN ERROR: selection'##.##.Error(1<|≡arg)∨~##.##.IsInt arg
      '∆WI LENGTH ERROR: selection'##.##.Error~arg≢⍛∊1 2
      arg←2↑arg ⍝ Allow default singleton to specify only insertion point
      '∆WI DOMAIN ERROR: selection'##.##.Error arg<0 ¯1

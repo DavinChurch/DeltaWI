@@ -18,9 +18,9 @@
  :If 0=≢arg
      result←was
  :Else
-     '∆WI DOMAIN ERROR: style'##.##.Error(1<≡arg)∧1≠≢arg
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∧1≠≢arg
      arg←##.##.Single arg
-     '∆WI DOMAIN ERROR: style'##.##.Error(1<≡arg)∨~##.##.IsInt arg
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∨~##.##.IsInt arg
      bits←##.##.BitVals+/∊arg
      was←##.##.BitVals was
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∧/1 2∊bits
