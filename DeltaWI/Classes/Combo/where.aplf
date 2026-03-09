@@ -1,12 +1,8 @@
- result←object where arg;tunits;units;scale;size;punits;extent;ppxsize;pscale;where;border;pxsize;psize;fsize
+ result←object where arg;tunits;units;size;punits;extent;where;fsize
 ⍝ Special handling for the where of a Combo box
 
- (where extent size scale border pxsize)←object ⎕VGET('_where'⍬)('_extent'⍬)('_size'⍬)('_scale' 1)('_border' 0)('_pix_size'(0 0)) ⍝ My current settings
- (psize pscale ppxsize)←(⊃object._Ancestry)⎕VGET('_size'⍬)('_scale' 1)('_pix_size'(0 0)) ⍝ Parent's size & scale (for use by where and extent)
- units←##.##.GUIroot._units ⍝ Get system conversion factors
- tunits←(1⍪units)[1+⊃scale;] ⍝ Compute unit-conversions for this object's scale ⍝? Need scale=0 adjusting
- punits←(units⍪⍨ppxsize÷|2↑3↓pscale)[1+⊃pscale;] ⍝ Compute unit-conversions for the parent object's scale
-⍝? Note: We might need to use ∆Border for some of these calculations?? Or won't it matter?
+ (where extent size)←object ⎕VGET('_where'⍬)('_extent'⍬)('_size'⍬) ⍝ My current settings
+ (tunits punits units)←##._supp.MyUnits object
 
  :If 4≠≢arg←##.##.Single arg ⍝ Make sure a nested argument is disclosed
      result←object ##.where arg ⍝ Handle any other situations directly with the common routine

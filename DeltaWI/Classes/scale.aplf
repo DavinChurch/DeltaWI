@@ -1,13 +1,11 @@
- result←object scale arg;size;units;scale;border;Borders;psize;pscale;tunits;punits;margins;ppxsize;extent
+ result←object scale arg;size;scale;Borders;tunits;punits;margins;extent;units
 ⍝ Request or modify the scaling factor of a GUI object
 
  arg←##.Single arg ⍝ Make sure a nested argument is disclosed
 
  :Section ⍝ Get all our basic information
-     (extent size scale border)←object ⎕VGET('_extent'⍬)('_size'⍬)('_scale'⍬)('_border' 0) ⍝ My current settings
-     (psize pscale ppxsize)←(⊃object._Ancestry)⎕VGET('_size'⍬)('_scale' 1)('_pix_size'(0 0)) ⍝ Parent's 'size' & 'scale' (for use by 'where' and 'extent')
-     units←##.GUIroot._units ⍝ Get system conversion factors
-     punits←(units⍪⍨ppxsize÷|2↑3↓pscale)[1+⊃pscale;] ⍝ Compute unit-conversions for the parent object's scale
+     (extent size scale)←object ⎕VGET('_extent'⍬)('_size'⍬)('_scale'⍬) ⍝ My current settings
+     (punits units)←1↓_supp.MyUnits object
      Borders←_supp.GetBorders object ⍝ Time to figure out what the border definitions are for this class (capitalized because it represents a global)
  :EndSection
 

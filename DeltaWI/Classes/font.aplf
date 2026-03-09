@@ -1,4 +1,4 @@
- result←object font arg;units;scale;pxsize;tunits;t;was;def;props;style;charset;font;fname;oldname;newname;old
+ result←object font arg;tunits;t;was;def;props;style;charset;font;fname;oldname;newname;old
 ⍝ Request or modify the object's font
 
 ⍝ Use the APL+Win structure (usually)
@@ -17,9 +17,7 @@
 ⍝       or a number selected from the LOGFONT lfCharSet enumeration
 ⍝ Or alternatively the entire 14-element Windows LOGFONT structure
 
- units←##.GUIroot._units
- (scale pxsize)←object ⎕VGET('_scale' 1)('_pix_size'(0 0))
- tunits←(units⍪⍨pxsize÷|2↑3↓scale)[1+⊃scale;] ⍝ Compute unit-conversions for the this object's scale ⍝? Does scale=0 work here?
+ tunits←⊃_supp.MyUnits object
  oldname←⊃was←object ⎕VGET⊂'_font' ''
  :If 0=≢arg
      result←was

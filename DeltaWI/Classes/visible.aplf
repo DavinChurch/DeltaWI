@@ -1,4 +1,4 @@
- result←object visible arg;was;resized
+ result←object visible arg;was;resized;choices
 ⍝ Request or modify the visibility of a GUI object
 
  result←was←object._visible ⍝ We'll need to know the previous setting in order to decide on event handlers

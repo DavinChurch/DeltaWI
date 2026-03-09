@@ -1,10 +1,9 @@
- ok←run _onResize message;units;object;size;tunits;scale
+ ok←run _onResize message;object;tunits;size
 ⍝ This is often coming from the Configure or StateChange event, so we need to translate
 
  object←⊃message
- units←##.GUIroot._units
- (size scale)←object ⎕VGET ('_size' ⍬) ('_scale' 1)
- tunits←(1⍪units)[1+⊃scale;] ⍝ Compute unit-conversions for this object's scale ⍝? Need scale=0 adjusting
+ size←object ⎕VGET⊂'_size'⍬
+ tunits←⊃_supp.MyUnits object
  :Select 2⊃message
  :Case 'Configure'
      ⍝ message[3 4]←Y,X (pixel) position of top-left corner on parent
@@ -15,5 +14,5 @@
      ok←1⊣(message[3],⍨size÷tunits)0 ##.Run run
  :Case '' ⍝ Implicit internal call
 ⍝? I assume we'll be passing the correct arguments directly?
-    ok←message 0 ##.Run run
+     ok←message 0 ##.Run run
  :EndSelect

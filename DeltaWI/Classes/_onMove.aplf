@@ -1,12 +1,10 @@
- ok←run _onMove message;units;pscale;ppxsize;object;punits
+ ok←run _onMove message;object;punits
 ⍝ This is often coming from the Configure event, so we need to translate
 
 ⍝ message[3 4]←Y,X (pixel) position of top-left corner on parent
 ⍝ message[5 6]←H,W (pixel) size of object
  object←⊃message
- units←##.GUIroot._units
- (pscale ppxsize)←(⊃object._Ancestry)⎕VGET('_scale' 1)('_pix_size'(0 0)) ⍝ Parent's scale & pix_size
- punits←(units⍪⍨ppxsize÷|2↑3↓pscale)[1+⊃pscale;] ⍝ Compute unit-conversions for the parent object's scale
+ punits←2⊃_supp.MyUnits object
  :Select 2⊃message
  :Case 'Configure'
      ok←1⊣(message[3 4]÷punits)0 ##.Run run

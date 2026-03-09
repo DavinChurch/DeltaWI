@@ -1,4 +1,4 @@
- (tunits punits)←MyUnits object;units;ppxsize;pscale;scale;pxsize
+ (tunits punits units)←MyUnits object;units;ppxsize;pscale;scale;pxsize
 ⍝ Determine what pixel-size my object's (and my parent's) unit sizes are
 
  (scale pxsize)←object ⎕VGET('_scale' 1)('_pix_size'(0 0))
@@ -6,3 +6,5 @@
  units←##.##.GUIroot._units ⍝ Get system conversion factors
  tunits←(units⍪⍨pxsize÷|2↑3↓scale)[1+⊃scale;] ⍝ Compute unit-conversions for this object's scale ⍝? Is this anywhere close to right for scale=0??
  punits←(units⍪⍨ppxsize÷|2↑3↓pscale)[1+⊃pscale;] ⍝ Compute unit-conversions for the parent object's scale
+
+ ⍝? Note: We might need to use ∆Border for some of these calculations?? Or won't it matter?

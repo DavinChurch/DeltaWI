@@ -1,12 +1,8 @@
- result←object extent arg;tunits;units;scale;size;punits;extent;ppxsize;pscale;where;psize;border;pxsize;fsize
+ result←object extent arg;tunits;units;size;punits;extent;where;fsize
 ⍝ Special handling for the extent of a Combo box
 
- (where extent size scale border pxsize)←object ⎕VGET('_where'⍬)('_extent'⍬)('_size'⍬)('_scale' 1)('_border' 0)('_pix_size'(0 0)) ⍝ My current settings
- (psize pscale ppxsize)←(⊃object._Ancestry)⎕VGET('_size'⍬)('_scale' 1)('_pix_size'(0 0)) ⍝ Parent's size & scale (for use by where and extent)
- units←##.##.GUIroot._units ⍝ Get system conversion factors
- tunits←(1⍪units)[1+⊃scale;] ⍝ Compute unit-conversions for this object's scale ⍝? Need scale=0 adjusting
- punits←(units⍪⍨ppxsize÷|2↑3↓pscale)[1+⊃pscale;] ⍝ Compute unit-conversions for the parent object's scale
-⍝? Note: We might need to use ∆Border for some of these calculations?? Or won't it matter?
+ (where extent size)←object ⎕VGET('_where'⍬)('_extent'⍬)('_size'⍬) ⍝ My current settings
+ (tunits punits units)←##._supp.MyUnits object
 
  :If 2≠≢arg←##.##.Single arg ⍝ Make sure a nested argument is disclosed
      result←object ##.extent arg ⍝ Handle any other situations directly with the common routine
@@ -22,7 +18,7 @@
      ⍝? The height of the control with the drop-down is set to fill as many rows as possible up to
      ⍝? 22 character units, by default; but how do we deal with this when ∇range gets changed?
      ⍝ The font size is then used to determine the number of 'Rows' in the native control
-     fsize←⊃object ##._supp.GetTextSize 'Xy'
+     fsize←⊃object ##._supp.GetTextSize'Xy'
      :If 2=≢extent ⋄ arg[1]←extent[1] ⍝ Force height not to change (it had better already match the font in use)
      :ElseIf 4=≢where ⋄ arg[1]←where[3]
      :ElseIf 2=≢size ⋄ arg[1]←size[1]×tunits÷punits ⍝? Does this conversion work? Will we even ever need to resort to this property?
