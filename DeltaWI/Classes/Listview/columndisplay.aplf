@@ -1,0 +1,44 @@
+ result←object columndisplay arg;t;i;units;vals
+⍝ [;1]←Column title
+⍝ [;2]←Column width
+⍝ [;3]←Justification
+⍝ [;4]←Colum ID (subscript from 'list')
+⍝ [;5]←Column order (display order)
+⍝ [;6]←Header image index
+⍝ [;7]←Header style (0=image to left; 1=image to right) ⍝? 1 is not allowed in Dyalog
+
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_columndisplay'(0 7⍴'')
+ :Else
+     units←##.##.GUIroot._units ⍝ Get the system unit conversions
+     arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: columndisplay'##.##.Error 2<|≡arg
+     '∆WI RANK ERROR: columndisplay'##.##.Error 2<≢⍴arg
+     arg←⊆arg ⋄ arg←(¯2↑1 1,⍴arg)⍴arg ⋄ arg←7↑[2]arg,⍤1⊢(⊢/⍴arg)↓⍤1⊢'' 10 'left',⍤1⊢2 ¯2\⍪⍳≢arg ⍝ Clean up argument structure
+     :If 0∊⍴arg
+         arg←0 7⍴'' ⍝ Default empty array - no checking needed
+     :Else
+         '∆WI DOMAIN ERROR: columndisplay'##.##.Error 0∊##.##.IsChar¨arg[;1 3]←1/¨arg[;1 3]
+         '∆WI RANK ERROR: columndisplay'##.##.Error 1<≢¨⍴¨arg[;1] ⍝ This disallows an edge condition that nobody will use
+         '∆WI DOMAIN ERROR: columndisplay'##.##.Error∨/arg[;2]<0
+         '∆WI ARGUMENT ERROR: Invalid column justification ("columndisplay" property)'##.##.Error∨/~arg[;3]∊'left' 'right' 'center'
+         t←arg[;4]/⍨arg[;4]≤0 ⋄ ('∆WI ARGUMENT ERROR: Invalid column index "',('-'@{⍵='¯'}⍕⊃t),'"')##.##.Error×≢t
+         t←arg[;5]/⍨~arg[;5]∊⍳≢arg ⋄ ('∆WI ARGUMENT ERROR: Invalid column order "',('-'@{⍵='¯'}⍕⊃t),'"')##.##.Error×≢t
+         t←arg[;6]/⍨arg[;6]<0 ⋄ ('∆WI ARGUMENT ERROR: Invalid image index "',('-'@{⍵='¯'}⍕⊃t),'"')##.##.Error×≢t
+         '∆WI ATTRIBUTE ERROR: Invalid "columndisplay" attribute specified'##.##.Error∨/~arg[;7]∊0 1
+         'Dyalog does not allow columndisplay[1;4]≠1'##.##.Error 1≠arg[1;4]
+         'Dyalog does not allow columndisplay[;7]=1'##.##.Error 1∊arg[;7]
+     :EndIf
+     object._columndisplay←arg ⍝ It's now in APL+Win "normal form"
+
+     object ##.##.∆WS('ColTitles'(1↓''⊂⍛,arg[;1]))('ColTitleAlign'(1↓''⊂⍛,{1∘⎕C@1⊢⍵}¨arg[;3]))('HeaderImageIndex'(1↓0,arg[;6]))
+     :For i :In arg[;4] ⍝ Set all column widths; unfortunately it must be done one at a time
+         2 ##.##.∆NQ object'SetColSize'i(arg[i;2]×units[1;2])0 ⍝? But what units is this supposed to be using, for each side? Chars??/Coord??
+     :EndFor
+     ⍝ Redefine all the data columns in case they've been switched around
+     ⍝? Do we need to preserve highlighting and such when we do this?
+     vals←object value⍬ ⍝ We need to preserve the list of selected items
+     {}object list,⊂object ⎕VGET⊂'_list'(0 2⍴0) ⍝ Re-set the property with its current value
+     {}object value,⊂vals ⍝ Put the selection back
+     result←##.NoRes
+ :EndIf

@@ -1,0 +1,20 @@
+ result←object SetImages arg;items;rows;images
+
+⍝ arg[1]←Row IDs
+⍝ arg[2]←Matrix of image indices to place on those rows
+
+ items←object ⎕VGET⊂'_list'(0 2⍴0)
+ '∆WI LENGTH ERROR: SetImages'##.##.Error 2≠≢arg
+ '∆WI RANK ERROR: SetImages'##.##.Error∨/1 2<≢¨⍴¨arg
+ '∆WI DOMAIN ERROR: SetImages'##.##.Error~∧/##.##.IsInt¨arg
+ '∆WI RANK ERROR: SetImages'##.##.Error 2<≢⍴2⊃arg
+ (rows images)←arg ⋄ rows←,rows ⋄ images←(¯2↑1 1,⍴images)⍴images
+ '∆WI LENGTH ERROR: SetImages'##.##.Error images≠⍥≢rows
+ '∆WI LENGTH ERROR: SetImages'##.##.Error 3<⊢/⍴images
+ items _supp.GoodRows rows ⍝ Look for row # errors
+
+ items[items[;1]⍳rows;2]←⊂⍤1⊢images ⍝ Update image indexes for the given rows
+ {}object list,⊂items ⍝ Replace the whole list with the updated version
+ result←##.NoRes
+
+ ⍝? Do we need to preserve selected rows while we do this?

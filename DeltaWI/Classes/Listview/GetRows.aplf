@@ -1,0 +1,8 @@
+ result←object GetRows arg;items
+
+ items←object ⎕VGET⊂'_list'(0 2⍴0)
+ arg←##.##.Single arg
+ '∆WI RANK ERROR: GetRows'##.##.Error 1<≢⍴arg
+ '∆WI DOMAIN ERROR: GetRows'##.##.Error~##.##.IsInt arg
+ items _supp.GoodRows arg ⍝ Look for row # errors
+ result←items[items[;1]⍳,arg;]

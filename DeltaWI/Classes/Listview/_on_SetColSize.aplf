@@ -1,0 +1,15 @@
+ ok←run _on_SetColSize message;cd;object
+⍝ If they have changed the column size manually, we need to adjust columndisplay to match
+⍝? If they've auto-sized the column, how can we tell what its been set to?
+
+⍝ message[3]←Column # (subscript)
+⍝ message[4]←Width (¯3 if user has asked for auto-resizing) ⍝? No way to tell what it is now!
+⍝ message[5]←(Not used: Undo flag)
+
+ :If message[4]<0 ⋄ ok←0 ⋄ :Return ⋄ :EndIf ⍝? Deny auto-sizing until we can tell what it's being set to
+
+ object←⊃message
+ cd←object ⎕VGET⊂'_columndisplay'(0 7⍴'')
+ cd[message[3];2]←message[4]÷1 2⊃##._supp.MyUnits object
+ object._columndisplay←cd
+ ok←1

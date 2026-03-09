@@ -1,0 +1,48 @@
+ result←object style arg;bits;props;view
+⍝ Listview:style
+
+⍝   1=Highlight entire row
+⍝   2=Stop highlighting at end of last column (1∊)                      ⍝? Always does in Dyalog
+⍝   4=Keep selected items highlighted even when control loses focus
+⍝   8=Disable multiple selections; single selection only
+⍝   16=Auto-rearrange (in both image views)
+⍝   32=Do not wrap long labels in largeimage view
+⍝   64=Disable scrolling (except for report view)                       ⍝ Dyalog always has automatic scroll bars; they can't be disabled
+⍝   128=Do not show headers (in report view)
+⍝   256=Disable column header buttons (in report view)                  ⍝? Not available in Dyalog - partially simulate with event=ColumnClick?
+⍝   512=Enable Edit of column one text
+⍝   1024=Enable user to reorder headers using mouse                     ⍝? Not available in Dyalog
+⍝   2048=Enable user to drag and drop items                             ⍝? How do Dyalog properties change if this is done?
+⍝   4096=Display gridlines between cells (in report view)
+⍝   8192=Item get selected if cursor hovers over it                     ⍝? Not available in Dyalog
+⍝   16384=Trigger onActivate when item is clicked                       ⍝? Not available in Dyalog - ignore/use with ItemDown/Up? (order=Down+Up+DblClick+Up;SelItems already changed)
+⍝   32768=Trigger onActivate on second click                            ⍝? Not available in Dyalog - ignore/use with ItemDblClick
+⍝   65536=Enable automatic check boxes as user state images
+⍝   131072=n/a
+⍝   262144=Suppress unfolding of label tips                             ⍝? Not available in Dyalog
+⍝   524288=Suppress info tips                                           ⍝? Not available in Dyalog
+
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_style' 0
+ :Else
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∧1≠≢arg
+     arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∨~##.##.IsInt arg
+     bits←##.##.BitVals arg←+/∊arg
+     view←object ⎕VGET⊂'_viewmode' 'report'
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error(arg≥1048576)∨(arg<0)∨131072∊bits
+     object._style←+/bits
+     props←⊂'FullRowSelect'(1∊bits)
+     props,←⊂'AlwaysShowSelection'(4∊bits)
+     props,←0/⊂'Style'('Multi' 'Single'⊃⍨1+8∊bits)                      ⍝? Creation only
+     props,←⊂'AutoArrange'(16∊bits)
+     props,←⊂'Wrap'(32∊bits)
+     props,←0/⊂'Header'(~128∊bits)                                      ⍝? Creation only
+     props,←⊂'EditLabels'(512∊bits)
+     props,←⊂'DragItems'(2048∊bits)
+     props,←⊂'GridLines'(4096∊bits)
+     props,←⊂'CheckBoxes'(65536∊bits)
+
+     object ##.##.∆WS props
+     result←##.NoRes
+ :EndIf

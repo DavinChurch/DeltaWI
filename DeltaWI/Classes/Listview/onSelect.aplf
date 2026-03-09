@@ -1,0 +1,2 @@
+ result←object onSelect arg
+ result←object('ItemDown'##.##.SetEvent'Select')arg

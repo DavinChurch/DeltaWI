@@ -1,0 +1,22 @@
+ result←object sortorder arg;items;valndx
+⍝ Allow reading and setting the order of the items shown on the screen
+⍝ List items can be numbered non-sequentially and those are the values used for 'sortorder' as well.
+⍝ In actuality, changing sortorder just changes the value of list itself so they're always defined to be in sync and not kept separately.
+⍝? Watch out for preserving item-states and related status when reordered??
+
+ items←object ⎕VGET⊂'_list'(0 2⍴0)
+ :If 0=≢arg
+     result←items[;1]
+ :Else
+     arg←1/##.##.Single arg
+     '∆WI RANK ERROR: sortorder'##.##.Error 1≠≢⍴arg
+     '∆WI DOMAIN ERROR: sortorder'##.##.Error~##.##.IsInt arg
+     '∆WI LENGTH ERROR: sortorder'##.##.Error arg≠⍥≢items
+     items _supp.GoodRows arg ⍝ Look for row # errors
+
+     valndx←items[;1]⍳object value ⍬ ⍝ Remember where the highlights were, positionally (by row #)
+     items←items[items[;1]⍳arg;] ⍝ Reorder the actual list into the new sequence
+     {}object list,⊂items ⍝ Reconstruct the list on the screen into the new order
+     {}object value,⊂items[valndx;1] ⍝ Put the highlights back in the positions they were, even if the row contents have moved
+     result←##.NoRes
+ :EndIf

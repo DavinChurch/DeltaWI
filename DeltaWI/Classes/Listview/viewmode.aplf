@@ -1,0 +1,18 @@
+ result←object viewmode arg;anames;dnames
+⍝ Listview:viewmode
+⍝ Just read/write the Dyalog property directly (no variable needed) since it's an equivalent feature
+
+⍝ Choices are: largeimage, smallimage, list, or report (default)
+⍝ Dyalog is: Icon, SmallIcon, List, or Report
+
+ anames←'largeimage' 'smallimage' 'list' 'report' ⍝ Names as used by APL+Win
+ dnames←'Icon' 'SmallIcon' 'List' 'Report' ⍝ Names as used by Dyalog
+ :If 0=≢arg
+     result←object ##.##.∆WG'View'
+     result←anames⊃⍨dnames⍳⊂result
+ :Else
+     '∆WI DOMAIN ERROR: viewmode'##.##.Error~##.##.IsChar arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: viewmode'##.##.Error~arg⊂⍛∊anames
+     object ##.##.∆WS'View'(dnames⊃⍨anames⍳⊂arg)
+     result←##.NoRes
+ :EndIf

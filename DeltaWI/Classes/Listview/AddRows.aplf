@@ -1,0 +1,18 @@
+      result←object AddRows arg;previous;nc;r
+ ⍝ 'AddRows' works exactly like setting 'list', except the data is appended to what's there
+
+ arg←##.##.Single arg ⍝ First we need to pre-validate just the new input...
+ previous←object ⎕VGET⊂'_list'(0 2⍴0)
+ :If (2>≢⍴arg)∧##.##.IsInt arg ⋄ arg←⍪arg ⋄ :Else ⋄ arg←(¯2↑1 1,⍴arg)⍴arg ⋄ :EndIf ⍝ Force into a matrix
+ :If 1=⊢/⍴arg ⋄ arg,←1 ⋄ :EndIf ⍝ Add a default [;2] if needed
+ 'DOMAIN ERROR'##.##.Error 0∊(##.##.IsInt¨arg[;1 2])∧0 1≥⍤1⊢≡¨arg[;1 2] ⍝ First two columns must be numeric (scalar for [;1] and scalar or vector for [;2])
+ r←arg[;1]/⍨(arg[;1]≤0)∨0∊##.##.IsInt¨arg[;1] ⋄ ('∆WI ARGUMENT ERROR: Invalid row identifier "',('-'@{⍵='¯'}⍕⊃r),'"')##.##.Error×≢r
+ '∆WI LENGTH ERROR: AddRows'##.##.Error∨/~1 2 3∊⍨≢¨arg[;2] ⍝ [;2] may be 1, 2, or 3 items
+ '∆WI DOMAIN ERROR: AddRows'##.##.Error∨/∨/¨1 0 ¯2⊂⍛>3↑¨arg[;2] ⍝ Check minimum values for sub-components in [;2]
+
+ nc←⌈/⊢/¨⍴¨previous arg ⍝ What is the maximum of the old and new widths?
+ (previous arg)←nc{1↓⍤1⊢(1+⍺)↑⍤1⊢(⊂''),⍵}¨previous arg ⍝ Pad both lists (with empties) to the same size
+ arg←previous⍪arg ⍝ Now glue the lists together and process them as one
+ result←object list,⊂arg ⍝ Just set the full property with the combined list
+
+ ⍝? Do we need to preserve selected rows while we do this?

@@ -1,0 +1,15 @@
+ ok←run _onColResize message;warg;cd;object
+
+⍝ message[3]←Column number (subscript?)
+⍝ message[4]←New column width, or ¯3 if autofit column ⍝? How can we tell what new size is if ¯3?
+⍝ message[5]←(Not used: Undo flag)
+
+⍝ ∆WARG[1]←Col ID (from columndisplay?)
+⍝ ∆WARG[2]←New width (in scaling units)
+
+ object←⊃message
+ :If ¯3∊4⊃message ⋄ ok←0 ⋄ :Return ⋄ :EndIf ⍝? Don't allow auto-resizing since we don't know how big it got
+ cd←object ⎕VGET⊂'_columndisplay'(0 7⍴'')
+ warg←cd[message[3];4],message[4]÷1 2⊃##._supp.MyUnits object
+
+ ok←1⊣(∆WARG:warg)##.##.Run run

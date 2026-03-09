@@ -1,0 +1,13 @@
+ result←object AutoFit arg;header;all;cd
+
+ arg←,##.##.Single arg ⍝ Ignore shape too
+ (header all)←'header' 'all'∊arg ⋄ arg←1↓0,arg~'header' 'all' ⍝ Extract keywords
+ cd←object ⎕VGET⊂'_columndisplay'(0 7⍴'')
+ '∆WI DOMAIN ERROR: AutoFit'##.##.Error~##.##.IsInt arg
+ '∆WI DOMAIN ERROR: AutoFit'##.##.Error~∧/arg∊⍳≢cd
+
+ arg←∪arg,all/⍳≢cd
+ {}(-2+header){2 ##.##.∆NQ object'SetColSize'⍵ ⍺}¨arg
+ result←##.NoRes
+
+ ⍝? onColResize only fires when the user resizes, not the method, right?

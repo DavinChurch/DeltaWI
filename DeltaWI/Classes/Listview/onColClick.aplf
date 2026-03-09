@@ -1,0 +1,2 @@
+ result←object onColClick arg
+ result←object('ColumnClick'##.##.SetEvent'ColClick')arg

@@ -1,0 +1,13 @@
+ result←object GetCells arg;items;rows;cols
+
+⍝ arg[1]←Row IDs
+⍝ arg[2]←Column numbers - 2+ data subscripts
+
+ items←object ⎕VGET⊂'_list'(0 2⍴0)
+ '∆WI LENGTH ERROR: GetCells'##.##.Error 2≠≢arg
+ '∆WI RANK ERROR: GetCells'##.##.Error 1<≢¨⍴¨arg
+ '∆WI DOMAIN ERROR: GetCells'##.##.Error~∧/##.##.IsInt¨arg
+
+ (rows cols)←,¨arg
+ items _supp.GoodRows rows ⍝ Look for row # errors
+ result←(items,⊂'')[items[;1]⍳rows;2+(1+⊢/⍴items)⌊cols]

@@ -1,0 +1,84 @@
+ Listview;baselist
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
+ 'f.l'∆WI Pass'f.l'⊢'New' 'Listview'
+ 'f.l'∆WI Pass 14.75 19.5⊢'size'
+ 'f.l'∆WI Pass 14.75 19.5⊢'extent'
+ 'f.l'∆WI Pass 7.46875 40 15 20⊢'where'
+
+ 'f.l'∆WI Pass'report'⊢'viewmode'
+ 'f.l'∆WI Pass MT⊢'viewmode' 'list'
+ 'f.l'∆WI Pass'list'⊢'viewmode'
+ 'f.l'∆WI Pass MT⊢'viewmode' 'report'
+ 'f.l'∆WI Pass'report'⊢'viewmode'
+
+ 'f.l'∆WI Pass(0 2⍴0)⊢'list'
+ 'f.l'∆WI Pass MT⊢'list'⍬
+ 'f.l'∆WI Pass(0 2⍴0)⊢'list'
+ 'f.l'∆WI Pass MT⊢'list'(⍳3)
+ 'f.l'∆WI Pass((⍳3),[1.5]1)⊢'list'
+ 'f.l'∆WI Pass MT⊢'list'(0 5⍴0)
+ 'f.l'∆WI Pass(0 5⍴0)⊢'list'
+ 'f.l'∆WI Pass MT⊢'list' 1 1 'test'
+ 'f.l'∆WI Pass(1 3⍴1 1 'test')⊢'list'
+ 'f.l'∆WI Pass MT⊢'list'(1 4⍴1 1 'test' 'here')
+ 'f.l'∆WI Pass((1 4⍴1 1 'test' 'here'))⊢'list'
+ 'f.l'∆WI Pass MT⊢'list'(2 4⍴1 1 'test' 'here',0 1 'and' 'there')
+ 'f.l'∆WI Pass((2 4⍴1 1 'test' 'here',2 1 'and' 'there'))⊢'list'
+
+ 'f.l'∆WI Pass 0⊢'style'
+ 'f.l'∆WI Pass MT⊢'style' 1 4 8 4096 65536
+ 'f.l'∆WI Pass 69645⊢'style'
+
+ 'f.l'∆WI Pass MT⊢'list'(baselist←5 10 15,1,'Five' 'Ten' 'Fifteen',[1.5]⍕¨5 10 15)
+ 'f.l'∆WI Pass baselist⊢'list'
+ 'f.l'∆WI Pass ⍬⊢'value'
+ 'f.l'∆WI Pass MT⊢'value' 5 15
+ 'f.l'∆WI Pass 5 15⊢'value'
+
+ 'f.l'∆WI Pass(0 7⍴'')⊢'columndisplay'
+ 'f.l'∆WI Pass MT⊢'columndisplay'(2 4⍴'Name' 10 'left' 1,'Number' 7 'right' 2)
+ 'f.l'∆WI Pass(2 7⍴'Name' 10 'left' 1 1 0 0,'Number' 7 'right' 2 2 0 0)⊢'columndisplay'
+
+ 'f.l'∆WI Pass 5 10 15⊢'sortorder'
+ 'f.l'∆WI Pass baselist⊢'list'
+ 'f.l'∆WI Pass 5 15⊢'value'
+ 'f.l'∆WI Pass MT⊢'sortorder' 15 10 5
+ 'f.l'∆WI Pass 15 10 5⊢'sortorder'
+ 'f.l'∆WI Pass(baselist[3 2 1;])⊢'list'
+ 'f.l'∆WI Pass 15 5⊢'value'
+ 'f.l'∆WI Pass MT⊢'sortorder' 10 5 15
+ 'f.l'∆WI Pass 10 5 15⊢'sortorder'
+ 'f.l'∆WI Pass(baselist[2 1 3;])⊢'list'
+ 'f.l'∆WI Pass 10 15⊢'value'
+
+ 'f.l'∆WI Pass MT⊢'list'baselist ⍝ Put it back the way we started
+ 'f.l'∆WI Pass baselist⊢'list'
+ 'f.l'∆WI Pass MT⊢'AddRows' 95 1 'Ninety-five'
+ 'f.l'∆WI Pass(baselist⍪95 1 'Ninety-five' '')⊢'list'
+
+ 'f.l'∆WI Pass MT⊢'AutoFit' 'header' 'all'
+
+ 'f.l'∆WI Pass(1 4⍴95 1 'Ninety-five' '')⊢'GetRows' 95
+ 'f.l'∆WI Pass MT⊢'SetRows' 95 1 'Ninety-five' '95'
+ 'f.l'∆WI Pass(baselist⍪95 1 'Ninety-five' '95')⊢'list'
+ 'f.l'∆WI Pass 0 0 0 1⊢'DeleteRows' 95
+ 'f.l'∆WI Pass baselist⊢'list'
+ 'f.l'∆WI Pass MT⊢'InsertRows' 10(95 1 'Ninety-five')
+ 'f.l'∆WI Pass((1↑baselist)⍪95 1 'Ninety-five' ''⍪1↓baselist)⊢'list'
+ 'f.l'∆WI Pass 0 1 0 0⊢'DeleteRows' 95
+ 'f.l'∆WI Pass baselist⊢'list'
+
+ 'f.l'∆WI Pass(1 1⍴⊂'10')⊢'GetCells' 10 2
+ 'f.l'∆WI Pass MT⊢'SetCells' 10 2 '11'
+ 'f.l'∆WI Pass(1 1⍴⊂'11')⊢'GetCells' 10 2
+ 'f.l'∆WI Pass MT⊢'SetCells' 10(1 2)(1 2⍴'Ten' '10')
+ 'f.l'∆WI Pass(1 2⍴'Ten' '10')⊢'GetCells' 10(1 2)
+ 'f.l'∆WI Pass(1 3⍴1 0 0)⊢'GetImages' 10
+ 'f.l'∆WI Pass MT⊢'SetImages' 10 2
+ 'f.l'∆WI Pass(1 3⍴2 0 0)⊢'GetImages' 10
+ 'f.l'∆WI Pass MT⊢'SetImages'(10 15)(2 3⍴1 0 0)
+ 'f.l'∆WI Pass(2 3⍴1 0 0)⊢'GetImages' 10 15
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

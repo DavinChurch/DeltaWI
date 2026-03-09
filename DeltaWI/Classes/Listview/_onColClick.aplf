@@ -1,0 +1,14 @@
+ ok←run _onColClick message;warg;cd;object
+
+⍝ message[3]←Column number (subscript?)
+⍝ message[4]←Mouse button (1=Left, 2=Right, 4=Middle)
+⍝ message[5]←Shift state (1=Shift, 2=Ctrl)
+
+⍝ ∆WARG[1]←Col ID (from columndisplay?)
+⍝ ∆WARG[2]←Shift state (1=Shift, 2=Ctrl, 4=Alt)
+
+ object←⊃message
+ cd←object ⎕VGET⊂'_columndisplay'(0 7⍴'')
+ warg←cd[message[3];4],message[5]
+
+ ok←1⊣(∆WARG:warg)##.##.Run run

@@ -1,0 +1,2 @@
+ result←object onClick arg
+ result←object(''##.##.SetEvent'Click' '>MouseDown' '>MouseDouble' '>MouseUp')arg ⍝? Can't use either ItemDown or MouseDown

@@ -1,0 +1,2 @@
+ result←object onColResize arg
+ result←object('SetColSize'##.##.SetEvent'ColResize')arg

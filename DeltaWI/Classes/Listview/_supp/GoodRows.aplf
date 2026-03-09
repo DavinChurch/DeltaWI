@@ -1,0 +1,6 @@
+ items GoodRows arg;r
+⍝ Produce a standard error message if the row # argument is not valid for the given item list
+
+ r←arg/⍨(arg≤0)∨0∊##.##.##.IsInt¨arg ⋄ ('∆WI ARGUMENT ERROR: Invalid row identifier "',('-'@{⍵='¯'}⍕⊃r),'"')##.##.##.Error×≢r ⍝? Should this be in this routine?
+ r←arg~items[;1] ⋄ ('∆WI ARGUMENT ERROR: Invalid row identifier "',('-'@{⍵='¯'}⍕⊃r),'"')##.##.##.Error×≢r
+ r←arg/⍨~≠arg ⋄ ('∆WI ARGUMENT ERROR: Duplicate row identifier "',('-'@{⍵='¯'}⍕⊃r),'"')##.##.##.Error×≢r

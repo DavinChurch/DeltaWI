@@ -1,0 +1,13 @@
+ result←object DeleteRows arg;items
+
+ items←object ⎕VGET⊂'_list'(0 2⍴0)
+ arg←##.##.Single arg
+ '∆WI RANK ERROR: DeleteRows'##.##.Error 1<≢⍴arg
+ '∆WI DOMAIN ERROR: DeleteRows'##.##.Error~##.##.IsInt arg
+ items _supp.GoodRows arg ⍝ Look for row # errors
+ result←items[;1]∊arg ⍝ Set the confirmation before actually changing the list
+ :If ∨/result ⍝ If there's something to bother deleting
+     {}object list,⊂result~⍛⌿items ⍝ Redefine the list with the missing rows
+ :EndIf
+
+⍝? Do we need to preserve selected rows while we do this?

@@ -1,0 +1,40 @@
+ result←object list arg;new;r;cd;items;info;imageindex;stateindex;i
+⍝ Listview:list
+
+⍝ [;1]←Row ID
+⍝ [;2]←Images (Image index; overlay index; user-state indes)
+⍝ [;3+]←Data cells
+
+⍝? Dyalog does not support overlay images or user-state images (except checkboxes)!
+
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_list'(0 2⍴0)
+ :Else
+     arg←##.##.Single arg
+     '∆WI RANK ERROR: list'##.##.Error 2<≢⍴arg
+     :If (2>≢⍴arg)∧##.##.IsInt arg ⋄ arg←⍪arg ⋄ :Else ⋄ arg←(¯2↑1 1,⍴arg)⍴arg ⋄ :EndIf ⍝ Force into a matrix
+     :If 1=⊢/⍴arg ⋄ arg,←1 ⋄ :EndIf ⍝ Add a default [;2] if needed
+     'DOMAIN ERROR'##.##.Error 0∊(##.##.IsInt¨arg[;1 2])∧0 1≥⍤1⊢≡¨arg[;1 2] ⍝ First two columns must be numeric (scalar for [;1] and scalar or vector for [;2])
+     '∆WI LENGTH ERROR: list'##.##.Error∨/~1 2 3∊⍨≢¨arg[;2] ⍝ [;2] may be 1, 2, or 3 items
+     '∆WI DOMAIN ERROR: list'##.##.Error∨/∨/¨1 0 ¯2⊂⍛>3↑¨arg[;2] ⍝ Check minimum values for sub-components in [;2]
+     r←0=arg[;1] ⋄ (r/arg[;1])←(⌈/0,arg[;1])+⍳+/r ⍝ Auto-number rows that specify row #0
+     arg _supp.GoodRows arg[;1] ⍝ Look for row # errors
+     '∆WI DOMAIN ERROR: list'##.##.Error∨/(arg[;2]=0)∨arg[;2]<¯2
+     (0 2↓arg)←,¨0 2↓arg ⍝ Data columns are always ravelled ⍝? What do numerics do in APL+Win?
+     object._list←arg ⍝ It's now in APL+Win "normal form"
+
+     ⍝ columndisplay[1;] is considered to be the *primary* data column, regardless of it's data-order or display-order
+⍝? Does Dyalog allow primary column to be moved out-of-place? How?
+     cd←1↓⍤1⊢6↑⍤1⊢0,object ⎕VGET⊂'_columndisplay'(0 7⍴'')
+     cd⍪←'' 0 '',⍤1⊢2/⍪(⍳2-⍨⊢/⍴arg)~cd[;4] ⍝ Provide some temporary assumptions for any missing columns
+     items←1↓''⊂⍛,(arg,⊂'')[;2+(cd⍪1)[1;4]] ⍝ Pull out the primary list data from the correct column
+     info←(arg,⊂'')[;(1+⊢/⍴arg)⌊2+1↓cd[;5]] ⍝ Extra data columns beyond the item name
+     imageindex←1⊃¨3↑¨arg[;2] ⍝ For primary item image selection ⍝? Does Dyalog allow 1 to mean "not used" if there are no images provided?
+     stateindex←3⊃¨3↑¨arg[;2] ⍝ For user-state images (arbitrary; unsupported in Dyalog) or automatic checkbox images (1,2; if 65536∊style)
+
+     object ##.##.∆WS('Items'items)('ReportInfo'info)('SelItems'(items≢⍛⍴0))('ImageIndex'imageindex)('ReportImageIndex'(0 0⍴0))
+     :For i :In ⍳≢items ⍝ Set/reset all item state values; unfortunately it must be done one at a time
+         2 ##.##.∆NQ object'SetItemState'i(4096×0⌈1⌊stateindex[i]-1) ⍝ Can only initialize with checkbox values, clear all others
+     :EndFor
+     result←##.NoRes
+ :EndIf

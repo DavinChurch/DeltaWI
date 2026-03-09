@@ -1,4 +1,4 @@
- result←obj (action OnAction resume)args
+ result←obj(action OnAction resume)args
 ⍝ Check object to see if it has any onAction processing to perform
 ⍝ If so, perform it and return any result (often NoRes). Otherwise just return a continuation signal (⎕NULL).
 ⍝ If resume=1, then this is a '*' continuation after (partial) onAction processing that should be resumed.
@@ -8,11 +8,13 @@
 ⍝ complete, remove it from the queue and just return to ∆WI for immediate exit with nothing done.
 ⍝? Have I got those exit procedures right?
 
-⍝? What have I done with the nesting for "action"? Is it right? Should I be doing the 1↑ (or equivalent) inside here?
+⍝? What have I done with the nesting for the "action" argument? Is it right? Should I be doing the 1↑ (or equivalent) inside here?
 
  :If '*'≠⊃⊃action ⍝ A '*' prefix means to ignore any onAction handling
- :AndIf ×≢(⎕UCS 13 32)∆dlt obj ⎕VGET⊂'_onAction' '' ⍝ Is there any processing to do?
-     result←'Action'Event obj Application,resume,action⊂⍛,args ⍝ Start up (or resume) onAction processing
+ :AndIf ×≢13 32 ⎕UCS⍛∆dlt obj ⎕VGET⊂'_onAction' '' ⍝ Is there any processing to do?
+     :Hold resume~⍛/'∆WI@onAction' ⍝ Signal to recursive ∆WI that we're validly processing an onAction stack
+         result←'Action'Event obj Application,resume,action⊂⍛,args ⍝ Start up (or resume) onAction processing
+     :EndHold
  :Else
      result←⎕NULL ⍝ There are no onActions to perform here at all - let ∆WI continue without any interruptions
  :EndIf

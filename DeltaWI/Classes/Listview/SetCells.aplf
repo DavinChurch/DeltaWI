@@ -1,0 +1,24 @@
+ result←object SetCells arg;items;rows;cols;cells;nc
+
+⍝ arg[1]←Row IDs
+⍝ arg[2]←Column numbers - 2+ data subscripts (may add a following column)
+⍝ arg[3]←Matrix of values to place in those cells
+
+ items←object ⎕VGET⊂'_list'(0 2⍴0)
+ '∆WI LENGTH ERROR: SetCells'##.##.Error 3≠≢arg
+ '∆WI RANK ERROR: SetCells'##.##.Error 1<≢¨⍴¨2↑arg
+ '∆WI DOMAIN ERROR: SetCells'##.##.Error~∧/##.##.IsInt¨2↑arg
+ '∆WI RANK ERROR: SetCells'##.##.Error 2<≢⍴3⊃arg
+ (rows cols cells)←arg ⋄ (rows cols)←,¨rows cols ⋄ cells←(¯2↑1 1,⍴⊆cells)⍴⊆cells
+ '∆WI LENGTH ERROR: SetCells'##.##.Error(⍴cells)≢≢¨rows cols
+ '∆WI RANK ERROR: SetCells'##.##.Error 1<≢¨⍴¨cells
+ cells←,¨cells
+ items _supp.GoodRows rows ⍝ Look for row # errors
+
+ nc←(⌈/cols)⌈⊢/⍴items ⍝ How many data columns will be needed to insert this data?
+ items←nc{1↓⍤1⊢(1+⍺)↑⍤1⊢(⊂''),⍵}items ⍝ Pad (with empties) to the needed size
+ items[items[;1]⍳rows;2+cols]←cells ⍝ Update the cells in-place
+ {}object list,⊂items ⍝ Replace the whole list with the updated version
+ result←##.NoRes
+
+ ⍝? Do we need to preserve selected rows while we do this?

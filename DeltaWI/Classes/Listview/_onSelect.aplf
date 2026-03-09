@@ -1,0 +1,11 @@
+ ok←run _onSelect message
+
+⍝ ItemDown:
+⍝ message[3]←Row # (subscript?)
+⍝ message[4]←Mouse button (1=Left, 2=Right, 4=Middle)
+⍝ message[5]←Shift state (1=Shift, 2=Ctrl)
+⍝ message[6]←Position code
+
+⍝ ∆WARG←n/a ⍝? Nothing here?
+
+ ok←1⊣##.##.Run run

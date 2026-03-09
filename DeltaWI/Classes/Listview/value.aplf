@@ -1,0 +1,12 @@
+ result←object value arg;sel;ids
+⍝ Allow reading and setting the list of highlighted item IDs
+⍝ This is not managed directly with a variable but reads and writes the object property directly
+
+ sel←object ##.##.∆WG'SelItems'
+ ids←⊃⍤1⊢object ⎕VGET⊂'_list'(0 0⍴0)
+ :If 0=≢arg
+     result←sel/sel≢⍛↑ids
+ :Else
+     object ##.##.∆WS'SelItems'(sel≢⍛↑ids∊∊##.##.Single arg) ⍝ Write the new value directly to Dyalog
+     result←##.NoRes
+ :EndIf

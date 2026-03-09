@@ -1,0 +1,22 @@
+ ok←run _onDblClick message;warg;cd;list
+⍝? Information not available from Dyalog ItemDblClick or MouseDblClick
+
+⍝ ItemDown:
+⍝ message[3]←Index of the item
+⍝ message[4]←Mouse button
+⍝ message[5]←Shift state (1=Shift, 2=Ctrl, 4=Alt)
+⍝ message[6]←Position (2=Icon, 4=Label, 8=Line, 16=Symbol, 32=Right of label)
+
+⍝ ∆WARG[1]←Row ID
+⍝ ∆WARG[2]←Col ID (from columndisplay)
+⍝ ∆WARG[3]←Location (image, label, imageuser, above, below, toleft, toright, aboveleft, aboveright, belowleft, belowright, nowhere, '')
+⍝ ∆WARG[4]←Shift state (1=Shift, 2=Ctrl, 4=Alt)
+⍝ ∆WARG[5]←Mouse location: row (scaled)
+⍝ ∆WARG[6]←Mouse location: col (scaled)
+⍝ ∆WARG[7]←Mouse button (1=Left, 2=Right)
+
+ (list cd)←object ⎕vget('_list' (0 2⍴0)) ('_columndisplay' (0 7⍴''))
+ warg←list[message[3];1]
+
+
+ ok←1⊣(∆WARG:warg)##.##.Run run

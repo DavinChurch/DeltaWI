@@ -16,12 +16,14 @@
      (objname objref action)←object ObjectName action                   ⍝ Parse out object name to which this call applies
      :If nametesting ⋄ result←objname ⋄ :Return ⋄ :EndIf                ⍝ Allow for name-parsing-only internal testing to be performed
      :If resume←action≡,⊂,'*'                                           ⍝ Resume from within onAction handler?
+         :Hold '∆WI@onAction' ⋄ resume←0 ⋄ :Else ⋄ resume←1 ⋄ :EndHold  ⍝ Are we really in the middle of onAction processing that can be continued?
+     :AndIf resume
          action←Application ⎕VGET⊂'∆WARG'⍬                              ⍝ Reconstitute the original command and pass it back into onAction for resumption
      :EndIf
      (name args)←Normalize action                                       ⍝ Separate action name from its arguments and standardize structure
      name←objref Canonize name                                          ⍝ In cases where capitalization is optional, adjust it to standard
      :If ⎕NULL≢result←objref(name Immediate)args ⋄ :Return ⋄ :EndIf     ⍝ Perform any out-of-band "instant" processing
-     :If ⎕NULL≢result←objref((1↑action)OnAction resume)args ⋄ :Return ⋄ :EndIf ⍝ Perform any application-specified alternative onAction processing
+     :If ⎕NULL≢result←objref((1↑action)OnAction resume)args ⋄ :Return ⋄ :EndIf  ⍝ Perform any application-specified alternative onAction processing
 
      ⍝ *** Time to execute the requested operation
      ⍝ Handle object creation cases separately; otherwise start up the normal action processing by class

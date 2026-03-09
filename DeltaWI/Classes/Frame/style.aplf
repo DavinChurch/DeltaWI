@@ -1,14 +1,7 @@
  result←object style arg;old;new;edge
 ⍝ Read or change the style of the Frame
-
-⍝ 0 = Etched            =
-⍝ 1 = Inset             =
-⍝ 2 = Flush (etched)    =
-⍝ 3 = Outset            =
-⍝ 4 = Inset             =
-⍝ 5 = Flush (etched)    =
-⍝ 6 = Outset            =
-⍝ 7 = Transparent       =
+⍝ However, Windows does not support control of a Frame's boundary under Dyalog, therefore it cannot be suppressed or controlled at all.
+⍝ All settings are validated but otherwise perform no action.
 
  old←object ⎕VGET⊂'_style' 0 ⍝ Existing style
  :If 0=≢arg
@@ -19,7 +12,5 @@
      '∆WI DOMAIN ERROR: style'##.##.Error 1<|≡new
      '∆WI DOMAIN ERROR: style'##.##.Error~(new←⊃new)∊0,⍳7
      object._style←new ⍝ Update the APL+Win record
-     edge←(1+new)⊃'Default' 'Plinth' 'Recess' 'Groove' 'Ridge' 'Shadow' '' '' ⍝? Who knows how these should be set? Dyalog is not using them at all.
-     object ##.##.∆WS'EdgeStyle'edge ⍝ Change the Dyalog object so the screen actually changes
      result←##.NoRes
  :EndIf
