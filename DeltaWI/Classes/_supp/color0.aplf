@@ -1,0 +1,8 @@
+ inherit←object color0 this;parent;t
+ ⍝ Determine inheritable colors
+ inherit←-¯1∊¨this ⍝ We may need to search for an inherited color back through the ancestors
+ :For parent :In ¯1↓object._Ancestry
+     :If ∧/inherit≠¯1 ⋄ :Leave ⋄ :EndIf ⍝ Once we have inherited colors we can stop
+     t←inherit=¯1 ⋄ (t/inherit)←t/parent ⎕VGET⊂'_color_'(¯1 ¯1)
+ :EndFor
+ ((inherit=¯1)/inherit)←¯101 ⍝ If there are no ancestral defaults, use the desktop background color

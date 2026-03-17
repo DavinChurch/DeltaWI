@@ -22,12 +22,12 @@
  style←##.##.BitVals object ⎕VGET⊂'_style' 0
  ⍝   256=Force lowercase
  ⍝   512=Force uppercase
- ⍝   2048=APL symbols allowed
- ⍝   8192=Allow Enter in text (only ∊ 4)
  :If 256∊style ⋄ key←¯1 ⎕C key ⋄ :EndIf ⍝ Force lowercase
  :If 512∊style ⋄ key←1 ⎕C key ⋄ :EndIf ⍝ Force uppercase
+ ⍝   2048=APL symbols allowed
  :If (~2048∊style)∧~key ⎕UCS⍛∊31+⍳96 ⋄ ok←0 ⋄ ##.##.Beep ⋄ :Return ⋄ :EndIf ⍝ Allow more than plain ASCII?
-⍝? If ~8192∊style, disable Ctrl+Enter key (how?)
+ ⍝   8192=Allow Enter in text (only ∊ 4)
+⍝? If ~8192∊style, also disable Ctrl+Enter key (how?)
 
  ok←key@3⊢message ⍝ Return modified message
  :If 3=##.⎕NC'_on_KeyPress' ⋄ ok←run ##._on_Keypress ok ⋄ :EndIf ⍝ Also call generic version if it exists

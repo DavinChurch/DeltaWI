@@ -32,7 +32,7 @@
  :Else
      :Section ⍝ Update the APL+Win font description
          '∆WI LENGTH ERROR: font'##.Error~arg≢⍛∊⍳4
-         arg←arg,arg≢⍛↓def←'' 1 0 'ansi' ⍝ Assume defaults
+         arg←arg,arg≢⍛↓def←'System' 1 0 'ansi' ⍝ Assume defaults
          :If (×≢was)∧∨/t←0=≢¨arg ⋄ (t/arg)←t/was ⋄ :EndIf ⍝ Allow ⍬ to leave as-is
          :If ∨/t←0=≢¨arg ⋄ (t/arg)←t/def ⋄ :EndIf ⍝ Allow ⍬ with no previous value to fill in with defaults
          '∆WI DOMAIN ERROR: font'##.Error~##.IsChar 1⊃arg
@@ -48,10 +48,10 @@
          object._font←arg ⍝ Set the APL+Win memory
          :If ##.IsChar charset←4⊃arg ⍝ Convert a standard name into a charset number
              ⍝ ANSI_CHARSET=0, OEM_CHARSET=255, SYMBOL_CHARSET=2, DEFAULT_CHARSET=1
-             arg[4]←0 255 2 1['ansi' 'oem' 'symbol' 'default'⍳⍥⎕C arg[4]]
+             charset←0 255 2 1['ansi' 'oem' 'symbol' 'default'⍳⍥⎕C arg[4]]
          :EndIf
          props←'Font'('Coord' 'RealPixel')('PName'(newname←1⊃arg))('Size'(⊃tunits×2⊃arg))('Fixed'(>/32 64∊style))
-         props,←('Italic'(2∊style))('Underline'(4∊style))('Weight'(400 700[1+1∊style]))('CharSet'(4⊃arg))('Rotate' 0)
+         props,←('Italic'(2∊style))('Underline'(4∊style))('Weight'(400 700[1+1∊style]))('CharSet'charset)('Rotate' 0)
          ##.∆EX⍕object ##.∆WGet⊂'FontObj' '' ⍝ Destroy any previous font object
          fname←##.Next object ⍝ Find the next available sequentially-numbered object name
          font←⎕VGET(object⍕⍛,'.',fname)##.∆WC props ⍝ Create an internal Font object to be used

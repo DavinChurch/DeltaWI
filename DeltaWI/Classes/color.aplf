@@ -30,12 +30,7 @@
  :EndSelect
 
  new←was _supp.color1¨new ⍝ Now break down each one into standard form
- inherit←¯1×¯1∊¨new ⍝ We may need to search for an inherited color back through the ancestors
- :for parent :in ¯1↓object._Ancestry
-    :if ∧/inherit≠¯1 ⋄ :leave ⋄ :endif ⍝ Once we have inherited colors we can stop
-    t←inherit=¯1 ⋄ (t/inherit)←t/parent ⎕vget⊂'_color_' (¯1 ¯1)
- :endfor
-((inherit=¯1)/inherit)←¯101 ⍝ If there are no ancestral defaults, use the desktop background color
+ inherit←object _supp.color0 new ⍝ We may need to search for inherited colors back through the ancestors
  (bcol fcol)←inherit _supp.color2¨new ⍝ Convert to Dyalog color codes
 
  object._color←arg ⋄ object._color_←new ⍝ Store the exact value they gave us as well as a parsed value for future use

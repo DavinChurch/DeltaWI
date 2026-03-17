@@ -1,13 +1,13 @@
-result←object edge arg
+ result←object edge arg
 ⍝ Allow showing a couple of different kinds of edges on controls
 
  :If 0=≢arg
-     result←object ⎕vget⊂'_edge' 0
+     result←object ⎕VGET⊂'_edge' 0
  :Else
      'DOMAIN ERROR'##.Error(1≠≢arg)∨~0 1 2∊⍨1↑arg
      'DOMAIN ERROR'##.Error 0≠≡arg←##.Single arg
      object._edge←arg
      object ##.∆WSet⊂'EdgeStyle'('Default' 'Recess' 'Shadow'⊃⍨1+arg)
-     ⍝? EdgeStyle=Recess doesn't seem to be doing anything?
+     ⍝? EdgeStyle=Recess doesn't seem to be doing anything? Aha! It's a bug where things work only on ⎕WC and not on ⎕WS - Issue #22824
      result←NoRes
  :EndIf

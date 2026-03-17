@@ -1,5 +1,5 @@
  (tunits punits units)←MyUnits object;units;ppxsize;pscale;scale;pxsize
-⍝ Determine what pixel-size my object's (and my parent's) unit sizes are
+⍝ Determine what pixel-size my object's (and my parent's, and the system's) unit sizes are
 
  (scale pxsize)←object ⎕VGET('_scale' 1)('_pix_size'(0 0))
  (pscale ppxsize)←(⊃object._Ancestry)⎕VGET('_scale' 1)('_pix_size'(0 0))
