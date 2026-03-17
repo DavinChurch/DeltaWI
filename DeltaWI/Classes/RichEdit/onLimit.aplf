@@ -1,0 +1,2 @@
+ result←object onLimit arg
+ result←object(''##.##.SetEvent'Limit')arg

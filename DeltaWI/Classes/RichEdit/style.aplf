@@ -1,0 +1,42 @@
+ result←object style arg;bits;props
+⍝ RichEdit:style
+
+⍝ Style bits (missing bits only used for Edit, otherwise shared codes):
+⍝ 0 = One line
+⍝ 4 = Multiline                                                                 ⍝? Dyalog does not provide single-line - simulate?
+⍝ 8 = Inhibit automatic vertical scrolling (4∊)                                 ⍝? Create-only
+⍝ 16 = Vertical scroll bar (4∊)                                                 ⍝? Create-only
+⍝ 32 = Inhibit automatic horizontal scrolling (causes word-wrapping if 4∊)
+⍝ 64 = Horizontal scroll bar                                                    ⍝? Create-only
+⍝ 1024 = Do not hide selection when tabbing out of field
+⍝ 2048 = APL entry field
+⍝ 4096 = Read only                                                              ⍝? Simulate with CharFormat[1]←'Protected' ?? (What about when appending?)
+⍝ 8192 = Allow Enter character as part of text (4∊)                             ⍝? Create-only
+⍝ 16384 = Do not select text when tabbing back to control
+⍝   Additional bits not used for Edit controls:
+⍝ 32768 = Disable automatic word selection when highlighting with mouse
+⍝ 65536 = Disable, rather than remove, unneeded scroll bars (∨/16 64∊)          ⍝? Unavailable in Dyalog
+⍝ 131072 = Allow Tab character in text
+⍝ 262144 = Advanced typography ⍝? (What is this?)
+⍝? bits≥32768 not yet implemented
+
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_style' 0
+ :Else
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∧1≠≢arg
+     arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∨~##.##.IsInt arg
+     bits←##.##.BitVals arg←+/∊arg
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error(~4∊bits)∧∨/8 16 8192∊bits ⍝ Interactions w/4
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error(arg≥262144×2)∨∨/1 2 128 256 512∊bits
+     object._style←+/bits
+
+     props,←0/⊂'VScroll'((~8∊bits)×¯2+16∊bits) ⍝ Can't support 8∧16 ⍝? Can only be set during creation
+     props,←0/⊂'HScroll'((~32∊bits)×¯2+64∊bits) ⍝ Can't support 32∧64 ⍝? Can only be set during creation
+     props,←0/⊂'PageWidth'((~32∊bits)×99999) ⍝? Can only be set during creation
+     props,←0/⊂'WantsReturn'(8192∊bits) ⍝? This can only be set during creation ⍝? (Dyalog always allows Ctrl-Enter anyway unless we suppress it?) ⍝? Create-only style
+     ⍝? 16384=Don't select text - not supported by Dyalog, but may be simulated during onFocus?
+     ⍝? 524288=Disable Paste - Dyalog gives us no control here, but it may be that we can't get a context menu at all anyway?
+     object ##.##.∆WS props
+     result←##.NoRes
+ :EndIf

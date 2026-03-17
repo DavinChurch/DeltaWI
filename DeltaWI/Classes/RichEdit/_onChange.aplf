@@ -1,0 +1,3 @@
+ ok←run _onChange message
+⍝ Execute the RichEdit:onChange event handler (no ⎕WARG)
+ ok←1⊣##.##.Run run

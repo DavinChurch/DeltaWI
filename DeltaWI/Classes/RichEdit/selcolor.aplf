@@ -1,0 +1,23 @@
+ result←object selcolor arg;select;fmt;inherit;old;self
+ ⍝ Use properties directly rather than an APL variable
+
+ ⍝? If the color is changed, how does that affect the Autocolour flag?
+
+ :If 0=≢arg
+     select←object ##.##.∆WG'SelText' ⋄ object ##.##.∆WS'SelText'(2⍴⊂select⊃⍛+1↑⍨-≢⊃select) ⍝ Start by just looking at the first character of the current selection
+     fmt←object ##.##.∆WG'CharFormat' ⋄ object ##.##.∆WS'SelText'select ⍝ Then get that one character's formatting and restore the original selection
+     :If 3≠≢result←4⊃fmt
+         :If 0=result ⋄ result←¯2
+         :Else ⋄ result-←99
+         :EndIf
+     :EndIf
+ :Else
+     'DOMAIN ERROR'##.##.Error~##.##.IsInt arg←##.##.Single arg
+     '∆WI LENGTH ERROR: selcolor'##.##.Error~1 3∊⍨≢arg
+     self←(_Ancestry:object,object._Ancestry) ⍝ When searching for inherited colors, include myself first
+     inherit←self ##._supp.color0 arg ¯2 ⍝ We may need to search for inherited colors back through the ancestors
+     old←object ##.##.∆WG'CharFormat'
+     old[4]←⊂inherit⊃⍛##._supp.color2 arg ⍝ Convert to Dyalog color code
+     object ##.##.∆WS⊂'CharFormat'old
+     result←##.NoRes
+ :EndIf

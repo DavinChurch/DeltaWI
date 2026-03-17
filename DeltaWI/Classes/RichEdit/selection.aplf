@@ -1,10 +1,10 @@
  result←object selection arg;seltext;text;start;t
-⍝ Edit:selection
+⍝ RichEdit:selection
 
  :If 0=≢arg
      (text seltext)←object ##.##.∆WG'Text' 'SelText' ⍝ Get the native text data and highlight positioning (not stored in variables)
      ⍝ seltext[1]←First character # (origin 1); seltext[2]←Last character # + 1
-     :If 1<≡seltext ⍝ Is this for a multi-line control? (Assume we never use matrices)
+     :If 1<≡seltext ⍝ Is this for a multi-line control (RichEdit is always multi-line)? (Assume we never use matrices)
          start←+\¯1↓0,1+≢¨text ⍝ The number of characters before each line
          seltext←start[1⊃¨seltext]+2⊃¨seltext ⍝ Convert to linear numbers
      :EndIf
@@ -19,7 +19,7 @@
      text←object ##.##.∆WG'Text' ⍝ We'll need to know what form and size this is
      arg[2]+←(arg[2]=¯1)×1+(1-⍨+/1+≢¨⊆text)-arg[1] ⍝ Re-point ¯1 to end-of-text
      seltext←1++\arg ⍝ Calculate the linear form
-     :If 1<≡text ⍝ Is this a multi-line control? (Assume we never use matrices)
+     :If 1<≡text ⍝ Is this a multi-line control (RichEdit is always multi-line)? (Assume we never use matrices)
          start←+\¯1↓0,1+≢¨text ⍝ The number of characters before each line
          t←(start+1)⍸seltext ⋄ seltext←t,¨seltext-start[t] ⍝? Make sure this calculation is correct?
      :EndIf

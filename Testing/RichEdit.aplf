@@ -1,0 +1,69 @@
+ RichEdit;changes;bump;rtf
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
+ 'f.r'∆WI Pass'f.r'⊢'New' 'RichEdit'
+ 'f.r'∆WI Pass 1.25 9.5⊢'size'
+ 'f.r'∆WI Pass 14.21875 45 1.5 10⊢'where'
+
+ ⍝ Test onChange event (implicitly called by 'text')
+ changes←0
+ 'f.r'∆WI Pass MT⊢'onChange' 'changes+←1'
+ 'f.r'∆WI Pass MT⊢'text' 'testing'
+ ⊢Pass 1⊢changes ⍝ Has the global changed?
+ 'f.r'∆WI Pass'testing'⊢'text'
+ ⊢Pass 1⊢changes ⍝ Has the global not changed?
+ ⍝ We can't event test this manually without a ⎕DQ
+
+ bump←0
+ 'f.r'∆WI Pass MT⊢'onLimit' 'bump←1'
+ 'f.r'∆WI Pass MT⊢'limit' 10
+⍝? There's no way to simulate the user typing in too many characters to show that this works
+
+ 'f.r'∆WI Pass 0 0⊢'selection'
+ 'f.r'∆WI Pass MT⊢'selection' 1 3
+ 'f.r'∆WI Pass 1 3⊢'selection'
+ 'f.r'∆WI Pass MT⊢'selection' 4 ¯1
+ 'f.r'∆WI Pass 4 3⊢'selection'
+ 'f.r'∆WI Pass'ing'⊢'seltext'
+ 'f.r'∆WI Pass MT⊢'seltext' 'xyz'
+ 'f.r'∆WI Pass'testxyz'⊢'text'
+
+ rtf←∊'{\rtf1\ansi\deff0{\fonttbl{\f0\fnil\fcharset0 MS Shell Dlg;}}' '\viewkind4\uc1\pard\lang1033\f0\fs17 testxyz\par' '}',¨⊂⎕UCS 13 10
+ 'f.r'∆WI Pass rtf⊢'rtf'
+ rtf←('testxyz'⎕R'testing')rtf
+ 'f.r'∆WI Pass MT⊢'rtf'rtf
+ rtf←('\\ansi'⎕R'\\ansi\\ansicpg1252')rtf ⍝ Rewriting it ourselves causes an internal definition change
+ 'f.r'∆WI Pass rtf⊢'rtf'
+
+ 'f.r'∆WI Pass MT⊢'text' 'testing'
+ 'f.r'∆WI Pass MT⊢'selection'(4 2)
+ 'f.r'∆WI Pass'in'⊢'seltext'
+ 'f.r'∆WI Pass ¯2⊢'selcolor'
+ 'f.r'∆WI Pass MT⊢'selcolor'(0 255 0)
+ 'f.r'∆WI Pass 0 255 0⊢'selcolor'
+ 'f.r'∆WI Pass'System' (17÷24) 0 'ansi' 0⊢'selfont' ⍝? Default font size will change when negative sizes are implemented
+ 'f.r'∆WI Pass MT⊢'selfont' 'Arial'
+ 'f.r'∆WI Pass'Arial' 1 0 'ansi' 0⊢'selfont'
+ 'f.r'∆WI Pass MT⊢'selfont'⍬ 2
+ 'f.r'∆WI Pass'Arial' 2 0 'ansi' 0⊢'selfont'
+ 'f.r' ∆WI Pass MT⊢'selection' 0 4
+ 'f.r' ∆WI Pass 'test'⊢'seltext'
+ 'f.r' ∆WI Pass MT⊢'selstyle' (1 1,3⍴¯1)
+ 'f.r' ∆WI Pass 1 1 0 0 0⊢'selstyle'
+ 'f.r' ∆WI Pass 1 1 1 1 1⊢'selstyleall'
+ 'f.r' ∆WI Pass MT⊢'selection' 0 5
+ 'f.r' ∆WI Pass 'testi'⊢'seltext'
+ 'f.r' ∆WI Pass 0 0 1 1 1⊢'selstyleall'
+ 'f.r'∆WI Pass MT⊢'selection'(4 2)
+ 'f.r'∆WI Pass'in'⊢'seltext'
+ 'f.r' ∆WI Pass 1 1 1 1 1⊢'selstyleall'
+ 'f.r'∆WI Pass MT⊢'selection'(3 3)
+ 'f.r'∆WI Pass'tin'⊢'seltext'
+ 'f.r' ∆WI Pass 0 0 1 1 1⊢'selstyleall'
+ 'f.r' ∆WI Pass 0 0 1 0⊢'selfontall'
+ 'f.r'∆WI Pass MT⊢'selection'(4 2)
+ 'f.r'∆WI Pass'in'⊢'seltext'
+ 'f.r' ∆WI Pass 1 1 1 1⊢'selfontall'
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

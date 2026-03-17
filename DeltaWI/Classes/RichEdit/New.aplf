@@ -1,0 +1,39 @@
+ result←object New arg;parent;name;actions;∆style;props;newobj;∆border
+⍝ Create a new RichEdit object
+
+⍝ Style bits (missing bits only used for Edit, otherwise shared codes):
+⍝ 0 = One line
+⍝ 4 = Multiline                                                                 ⍝? Dyalog does not provide single-line - simulate?
+⍝ 8 = Inhibit automatic vertical scrolling (4∊)                                 ⍝? Create-only
+⍝ 16 = Vertical scroll bar (4∊)                                                 ⍝? Create-only
+⍝ 32 = Inhibit automatic horizontal scrolling (causes word-wrapping if 4∊)
+⍝ 64 = Horizontal scroll bar                                                    ⍝? Create-only
+⍝ 1024 = Do not hide selection when tabbing out of field
+⍝ 2048 = APL entry field
+⍝ 4096 = Read only                                                              ⍝? Simulate with CharFormat[1]←'Protected' ?? (What about when appending?)
+⍝ 8192 = Allow Enter character as part of text (4∊)                             ⍝? Create-only
+⍝ 16384 = Do not select text when tabbing back to control
+⍝   Additional bits not used for Edit controls:
+⍝ 32768 = Disable automatic word selection when highlighting with mouse
+⍝ 65536 = Disable, rather than remove, unneeded scroll bars (∨/16 64∊)          ⍝? Unavailable in Dyalog
+⍝ 131072 = Allow Tab character in text
+⍝ 262144 = Advanced typography ⍝? (What is this?)
+⍝? bits≥32768 not yet implemented
+
+ (parent name)←object ⍝ Separate non-standard two-part argument
+ actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
+
+ (∆style ∆border)←((1↓¨arg),⊂⍬)[actions⍳'style' 'border']
+ ∆border←0⌈×+/∊∆border ⋄ ∆style←##.##.BitVals+/∊∆style
+ arg←(parent:parent ⋄ border:∆border)##.##.New.Center arg
+ arg,←(~'edge'⊂⍛∊actions)/⊂'edge' 1 ⍝ RichEdit boxes have a default 'edge'
+
+ props←'RichEdit'('Visible' 0) ⍝ Define properties that must be used during creation
+ props,←⊂'VScroll'((~8∊∆style)×¯2+16∊∆style) ⍝ Can't support 8∧16 ⍝? Can only be set during creation
+ props,←⊂'HScroll'((~32∊∆style)×¯2+64∊∆style) ⍝ Can't support 32∧64 ⍝? Can only be set during creation
+ props,←⊂'PageWidth'((~32∊∆style)×99999) ⍝? Can only be set during creation
+ props,←(~'border'⊂⍛∊actions)/⊂'Border'∆border ⍝ Set border upon creation if we have it ⍝? It cannot be changed later
+ props,←⊂'WantsReturn'(8192∊∆style) ⍝ Override default (1) if 8192 not specified ⍝? (Dyalog always allows Ctrl-Enter anyway unless we suppress it?) ⍝? Create-only style
+
+ newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object with required parameters
+ result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure

@@ -1,0 +1,31 @@
+ result←object selstyle arg;was;flags;flagnames;t
+⍝ Request or modify the selected text's font style
+⍝ Use properties directly rather than an APL variable
+
+⍝ The APL+Win structure:
+⍝   [1]←Bold
+⍝   [2]←Italic
+⍝   [3]←Underline
+⍝   [4]←Strikeout
+⍝   [5]←Protected
+⍝ CharFormat in Dyalog:
+⍝   [1]←Text attributes - vector of active keywords:
+⍝       Autocolour, Bold, Italic, Underline, Strikeout, Protected
+⍝   [2]←Font name (not used here)
+⍝   [3]←Font size (not used here)
+⍝   [4]←Color (not used here)
+⍝   [5]←Offset (not used here)
+
+ flags←⊃object ##.##.∆WG'CharFormat'
+ flagnames←'Bold' 'Italic' 'Underline' 'Strikeout' 'Protected' ⍝ Flag names, in APL+Win order
+
+ :If 0=≢arg
+     result←flagnames∊flags
+ :Else
+     arg←##.##.Single arg ⍝ Make sure a nested singleton is flattened
+     '∆WI LENGTH ERROR: selstyle'##.##.Error~arg≢⍛∊0,⍳5
+     '∆WI DOMAIN ERROR: selfont'##.##.Error~∧/arg∊¯1 0 1
+     arg←5↑arg,5⍴¯1 ⋄ t←arg=¯1 ⋄ (t/arg)←t/flagnames∊flags ⍝ Assign previous values to ¯1 requests and defaults
+     object ##.##.∆WS'CharFormat'(,⊂flagnames,¨⍨arg~⍛/¨'~') ⍝ Update the flags individually
+     result←##.NoRes
+ :EndIf

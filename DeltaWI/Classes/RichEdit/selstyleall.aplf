@@ -1,0 +1,23 @@
+ result←object selstyleall arg;flags;flagnames;t;from;to;limits;here
+⍝ Determine the consistency of the selected text's font style
+⍝ Use properties directly rather than an APL variable.
+⍝ It may be a little slow scanning through the text one character at a time.
+
+ '∆WI ACTION ERROR: Property "selstyleall" is read-only'##.##.Error×≢arg
+ flagnames←'Bold' 'Italic' 'Underline' 'Strikeout' 'Protected' ⍝ Flag names, in APL+Win order
+ (from to)←object ##.##.∆WG'SelText'
+ flags←¯1 ⍝ We're still looking for the beginning of the selected area
+ result←5⍴1 ⍝ Begin by assuming that all are in agreement
+ here←from ⋄ limits←1+≢¨object ##.##.∆WG'Text'
+
+ :While ∨/result
+     here+←0 1 ⋄ :If here[2]>limits[here[1]] ⋄ here[1]+←1 ⋄ here[2]←1 ⋄ :EndIf ⍝ Increment selection pointer
+ :AndIf 1 2≡⍋here to ⍝ And we haven't yet reached the end of the original selection
+     object ##.##.∆WS'SelText'(here here) ⍝ Place the selection point at the end of the next character
+     :If ¯1∊flags
+         flags←flagnames∊⊃object ##.##.∆WG'CharFormat' ⍝ Define starting values at the first location
+     :Else
+         result∧←flags=flagnames∊⊃object ##.##.∆WG'CharFormat' ⍝ Compare basis to the current styling as of that insertion point
+     :EndIf
+ :EndWhile
+ object ##.##.∆WS'SelText'(from to) ⍝ Restore positioning

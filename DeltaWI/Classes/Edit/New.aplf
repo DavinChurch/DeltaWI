@@ -1,13 +1,32 @@
  result←object New arg;parent;name;actions;∆style;props;newobj;∆border
 ⍝ Create a new Edit object
 
+⍝ Style bits:
+⍝ 0 = One line; left-justified
+⍝ 1 = Centered text (4∊)
+⍝ 2 = Right justified text (4∊)
+⍝ 4 = Multiline
+⍝ 8 = Inhibit automatic vertical scrolling (4∊)
+⍝ 16 = Vertical scroll bar (4∊)
+⍝ 32 = Inhibit automatic horizontal scrolling (causes word-wrapping if 4∊)
+⍝ 64 = Horizontal scroll bar
+⍝ 128 = Password
+⍝ 256 = Lowercase
+⍝ 512 = Uppercase
+⍝ 1024 = Keep selection highlighted when tabbing out of field
+⍝ 2048 = APL entry field
+⍝ 4096 = Read only
+⍝ 8192 = Allow Enter character as part of text (4∊)
+⍝ 16384 = Do not select text when tabbing back to control
+⍝ 524288 = Disable Past context menu (4096∊)
+
  (parent name)←object ⍝ Separate non-standard two-part argument
  actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
 
  (∆style ∆border)←((1↓¨arg),⊂⍬)[actions⍳'style' 'border']
  ∆border←0⌈×+/∊∆border ⋄ ∆style←##.##.BitVals+/∊∆style
  arg←(parent:parent ⋄ border:∆border)##.##.New.Center arg
- arg,←(~'edge'⊂⍛∊actions)/⊂'edge' 1 ⍝ Only Edit boxes have a default 'edge'
+ arg,←(~'edge'⊂⍛∊actions)/⊂'edge' 1 ⍝ Edit boxes have a default 'edge'
 
  props←'Edit'('FieldType' 'Char')('Visible' 0) ⍝ Define properties that must be used during creation
  props,←⊂'Style'('Single' 'Multi'⊃⍨1+4∊∆style) ⍝? Create-only style
@@ -16,6 +35,6 @@
  props,←⊂'VScroll'((>/4 8∊∆style)×¯2+16∊∆style) ⍝? Create-only style
  props,←⊂'HScroll'((~32∊∆style)×¯2+64∊∆style) ⍝? Create-only style
  props,←(~'border'⊂⍛∊actions)/⊂'Border'∆border ⍝ Set border upon creation if we have it ⍝? It cannot be changed later
- props,←⊂'WantsReturn'(8192∊∆style) ⍝? Create-only style
+ props,←⊂'WantsReturn'(8192∊∆style)  ⍝? (Dyalog always allows Ctrl-Enter anyway unless we suppress it?) ⍝? Create-only style
  newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object with required parameters
  result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure

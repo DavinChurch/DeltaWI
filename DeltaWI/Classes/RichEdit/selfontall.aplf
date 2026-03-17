@@ -1,0 +1,27 @@
+ result←object selfontall arg;from;to;fonts;here;limits
+⍝ Determine the consistency of the selected text's font formatting
+⍝ Use properties directly rather than an APL variable.
+⍝ It may be a little slow scanning through the text one character at a time.
+
+⍝ [1]←Font name
+⍝ [2]←Font size
+⍝ [3]←Offset
+⍝ [4]←Color
+
+ '∆WI ACTION ERROR: Property "selfontall" is read-only'##.##.Error×≢arg
+ (from to)←object ##.##.∆WG'SelText'
+ fonts←¯1 ⍝ We're still looking for the beginning of the selected area
+ result←4⍴1 ⍝ Begin by assuming that all are in agreement
+ here←from ⋄ limits←1+≢¨object ##.##.∆WG'Text'
+
+ :While ∨/result
+     here+←0 1 ⋄ :If here[2]>limits[here[1]] ⋄ here[1]+←1 ⋄ here[2]←1 ⋄ :EndIf ⍝ Increment selection pointer
+ :AndIf 1 2≡⍋here to ⍝ And we haven't yet reached the end of the original selection
+     object ##.##.∆WS'SelText'(here here) ⍝ Place the selection point at the end of the next character
+     :If ¯1∊fonts
+         fonts←2 3 5 4⊂⍛⌷object ##.##.∆WG'CharFormat' ⍝ Define starting values at the first location
+     :Else
+         result∧←fonts≡¨2 3 5 4⊂⍛⌷object ##.##.∆WG'CharFormat' ⍝ Compare basis to the current styling as of that insertion point
+     :EndIf
+ :EndWhile
+ object ##.##.∆WS'SelText'(from to) ⍝ Restore positioning

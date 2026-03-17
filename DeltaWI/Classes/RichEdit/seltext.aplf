@@ -1,5 +1,5 @@
  result←object seltext arg;txt;seltxt;new
-⍝ Edit:selection
+⍝ RichEdit:selection
 
  txt←object text ⍬ ⋄ seltxt←object selection ⍬ ⍝ Get existing properties the easy way
  :If 0=≢arg
@@ -11,7 +11,8 @@
      '∆WI RANK ERROR: seltext'##.##.Error 1≠≢⍴new
      '∆WI DOMAIN ERROR: seltext'##.##.Error 1≠≡new
      '∆WI DOMAIN ERROR: seltext'##.##.Error~##.##.IsChar new
-     new←object ##.##.QuadAV new ⍝ Convert Unicode to ⎕AV as best we can if we're using one of those fonts
+⍝?     new←object ##.##.QuadAV new ⍝ Convert Unicode to ⎕AV as best we can if we're using one of those fonts
+⍝? QuadAV is going to need to be selectively applied to only portions of the text that use that font! Difficult determination?
      txt←(seltxt[1]↑txt),new,(+/seltxt)↓txt ⍝ Replace that portion of the text
      seltxt[2]←≢new ⍝ Update selected position
      {}object text,⊂txt ⋄ {}object selection,⊂seltxt ⍝ Write out the new properties the easy way

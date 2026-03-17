@@ -1,0 +1,71 @@
+ result←object selfont arg;tunits;charset;units;pix_twips;was;new;t;style;oldname;newname;old;def
+⍝ Request or modify the selected text's font
+⍝ Use properties directly rather than an APL variable
+
+⍝ The APL+Win structure:
+⍝   [1]←Font name
+⍝   [2]←Font size (scale-relative)
+⍝   [3]←Font style (not available in Dyalog)
+⍝   [4]←Font charset
+⍝       'ansi', 'oem', 'symbol', 'default',
+⍝       or a number selected from the LOGFONT lfCharSet enumeration
+⍝   [5]←Offset - scale-units higher (+) or lower (-) from the baseline
+⍝ CharFormat in Dyalog:
+⍝   [1]←Text attributes (not used here)
+⍝   [2]←Font name
+⍝   [3]←Font size (in twips)
+⍝   [4]←Color (not used here)
+⍝   [5]←Offset (+/-, in twips)
+
+⍝? What do we need to do with negative font sizes (which vary from standard due to font leading)? The factor seems to be 0.6875×.
+
+ (tunits units)←1 3⊂⍛⌷##._supp.MyUnits object
+ pix_twips←units[4;] ⍝ Pixels per twip, for converting scales
+ was←object ##.##.∆WG'CharFormat'
+ new←was[2],was[3],0,'ansi'⊂⍛,was[5] ⋄ new[2 5]×←⊃pix_twips÷tunits ⍝ Convert back to APL+Win structure, including twips to scale-units
+ :If 'MS Shell Dlg'≡⊃new ⋄ new[1]←⊂'System' ⋄ :EndIf ⍝ This a generic name for System - let's name it consistently
+
+ :If 0=≢arg ⋄ result←new ⋄ :Return ⋄ :EndIf ⍝ Just give them back what we have
+
+ :Section ⍝ Validate the APL+Win font description
+     arg←,⊆##.##.Single arg ⍝ Make sure a nested singleton is flattened
+     '∆WI LENGTH ERROR: selfont'##.##.Error~arg≢⍛∊⍳5
+     arg←arg,arg≢⍛↓def←'System' 1 0 'ansi' 0 ⍝ Assume defaults (Dyalog cannot auto-select a font name)
+     :If (×≢new)∧∨/t←0=≢¨arg ⋄ (t/arg)←t/new ⋄ :EndIf ⍝ Allow ⍬ to leave as-is (from APL+Win format)
+     :If ∨/t←0=≢¨arg ⋄ (t/arg)←t/def ⋄ :EndIf ⍝ Allow ⍬ with no previous value to fill in with defaults
+     :If 'MS Shell Dlg'≡⊃arg ⋄ arg[1]←⊂'System' ⋄ :EndIf ⍝ This a generic name for System - let's name it consistently
+     '∆WI DOMAIN ERROR: selfont'##.##.Error~##.##.IsChar 1⊃arg
+     '∆WI DOMAIN ERROR: selfont'##.##.Error~1 3 5∊⍨10|⎕DR 2⊃arg
+     '∆WI DOMAIN ERROR: selfont'##.##.Error~##.##.IsInt 3⊃arg
+     '∆WI DOMAIN ERROR: selfont'##.##.Error(arg[3]<0)∨arg[3]>4095
+     '∆WI DOMAIN ERROR: selfont'##.##.Error(~##.##.IsInt 4⊃arg)∧~arg[4]∊⍥⎕C'ansi' 'oem' 'symbol' 'default'
+     '∆WI DOMAIN ERROR: selfont'##.##.Error~(##.##.IsInt 5⊃arg)∧1=≢5⊃arg
+     style←##.##.BitVals 3⊃arg
+     '∆WI ATTRIBUTE ERROR: Invalid "selfont" attribute specified'##.##.Error×style~0 32 64 128 256 512 ⍝ Valid (but not usable)
+     '∆WI ATTRIBUTE ERROR: Invalid "selfont" attribute specified'##.##.Error∧/32 64∊style
+     (oldname newname)←new[1],arg[1] ⍝ Remember the font names
+ :EndSection
+
+ :Section ⍝ Update CharFormat to match
+     result←##.NoRes
+     :If ##.##.IsChar charset←4⊃arg ⍝ Convert a standard name into a charset number (though it is not actually used here)
+             ⍝ ANSI_CHARSET=0, OEM_CHARSET=255, SYMBOL_CHARSET=2, DEFAULT_CHARSET=1
+         charset←0 255 2 1['ansi' 'oem' 'symbol' 'default'⍳⍥⎕C arg[4]]
+     :EndIf
+     charset←0 ⍝ CharFormat does not support character sets ⍝? Does it need to? APL+Win fonts should be handled differently anyway, right?
+     new←was[1],arg[1 2],was[4],arg[5]
+     new[3 5]÷←⊃pix_twips÷tunits ⍝ Convert scale-units to twips
+     object ##.##.∆WS'CharFormat'new ⍝ Redefine this property with the new values
+ :EndSection
+
+ :Section ⍝ Modify contents of selection to match new font (if necessary)
+     :If oldname≢newname ⍝ If the font name has changed
+     :AndIf ≠/oldname newname ##.##.QuadAV¨'⍺' ⍝ And the old and new fonts represent APL symbols differently
+     :AndIf ×≢old←object seltext ⍬ ⍝ And it has something there
+         {}object seltext,⊂old ⍝ Then it needs to be rebuilt using the standard process
+     :EndIf
+ :EndSection
+
+
+ ⍝? What happens to existing text if we change the font size? Probably OK?
+ ⍝? What about typing in an Edit field with an APL font? - Need fix for bug # 18847
