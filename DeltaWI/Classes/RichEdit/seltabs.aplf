@@ -1,0 +1,23 @@
+ result←object seltabs arg;para;t;tunits;units;pix_twip
+⍝ Read or write paragraph tab settings (only partial support)
+⍝ Use properties directly rather than an APL variable
+⍝? Only left-aligned tabs supportable (and no leaders)
+
+ para←object ##.##.∆WG'ParaFormat'
+ (tunits units)←1 3⊂⍛⌷##._supp.MyUnits object
+ pix_twip←units[4;] ⍝ Pixels per twip, for converting scales
+
+ :If 0=≢arg
+     result←(6⊃para)×2⊃pix_twip÷tunits ⍝? Only stop-points, converted to scale-units
+ :Else
+     arg←##.##.Single arg ⍝ Make sure a nested singleton is flattened
+     '∆WI LENGTH ERROR: seltabs'##.##.Error 32<≢arg
+     '∆WI LENGTH ERROR: seltabs'##.##.Error∨/3<≢¨arg
+     '∆WI DOMAIN ERROR: seltabs'##.##.Error~1 3 5∊⍨10|⎕DR∊arg
+     '∆WI DOMAIN ERROR: seltabs'##.##.Error~∧/∧/¨(1↓¨arg)∊¨⊂0,⍳15
+⍝? Report unsupported use of non-left-tabs in 1↓¨?
+     arg←(⊃¨arg)÷2⊃pix_twip÷tunits ⍝ Convert scale-units to twips ⍝? Ignore non-left settings
+     para[6]←⊂arg[⍋arg]
+     object ##.##.∆WS⊂'ParaFormat'para
+     result←##.NoRes
+ :EndIf

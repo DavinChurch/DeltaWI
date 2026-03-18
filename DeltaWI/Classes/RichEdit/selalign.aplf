@@ -1,0 +1,16 @@
+ result←object selalign arg;para
+⍝ Report or modify the paragraph alignment: left/center/right
+⍝ Use properties directly rather than an APL variable
+
+ para←object ##.##.∆WG'ParaFormat'
+
+ :If 0=≢arg
+     result←'left' 'center' 'right'⊃⍨'Left' 'Centre' 'Right'⍳para[1]
+ :Else
+     '∆WI LENGTH ERROR: selalign'##.##.Error 1≠≢arg
+     arg←##.##.Single arg ⍝ Make sure a nested singleton is flattened
+     '∆WI DOMAIN ERROR: selalign'##.##.Error~arg⊂⍛∊'left' 'center' 'right'
+     para[1]←'Left' 'Centre' 'Right'['left' 'center' 'right'⍳⊂arg]
+     object ##.##.∆WS⊂'ParaFormat'para
+     result←##.NoRes
+ :EndIf

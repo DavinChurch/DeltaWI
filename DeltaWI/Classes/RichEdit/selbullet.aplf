@@ -1,0 +1,18 @@
+ result←object selbullet arg;para
+⍝ Paragraphs might have bullets; detect or turn on/off
+⍝ Use properties directly rather than an APL variable
+⍝ (Cannot preserve originally-set value type; report 'none'/'bullet' only.)
+⍝ (Also cannot support extended "bullet" types [numbers, etc].)
+
+ para←object ##.##.∆WG'ParaFormat'
+
+ :If 0=≢arg
+     result←(1+para[5])⊃'none' 'bullet'
+ :Else
+     '∆WI LENGTH ERROR: selbullet'##.##.Error 1≠≢arg
+     arg←##.##.Single arg ⍝ Make sure a nested singleton is flattened
+     '∆WI DOMAIN ERROR: selbullet'##.##.Error~arg⊂⍛∊0 1 'none' 'bullet',,¨0 1
+     para[5]←arg⊂⍛∊'bullet' 1,,¨1
+     object ##.##.∆WS⊂'ParaFormat'para
+     result←##.NoRes
+ :EndIf

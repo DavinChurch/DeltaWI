@@ -42,28 +42,44 @@
  'f.r'∆WI Pass ¯2⊢'selcolor'
  'f.r'∆WI Pass MT⊢'selcolor'(0 255 0)
  'f.r'∆WI Pass 0 255 0⊢'selcolor'
- 'f.r'∆WI Pass'System' (17÷24) 0 'ansi' 0⊢'selfont' ⍝? Default font size will change when negative sizes are implemented
+ 'f.r'∆WI Pass'System' (17÷24) 0 'ansi' 0⊢'selfont'
  'f.r'∆WI Pass MT⊢'selfont' 'Arial'
  'f.r'∆WI Pass'Arial' 1 0 'ansi' 0⊢'selfont'
  'f.r'∆WI Pass MT⊢'selfont'⍬ 2
  'f.r'∆WI Pass'Arial' 2 0 'ansi' 0⊢'selfont'
- 'f.r' ∆WI Pass MT⊢'selection' 0 4
- 'f.r' ∆WI Pass 'test'⊢'seltext'
- 'f.r' ∆WI Pass MT⊢'selstyle' (1 1,3⍴¯1)
- 'f.r' ∆WI Pass 1 1 0 0 0⊢'selstyle'
- 'f.r' ∆WI Pass 1 1 1 1 1⊢'selstyleall'
- 'f.r' ∆WI Pass MT⊢'selection' 0 5
- 'f.r' ∆WI Pass 'testi'⊢'seltext'
- 'f.r' ∆WI Pass 0 0 1 1 1⊢'selstyleall'
+ 'f.r'∆WI Pass MT⊢'selection' 0 4
+ 'f.r'∆WI Pass'test'⊢'seltext'
+ 'f.r'∆WI Pass MT⊢'selstyle'(1 1,3⍴¯1)
+ 'f.r'∆WI Pass 1 1 0 0 0⊢'selstyle'
+ 'f.r'∆WI Pass 1 1 1 1 1⊢'selstyleall'
+ 'f.r'∆WI Pass MT⊢'selection' 0 5
+ 'f.r'∆WI Pass'testi'⊢'seltext'
+ 'f.r'∆WI Pass 0 0 1 1 1⊢'selstyleall'
  'f.r'∆WI Pass MT⊢'selection'(4 2)
  'f.r'∆WI Pass'in'⊢'seltext'
- 'f.r' ∆WI Pass 1 1 1 1 1⊢'selstyleall'
+ 'f.r'∆WI Pass 1 1 1 1 1⊢'selstyleall'
  'f.r'∆WI Pass MT⊢'selection'(3 3)
  'f.r'∆WI Pass'tin'⊢'seltext'
- 'f.r' ∆WI Pass 0 0 1 1 1⊢'selstyleall'
- 'f.r' ∆WI Pass 0 0 1 0⊢'selfontall'
+ 'f.r'∆WI Pass 0 0 1 1 1⊢'selstyleall'
+ 'f.r'∆WI Pass 0 0 1 0⊢'selfontall'
  'f.r'∆WI Pass MT⊢'selection'(4 2)
  'f.r'∆WI Pass'in'⊢'seltext'
- 'f.r' ∆WI Pass 1 1 1 1⊢'selfontall'
+ 'f.r'∆WI Pass 1 1 1 1⊢'selfontall'
+
+ 'f.r'∆WI Pass'none'⊢'selbullet'
+ 'f.r'∆WI Pass MT⊢'selbullet' 1
+ 'f.r'∆WI Pass'bullet'⊢'selbullet'
+ 'f.r'∆WI Pass 0 0 0⊢'selindents'
+ 'f.r'∆WI Pass MT⊢'selindents' 1 0 1
+ 'f.r'∆WI Pass 1 0 1⊢'selindents'
+ 'f.r'∆WI Pass'left'⊢'selalign'
+ 'f.r'∆WI Pass MT⊢'selalign' 'center'
+ 'f.r'∆WI Pass'center'⊢'selalign'
+ 'f.r'∆WI Pass ⍬⊢'seltabs'
+ 'f.r'∆WI Pass MT⊢'seltabs' 2 5 7.5(10 2 1) ⍝? Non-left-tabs accepted but converted to left-tabs
+ 'f.r'∆WI Pass 2 5 7.5 10⊢'seltabs'
+
+
+
 
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

@@ -1,4 +1,4 @@
- result←object selfont arg;tunits;charset;units;pix_twips;was;new;t;style;oldname;newname;old;def
+ result←object selfont arg;tunits;charset;units;pix_twip;was;new;t;style;oldname;newname;old;def
 ⍝ Request or modify the selected text's font
 ⍝ Use properties directly rather than an APL variable
 
@@ -17,12 +17,10 @@
 ⍝   [4]←Color (not used here)
 ⍝   [5]←Offset (+/-, in twips)
 
-⍝? What do we need to do with negative font sizes (which vary from standard due to font leading)? The factor seems to be 0.6875×.
-
  (tunits units)←1 3⊂⍛⌷##._supp.MyUnits object
- pix_twips←units[4;] ⍝ Pixels per twip, for converting scales
+ pix_twip←units[4;] ⍝ Pixels per twip, for converting scales
  was←object ##.##.∆WG'CharFormat'
- new←was[2],was[3],0,'ansi'⊂⍛,was[5] ⋄ new[2 5]×←⊃pix_twips÷tunits ⍝ Convert back to APL+Win structure, including twips to scale-units
+ new←was[2],was[3],0,'ansi'⊂⍛,was[5] ⋄ new[2 5]×←⊃pix_twip÷tunits ⍝ Convert back to APL+Win structure, including twips to scale-units
  :If 'MS Shell Dlg'≡⊃new ⋄ new[1]←⊂'System' ⋄ :EndIf ⍝ This a generic name for System - let's name it consistently
 
  :If 0=≢arg ⋄ result←new ⋄ :Return ⋄ :EndIf ⍝ Just give them back what we have
@@ -54,7 +52,7 @@
      :EndIf
      charset←0 ⍝ CharFormat does not support character sets ⍝? Does it need to? APL+Win fonts should be handled differently anyway, right?
      new←was[1],arg[1 2],was[4],arg[5]
-     new[3 5]÷←⊃pix_twips÷tunits ⍝ Convert scale-units to twips
+     new[3 5]←new[3 5]÷⊃pix_twip÷tunits ⍝ Convert scale-units to twips (can't round because it will throw off reverse calculation)
      object ##.##.∆WS'CharFormat'new ⍝ Redefine this property with the new values
  :EndSection
 

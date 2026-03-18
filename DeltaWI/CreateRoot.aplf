@@ -11,12 +11,13 @@
  this.ScreenSize←1⊃devcaps ⍝ The pixel-size of the entire screen
  this.AspectRatio←÷/⌽2⊃devcaps ⍝ The ratio (W÷H) of inch-size of the screen; estimated; used for visual concerns like square- and circle-drawing
  ⍝inches←(2⊃devcaps)÷25.4 ⍝ How big is the screen in inches (h,w); estimated
- tpp←15 ⍝?1440÷25.4×⊃÷/2↑devcaps ⍝ Twips/pixel ⍝ Override calculated tpp with an assumed value (should we be doing this?)
+ ⍝tpp←⌈/1440÷25.4×⊃÷/2↑devcaps ⍝ Twips/pixel ⍝ Figure best-guess assumption from DevCaps - it should be around 15 twips/pixel
+ tpp←15 ⍝ No, override the calcuation with a whole # constant - the hardware estimates are too unreliable and this should be close enough
  ⍝ _units definition (including any post-computed scale=0 factors), and variables derived from them, are always in real-pixels-per-unit
  this._units←1 2⍴16 8 ⍝ Pixels per system character unit (constant; assumed)
  this._units⍪←this._units[1;]÷8 4 ⍝ Dialog units
- this._units⍪←2⍴20÷tpp ⍝ screensize÷inches÷72 ⍝ Points (72/in)
- this._units⍪←2⍴÷tpp ⍝ Twips (1440/in)
+ this._units⍪←2⍴20÷tpp ⍝ screensize÷inches÷72 ⍝ Points (72/in) [use hardware estimate]
+ this._units⍪←2⍴÷tpp ⍝ Twips (1440/in) [use hardware estimate]
  this._units⍪←devcaps[4]÷100 ⍝ Virtual pixels (scaled, by default)
  this._units⍪←1 1 ⍝ True pixels
  this._size←this.ScreenSize÷this._units[1;] ⍝ Represents the physical screen size, in character units
