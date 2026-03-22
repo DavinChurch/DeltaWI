@@ -1,4 +1,4 @@
- result←object where arg;size;extent;where;scale;pscale;psize;dthick;Borders;margins;t;tunits;punits;dyposn;dysize;resize;at;rewhere
+ result←object where arg;size;extent;where;scale;pscale;psize;dthick;Borders;margins;t;tunits;punits;dyposn;dysize;resize;at;rewhere;pxsize
 ⍝ Request or modify the location and size of a GUI object
 
 ⍝ Note: 'where' is outside dimensions, relative to parent and using parent's scale
@@ -77,6 +77,8 @@
              margins←+/2 2⍴+⌿Borders[1;,2;] ⍝ Differences between 'extent' and 'size' (in pixels)
              extent←punits÷⍨margins+size×tunits ⍝ Recompute 'extent', rescaling as needed
          :EndIf
+         margins←+/2 2⍴+⌿Borders[1;,2;] ⍝ Differences between 'extent' and 'size' (in pixels)
+         pxsize←⌊0.5+margins-⍨extent×punits ⍝ Recompute pxsize, rescaling as needed
      :EndSection
      :Section ⍝ Recompute APL+Win 'size'
          :If (0≠⊃scale)∧2=≢extent ⍝ If we're in proportional scaling, we don't change 'size' at all
@@ -87,7 +89,7 @@
      :Section ⍝ Set APL+Win properties
          :If scale⊃⍛∊5 6 ⋄ size←⌊0.5+size ⋄ :EndIf ⍝ If 'scale' is in pixels, round to integers
          :If pscale⊃⍛∊5 6 ⋄ (where extent)←⌊0.5+where extent ⋄ :EndIf ⍝ If parent 'scale' is in pixels, round to integers
-         object.(_where _size _extent)←where size extent ⍝ Set new APL+Win reference values
+         object.(_where _size _extent _pix_size)←where size extent pxsize ⍝ Set new APL+Win reference values
 ⍝? Make adjustments for closed object handling
      :EndSection
 
@@ -95,7 +97,7 @@
          at←|(where[1 2]-(2↑1↓pscale)×psize>0)+psize×psize<0 ⍝ Figure the Dyalog-relative positioning for offset & inverted axes
          dyposn←(+⌿Borders[2;1 3;1 3])+punits×at ⍝ Where should the Dyalog Posn start?
          dysize←(punits×extent)+_supp.GetSizes object
-         :If 'User'≡object ##.∆WG'Coord' ⍝ In this case, we've got to do something about using custom coordinates (used for Pictures)
+         :If 'User'≡object ##.∆WGet⊂'Coord' 'Prop' ⍝ In this case, we've got to do something about using custom coordinates (used for Pictures)
              ##.Halt'How do we need to handle this??'
              ⍝? How can I relocate the Picture parent when its Coord=User? Does it use the parent's Coord?
              ⍝? What happens if there's a Picture within a Picture?

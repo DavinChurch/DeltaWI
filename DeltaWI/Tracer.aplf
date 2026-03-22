@@ -25,8 +25,8 @@
  T__x←('⎕SE.UCMD' '⎕SE.Dyalog.Utils.disp' '⎕SE.Dyalog.Utils.display')[1+T__u←3|']disp' ']display'⍳T__x] ⍝ Override general spellings
  ((T__t\T__u>0)/T__vars)←(T__x/⍨T__u>0),¨{⍵↓⍨¯1+⍵⍳' '}¨T__vars/⍨T__t\T__u>0 ⍝ Spell out overridden user-command code
  ((T__t\T__u=0)/T__vars)←(T__x/⍨T__u=0),¨' ',¨'''',¨'''',¨⍨(T__t\T__u=0)/T__vars/¨⍨1+T__vars='''' ⍝ Spell out executable user-command code
- ⎕CS⊃⎕RSI ⍝ Let's refer to all their expressions from within the calling namespace
  :Trap 0
+     ⎕CS⊃⎕RSI ⍝ Let's refer to all their executable expressions from within the calling namespace
      T__vars←((×≢¨T__ttls)/¨T__ttls,¨':'),⍪⍎¨T__vars ⍝ Obtain the data values to be shown
  :Else
      ('Error in traced expression: ',⎕DMX.Message)⎕SIGNAL ⎕EN

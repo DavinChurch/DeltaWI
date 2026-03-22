@@ -10,7 +10,8 @@
      '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∨1≠≢arg
      arg←##.##.Single arg
      '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∨~##.##.IsInt arg
-     bits←##.##.BitVals+/∊arg
+      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∨/∊arg<0
+    bits←##.##.BitVals arg←+/∊arg
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error×≢bits~0 1
      object._style←+/bits
      object ##.##.∆WS 0/⊂'Align'(⊃'Left' 'Right'/⍨1,⍨1∊bits) ⍝? Can only be done during object creation

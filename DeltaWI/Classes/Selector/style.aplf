@@ -1,0 +1,49 @@
+ result←object style arg;bits;props
+
+⍝ 0=Tabs
+⍝ 1=Buttons
+⍝ 2=NoTabs
+⍝ 8=Multiline
+⍝ 16=RaggedRight (8∊)
+⍝ 32=FixedWidth
+⍝ 64=ForceImageLeft (32∊)
+⍝ 128=ForceLabelLeft (32∊)
+⍝ 256=Limit Focus (mouse click never focuses on Selector [Tab])
+⍝ 512=Immediate focus (~256∊) (first mouse click focuses on Selector [Tab])
+⍝ 1024=Tabs on side (left)
+⍝ 2048=Tabs on bottom or right
+⍝ 4096=Keep lines intact (forces 8; split rows instead of reordering)
+⍝ 8192=(reserved)
+⍝ 16384=Flat buttons (1∊)
+⍝ 32768=No separators (∧/1 16384∊)
+⍝ 65536=Hot track
+
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_style' 0
+ :Else
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∧1≠≢arg
+     arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∨~##.##.IsInt arg
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∨/∊arg<0
+     bits←##.##.BitVals arg←+/∊arg
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∧/1 2∊bits
+     'Selector style=2 (NoTabs) cannot be supported in Dyalog at present'##.##.Error 2∊bits
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error(arg≥65536×2)∨∨/4 8192∊bits
+     object._style←+/bits
+     props←⍬
+     props,←⊂'Style'('Tabs' 'Buttons' 'FlatButtons'⊃⍨1++/∧\1 16384∊bits)
+     props,←⊂'MultiLine'(∨/8 4096∊bits)
+     props,←⊂'Justify'('Right' 'None'⊃⍨1+∧/16 8∊bits)
+     props,←⊂'TabJustify'('Centre' 'IconEdge' 'Edge'⊃⍨1++/∨\128 64∊bits)
+     props,←⊂'TabFocus'('Normal' 'Never' 'ButtonDown'⊃⍨1+2⊥<\512 256∊bits)
+     props,←0/⊂'Align'('Top' 'Bottom' 'Left' 'Right'⊃⍨1+2⊥1024 2048∊bits) ⍝? Only during creation
+     props,←⊂'ScrollOpposite'(4096∊bits)
+     props,←⊂'FlatSeparators'(~32768∊bits)
+     props,←0/⊂'HotTrack'(65536∊bits) ⍝? Only during creation
+
+     object ##.##.∆WS props
+     result←##.NoRes
+ :EndIf
+
+
+ ⍝? Test all the different styles once we have Pages working well enough to add them to the selector

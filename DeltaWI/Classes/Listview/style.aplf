@@ -28,6 +28,7 @@
      '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∧1≠≢arg
      arg←##.##.Single arg
      '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∨~##.##.IsInt arg
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∨/∊arg<0
      bits←##.##.BitVals arg←+/∊arg
      view←object ⎕VGET⊂'_viewmode' 'report'
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error(arg≥1048576)∨(arg<0)∨131072∊bits

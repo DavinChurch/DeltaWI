@@ -1,0 +1,30 @@
+ result←object New arg;parent;name;props;newobj;actions
+⍝ Create a new Selector object
+
+⍝ style bits:
+⍝ 0=Tabs
+⍝ 1=Buttons
+⍝ 2=NoTabs
+⍝ 8=Multiline
+⍝ 16=RaggedRight (8∊)
+⍝ 32=FixedWidth
+⍝ 64=ForceImageLeft (32∊)
+⍝ 128=ForceLabelLeft (32∊)
+⍝ 256=Limit Focus
+⍝ 512=Immediate focus (~256∊)
+⍝ 1024=Tabs on side (left)
+⍝ 2048=Tabs on bottom or right
+⍝ 4096=Keep lines intact; force 8 (don't reorder rows)
+⍝ 8192=(reserved)
+⍝ 16384=Flat buttons (1∊)
+⍝ 32768=No separators (∧/1 16384∊)
+⍝ 65536=Hot track
+
+ (parent name)←object ⍝ Separate non-standard two-part argument
+ actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
+ arg,←(~'style'⊂⍛∊actions)/⊂'style' 0 ⍝ Force 'style' settings upon creation
+ arg←(parent:parent)##.##.New.Center arg
+
+ props←'TabControl'('Visible' 0) ⍝ Define properties that must be used during creation
+ newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object with required parameters
+ result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure

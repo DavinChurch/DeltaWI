@@ -3,10 +3,10 @@
 ⍝ For use by common-area routines to access properties that may or may not actually exist on the particular object
 
 ⍝ Begin by ensuring correct nesting for each property
- :if 0=≡props ⋄ props←,¨props ⋄ :endif
- :if 1=|≡props ⋄ props←⊂,props ⋄ :endif
+ :If 0=≡props ⋄ props←,¨props ⋄ :EndIf
+ :If 1=|≡props ⋄ props←⊂,props ⋄ :EndIf
  value←⍬⍨¨props←,¨⊆¨,props
- :if obj≡'⎕' ⋄ value←props ⋄ :return ⋄ :endif ⍝ Only for testing argument parsing
+ :If obj≡'⎕' ⋄ value←props ⋄ :Return ⋄ :EndIf ⍝ Only for testing argument parsing
  names←,¨⊃¨props ⍝ Dyalog property names being referenced
  :If 0∊≢props ⋄ :Return ⋄ :EndIf ⍝ Nothing to do
  'Missing property name'⎕SIGNAL 11/⍨0∊≢¨props ⍝ Watch for internal coding error
@@ -19,5 +19,5 @@
 
  ⍝ For any pseudo-properties, assume they're property-like variables and retrieve them (using any provided defaults)
  :If ∨/~real
-     (real~⍛/value)←obj ⎕VGET real~⍛/props ⍝ Obtain from WS if present, otherwise use default value
+     ((~real)/value)←obj ⎕VGET real~⍛/props ⍝ Obtain from WS if present, otherwise use default value
  :EndIf

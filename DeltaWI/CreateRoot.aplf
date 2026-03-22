@@ -24,6 +24,7 @@
  this._where←0 0,this._size ⍝ Pretend the APL root has a location (full-screen)
  this._extent←this._size ⍝ Pretend the APL root has an extent (full-screen)
  this._scale←1 ⍝ Pretend the APL root is measured in characters
+ this._pix_size←this.ScreenSize ⍝ We'll record hidden pixel-sizes for all objects to allow closing certain Dyalog loopholes
  ⍝ Dyalog GUI objects need a parent's Coord in order to measure Posn (at least)
  ⍝ The usual default for a Dyalog root is 'Prop', so convert it to/from pixels to match up (unless it has been changed)
 

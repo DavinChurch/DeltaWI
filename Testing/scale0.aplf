@@ -4,57 +4,68 @@
 
  ⍝ Put a character-scale button on a character-scale form (the normal way)
  'f'∆WI Pass(,'f')⊢'New' 'Form'('where' 30 100)('extent' 10 30) ⍝ In character units
+ GetPix Pass 160 240⊢'f'
  'f.b'∆WI Pass'f.b'⊢'Create' 'Button'('where' 8.5 18)('size' 1.5 12)('caption' 'Corner') ⍝ Put it in the corner of the form
  'f.b'∆WI Pass 8.5 18 1.5 12⊢'where'
  'f.b'∆WI Pass 1.5 12⊢'extent'
  'f.b'∆WI Pass 1.5 12⊢'size'
+ GetPix Pass 24 96⊢'f.b'
 
  ⍝ Put a character-scale button on a percentage-scale form
  'f'∆WI Pass MT⊢'scale' 0 0 0 100 100 ⍝ Change to percentage scaling (1.6 2.4 px/%)
+ GetPix Pass 160 240⊢'f'
  'f.b'∆WI Pass'f.b'⊢'Create' 'Button'('where' 85 60)('size' 1.5 12)('caption' 'Corner') ⍝ Put it in the corner of the form
  'f.b'∆WI Pass 85 60 15 40⊢'where'
  'f.b'∆WI Pass 15 40⊢'extent'
  'f.b'∆WI Pass 1.5 12⊢'size'
+ GetPix Pass 24 96⊢'f.b'
 
  ⍝ Change it to a percentage-scale button and check it out
  'f.b'∆WI Pass MT⊢'scale' 0 0 0 100 100
  'f.b'∆WI Pass 85 60 15 40⊢'where'
  'f.b'∆WI Pass 15 40⊢'extent'
  'f.b'∆WI Pass 100 100⊢'size'
+ GetPix Pass 24 96⊢'f.b'
 
  ⍝ Now let's trying working on a reversed-axis percentage-scale form
  'f'∆WI Pass MT⊢'scale' 0 100 0 ¯100 100 ⍝ Change to percentage scaling (¯1.6 2.4 px/%)
+ GetPix Pass 160 240⊢'f'
  'f.b'∆WI Pass'f.b'⊢'Create' 'Button'('where' 15 60)('size' 1.5 12)('caption' 'Corner') ⍝ Put it in the corner of the form
  'f.b'∆WI Pass 15 60 15 40⊢'where'
  'f.b'∆WI Pass 15 40⊢'extent'
  'f.b'∆WI Pass 1.5 12⊢'size'
+ GetPix Pass 24 96⊢'f.b'
 
  ⍝ Reversing the other axis ought to work just as well
  'f'∆WI Pass MT⊢'scale' 0 0 100 100 ¯100 ⍝ Swap percentage scaling (1.6 ¯2.4 px/%)
+ GetPix Pass 160 240⊢'f'
  'f.b'∆WI Pass'f.b'⊢'Create' 'Button'('where' 85 40)('size' 1.5 12)('caption' 'Corner') ⍝ Put it in the corner of the form
  'f.b'∆WI Pass 85 40 15 40⊢'where'
  'f.b'∆WI Pass 15 40⊢'extent'
  'f.b'∆WI Pass 1.5 12⊢'size'
+ GetPix Pass 24 96⊢'f.b'
 
  ⍝ Let's trying making a scale=0 button on a scale=0 form
  'f'∆WI Pass MT⊢'scale' 0 0 0 100 100 ⍝ Plain percentage scaling (1.6 2.4 px/%)
+ GetPix Pass 160 240⊢'f'
  'f.b'∆WI Pass'f.b'⊢'Create' 'Button'('caption' 'Offset')('scale' 0 0 0 64 64)
  'f.b'∆WI Pass MT⊢'where' 10 10
  'f.b'∆WI Fail'∆WI SIZE ERROR: Cannot set "size" when "scale" is proportional; Use "extent" or "where" instead'⊢'size' 6.4 19.2
  'f.b'∆WI Pass MT⊢'scale' 1
  'f.b'∆WI Pass MT⊢'size' 1 9
  'f.b'∆WI Pass 10 10 10 30⊢'where'
+ GetPix Pass 16 72⊢'f.b'
 
  ⍝ How about scales (in both directions) that don't start at 0?
  'f'∆WI Pass MT⊢'scale' 0 25 150 100 ¯100 ⍝ Offset-percentage scaling (1.6 2.4 px/%)
+ GetPix Pass 160 240⊢'f'
  'f.b'∆WI Pass'f.b'⊢'Create' 'Button'('where'(110 160))('size' 1.5 12)('caption' 'Corner') ⍝ Put it in the corner of the form
  'f.b'∆WI Pass 110 160 15 40⊢'where'
  'f.b'∆WI Pass 15 40⊢'extent'
  'f.b'∆WI Pass 1.5 12⊢'size'
-
+ GetPix Pass 24 96⊢'f.b'
 
 
 ⍝? Also try changing where+ after setting to percentage (what did I mean by this?)
-
 
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

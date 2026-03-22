@@ -1,0 +1,3 @@
+ pxsize←GetPix name
+⍝ Used when testing _pix_size calculations
+ pxsize←('#.⍙WI.',name)⎕VGET⊂'_pix_size'⍬

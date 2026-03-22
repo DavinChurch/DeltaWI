@@ -5,7 +5,7 @@
 
  :Section ⍝ Get all our basic information
      (extent size scale)←object ⎕VGET('_extent'⍬)('_size'⍬)('_scale'⍬) ⍝ My current settings
-     (punits units)←1↓_supp.MyUnits object
+     (tunits punits units)←_supp.MyUnits object
      Borders←_supp.GetBorders object ⍝ Time to figure out what the border definitions are for this class (capitalized because it represents a global)
  :EndSection
 
@@ -46,23 +46,20 @@
      :Case 0 0 ⍝ Staying in proportional, but maybe changing factors
          size←arg[4 5] ⍝ Just directly setting new 'size' values
      :Case 0 1 ⍝ Converting from proportional to fixed
-         tunits←(1⍪units)[1+⊃arg;] ⍝ Compute new-scale unit-conversions for this object's 'scale'
          margins←+/2 2⍴+⌿Borders[1;,2;] ⍝ Differences between 'extent' and 'size' (in pixels)
          size←tunits×margins-⍨extent×punits ⍝ Convert to new units
-         object.⎕EX'_pix_size' ⍝ This isn't valid any more
      :Case 1 0 ⍝ Converting from fixed to proportional
          ⍝ This needs to create an actual pixel-size notation for later use
-         object._pix_size←size×(1⍪units)[1+⊃scale;] ⍝ How big is this object in pixels? Remember it for later sizing needs.
          size←arg[4 5] ⍝ Just directly setting new 'size' values
      :Case 1 1 ⍝ Remaining fixed, but maybe changing units
-         size←(1⍪units)[1+⊃arg;]÷⍨size×(1⍪units)[1+⊃scale;] ⍝ Convert to new units
+         size←size×tunits÷units[⊃arg;] ⍝ Convert size to new units
      :EndSelect
  :EndSection
 
  :Section ⍝ Set APL+Win properties (Dyalog properties don't change)
      scale←arg ⍝ Now we can set the new property value from what they gave us
      :If scale⊃⍛∊5 6 ⋄ (size scale)←⌊0.5+size scale ⋄ :EndIf ⍝ If new 'scale' is in pixels, round to integers
-     object.(_size _scale)←size scale ⍝ Set new APL+Win reference values
+     object.(_size _scale)←size scale ⍝ Set new APL+Win reference value
 ⍝? Make adjustments for closed object handling
  :EndSection
 

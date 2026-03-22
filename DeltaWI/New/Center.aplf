@@ -1,4 +1,4 @@
- arg←opts Center arg;from;actions;units;∆where;∆size;∆extent;where;parent;stretch;psize;pscale;ppxsize;punits;extent;Borders;where_extent;border;_size;size
+ arg←opts Center arg;from;actions;units;∆where;∆size;∆extent;where;parent;stretch;psize;pscale;punits;extent;Borders;where_extent;border;_size;size
 ⍝ Generic routine to auto-center new objects on their parent by modifying the provided argument list before ∆WI execution
 ⍝ opts← namespace with optional controlling variables
 ⍝       parent: reference to parent object [required]
@@ -13,8 +13,8 @@
  ⍝ If needed, modify or prepend a default 'where' for object creation
  (∆where ∆size ∆extent)←∊¨((1↓¨arg),⊂⍬)[actions⍳'where' 'size' 'extent'] ⍝ Which of our defaults are they giving us anyway (so we can skip adding defaults)
  :If 4≠≢where←∆where ⍝ If they're not giving us a full 4⍴ "where", generate a default they can modify later
-     (psize pscale ppxsize)←parent ⎕VGET'_size' '_scale'('_pix_size'(0 0)) ⍝ What's the parent's size & scale? ⍝? Does this give us the right data for scale=0?
-     punits←(units⍪⍨ppxsize÷|2↑3↓pscale)[1+⊃pscale;] ⍝ Compute unit-conversions for the parent object's scale
+     (psize pscale)←parent ⎕VGET'_size' '_scale' ⍝ What's the parent's size & scale? ⍝? Does this give us the right data for scale=0?
+     punits←⊃##.Classes._supp.MyUnits parent ⍝ Get the unit-conversions for the parent object's scale
      :If 2≠≢extent←∆extent ⍝ Use an extent they gave us if we have one, otherwise calculate it
          extent←size×units[1;]÷punits ⍝ Compute an extent using parent's scale
      :EndIf

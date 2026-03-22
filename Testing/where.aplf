@@ -1,5 +1,5 @@
  where;∆WSELF
-⍝ Test related location & size properties (where, extent, size, & scale)
+⍝ Test related location & size properties (where, extent, size, & scale), and ∆WSELF usage
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
  'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
@@ -12,22 +12,27 @@
  ∆WI Pass 7.5625 8⊢'extent'
  ∆WI Pass 7.5625 8⊢'size'
  ∆WI Pass 1 0 0 7.5625 8⊢'scale'
+ GetPix Pass 121 64⊢∆WSELF
  ∆WI Pass MT⊢'extent' 10 10
  ∆WI Pass 0 0 12.4375 12⊢'where'
  ∆WI Pass 10 10⊢'extent'
  ∆WI Pass 10 10⊢'size'
  ∆WI Pass 1 0 0 10 10⊢'scale'
+ GetPix Pass 160 80⊢∆WSELF
  ∆WI Pass MT⊢'scale' 2
  ∆WI Pass 10 10⊢'extent'
  ∆WI Pass 80 40⊢'size'
  ∆WI Pass 2 0 0 80 40⊢'scale'
+ GetPix Pass 160 80⊢∆WSELF
  ∆WI Pass MT⊢'where' 30 150
  ∆WI Pass 30 150 12.4375 12⊢'where'
  ∆WI Pass 10 10⊢'extent'
  ∆WI Pass 80 40⊢'size'
+ GetPix Pass 160 80⊢∆WSELF
  ∆WI Pass 2 0 0 80 40⊢'scale'
  ∆WI Pass MT⊢'extent' 10 30
  ∆WI Pass 80 120⊢'size'
+ GetPix Pass 160 240⊢∆WSELF
 
  'f.b1'∆WI Pass'f.b1'⊢'New' 'Button'('where' 0 0)('caption' 'Yep')
  ∆WSELF←'f.b1'
@@ -35,18 +40,21 @@
  ∆WI Pass 0 0 12 40⊢'where'
  ∆WI Pass 12 40⊢'extent'
  ∆WI Pass 1.5 10⊢'size'
+ GetPix Pass 24 80⊢∆WSELF
 
  'f.b2'∆WI Pass'f.b2'⊢'New' 'Button'('where' 15 40)('extent' 18 60)('caption' 'Nope')
  ∆WSELF←'f.b2'
  ∆WI Pass 15 40 18 60⊢'where'
  ∆WI Pass 18 60⊢'extent'
  ∆WI Pass 2.25 15⊢'size'
+ GetPix Pass 36 120⊢∆WSELF
 
  'f.b3'∆WI Pass'f.b3'⊢'New' 'Button'('where' 40 20)('size' 2 20)('caption' 'Maybe')
  ∆WSELF←'f.b3'
  ∆WI Pass 40 20 16 80⊢'where'
  ∆WI Pass 16 80⊢'extent'
  ∆WI Pass 2 20⊢'size'
+ GetPix Pass 32 160⊢∆WSELF
 
 ⍝ Scale=0 testing done in ∇scale0
 

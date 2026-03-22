@@ -1,4 +1,4 @@
- result←object size arg;size;extent;where;scale;pscale;dthick;Borders;margins;t;tunits;punits;dysize;resize;ppsize
+ result←object size arg;size;extent;where;scale;pscale;dthick;Borders;margins;t;tunits;punits;dysize;resize;ppsize;pxsize
 ⍝ Request or modify the size of a GUI object
 
 ⍝ Note: 'where' is outside dimensions, relative to parent and using parent's scale
@@ -35,6 +35,7 @@
      :Section ⍝ Recompute APL+Win 'extent'
          margins←+/2 2⍴+⌿Borders[1;,2;] ⍝ Differences between 'extent' and 'size' (in pixels)
          extent←punits÷⍨margins+size×tunits ⍝ Convert to parent units to get 'extent'
+         pxsize←⌊0.5+margins-⍨extent×punits ⍝ Recompute pxsize, rescaling as needed
      :EndSection
      :Section ⍝ Recompute APL+Win 'where'
          margins←+/2 2⍴+⌿Borders[1;1 3;] ⍝ Differences between 'extent' and 'where' (in pixels)
@@ -43,13 +44,13 @@
      :Section ⍝ Set APL+Win properties
          :If scale⊃⍛∊5 6 ⋄ size←⌊0.5+size ⋄ :EndIf ⍝ If 'scale' is in pixels, round to integers
          :If pscale⊃⍛∊5 6 ⋄ (where extent)←⌊0.5+where extent ⋄ :EndIf ⍝ If parent 'scale' is in pixels, round to integers
-         object.(_where _size _extent)←where size extent ⍝ Set new APL+Win reference values
+         object.(_where _size _extent _pix_size)←where size extent pxsize ⍝ Set new APL+Win reference values
 ⍝? Make adjustments for closed object handling
      :EndSection
 
      :Section ⍝ Compute and set Dyalog sizing properties
          dysize←(extent×punits)+_supp.GetSizes object
-         :If 'User'≡object ##.∆WG'Coord' ⍝ In this case, we've got to do something about using custom coordinates (used for Pictures)
+         :If 'User'≡object ##.∆WGet⊂'Coord' 'Prop' ⍝ In this case, we've got to do something about using custom coordinates (used for Pictures)
              ##.Halt'How do we need to handle this??'
              ⍝? How can I relocate the Picture parent when its Coord=User? Does it use the parent's Coord?
              ⍝? What happens if there's a Picture within a Picture?
