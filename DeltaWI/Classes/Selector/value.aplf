@@ -1,0 +1,14 @@
+ result←object value arg;pgs;was;newtab
+
+ pgs←object pages ⍬ ⍝ And what are our Page names (in order)?
+ was←(1+≢pgs)|pgs⍳⊂##.##.LeafName⍕(object ##.##.∆WG'TabObj')._Owner ⍝ Get the index number of the Page currently selected
+ :If 0=≢arg
+     result←was ⍝ Just return the current Page index number
+ :Else
+     '∆WI DOMAIN ERROR: value'##.##.Error(1≠≢arg)∨~IsInt arg ⍝ It better be only a single scalar
+     'Cannot de-select a current page in Dyalog'##.##.Error 0∊arg
+     '∆WI DOMAIN ERROR: value'##.##.Error~arg⊃⍛∊⍳≢pgs ⍝ And one of the valid page numbers
+     newtab←object ⎕VGET(arg⊃pgs),'_Tab' ⍝ Which Page tab did they ask to select?
+     1 ##.##.∆NQ newtab'Select' ¯2 ⍝ "Press" the new tab-button (which should fire the onValidate events) & tell 'em where it came from
+     result←##.NoRes
+ :EndIf
