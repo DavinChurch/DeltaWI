@@ -1,0 +1,58 @@
+ Selector;PVal;SVal;SChg;ext;tn
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
+ 'f.s'∆WI Pass'f.s'⊢'New' 'Selector'
+ 'f.s.p1'∆WI Pass'f.s.p1'⊢'New' 'Page'('caption' 'One')
+ 'f.s.p2'∆WI Pass'f.s.p2'⊢'New' 'Page'('caption' 'Two')
+
+ ext←'f.s'∆WI'size' ⍝ Get the size of the Selector
+ 'f.s.p1'∆WI Pass ext⊢'extent' ⍝ And make sure the Page takes up the whole thing
+
+ 'f.s'∆WI Pass'p1' 'p2'⊢'pages'
+ 'f.s'∆WI Pass 1⊢'value'
+
+ 'f.s.p1'∆WI Pass MT⊢'onValidate' 'PVal←2 2⊃∆WARG'
+ 'f.s.p2'∆WI Pass MT⊢'onValidate' 'PVal←2 2⊃∆WARG'
+ 'f.s'∆WI Pass MT⊢'onValidate' 'SVal←2 2⊃∆WARG'
+ 'f.s'∆WI Pass MT⊢'onChange' 'SChg←2⊃∆WARG'
+ PVal←SVal←SChg←0
+ 'f.s'∆WI Pass MT⊢'value' 2
+ ⊢Pass 1 1 1⊢PVal SVal SChg
+ PVal←SVal←SChg←0
+ 'f.s'∆WI Pass MT⊢'value' 1
+ ⊢Pass 2 2 2⊢PVal SVal SChg
+ PVal←SVal←0
+ 'f.s'∆WI Pass 1⊢'Validate'
+ ⊢Pass 1 1⊢PVal SVal
+ 'f.s'∆WI Pass MT⊢'value' 2
+ PVal←SVal←0
+ 'f.s'∆WI Pass 1⊢'Validate'
+ ⊢Pass 2 2⊢PVal SVal
+ PVal←SVal←0
+ 'f.s.p1'∆WI Pass 1⊢'Validate'
+ ⊢Pass 1 1⊢PVal SVal
+ PVal←SVal←0
+ 'f.s.p2'∆WI Pass 1⊢'Validate'
+ ⊢Pass 2 2⊢PVal SVal
+
+⍝ Visible verify these styles
+ 'f.s'∆WI Pass MT⊢'style' 0
+ 'f.s'∆WI Pass MT⊢'style' 1
+ 'f.s'∆WI Pass MT⊢'style' 1 16384
+ 'f.s'∆WI Pass MT⊢'style' 1 16384 32768
+ 'f.s'∆WI Pass MT⊢'style' 32 128
+⍝ 'f.s'∆WI Pass MT⊢'style' 1024      ⍝? Can only be set during object creation
+⍝ 'f.s'∆WI Pass MT⊢'style' 2048      ⍝? Can only be set during object creation
+⍝ 'f.s'∆WI Pass MT⊢'style' 1024 2048 ⍝? Can only be set during object creation
+
+ :For tn :In 2↓⍳10 ⍝ To provide for multiple rows of tabs
+     ('f.s.p',⍕tn)∆WI Pass('f.s.p',⍕tn)⊢'New' 'Page'('caption'('#',⍕tn))
+ :EndFor
+
+ 'f.s'∆WI Pass MT⊢'style' 8
+ 'f.s'∆WI Pass MT⊢'style' 8 16
+ 'f.s'∆WI Pass MT⊢'style' 8 32
+ 'f.s'∆WI Pass MT⊢'style' 8 32 128
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

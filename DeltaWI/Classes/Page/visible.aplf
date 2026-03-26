@@ -1,0 +1,3 @@
+ result←object visible arg
+ '∆WI ACTION ERROR: Property "visible" is read-only'##.##.Error×≢arg
+ result←object ##.visible arg

@@ -3,6 +3,7 @@
 ⍝ opts← namespace with optional controlling variables
 ⍝       parent: reference to parent object [required]
 ⍝       stretch: pretend new object is this many pixels bigger (vertical, horizontal) for centering calculations
+⍝ If this routine is not used during ∇New processing, be sure to at least set _where, _extent, & _size variables before calling ∇Initialize.
 
  from←⊃⎕RSI ⍝ Immediate source namespace calling me (where I can find settings)
  actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with

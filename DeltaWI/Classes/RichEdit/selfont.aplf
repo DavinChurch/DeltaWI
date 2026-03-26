@@ -17,7 +17,7 @@
 ⍝   [4]←Color (not used here)
 ⍝   [5]←Offset (+/-, in twips)
 
- (tunits units)←1 3⊂⍛⌷##._supp.MyUnits object
+ (tunits units)←1 0 1/##._supp.MyUnits object
  pix_twip←units[4;] ⍝ Pixels per twip, for converting scales
  was←object ##.##.∆WG'CharFormat'
  new←was[2],was[3],0,'ansi'⊂⍛,was[5] ⋄ new[2 5]×←⊃pix_twip÷tunits ⍝ Convert back to APL+Win structure, including twips to scale-units

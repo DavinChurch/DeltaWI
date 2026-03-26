@@ -1,5 +1,6 @@
  result←object Validate arg;curpage;pageno
  ⍝ Explicitly request a validation of the current page (ignore any arguments)
  curpage←object ⎕VGET(pageno←object value ⍬)⊃object pages ⍬ ⍝ What page are we validating?
- :If ~result←'Validate'##.##.Event curpage ##.##.Application ¯1(¯1,pageno) ⋄ :Return ⋄ :EndIf
- :If ~result←'Validate'##.##.Event object ##.##.Application ¯1(¯1,pageno) ⋄ :Return ⋄ :EndIf
+ :If result←~(⊂'Validate'##.##.Event curpage ##.##.Application ¯1(¯1,pageno))∊⍬ 1⍴¨0
+ :AndIf result←~(⊂'Validate'##.##.Event object ##.##.Application ¯1(¯1,pageno))∊⍬ 1⍴¨0
+ :EndIf

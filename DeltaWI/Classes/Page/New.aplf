@@ -1,0 +1,26 @@
+ result←object New arg;parent;name;props;newobj;size;punits;units;extent;newtab;previous;actions
+
+ (parent name)←object ⍝ Separate non-standard two-part argument
+ actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
+ previous←'TabButton'##.##.∆WN parent
+
+ newtab←⎕VGET(parent⍕⍛,'.',##.##.Next parent)##.##.∆WC'TabButton' ⍝ First create a hidden "Tab" object using the next available arbitrary number
+ ##.##.New.InitChild parent newtab
+
+ props←'SubForm'('Visible' 0) ⍝ Define properties that must be used during creation
+ newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object with required parameters
+ newobj ##.##.∆WS⊂'TabObj'newtab ⍝ Connect this to the hidden TabButton object created above
+ newtab._Owner←newobj ⍝ Set the usual referral back to the SubForm (Page), even though it's also available in TabObj now
+
+ ⍝ Explicitly set positioning variables before calling ∇Initialize, since they're not modifiable
+ (punits units)←1 0 1/##._supp.MyUnits parent
+ extent←parent._size ⋄ size←extent÷units[1;]÷punits ⍝ Occupy full client area of parent Selector
+ newobj.(_where _extent _size)←(0 0,extent)extent size
+
+ arg,←(~'caption'⊂⍛∊actions)/⊂'caption'name
+ result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure
+
+ newtab ##.##.New.SysEvents newobj ⍝ Set up any system-level events (e.g. _on_Select) that need to come from the TabButton instead of the SubForm
+ :If 0=≢previous ⋄ 1 ##.##.∆NQ newtab'Select' ⋄ :EndIf ⍝ Force auto-selection of first-added page
+
+ ⍝? Note: Adding a new Page to a Selector causes it to be automatically set in TabControl.TabObj. It should instead preserve the current tab, including "none".

@@ -4,7 +4,7 @@
 ⍝? Cannot support arg[2] = Bullet indent amount
 
  para←object ##.##.∆WG'ParaFormat'
- (tunits units)←1 3⊂⍛⌷##._supp.MyUnits object
+ (tunits units)←1 0 1/##._supp.MyUnits object
  pix_twip←units[4;] ⍝ Pixels per twip, for converting scales
 
  :If 0=≢arg

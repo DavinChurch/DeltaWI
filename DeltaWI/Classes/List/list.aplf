@@ -18,6 +18,7 @@
          :Case 2 ⍝ Is it a matrix of lines?
              new←##.##.∆dtr¨↓new
          :Else
+⍝? For some reason, a 3 1⍴ nested matrix is allowed, probably as a variant of a nested vector - will this handle it?
              new←,,¨↓new
          :EndSelect
      :EndIf

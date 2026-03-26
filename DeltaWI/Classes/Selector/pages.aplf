@@ -2,4 +2,4 @@
  '∆WI ACTION ERROR: Property "pages" is read-only'##.##.Error 0≠≢arg
  result←'SubForm'##.##.∆WN object
  result←result[⍋result ##.##.∆WG¨⊂'TabIndex']
- result←result._name ⍝ Convert to low-level page names
+ result←result._name ⍝ Convert to low-level Page names (GUI object names, not tab-captions)

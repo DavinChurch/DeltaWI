@@ -1,0 +1,3 @@
+ result←object size arg
+ '∆WI ACTION ERROR: Property "size" is read-only'##.##.Error×≢arg
+ result←object ##.size arg

@@ -33,3 +33,16 @@
 ⍝? Maybe just going back to the most local application scope makes sense for events, since they may be called anytime?
 
  WRES←Application ⎕VGET⊂'∆WRES'wres             ⍝ Return result to the calling function for easier access (but shy so it won't just print)
+
+
+ ⍝? Ok, we've got a problem here. If the user executes an event-handler that contains a branch, then it jumps out of ∆WI without ever having
+ ⍝? a chance to clean up (especially the quad-vars). The only thing I can think of so far is cutting off the expression at the point of the
+ ⍝? branch and putting it into a global for ∆WI to perform the last thing before it returns (probably from a Wait).
+ ⍝? Don't do this for quoted strings unless they're being ⍎'d, which makes it an even a bigger mess.
+ ⍝? Got any better ideas?
+
+ ⍝? Shouldn't we be checking the contents for an ⍎ anyway and replacing it with a function call to handle special cases, including double-quotes?
+
+ ⍝? Create ⎕-vars in the system and localize them here?
+ ⍝? Create/use PrepExec (recusively)
+ ⍝? Hmmm... was thinking about a subroutine (∇RunIt?) that could localize the sys vars differently, but I don't remember which level I worked out it should do that

@@ -1,0 +1,3 @@
+ result←object extent arg
+ '∆WI ACTION ERROR: Property "extent" is read-only'##.##.Error×≢arg
+ result←object ##.extent arg

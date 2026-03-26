@@ -1,4 +1,4 @@
- result←object style arg;bits;props
+ result←object style arg;bits;props;width
 
 ⍝ 0=Tabs
 ⍝ 1=Buttons
@@ -40,6 +40,17 @@
      props,←⊂'ScrollOpposite'(4096∊bits)
      props,←⊂'FlatSeparators'(~32768∊bits)
      props,←0/⊂'HotTrack'(65536∊bits) ⍝? Only during creation
+     ⍝ If setting fixed-sized tabs on a single line, leave a 38-pixel right margin so there is room for the scroll gadget
+     :If 32∊bits
+         width←(2⊃object._pix_size)-38×~8∊bits ⍝ How far across can we spread them?
+         ⍝? If it's multi-line, how do we know how many tabs are on each line?
+         ⍝? Dyalog cannot set different tab sizes for each line of a multi-line TabControl!
+         ⍝? The number of tabs (perhaps added later) changes the width of each tab for "fitting" - ask for help?
+         props,←⊂'TabSize'⍬ (⌊width÷3) ⍝? Just leave room for three tabs at present
+     :Else
+         props,←⊂'TabSize'⍬ ¯1
+     :EndIf
+     ⍝? We need to set fixed width for style=32
 
      object ##.##.∆WS props
      result←##.NoRes

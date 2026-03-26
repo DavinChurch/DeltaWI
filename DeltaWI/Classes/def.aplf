@@ -21,3 +21,6 @@
 ⍝? What else do we need to do here???
      result←NoRes
  :EndIf
+
+
+ ⍝? Oops! What if an object has a hidden component that is not a child, such as a Page with a sibling TabButton?? Could we move it inside temporarily, even a ⎕OR of it?

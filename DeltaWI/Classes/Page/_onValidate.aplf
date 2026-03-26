@@ -1,5 +1,5 @@
  ok←run _onValidate message
- ⍝ This is only invoked internally
+ ⍝ This is only invoked internally, and on the SubForm portion of the Page object
 
  ⍝ ∆WARG: Cause of validation, (new page #, old page #) -- must be passed in by explicit call in message[3 4]
  ⍝ ∆WARG[1]: 2=Mouse, 1=Keyboard, 0=Unknown, ¯1=Validate method, ¯2=value changed, ¯3=Close method

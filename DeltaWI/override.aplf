@@ -1,5 +1,6 @@
- rpt←namespace override fnname
+ rpt←{namespaceref} override fnname
 ⍝ Create an override function in the given namespace - for personal/temporary use
- 'Function already exists'⎕SIGNAL 16/⍨0≠namespace.⎕NC fnname
- 'Function definition error'⎕SIGNAL 16/⍨fnname≢namespace.⎕FX(1,⍴fnname)⍴fnname
- rpt←⎕SE.Link.Add namespace⍕⍛,'.',fnname ⍝ Try to use ]Link to let it know there's a new function
+ :If 0=⎕NC'namespaceref' ⋄ namespaceref←⎕THIS ⋄ :EndIf ⍝ Default location for the override fn is ⎕THIS
+ 'Function already exists'⎕SIGNAL 16/⍨0≠namespaceref.⎕NC fnname
+ 'Function definition error'⎕SIGNAL 16/⍨fnname≢namespaceref.⎕FX(1,⍴fnname)⍴fnname
+ rpt←⎕SE.Link.Add namespaceref⍕⍛,'.',fnname ⍝ Try to use ]Link to let it know there's a new function

@@ -1,0 +1,8 @@
+ result←object Validate arg;pageno;sel;pgs
+ ⍝ Explicitly request a validation of this page (ignore any arguments)
+ sel←⊃object._Ancestry
+ pgs←sel ##.Selector.pages ⍬
+ pageno←(1+≢pgs)|pgs⍳⊂object._name
+ :If result←~(⊂'Validate'##.##.Event object ##.##.Application ¯1(¯1,pageno))∊⍬ 1⍴¨0
+ :AndIf result←~(⊂'Validate'##.##.Event sel ##.##.Application ¯1(¯1,pageno))∊⍬ 1⍴¨0
+ :EndIf

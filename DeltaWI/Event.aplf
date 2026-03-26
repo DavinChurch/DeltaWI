@@ -1,4 +1,4 @@
- {dq}←events Event message;event;object;realevent;localize;fn;action;run;Application;handler;⎕TRAP;GUIroot;suppress;warg;wres;wevent;force;mousing;mouseonce;top
+ {dq}←events Event message;event;object;realevent;localize;fn;action;run;Application;handler;⎕TRAP;GUIroot;suppress;warg;wres;wevent;force;mousing;mouseonce;top;realobject
 ⍝ When any needed Dyalog event is signalled, execute this function directly to perform the appropriate operations.
 ⍝ Important: This function often operates independently of ∆WI and allows a separate access point into the DeltaWI system when system events call it.
 ⍝
@@ -25,7 +25,8 @@
  :Hold top/'∆WI'('∆WI#',⍕⎕TID)                                          ⍝ Make sure we stay single-threaded!
 
      :If 0=≢events←,⊆,events ⋄ :Return ⋄ :EndIf ⍝ If there are no APL+Win events to emulate, just exit quickly
-     (object realevent)←2↑message ⍝ What object/event are we processing? ("message" may be synthetic)
+     object←⊃(realobject realevent)←2↑message ⋄  ⍝ What object/event are we processing? ("message" may be synthetic)
+     :While 0≠object.⎕NC'_Owner' ⋄ object←object._Owner ⋄ :EndWhile ⍝ Follow the ownership chain up to a real APL+Win object to work on
      :If 9=⎕NC'realevent' ⍝ Is this an internal (non-real) event call?
          ⍝ If our event message ia synthetic with an "event name" that's actually a namespace reference,
          ⍝ then that is a previous "Application" pointer being passed in from an internal (implied) event.
@@ -36,7 +37,8 @@
          suppress←object ⎕VGET⊂'_suppress' 0 ⍝ Have they asked to suppress this implied event?
 ⍝? 'suppress' still needs testing, when get get to an object that can use it like Edit
 ⍝? What do we do about methods that directly cause events? Can they be suppressed or not?
-         dq←Classes.NoRes ⍝ We'll have a different default return value for synthetic events (e.g. for when it is suppressed)
+         dq←Classes.NoRes ⍝ We'll have a different default return value for synthetic events (e.g. for when it is suppressed or isn't assigned)
+⍝? Why do we need to default this to NoRes for internal events instead of 1?
      :Else
          :If (1<≢⎕RSI)∧∧/1,2≡/⎕NSI ⍝? This is for debugging internal event calls - delete before production
              'Messages from ⎕RSI determination when called from within DeltaWI'Tracer')SI'

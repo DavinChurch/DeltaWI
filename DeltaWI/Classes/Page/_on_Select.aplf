@@ -1,0 +1,17 @@
+ ok←run _on_Select message;object;pgs;sel;waspage;newpage;wasndx;newndx;by
+ ⍝ Intercept an activation of a Page's TabButton and do any preliminary checking/work on the Page as a whole unit
+
+ object←⊃message ⍝ The Page's TabButton that was pressed
+ :If 'SubForm'≡object ##.##.∆WG'Type' ⋄ ok←1 ⋄ :Return ⋄ :EndIf ⍝ Ignore Select events coming directly from the SubForm instead of the TabButton
+ by←3⊃message,2 ⍝ Assume the mouse changed it (if we're not told from another routine) ⍝? Can we detect a keyboard-invoked Select here?
+ newpage←object._Owner ⍝ The matching Page (SubForm) object
+ sel←⊃newpage._Ancestry ⍝ The Selector (parent) object
+ waspage←(sel ##.##.∆WG'TabObj')._Owner ⍝ The previously-selected Page object that we're leaving
+ pgs←sel sel._Class.pages ⍬ ⍝ What are our sibling Page (object) names (in order)?
+ (wasndx newndx)←(1+≢pgs)|pgs⍳##.##.LeafName¨⍕¨waspage newpage
+ :If ok←wasndx=newndx ⋄ :Return ⋄ :EndIf ⍝ If the page hasn't actually changed, don't do anything
+ :If ok←~(⊂'Validate'##.##.Event waspage ##.##.Application by(newndx,wasndx))∊⍬ 1⍴¨0 ⍝ Validate previous Page
+ :AndIf ok←~(⊂'Validate'##.##.Event sel ##.##.Application by(newndx,wasndx))∊⍬ 1⍴¨0 ⍝ Validate Selector
+     waspage._visible←0 ⋄ newpage._visible←1 ⍝ Manage the _visible properties ourselves!
+     ok←1⊣'Change'##.##.Event sel ##.##.Application newndx wasndx ⍝ A successful Selector Change is occurring
+ :EndIf

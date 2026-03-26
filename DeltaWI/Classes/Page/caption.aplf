@@ -1,0 +1,13 @@
+ result←object caption arg
+
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_caption' ''
+ :Else
+     '∆WI DOMAIN ERROR: caption'##.##.Error 1≠≢arg
+     arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: caption'##.##.Error~##.##.IsChar arg
+     '∆WI RANK ERROR: caption'##.##.Error 1<|≡arg
+     object._caption←arg
+     (object ##.##.∆WG'TabObj')##.##.∆WS⊂'Caption'(∊arg)
+     result←##.NoRes
+ :EndIf

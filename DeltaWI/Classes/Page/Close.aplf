@@ -1,0 +1,10 @@
+ result←object Close arg;sel;pgs;pageno
+
+ sel←⊃object._Ancestry
+ pgs←sel ##.Selector.pages ⍬
+ pageno←(1+≢pgs)|pgs⍳⊂object._name
+ :If result←~(⊂'Validate'##.##.Event object ##.##.Application ¯3(0,pageno))∊⍬ 1⍴¨0 ⍝ Validate the Page before closing it ⍝? Is this "new page" = 0 at this time?
+ :AndIf result←~(⊂'Validate'##.##.Event sel ##.##.Application ¯3(0,pageno))∊⍬ 1⍴¨0 ⍝ Validate the Selector before closing it
+ :AndIf result←object ##.Close arg ⍝ Call the normal closing process
+     ⍝sel ##.Selector.value 0 ⍝ The selector no longer has an active page ⍝? This doesn't work because Dyalog can't de-select all pages
+ :EndIf
