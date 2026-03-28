@@ -13,6 +13,9 @@
  ⊢Pass 1⊢changes ⍝ Has the global changed?
  'f.e'∆WI Pass'testing'⊢'text'
  ⊢Pass 1⊢changes ⍝ Has the global not changed?
+ 'f.e' ∆WI Pass MT⊢'suppress' 1 ⍝ Now let's test suppression
+ 'f.e'∆WI Pass MT⊢'text' 'Testing'
+ ⊢Pass 1⊢changes ⍝ Has the global not changed?
  ⍝ We can't event test this manually without a ⎕DQ
 
  ⍝ Now, let's check out some internal-event processing - but this has to be completed by hand

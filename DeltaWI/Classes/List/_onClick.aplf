@@ -1,5 +1,2 @@
  ok←run _onClick message
- ⍝ Execute the List:onClick event handler
- ⍝ No arguments or results are used for this event.
-
- ok←1⊣##.##.Run run
+ ok←1⊣##.##.Run run ⍝ No arguments or results are used for this event.

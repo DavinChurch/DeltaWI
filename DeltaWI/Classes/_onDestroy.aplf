@@ -2,4 +2,4 @@
  ⍝ Execute the generic onDestroy event handler
  ⍝ No arguments or results are used for this event.
 
- ok←1⊣##.Run run
+ ok←(NoRes 1⊃⍨1+×≢2⊃message)⊣##.Run run

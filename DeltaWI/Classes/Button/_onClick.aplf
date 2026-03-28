@@ -1,5 +1,4 @@
  ok←run _onClick message
- ⍝ Execute the Button:onClick event handler
  ⍝ No arguments or results are used for this event.
 
  ok←1⊣##.##.Run run

@@ -1,4 +1,4 @@
  ok←run _onShow message
  ⍝ Execute a generic onShow event handler
 
- ok←{⍵≡0:NoRes ⋄ ⍵}message 0 ##.Run run
+ ok←NoRes⊣message 0 ##.Run run

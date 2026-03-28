@@ -1,4 +1,4 @@
- result←object InsertRows arg;row;previous;r;nc;n
+ result←object InsertRows arg;row;previous;r;nc;n;NeverSuppress
  ⍝ 'InsertRows' works exactly like setting 'list', except the data is inserted immediately before a given row
 
 ⍝ arg[1]←Row ID (to insert before)

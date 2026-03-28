@@ -1,4 +1,4 @@
- result←object Modify arg;was;new;flags;mystop;do;kids;parent;mod;done;onmod
+ result←object Modify arg;was;new;flags;mystop;do;kids;parent;mod;done;onmod;NeverSuppress
 ⍝ Change the object's "currently modified" three-state flag
 
  '∆WI LENGTH ERROR: Modify'##.Error~0 1∊⍨≢arg

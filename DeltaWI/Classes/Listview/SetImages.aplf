@@ -1,4 +1,4 @@
- result←object SetImages arg;items;rows;images
+ result←object SetImages arg;items;rows;images;NeverSuppress
 
 ⍝ arg[1]←Row IDs
 ⍝ arg[2]←Matrix of image indices to place on those rows

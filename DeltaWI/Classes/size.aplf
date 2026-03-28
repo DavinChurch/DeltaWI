@@ -59,7 +59,7 @@
      :EndSection
 
      :If size≢resize ⍝ Only if the size is changing
-         'Resize'##.Event object ##.Application,object._size,0 ⍝ Run the onResize event handler
+         'Resize?'##.Event object ##.Application,object._size,0 ⍝ Run the onResize event handler
      :EndIf
      result←NoRes
 

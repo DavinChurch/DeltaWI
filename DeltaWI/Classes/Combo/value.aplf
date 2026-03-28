@@ -11,5 +11,5 @@
      object ##.##.∆WS'SelItems'(arg∊⍨⍳≢object ##.##.∆WG'Items') ⍝ Write the new value directly to Dyalog
      result←##.NoRes
 
-     'Click'##.##.Event object ##.##.Application ⍝ Process onClick for them
+     'Click?'##.##.Event object ##.##.Application ⍝ Process onClick for them
  :EndIf

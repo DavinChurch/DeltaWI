@@ -1,6 +1,4 @@
  ok←run _on_KeyPress message;style;key;limit;txt;object
-⍝ Internal handling of the Edit:onKeyPress event
-
  object←⊃message
  :If 0≠⍴⍴key←3⊃message ⍝ Get the keystroke (if it's a single key)
      ok←1 ⍝ Don't mess with key-commands at all

@@ -1,6 +1,6 @@
  ok←run _onClose message
  ⍝ Execute a generic onClose event handler
- ⍝ Must return only 0 or 1
+ ⍝ Must return only 0 (abort) or 1 (ok); for either a native event or the Close method
 
  ok←message 1 ##.Run run
- ok←~⊂ok⊂⍛∊0(,0) ⍝ Are they allowing closure?
+ ok←~⊂ok⊂⍛∊⍬ 1⍴¨0 ⍝ Are they allowing closure?

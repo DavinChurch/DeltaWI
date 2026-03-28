@@ -1,3 +1,2 @@
  ok←run _onLimit message
-⍝ Execute the Edit:onLimit event handler (no ⎕WARG)
- ok←1⊣##.##.Run run
+ ok←1⊣##.##.Run run ⍝ (no ⎕WARG)

@@ -1,6 +1,4 @@
  ok←run _onKeyPress message;key;keys
-⍝ Execute the Combo:onKeyPress event handler
-
  :If 1=≢key←3⊃message
      :Select ok←key 0 ##.##.Run run
      :Case 0

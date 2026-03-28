@@ -1,4 +1,4 @@
- result←object Open arg;hidden;kids;waiting
+ result←object Open arg;hidden;kids;waiting;NeverSuppress
 ⍝ Open a closed GUI object
 
  :If 0≠object._opened ⍝ If it's already opened/opening, then we have nothing to do here
@@ -14,7 +14,7 @@
  object._opened←1 ⍝ Now it's fully open
 
  :If ×≢kids←object children ⍬
-     {}(object ⎕VGET ##.LeafName¨kids)('Open'##.Invoke)¨⊂⍬ ⍝ Recursively Open all my children
+     (object ⎕VGET ##.LeafName¨kids)('Open'##.Invoke)¨⊂⍬ ⍝ Recursively Open all my children
  :EndIf
 
  object ##.∆WSet⊂'Active' 1 ⍝ Update Dyalog control properties
@@ -22,7 +22,7 @@
      object ##.∆WSet⊂'Visible' 1 ⍝ Make sure it's shown
  :EndIf
 
-_supp.waiton object ⍝ Add this to any currently-waiting primary Form
+ _supp.waiton object ⍝ Add this to any currently-waiting primary Form
 
 
 ⍝? Old coding I want to remember for a while...

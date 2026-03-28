@@ -1,5 +1,5 @@
  ok←run _onChange message
- ⍝ This is only invoked internally
+ ⍝ This is only invoked internally, and from the Page object
 
  ⍝ ∆WARG: Old page #, new page # -- must be passed in by explicit call in message[3 4]
  ok←1⊣(∆WARG:message)##.##.Run run

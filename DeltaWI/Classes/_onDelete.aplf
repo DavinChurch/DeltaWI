@@ -1,5 +1,5 @@
-ok←run _onDelete message
+ ok←run _onDelete message
  ⍝ Execute the generic onDelete event handler
  ⍝ No arguments or results are used for this event.
 
-ok←1⊣##.Run run
+ ok←(NoRes 1⊃⍨1+×≢2⊃message)⊣##.Run run

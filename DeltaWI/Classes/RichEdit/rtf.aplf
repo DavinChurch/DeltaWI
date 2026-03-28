@@ -18,6 +18,6 @@
      result←##.NoRes
 
      ⍝ Now we need to fire an implied onChange event for them
-     'Change'##.##.Event object ##.##.Application
+     'Change?'##.##.Event object ##.##.Application
 ⍝? Also watch out for onModified!
  :EndIf

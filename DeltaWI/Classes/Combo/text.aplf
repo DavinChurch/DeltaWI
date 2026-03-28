@@ -24,5 +24,5 @@
          {}object value,0 ⍝ For style=0,1 boxes, this resets any current selection
      :EndIf
      ⍝ onClick is already run by ∇value
-     'Change'##.##.Event object ##.##.Application ⍝ Process onChange for them
+     'Change?'##.##.Event object ##.##.Application ⍝ Process onChange for them
  :EndIf

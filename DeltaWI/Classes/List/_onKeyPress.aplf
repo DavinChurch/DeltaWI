@@ -1,6 +1,4 @@
  ok←run _onKeyPress message;key;keys
-⍝ Execute the List:onKeyPress event handler
-
  :If 1=≢key←3⊃message
      :If 0=≢keys←message[1]⎕VGET⊂'_keys'⍬
      :OrIf message[4]∊keys

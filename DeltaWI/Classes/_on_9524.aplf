@@ -7,3 +7,5 @@
 
 ⍝ After this has been processed, we may remove the event 9524 trapping from the object, but why bother?
 ⍝ We'll leave it there in case more Defers are used on the object.
+
+⍝? Ack! Shouldn't we be returning an "ok" code here??

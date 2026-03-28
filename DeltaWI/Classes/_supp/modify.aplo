@@ -16,7 +16,7 @@
          do←+/∧\(flags[;1]=0)∧~¯1↓mystop,flags[;2] ⍝ How many of my ancestors need to be changed?
          :For parent :In do↑object._Ancestry
              parent._modified←¯1 ⍝ It's ¯1 now to show that I've been modified
-             'Modified'##.##.Event parent ##.##.Application,¯1 0,¯1,reason[2] ⍝ Run their onModified event handler
+             'Modified?'##.##.Event parent ##.##.Application,¯1 0,¯1,reason[2] ⍝ Run their onModified event handler
          :EndFor
      :Else ⍝ Turning it off, resets all descendants to 0 as well, and conditionally some of the ancestors as well
          ⍝ Reset all descendants
@@ -38,7 +38,7 @@
                  :EndIf
                  ⍝ Ok, no other children of this parent have modifications, so we need to reset it to 0 as well
                  parent._modified←0 ⍝ I was the only modified child of this parent, so reset it as well
-                 'Modified'##.##.Event parent ##.##.Application,0 ¯1,¯1,reason[2] ⍝ Run their onModified event handler
+                 'Modified?'##.##.Event parent ##.##.Application,0 ¯1,¯1,reason[2] ⍝ Run their onModified event handler
                  :If flags[2] ⋄ :Leave ⋄ :EndIf ⍝ If modifications stop here, then don't go any further up
                  done,←parent ⋄ parent←⊃parent._Ancestry ⍝ Now check their parent to see if it need changes
              :EndWhile
@@ -47,4 +47,4 @@
  :EndSection
 
  ⍝ Finally, we'll fire my own onModified event
- result←'Modified'##.##.Event object ##.##.Application,new,was,reason ⍝ Run my onModified event handler (with arguments and result)
+ result←'Modified?'##.##.Event object ##.##.Application,new,was,reason ⍝ Run my onModified event handler (with arguments and result)

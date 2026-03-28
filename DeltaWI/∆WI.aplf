@@ -17,7 +17,7 @@
      :If nametesting ⋄ result←objname ⋄ :Return ⋄ :EndIf                ⍝ Allow for name-parsing-only internal testing to be performed
      :If resume←action≡,⊂,'*'                                           ⍝ Resume from within onAction handler?
          :Hold '∆WI@onAction' ⋄ resume←0 ⋄ :Else ⋄ resume←1 ⋄ :EndHold  ⍝ Are we really in the middle of onAction processing that can be continued?
-     :AndIf resume
+     :AndIf resume                                                      ⍝ Are we still only resuming (only if we're on :Hold)
          action←Application ⎕VGET⊂'∆WARG'⍬                              ⍝ Reconstitute the original command and pass it back into onAction for resumption
      :EndIf
      (name args)←Normalize action                                       ⍝ Separate action name from its arguments and standardize structure

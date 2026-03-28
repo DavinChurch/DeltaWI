@@ -2,7 +2,7 @@
 ⍝ Allow reading and writing the state of the Check(box)
 
  :If 0=≢arg
-     result←object ##.##.∆WG 'State'
+     result←object ##.##.∆WG'State'
  :Else
      arg←##.##.Single arg
      '∆WI DOMAIN ERROR: value'##.##.Error~##.##.IsInt arg
@@ -11,5 +11,5 @@
      '3-state checkboxes cannot be supported at present'##.##.Error 2∊arg
      object ##.##.∆WS⊂'State'arg ⍝ Set Dyalog directly - do not keep a variable copy of the state
 
-     result←##.NoRes⊣'Click'##.##.Event object ##.##.Application ⍝ Just run the onClick event handler without a result
+     result←##.NoRes⊣'Click?'##.##.Event object ##.##.Application ⍝ Just run the onClick event handler without a result
  :EndIf

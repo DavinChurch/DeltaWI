@@ -1,4 +1,2 @@
-ok←run _onWait message
- ⍝ Execute a Form:onWait event handler
-
+ ok←run _onWait message
  ok←NoRes⊣message 0 ##.##.Run run

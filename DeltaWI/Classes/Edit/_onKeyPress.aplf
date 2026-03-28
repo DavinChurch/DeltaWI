@@ -1,6 +1,4 @@
  ok←run _onKeyPress message;key;keys
-⍝ Execute the Edit:onKeyPress event handler
-
  :If 1=≢key←3⊃message
      :If 0=≢keys←message[1]⎕VGET⊂'_keys'⍬
      :OrIf message[4]∊keys
@@ -26,5 +24,4 @@
      ok←0 ⍝ Abort
  :EndIf
 
- ⍝? Add a check for exceeding the limit - do we do that here or do we need it somewhere else, or can we get Dyalog to do it?
  ⍝? Do we need to add extra processing here to support styles like case-forcing or the Enter key or non-APL-character support?

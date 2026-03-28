@@ -1,4 +1,4 @@
  ok←run _onOpen message
  ⍝ Execute a generic onOpen event handler
 
- ok←1⊣message 1 ##.Run run
+ ok←message NoRes ##.Run run

@@ -21,3 +21,5 @@
  :EndIf
 
  result←'Hide'##.Event object ##.Application,arg ⍝ Run the onHide event handler (with arguments and result)
+
+ ⍝? We also need to Hide (and onHide) all our children - or do we??

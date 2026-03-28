@@ -13,7 +13,8 @@
  :If '*'≠⊃⊃action ⍝ A '*' prefix means to ignore any onAction handling
  :AndIf ×≢13 32 ⎕UCS⍛∆dlt obj ⎕VGET⊂'_onAction' '' ⍝ Is there any processing to do?
      :Hold resume~⍛/'∆WI@onAction' ⍝ Signal to recursive ∆WI that we're validly processing an onAction stack
-         result←'Action'Event obj Application,resume,action⊂⍛,args ⍝ Start up (or resume) onAction processing
+         result←'Action'Event obj Application,resume,action⊂⍛,args ⍝ Start up (or resume) onAction processing (expression cannot be '') ⍝? Never suppress!
+         ⍝ This always returns an explicit result
      :EndHold
  :Else
      result←⎕NULL ⍝ There are no onActions to perform here at all - let ∆WI continue without any interruptions

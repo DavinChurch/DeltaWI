@@ -3,3 +3,6 @@
 
  '∆WI ACTION ERROR: Property "opened" is read-only'##.Error×≢arg
  result←|object._opened
+
+
+ ⍝? Oops! I can set the opened property to 0 to Close an object??

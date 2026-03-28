@@ -1,4 +1,4 @@
- result←object SetRows arg;previous;nc;t
+ result←object SetRows arg;previous;nc;t;NeverSuppress
  ⍝ 'SetRows' works exactly like setting 'list', except the rows replace those that are already there
 
  arg←##.##.Single arg ⍝ First we need to pre-validate just the new input...

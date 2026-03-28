@@ -1,4 +1,4 @@
- result←object SetCells arg;items;rows;cols;cells;nc
+ result←object SetCells arg;items;rows;cols;cells;nc;NeverSuppress
 
 ⍝ arg[1]←Row IDs
 ⍝ arg[2]←Column numbers - 2+ data subscripts (may add a following column)
