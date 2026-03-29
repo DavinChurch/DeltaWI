@@ -1,0 +1,20 @@
+ clean←Requote text;t;exeme
+⍝ APL+Win allows two kinds of character quotation marks (' & ") while Dyalog allows only one (').
+⍝ This function is used during run-time to convert APL+Win-style executable strings into Dyalog-style.
+⍝ It is normally called to pre-process arguments to the Execute (⍎) primitive or equivalent implied execution.
+⍝ It also adds a recursive call to itself to any imbedded ⍎ primitives within the expression.
+
+⍝ A simplified quote-replacement function from Morten, but it does not avoid comments or handle imbedded executes:
+⍝       '''[^'']*''' '"[^"]*"'⎕R{⍵.('\"' ''''⎕R'''' ''''''⍣PatternNum⊢Match)}
+
+ exeme←'⍎',⊃⎕XSI ⍝ Executable recursive execution text (may substitute an execute-replacement function for ⍎ if necessary)
+ clean←0⍴text←,text ⍝ We'll have to build this piecemeal, I think, to avoid more-complex ⎕R-work
+ :While ×≢text
+     clean,←(t←¯1+⌊/text⍳'''"⍝⍎')↑text ⍝ Grab all the text preceding any signal characters
+     :Select ⊃text←t↓text ⍝ Handle each signal character differently, one at a time
+     :Case '''' ⋄ clean,←(t←+/∧\≠\⍛∨⊃⍛=text)↑text ⋄ text↓⍨←t
+     :Case '"' ⋄ clean,←'\"' ''''⎕R'''' ''''''⊢(t←+/∧\≠\⍛∨⊃⍛=text)↑text ⋄ text↓⍨←t
+     :Case '⍝' ⋄ clean,←text ⋄ text←''
+     :Case '⍎' ⋄ clean,←exeme,' ' ⋄ text↓⍨←1
+     :EndSelect
+ :EndWhile
