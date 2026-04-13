@@ -1,0 +1,5 @@
+ result←object Validate arg
+ ⍝ Explicitly request a generic validation on a Tree (for some user-defined purpose)
+
+ :If ×≢arg ⋄ arg←⊂##.##.Single arg ⋄ :EndIf ⍝ Obtain an argument they may have provided and pass it in (nested)
+ result←~(⊂'Validate'##.##.Event object ##.##.Application ¯1,arg)∊⍬ 1⍴¨0

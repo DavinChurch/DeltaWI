@@ -1,0 +1,15 @@
+ ok←run _onExpanding message;warg;list;object;state
+
+⍝ message[2]←'Expanding' or 'Retracting'
+⍝ message[3]←Item subscript
+
+⍝ ∆WARG[1]←Node ID
+⍝ ∆WARG[2]←1=Expanding, 0=Collapsing
+
+ object←⊃message
+ list←object ⎕VGET⊂'_list'(0 5⍴0)
+ state←2 ##.##.∆NQ object'GetItemState'(3⊃message)
+ :If 64∊##.##.BitVals state ⋄ ok←1 ⋄ :Return ⋄ :EndIf ⍝ If it's already been expanded, don't do anything
+
+ warg←list[message[3];1],¯1+'Retracting' 'Expanding'⍳message[2]
+ ok←~((∆WARG:warg ⋄ ∆WRES:1)##.##.Run run)⊂⍛∊⍬ 1⍴¨0

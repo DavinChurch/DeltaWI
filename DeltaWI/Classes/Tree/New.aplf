@@ -1,0 +1,14 @@
+ result←object New arg;parent;name;actions;props;newobj;∆border;∆style
+⍝ Create a new Tree object
+
+ (parent name)←object ⍝ Separate non-standard two-part argument
+ actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
+
+ (∆border ∆style)←((1↓¨arg),⊂⍬)[actions⍳'border' 'style']
+ ∆border←0⌈×+/∊∆border ⋄ ∆style←##.##.BitVals+/∊∆style
+ arg←(parent:parent ⋄ border:∆border ⋄ stretch:0 0)##.##.New.Center arg
+
+ props←'TreeView'('Visible' 0) ⍝ Properties that should be used during creation
+ props,←(~'border'⊂⍛∊actions)/⊂'Border'∆border ⍝ Set border upon creation if we have it
+ newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
+ result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure

@@ -1,0 +1,76 @@
+ result←object SetInfo arg;opr;nodes;ops;tree;states;statebits;statenames;ndx;setting;NeverSuppress;bit
+
+⍝? What causes a return value of 0?
+ '∆WI ARGUMENT ERROR: Argument required for "SetInfo" method'##.##.Error 0=≢arg
+ '∆WI LENGTH ERROR: SetInfo'##.##.Error~2 3∊⍨≢arg
+ :If 3=≢arg
+     (opr nodes setting)←arg
+     '∆WI RANK ERROR: SetInfo'##.##.Error 1<≢⍴nodes
+     '∆WI LENGTH ERROR: SetInfo'##.##.Error 2<≢⍴setting
+     '∆WI LENGTH ERROR: SetInfo'##.##.Error(2=≢⍴setting)∧0=⊢/⍴setting
+ :Else
+     (opr nodes)←arg
+     '∆WI LENGTH ERROR: SetInfo'##.##.Error(2≠≢⍴nodes)∨2≠⊢/⍴nodes
+     setting←0 1↓nodes ⋄ nodes←nodes[;1]
+     :If 1=⊢/⍴setting ⋄ setting←,setting ⋄ :EndIf
+ :EndIf
+ '∆WI DOMAIN ERROR: SetInfo'##.##.Error~##.##.IsInt nodes
+ 'INDEX ERROR'##.##.Error 0=≢nodes←,nodes
+ :If opr⊂⍛∊'list' 'images' ⋄ setting←(¯2↑1 1,⍴setting)⍴setting ⋄ :EndIf ⍝ Force these to matrix form ⍝? (a vector of 'images' might be interpreted differently?)
+ :If opr∊⍥⊂'label' ⋄ setting←,⊆setting ⋄ :EndIf ⍝ This one should be nested
+ '∆WI LENGTH ERROR: SetInfo'##.##.Error≠/≢¨nodes setting
+ ops←'checkstate' 'list' 'label' 'images' 'highlightbold' 'highlightcut' 'highlightdrop' 'highlightselect'
+ ops,←'expanded' 'expandedonce' 'forceparent'
+ '∆WI ACTION ERROR: Invalid operation for "SetInfo" method'##.##.Error~opr⊂⍛∊ops
+ '∆WI ACTION ERROR: highlightcut is not supported yet'##.##.Error opr≡'highlightcut'
+ '∆WI ACTION ERROR: forceparent is not supported yet'##.##.Error opr≡'forceparent'
+
+ result←nodes≢⍛⍴1 ⍝ Default result
+ tree←object ⎕VGET⊂'_list'(0 5⍴0)
+ ('∆WI ARGUMENT ERROR: Item ',(⍕⊃nodes~tree[;1]),' not found ("SetInfo" method)')##.##.Error~∧/nodes∊tree[;1]
+ ndx←tree[;1]⍳nodes
+ states←{⊃2 ##.##.∆NQ object'GetItemState'⍵}¨ndx
+ statebits←'' 'highlightselect' '' 'highlightdrop' 'highlightbold' 'expanded' 'expandedonce'
+
+ :Select opr ⍝ Set any of an assortment of different things
+ :Case 'checkstate' ⍝ User-state image index
+     :If 2=≢⍴setting ⋄ setting←setting[;1] ⋄ :EndIf ⍝ Force vector
+     '∆WI DOMAIN ERROR: SetInfo'##.##.Error 1≠≢⍴setting←1/setting
+     '∆WI DOMAIN ERROR: SetInfo'##.##.Error~∧/setting∊0 1
+     :If 32∊##.##.BitVals object ⎕VGET⊂'_style' 0 ⍝ Are automatic checkboxes turned on?
+         ((~setting)/states)←12 ##.##.BitOff setting~⍛/states
+         (setting/states)←12 ##.##.BitOn setting/states
+         states{2 ##.##.∆NQ object'SetItemState'⍵ ⍺}¨ndx ⍝ Update Dyalog's states directly
+     :Else ⍝ Anything else should be stored in the obect list
+         (4⊃¨tree[ndx;4])←setting
+         {}object list,⊂tree ⍝? Not terribly efficient, but easy
+     :EndIf
+ :Case 'list' ⍝ list[nodes;3 4 5]
+     '∆WI RANK ERROR: SetInfo'##.##.Error 2<≢⍴setting
+     '∆WI LENGTH ERROR: SetInfo'##.##.Error~1 2 3∊⍨⊢/⍴setting
+     tree[,ndx;(⊢/⍴setting)↑3 4 5]←setting ⍝ Use the 'list' property function to validate the contents any further
+     {}object list,⊂tree ⍝? Not terribly efficient, but easy
+ :Case 'label' ⍝ label
+     '∆WI RANK ERROR: SetInfo'##.##.Error 2<≢⍴setting←1/setting
+     '∆WI LENGTH ERROR: SetInfo'##.##.Error(2=≢⍴setting)∧1<⊢/⍴setting
+     :If 2=≢⍴setting ⋄ setting←setting[;1] ⋄ :EndIf ⍝ Force vector
+     '∆WI LENGTH ERROR: SetInfo'##.##.Error(≢ndx←,ndx)≠≢setting←,⊆setting
+     '∆WI DOMAIN ERROR: SetInfo'##.##.Error~∧/##.##.IsChar¨setting
+     tree[ndx;3]←setting
+     {}object list,⊂tree ⍝? Not terribly efficient, but easy
+ :Case 'images' ⍝ Matrix of non-selected, selected, overlay, user-state image index
+     '∆WI RANK ERROR: SetInfo'##.##.Error 2≠≢⍴setting
+     '∆WI LENGTH ERROR: SetInfo'##.##.Error~1 2 3 4∊⍨⊢/⍴setting
+     tree[ndx;4]←↓setting
+     {}object list,⊂tree ⍝? Not terribly efficient, but easy
+ :CaseList 'highlightbold' 'highlightcut' 'highlightdrop' 'highlightselect' 'expanded' 'expandedonce' ⍝ Boolean state
+     '∆WI DOMAIN ERROR: SetInfo'##.##.Error 1≠≢⍴setting←1/setting
+     :If 2=≢⍴setting ⋄ setting←setting[;1] ⋄ :EndIf ⍝ Force vector
+     '∆WI DOMAIN ERROR: SetInfo'##.##.Error~∧/setting∊0 1
+     bit←¯1+statebits⍳⊂opr
+     ((~setting)/states)←bit ##.##.BitOff setting~⍛/states
+     (setting/states)←(bit,6/⍨5∊bit)##.##.BitOn setting/states
+     states{2 ##.##.∆NQ object'SetItemState'⍵ ⍺}¨ndx ⍝ Update Dyalog's states directly
+ :Case 'forceparent' ⍝ 0=Normal, 1=assumes it has children, ¯1=GetVirtualData
+     ⍝? Cannot yet be supported
+ :EndSelect

@@ -1,0 +1,17 @@
+ result←object value arg;tree;index;was
+⍝ Allow reading and setting the currently-selected nodes
+⍝ This is not managed with a variable but reads and writes the object property directly
+
+ tree←object ⎕VGET⊂'_list'(0 5⍴0)
+ was←⊃tree[⍸object ##.##.∆WG'SelItems';1] ⍝ Convert the subscript back into tree-numbering
+ :If 0=≢arg
+     result←was
+ :Else
+     '∆WI DOMAIN ERROR: value'##.##.Error~##.##.IsInt arg←∊##.##.Single arg
+     '∆WI LENGTH ERROR: value'##.##.Error 1≠≢arg
+     ('∆WI ARGUMENT ERROR: Item ',(⍕⊃arg~tree[;1]),' not found ("value" method)')##.##.Error~∧/arg∊tree[;1]
+     index←⊃tree[;1]⍳arg ⍝ Convert tree-numbering to subscript
+     object ##.##.∆WS'SelItems'(index∊⍨⍳≢tree) ⍝ Write the new value directly to Dyalog
+     'Change'##.##.Event object ##.##.Application,tree[index;1],was
+     result←##.NoRes
+ :EndIf

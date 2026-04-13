@@ -1,0 +1,37 @@
+ ok←run _onValidate message;warg;list;object;lastclicks;new;previous
+
+⍝ -- ItemDown:
+⍝ message[3]←Index of the item
+⍝ message[4]←Mouse button
+⍝ message[5]←Shift state (1=Shift, 2=Ctrl, 4=Alt)
+⍝ message[6]←Position (2=Icon, 4=Label, 8=Line, 16=Symbol, 32=Right of label)
+⍝ -- If program-invoked:
+⍝ message[2]←⊂''
+⍝ message[3]←Action code (see below)
+⍝ message[4]←Validate method argument (enclosed; not present at all if none)
+⍝ message[4]←New node ID # (for action=¯2)
+
+⍝ ∆WARG[1]←Action code (1=Keystroke, 2=Mouse, ¯1=Validate method, ¯2=value property (or ShowNode:Select), 0=Unknown
+⍝ -- If using Validate method:
+⍝ ∆WARG[2]←⊂Method argument (if any supplied, otherwise ∆WARG is a scalar)
+⍝ -- If not using Validate method:
+⍝ ∆WARG[2]←Previous node ID
+⍝ ∆WARG[3]←Newly selected node ID
+
+⍝ Set ∆WRES←0 to reject validation for either internal or native invocation
+
+ object←⊃message
+ list←object ⎕VGET⊂'_list'(0 5⍴0)
+ lastclicks←object ⎕VGET⊂'_Last_Clicks'⍬
+ :If ×≢2⊃message ⋄ new←message[3] ⋄ :ElseIf 4≤≢message ⋄ new←message[4] ⋄ :Else ⋄ new←0 ⋄ :EndIf
+ (new previous)←(0,list[;1])[1+new,⊃lastclicks~new] ⍝ New & previous node ID
+
+ :If ×≢2⊃message ⍝ Is this a native event processing?
+     warg←2,previous,new ⍝? I have no idea how to tell if they used the keyboard to select this
+ :ElseIf ¯1∊warg←⊃message ⍝ This is coming from the Validate method
+     :If 4≤≢message ⋄ warg,←message[4] ⋄ :EndIf
+ :Else ⍝ This is coming from setting the value property
+     warg,←previous,new
+ :EndIf
+
+ ok←~((∆WARG:warg ⋄ ∆WRES:1)##.##.Run run)⊂⍛∊⍬ 1⍴¨0

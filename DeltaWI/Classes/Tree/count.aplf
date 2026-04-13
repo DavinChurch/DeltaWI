@@ -1,0 +1,9 @@
+ result←object count arg;lsize;csize
+
+ ⍝ [1]←Total # of nodes in the tree
+ ⍝ [2]←Number of nodes that will fit on the screen (Dyalog cannot provide this number so try to simulate it)
+
+ '∆WI ACTION ERROR: Property "count" is read-only'##.##.Error×≢arg
+ result←≢object ⎕VGET⊂'_list'(0 5⍴0)
+ lsize←1.25×⊃object ##._supp.GetTextSize'Yy' ⋄ csize←⊃object ##.size ⍬
+ result,←⌊csize÷lsize ⍝ Do our best approximation of how many full lines will fit on the screen

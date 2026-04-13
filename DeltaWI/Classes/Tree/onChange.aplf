@@ -1,0 +1,2 @@
+ result←object onChange arg
+ result←object('ItemDown'##.##.SetEvent'Change' '>Click' '<DblClick' '>MouseDown' '<MouseDouble' '>MouseUp' '>Validate')arg

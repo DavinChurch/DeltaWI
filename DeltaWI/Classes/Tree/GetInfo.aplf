@@ -1,0 +1,51 @@
+ result←object GetInfo arg;opr;nodes;depth;ops;tree;states;statebits;statenames;ndx;children
+
+ '∆WI ARGUMENT ERROR: Argument required for "GetInfo" method'##.##.Error 0=≢arg
+ '∆WI LENGTH ERROR: GetInfo'##.##.Error~2 3∊⍨≢arg
+ (opr nodes depth)←3↑arg,0
+ '∆WI DOMAIN ERROR: GetInfo'##.##.Error~∧/##.##.IsInt¨nodes depth
+ nodes←,nodes
+ '∆WI LENGTH ERROR: GetInfo'##.##.Error(0=≢nodes)∨(1<≢nodes)∧2<≢arg
+ ops←'checkstate' 'list' 'label' 'images' 'highlightbold' 'highlightcut' 'highlightdrop' 'highlightselect'
+ ops,←'expanded' 'expandedonce' 'forceparent' 'haschildren' 'wherelabel' 'whererow' 'handle'
+ '∆WI ACTION ERROR: Invalid operation for "GetInfo" method'##.##.Error~opr⊂⍛∊ops
+ '∆WI ACTION ERROR: highlightcut is not supported yet'##.##.Error opr≡'highlightcut'
+ '∆WI ACTION ERROR: forceparent is not supported yet'##.##.Error opr≡'forceparent'
+ '∆WI ACTION ERROR: internal API-support arguments are not supported'##.##.Error opr⊂⍛∊'wherelabel' 'whererow' 'handle'
+
+ tree←object ⎕VGET⊂'_list'(0 5⍴0)
+ ('∆WI ARGUMENT ERROR: Item ',(⍕⊃nodes~tree[;1]),' not found ("GetInfo" method)')##.##.Error~∧/nodes∊tree[;1]
+ :If 1=≢ndx←tree[;1]⍳nodes ⍝ If there's only one node specified then we can also watch out for children
+     depth←tree{⍵≥0:⍵ ⋄ ⌈/⍺[;2]}depth ⍝ Convert ¯1 to depth at least as deep as entire tree
+     children←ndx+⍸∧\ndx↓tree[;2]>tree[ndx;2] ⍝ First find all my children
+     ndx,←children/⍨tree[children;2]≤tree[ndx;2]+depth ⍝ Include only those within the specified depth
+ :EndIf
+
+ states←{⊃2 ##.##.∆NQ object'GetItemState'⍵}¨ndx
+ statebits←'' 'highlightselect' '' 'highlightdrop' 'highlightbold' 'expanded' 'expandedonce'
+ statenames←##.##.∆dim¨↓(statebits≢⍛##.##.Bits states)/⍤1⊢statebits
+
+ :Select opr ⍝ Get any of an assortment of different things
+ :Case 'checkstate' ⍝ User-state image index
+     :If 5 ##.##.BitOf object ⎕VGET⊂'_style' 0 ⍝ Are automatic checkboxes turned on?
+         result←12 ##.##.BitOf states ⍝ We need to get this information directly from Dyalog's state
+     :Else
+         result←4⊃¨tree[ndx;4] ⍝ Anything else should be stored in 'list'
+     :EndIf
+ :Case 'list' ⍝ tree[ndx;3 4 5]
+     result←tree[ndx;3 4],statenames
+ :Case 'label' ⍝ label
+     result←tree[ndx;3]
+ :Case 'images' ⍝ Matrix of non-selected, selected, overlay, user-state image index
+     result←↑tree[ndx;4]
+ :CaseList 'highlightbold' 'highlightcut' 'highlightdrop' 'highlightselect' 'expanded' 'expandedonce' ⍝ Boolean state
+     result←(¯1+statebits⍳⊂opr)##.##.BitOf states
+ :Case 'forceparent' ⍝ 0=Normal, 1=assumes it has children, ¯1=GetVirtualData
+     ⍝? Cannot yet be supported
+ :Case 'haschildren' ⍝ Actual existance of children
+     result←</(tree[;2]⍪0)[ndx∘.+0 1]
+ :CaseList 'wherelabel' 'whererow' ⍝ Position & size ((n,4)⍴) of node's label or entire row; special cases
+     ⍝? Cannot yet be supported
+ :Case 'handle' ⍝ Internal Windows handle for the node in case using APIs
+     ⍝? Cannot yet be supported
+ :EndSelect

@@ -1,0 +1,20 @@
+ ok←run _onClick message;warg;list
+⍝? Information not available from Dyalog ItemDown or MouseDown
+
+⍝ ItemDown:
+⍝ message[3]←Index of the item
+⍝ message[4]←Mouse button
+⍝ message[5]←Shift state (1=Shift, 2=Ctrl, 4=Alt)
+⍝ message[6]←Position (2=Icon, 4=Label, 8=Line, 16=Symbol, 32=Right of label)
+
+⍝ ∆WARG[1]←Node ID
+⍝ ∆WARG[2]←Location (image, button, label, imageuser, indent, noderight, above, below, toleft, toright, aboveleft, aboveright, belowleft, belowright, nowhere, '')
+⍝ ∆WARG[3]←Shift state (1=Shift, 2=Ctrl, 4=Alt)
+⍝ ∆WARG[4]←Mouse location: row (scaled)
+⍝ ∆WARG[5]←Mouse location: col (scaled)
+⍝ ∆WARG[6]←Mouse button (1=Left, 2=Right)
+
+ list←object ⎕VGET⊂'_list'(0 5⍴0)
+ warg←list[message[3];1] ⍝? Not enough information
+
+ ok←1⊣(∆WARG:warg)##.##.Run run

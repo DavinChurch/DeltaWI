@@ -1,0 +1,3 @@
+ result←object onExpanding arg
+ result←object('Expanding'##.##.SetEvent'Expanding')arg
+ result←object('Retracting'##.##.SetEvent'Expanding')arg

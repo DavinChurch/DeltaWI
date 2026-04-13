@@ -1,0 +1,27 @@
+ result←object ShowNode arg;tree;opr;node;ndx;previous
+ ⍝ [1]←'select', 'drop', or 'firstvisible'
+ ⍝ [2]←Node ID, or 0, or 'none'
+
+ '∆WI LENGTH ERROR: ShowNode'##.##.Error 2≠≢arg←##.##.Single arg
+ (opr node)←arg
+ '∆WI ACTION ERROR: Invalid operation for "ShowNode" method'##.##.Error~opr⊂⍛∊'select' 'drop' 'firstvisible'
+ '''drop'' operation not yet implemented'##.##.Error opr≡'drop'
+ '''firstvisible'' operation not yet implemented'##.##.Error opr≡'firstvisible'
+ tree←object ⎕VGET⊂'_list'(0 5⍴0)
+
+ :Select opr
+ :Case 'select'
+     :If node≡'none' ⋄ node←0 ⋄ :EndIf
+     '∆WI LENGTH ERROR: ShowNode'##.##.Error 1≠≢node
+     '∆WI DOMAIN ERROR: ShowNode'##.##.Error~##.##.IsInt node
+     ('∆WI ARGUMENT ERROR: Item ',(⍕⊃node~tree[;1]),' not found ("ShowNode" method)')##.##.Error(node≠0)∧~∧/node∊tree[;1]
+     ndx←tree[;1]⍳node←⊃node
+     previous←⊃tree[;1]/⍨object ##.##.∆WG 'SelItems'
+     :If result←{⍵≡0 0⍴'':1⋄⍵}'Validate'##.##.Event object ##.##.Application,¯2,previous,node
+         object ##.##.∆WS 'SelItems'(ndx∊⍨⍳≢tree) ⍝ Turn off everything but that one node
+     :EndIf
+ :Case 'drop'
+     ⍝? Not yet implemented
+ :Case 'firstvisible'
+     ⍝? Not modifiable in Dyalog
+ :EndSelect

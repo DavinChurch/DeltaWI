@@ -15,8 +15,7 @@
 ⍝ ∆WARG[6]←Mouse location: col (scaled)
 ⍝ ∆WARG[7]←Mouse button (1=Left, 2=Right)
 
- (list cd)←object ⎕vget('_list' (0 2⍴0)) ('_columndisplay' (0 7⍴''))
- warg←list[message[3];1]
-
+ (list cd)←object ⎕VGET('_list'(0 2⍴0))('_columndisplay'(0 7⍴''))
+ warg←list[message[3];1] ⍝? Not enough information
 
  ok←1⊣(∆WARG:warg)##.##.Run run

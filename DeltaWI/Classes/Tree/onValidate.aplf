@@ -1,0 +1,2 @@
+ result←object onValidate arg
+ result←object('ItemDown'##.##.SetEvent'Validate' '<Change' '>Click' '<DblClick' '>MouseDown' '<MouseUp' '<MouseDouble')arg

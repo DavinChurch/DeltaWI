@@ -1,0 +1,2 @@
+ result←object onSort arg
+ result←object(''##.##.SetEvent'Sort')arg ⍝ Only called from the SortChildren method

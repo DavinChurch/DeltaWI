@@ -1,0 +1,48 @@
+ result←object FindNode arg;opr;node;ops;tree;states;ndx;parents;visible;expanded
+
+⍝ [1]←Operation: root[~2], parent, child, next, prev, children, firstvisible[~2], nextvisible, prevvisible, drop[~2], select[~2]
+⍝ [2]←Node ID (except for those marked [~2] above)
+
+ '∆WI ARGUMENT ERROR: Argument required for "FindNode" method'##.##.Error 0=≢arg
+ '∆WI LENGTH ERROR: FindNode'##.##.Error~1 2∊⍨≢arg
+ (opr node)←2↑arg,¯1
+ ops←'root' 'parent' 'child' 'next' 'prev' 'children' 'firstvisible' 'nextvisible' 'prevvisible' 'drop' 'select'
+ '∆WI ACTION ERROR: Invalid operation for "FindNode" method'##.##.Error~opr⊂⍛∊ops
+ '∆WI LENGTH ERROR: FindNode'##.##.Error(1=≢arg)≠opr⊂⍛∊'root' 'firstvisible' 'drop' 'select'
+ '∆WI DOMAIN ERROR: FindNode'##.##.Error(node≤0)∧~opr⊂⍛∊'root' 'firstvisible' 'drop' 'select'
+ '∆WI DOMAIN ERROR: FindNode'##.##.Error~∧/##.##.IsInt node
+ '∆WI LENGTH ERROR: FindNode'##.##.Error 1≠≢node
+ '∆WI ACTION ERROR: drop operation is not supported yet'##.##.Error opr≡'drop'
+
+ tree←object ⎕VGET⊂'_list'(0 5⍴0)
+ ('∆WI ARGUMENT ERROR: Item ',(⍕⊃node~tree[;1]),' not found ("FindNode" method)')##.##.Error(node≠¯1)∧~node∊tree[;1]
+ ndx←tree[;1]⍳node
+ expanded←5 ##.##.BitOf states←{⊃2 ##.##.∆NQ object'GetItemState'⍵}¨⍳≢tree
+ parents←{⊃2 ##.##.∆NQ object'GetParentItem'⍵}¨⍳≢tree ⍝ These are subscripts, not IDs
+ visible←tree≢⍛⍴1 ⍝ Let's calculate if each item is visible (all their ancestors are expanded)
+ visible←visible(expanded{∧/⍵=0:⍺ ⋄ (⍺∧(1,⍺⍺)[1+(0,⍵⍵)[1+⍵]])∇(0,⍵⍵)[1+⍵]}parents)⍳≢parents
+
+ :Select opr ⍝ Find any of an assortment of different things
+ :Case 'root' ⍝ First top-level node
+     result←⊃tree[;1]
+ :Case 'parent' ⍝ Parent node
+     result←tree[parents[ndx];1]
+ :Case 'child' ⍝ First child node
+     result←⊃tree[⍸parents=ndx;1]
+ :Case 'next' ⍝ Next sibling node
+     result←tree[⍸parents=parents[ndx];1] ⋄ result←⊃(result⍳node)↓result
+ :Case 'prev' ⍝ Previous sibling node
+     result←tree[⍸parents=parents[ndx];1] ⋄ result←⊢/0,(¯1+result⍳node)↑result
+ :Case 'children' ⍝ Vector of all children of the node
+     result←tree[;1]/⍨parents=ndx
+ :Case 'firstvisible' ⍝ First visible node
+     result←⊃tree[;1]/⍨visible
+ :Case 'nextvisible' ⍝ Next visible node
+     result←⊃tree[;1]/⍨visible∧ndx<⍳≢tree
+ :Case 'prevvisible' ⍝ Previous visible node
+     result←⊃⌽tree[;1]/⍨visible∧ndx>⍳≢tree
+ :Case 'drop' ⍝ Drag & Drop target
+     ⍝? Not implemented yet
+ :Case 'select' ⍝ Currently-selected node
+     result←⊃tree[⍸object ##.##.∆WG'SelItems';1]
+ :EndSelect

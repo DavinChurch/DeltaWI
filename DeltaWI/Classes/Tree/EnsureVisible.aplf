@@ -1,0 +1,16 @@
+ result←object EnsureVisible arg;tree;ndx;expanded;lines;first;parents;shown;offscreen
+ '∆WI ARGUMENT ERROR: Argument required for "EnsureVisible" method'##.##.Error 0=≢arg
+ '∆WI LENGTH ERROR: GetInfo'##.##.Error 1≠≢arg←##.##.Single arg
+ tree←object ⎕VGET⊂'_list'(0 5⍴0)
+ ('∆WI ARGUMENT ERROR: Item ',(⍕⊃arg~tree[;1]),' not found ("EnsureVisible" method)')##.##.Error~∧/arg∊tree[;1]
+ expanded←5 ##.##.BitOf{⊃2 ##.##.∆NQ object'GetItemState'⍵}¨⍳≢tree
+ parents←{⊃2 ##.##.∆NQ object'GetParentItem'⍵}¨⍳≢tree
+ ndx←tree[;1]⍳⊃arg
+ first←object ##.##.∆WG'Index' ⍝ What is the first item on the screen?
+ lines←2⊃object count ⍬ ⍝ How many lines will fit on the screen?
+ shown←(1,expanded)[1+parents] ⍝ Is this node potentially shown on the screen?
+ offscreen←~arg∊(lines≥+\(first-1)↓shown)/(first-1)↓tree[;1] ⍝ Is it currently scrolled off the screen?
+ result←shown[ndx]∧offscreen ⍝ Return 1 if the parent was already expanded but the node was scrolled to make it visible; 0 otherwise
+ 2 ##.##.∆NQ object'ShowItem'ndx ⍝ Finally, have Dyalog do the work
+
+ ⍝? Does parents here actually need to include all ancestors?

@@ -1,0 +1,6 @@
+ ok←run _onSort message
+⍝ Use if sorting non-alphabetically is desired
+⍝ ∆WARG[1 2]←message[3 4]←Two node IDs to be sorted
+⍝ Return +# if [1]>[2], -# if [1]<[2], or 0 if [1]=[2]; numerically: -/[1 2]
+
+ ok←×(∆WARG:message)##.##.Run run

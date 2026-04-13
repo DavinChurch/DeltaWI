@@ -18,7 +18,7 @@
      ⍝? The height of the control with the drop-down is set to fill as many rows as possible up to
      ⍝? 22 character units, by default; but how do we deal with this when ∇range get changed?
      ⍝ The font size is then used to determine the number of 'Rows' in the native control.
-     fsize←⊃object ##._supp.GetTextSize'Xy' ⍝ Determine font size to tell us how big each row will be
+     fsize←⊃object ##._supp.GetTextSize'Xy' ⍝ Determine font size to tell us how big each row will be   ⍝? Does this need 1.25×?
      :If 2=≢size ⋄ arg[1]←size[1] ⍝ Force height not to change (it had better already match the font in use)
      :ElseIf 2=≢extent ⋄ arg[1]←extent[1] ⍝? Does this conversion work? Will we even ever need to resort to this property?
      :ElseIf 4=≢where ⋄ arg[1]←where[3] ⍝? Does this conversion work? Will we even ever need to resort to this property?

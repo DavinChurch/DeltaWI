@@ -8,8 +8,8 @@
  :AndIf ~1∊##.##.BitVals object ⎕VGET⊂'_style' 0 ⍝ Only worry about non-Simple boxes
  :AndIf (2↑oldfont)≢2↑newfont ⍝ Are they changing anything (pertinent)?
      osz←⊃object._size ⍝ What edit-box size are we currently using?
-     fsize1←⊃object ##._supp.GetTextSize'Xy' ⍝ Determine old font size
-     fsize2←⊃object ##._supp.GetTextSize'Xy'(2↑newfont) ⍝ Determine new font size
+     fsize1←⊃object ##._supp.GetTextSize'Xy' ⍝ Determine old font size              ⍝? Does this need 1.25×?
+     fsize2←⊃object ##._supp.GetTextSize'Xy'(2↑newfont) ⍝ Determine new font size   ⍝? Does this need 1.25×?
      nsz←osz+fsize2-fsize1 ⍝ Compute new edit-box size based on the difference between old and new font sizes
      (sz ex wh)←object ⎕VGET'_size' '_extent' '_where' ⍝ We'll change the APL+Win definitions internally
      sz[1]←ex[1]←wh[3]←nsz ⍝ Direct modifications because the regular property routines don't know the font is changing

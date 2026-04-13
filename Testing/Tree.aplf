@@ -1,0 +1,125 @@
+ Tree;tree;t
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
+ 'f.t'∆WI Pass'f.t'⊢'New' 'Tree'
+ 'f.t'∆WI Pass 14.75 19.5⊢'size'
+ 'f.t'∆WI Pass 7.5 40 15 20⊢'where'
+
+ tree←[
+     1 1 'One'
+     11 2 'One-one'
+     12 2 'One-two'
+     121 3 'One-two-one'
+     122 3 'One-two-two'
+     13 2 'One-three'
+     2 1 'Two'
+     3 1 'Three'
+     31 2 'Three-one'
+     32 2 'Three-two'
+ ]
+ 'f.t'∆WI Pass MT⊢'list'tree
+ 'f.t'∆WI Pass{tree≡3↑[2]⍵}⊢'list'
+ tree←'f.t'∆WI'list' ⍝ Assign a new value with defaults filled in
+
+ 'f.t'∆WI Pass MT⊢'style' 4 16 32
+ 'f.t'∆WI Pass 52⊢'style'
+ 'f.t'∆WI Pass 10 14⊢'count'
+ 'f.t'∆WI Pass 0⊢'value'
+ 'f.t'∆WI Pass MT⊢'value' 121
+ 'f.t'∆WI Pass 121⊢'value'
+
+ 'f.t'∆WI Pass(,21)⊢'InsertNodes' 2 'first'(21 2 'Two-One')
+ t←(7↑tree)⍪(21 2 'Two-One'(1 1 0 0)(0⍴⊂''))⍪7↓tree ⋄ t[7;5]←⊂,⊂'haschildren'
+ 'f.t'∆WI Pass t⊢'list'
+ 'f.t'∆WI Pass(,1)⊢'DeleteNodes' 21
+ 'f.t'∆WI Pass tree⊢'list'
+
+ 'f.t'∆WI Pass 1⊢'FindNode' 'root'
+ 'f.t'∆WI Pass 3⊢'FindNode' 'parent' 31
+ 'f.t'∆WI Pass 121⊢'FindNode' 'child' 12
+ 'f.t'∆WI Pass 122⊢'FindNode' 'next' 121
+ 'f.t'∆WI Pass 121⊢'FindNode' 'prev' 122
+ 'f.t'∆WI Pass 11 12 13⊢'FindNode' 'children' 1
+ 'f.t'∆WI Pass 1⊢'FindNode' 'firstvisible'
+ 'f.t'∆WI Pass 2⊢'FindNode' 'nextvisible' 1
+ 'f.t'∆WI Pass 3⊢'FindNode' 'prevvisible' 32
+ 'f.t'∆WI Pass MT⊢'value' 121
+ 'f.t'∆WI Pass 121⊢'value'
+ 'f.t'∆WI Pass 121⊢'FindNode' 'select'
+
+ 'f.t'∆WI Pass MT⊢'value' 121
+ 'f.t'∆WI Pass 121⊢'value'
+ 'f.t'∆WI Pass 1⊢'ShowNode' 'select' 0
+ 'f.t'∆WI Pass 0⊢'value'
+ 'f.t'∆WI Pass 1⊢'ShowNode' 'select' 31
+ 'f.t'∆WI Pass 31⊢'value'
+
+ 'f.t'∆WI Pass 1⊢'Expand' 'collapse' 1
+ 'f.t'∆WI Pass 1⊢'Expand' 'expand' 1
+ 'f.t'∆WI Pass 1⊢'Expand' 'collapsebranch' 1
+ 'f.t'∆WI Pass 1⊢'Expand' 'expand' 1
+ 'f.t'∆WI Pass 1⊢'Expand' 'expandbranch' 1
+ 'f.t'∆WI Pass 1⊢'Expand' 'toggle' 3
+
+ 'f.t'∆WI Pass MT⊢'onSort' '∆WRES←-/∆WARG' ⍝ Allow sorting by numerical ID
+ 'f.t'∆WI Pass MT⊢'list'(3↑[2]tree) ⍝ Reset original order
+ 'f.t'∆WI Pass 1⊢'SortChildren' 'root'
+ 'f.t'∆WI Pass(tree[1 2 3 4 5 6 8 9 10 7;])⊢'list'
+ 'f.t'∆WI Pass 1⊢'SortChildren' 'root' 'recurse'
+ 'f.t'∆WI Pass(tree[1 2 6 3 4 5 8 9 10 7;])⊢'list'
+ 'f.t'∆WI Pass 1⊢'SortChildren' 'root' 'recurse' 'onSort'
+ 'f.t'∆WI Pass tree⊢'list' ⍝ Have we returned to original order
+ 'f.t'∆WI Pass 1⊢'SortChildren' 1
+ 'f.t'∆WI Pass(tree[1 2 6 3 4 5 7 8 9 10;])⊢'list'
+
+ 'f.t'∆WI Pass MT⊢'size' 5 20
+ 'f.t'∆WI Pass 1⊢'Expand' 'expandbranch' 1
+ 'f.t'∆WI Pass 1⊢'EnsureVisible' 2
+ 'f.t'∆WI Pass 0⊢'EnsureVisible' 13
+ 'f.t'∆WI Pass 0⊢'Expand' 'collapse' 3
+ 'f.t'∆WI Pass 0⊢'EnsureVisible' 31
+
+ 'f.t'∆WI Pass 0 0⊢'GetInfo' 'checkstate'(2 3)
+ 'f.t'∆WI Pass 0 0 0 0⊢'GetInfo' 'checkstate' 1 1
+ 'f.t'∆WI Pass 0 0 0 0 0 0⊢'GetInfo' 'checkstate' 1 ¯1
+ 'f.t'∆WI Pass MT⊢'list'(tree[;⍳3])
+ 'f.t'∆WI Pass{tree[7 8;3 4]≡2↑[2]⍵}⊢'GetInfo' 'list'(2 3)
+ 'f.t'∆WI Pass'One-two' 'Three-one'⊢'GetInfo' 'label'(12 31)
+ 'f.t'∆WI Pass(3 4⍴1 1 0 0)⊢'GetInfo' 'images'(12 121 122)
+ 'f.t'∆WI Pass 0 0 0⊢'GetInfo' 'highlightbold'(1 2 3)
+ 'f.t'∆WI Pass 0 0⊢'GetInfo' 'expanded'(12 3)
+ 'f.t'∆WI Pass 0 0⊢'GetInfo' 'expandedonce'(12 3)
+ 'f.t'∆WI Pass 1⊢'Expand' 'expand' 3
+ 'f.t'∆WI Pass 0 1⊢'GetInfo' 'expanded'(12 3)
+ 'f.t'∆WI Pass 0 1⊢'GetInfo' 'expandedonce'(12 3)
+ 'f.t'∆WI Pass 1⊢'Expand' 'collapse' 3
+ 'f.t'∆WI Pass 0 0⊢'GetInfo' 'expanded'(12 3)
+ 'f.t'∆WI Pass 0 1⊢'GetInfo' 'expandedonce'(12 3)
+ 'f.t'∆WI Pass 1 0⊢'GetInfo' 'haschildren'(1 2)
+
+ 'f.t'∆WI Pass 1 1⊢'SetInfo' 'checkstate'(2 3)(0 1)
+ 'f.t'∆WI Pass 0 1⊢'GetInfo' 'checkstate'(2 3)
+ 'f.t'∆WI Pass(,1)⊢'SetInfo' 'list' 2(1 3⍴'Twoo'(1 1 0 0)'')
+ 'f.t'∆WI Pass(,⊂'Twoo')⊢'GetInfo' 'label' 2
+ 'f.t'∆WI Pass(,1)⊢'SetInfo' 'list' 2('Two'(1 1 0 0)'')
+ 'f.t'∆WI Pass(,1)⊢'SetInfo' 'label' 2 'Too'
+ 'f.t'∆WI Pass(,⊂'Too')⊢'GetInfo' 'label' 2
+ 'f.t'∆WI Pass(,1)⊢'SetInfo' 'label'(,2)(1 1⍴⊂'Two')
+ 'f.t'∆WI Pass(2 4⍴1 1 0 0,1 1 0 0)⊢'GetInfo' 'images'(12 121)
+ 'f.t'∆WI Pass(,1)⊢'SetInfo' 'images' 12(5 1)
+ 'f.t'∆WI Pass(2 4⍴5 1 0 0,1 1 0 0)⊢'GetInfo' 'images'(12 121)
+ 'f.t'∆WI Pass 0 0 0⊢'GetInfo' 'highlightbold'(1 2 3)
+ 'f.t'∆WI Pass 1 1 1⊢'SetInfo' 'highlightbold'(1 2 3)(0 1 0)
+ 'f.t'∆WI Pass 0 1 0⊢'GetInfo' 'highlightbold'(1 2 3)
+ 'f.t'∆WI Pass MT⊢'list'(tree[;⍳3])
+ 'f.t'∆WI Pass{tree[7 8;3 4]≡2↑[2]⍵}⊢'GetInfo' 'list'(2 3)
+ 'f.t'∆WI Pass 0 0⊢'GetInfo' 'expandedonce'(1 3)
+ 'f.t'∆WI Pass 1 1⊢'SetInfo' 'expanded'(1 3)(1 0)
+ 'f.t'∆WI Pass 1 0⊢'GetInfo' 'expanded'(1 3)
+ 'f.t'∆WI Pass 1 0⊢'GetInfo' 'expandedonce'(1 3)
+ 'f.t'∆WI Pass 1⊢'Expand' 'collapse' 1
+ 'f.t'∆WI Pass 0 0⊢'GetInfo' 'expanded'(1 3)
+ 'f.t'∆WI Pass 1 0⊢'GetInfo' 'expandedonce'(1 3)
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

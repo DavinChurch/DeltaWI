@@ -17,9 +17,9 @@
      'DOMAIN ERROR'##.##.Error 0∊(##.##.IsInt¨arg[;1 2])∧0 1≥⍤1⊢≡¨arg[;1 2] ⍝ First two columns must be numeric (scalar for [;1] and scalar or vector for [;2])
      '∆WI LENGTH ERROR: list'##.##.Error∨/~1 2 3∊⍨≢¨arg[;2] ⍝ [;2] may be 1, 2, or 3 items
      '∆WI DOMAIN ERROR: list'##.##.Error∨/∨/¨1 0 ¯2⊂⍛>3↑¨arg[;2] ⍝ Check minimum values for sub-components in [;2]
-     r←0=arg[;1] ⋄ (r/arg[;1])←(⌈/0,arg[;1])+⍳+/r ⍝ Auto-number rows that specify row #0
+     r←0=arg[;1] ⋄ (r/arg[;1])←(⌈/0,arg[;1])+⍳+/r ⍝ Auto-number rows that specify row #0 (actually uses ⌈/ of any previous list)
      arg _supp.GoodRows arg[;1] ⍝ Look for row # errors
-     '∆WI DOMAIN ERROR: list'##.##.Error∨/(arg[;2]=0)∨arg[;2]<¯2
+⍝?     '∆WI DOMAIN ERROR: list'##.##.Error∨/(arg[;2]=0)∨arg[;2]<¯2
      (0 2↓arg)←,¨0 2↓arg ⍝ Data columns are always ravelled ⍝? What do numerics do in APL+Win?
      object._list←arg ⍝ It's now in APL+Win "normal form"
 
@@ -31,6 +31,7 @@
      info←(arg,⊂'')[;(1+⊢/⍴arg)⌊2+1↓cd[;5]] ⍝ Extra data columns beyond the item name
      imageindex←1⊃¨3↑¨arg[;2] ⍝ For primary item image selection ⍝? Does Dyalog allow 1 to mean "not used" if there are no images provided?
      stateindex←3⊃¨3↑¨arg[;2] ⍝ For user-state images (arbitrary; unsupported in Dyalog) or automatic checkbox images (1,2; if 65536∊style)
+⍝? For images, watch out for 0, ¯1, & ¯2 values - special handling
 
      object ##.##.∆WS('Items'items)('ReportInfo'info)('SelItems'(items≢⍛⍴0))('ImageIndex'imageindex)('ReportImageIndex'(0 0⍴0))
      :For i :In ⍳≢items ⍝ Set/reset all item state values; unfortunately it must be done one at a time

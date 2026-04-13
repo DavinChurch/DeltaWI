@@ -38,7 +38,7 @@
          suppress←object ⎕VGET⊂'_suppress' 0 ⍝ Have they asked to suppress this implied event?
          dq←Classes.NoRes ⍝ We'll have a different default return value for synthetic events (e.g. for when it is suppressed or doesn't have a handler)
      :Else
-         :If (1<≢⎕RSI)∧∧/1,2≡/⎕NSI ⍝? This is for debugging internal event calls - delete before production
+         :If 0∧(1<≢⎕RSI)∧∧/1,2≡/⎕NSI ⍝? This is for debugging internal event calls - delete before production ⍝? This seems to be working - shut it off for now
              'Messages from ⎕RSI determination when called from within DeltaWI'Tracer')SI'
              Application←⎕←⊃⎕THIS,⍨⎕RSI/⍨⎕←⎕THIS⍕⍛{(⊂⍺,'.')≢¨⍵↑¨⍨1+≢⍺}⎕←⎕NSI,¨'.' ⍝ Global: What is the current application namespace (outside DeltaWI) when the event fires?
          :Else

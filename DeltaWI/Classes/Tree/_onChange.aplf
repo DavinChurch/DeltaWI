@@ -1,0 +1,4 @@
+ ok←run _onChange message;warg;list;lastclicks
+  (list lastclicks)←(⊃message) ⎕VGET('_list'(0 5⍴0))('_Last_Clicks'⍬)
+ warg←(0,list[;1])[1+message[3],⊃lastclicks~message[3]] ⍝ New item, previous item
+ ok←1⊣(∆WARG:warg)##.##.Run run

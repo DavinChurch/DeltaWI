@@ -1,0 +1,18 @@
+ grade←(compare Sort)nodes;starting;pass;swapped;count;i
+⍝ Use the given comparison function to sort the node IDs into their proper order.
+⍝ This is generally used on quite small lists, so we'll use a Bubble Sort for code simplicity.
+⍝ The Bubble Sort typically has O(n²) time & comparison complexity.
+⍝ (The algorithm can be changed to something more complicated if optimization is needed later.)
+⍝ ∇compare: Produce +1 if [1]>[2], ¯1 if [1]<[2], or 0 if [1]=[2]; numerically: -/[1 2]
+
+ starting←nodes ⍝ The starting order of the node numbers, for use in building the final grade-ordering
+
+ :For pass :In ⍳¯1+count←≢nodes ⍝ Loop through passes, with each pass being shorter than the previous one
+     swapped←0 ⍝ Has anything been swapped in this pass or not (so we can tell if we're done early)?
+     :For i :In ⍳count-pass ⍝ Check each item-pair [i+0 1] to see if they need swapping
+         :If 1=compare nodes[i+0 1] ⋄ nodes[i+0 1]←nodes[i+1 0] ⋄ swapped←1 ⋄ :EndIf ⍝ If they're out-of-order, swap them
+     :EndFor
+     :If ~swapped ⋄ :Leave ⋄ :EndIf ⍝ If nothing got swapped during this pass, then we're done sorting
+ :EndFor
+
+ grade←starting⍳nodes ⍝ Turn the final order into a ⍋-vector

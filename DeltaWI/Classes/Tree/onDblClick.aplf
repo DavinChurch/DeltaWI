@@ -1,0 +1,2 @@
+ result←object onDblClick arg
+ result←object(''##.##.SetEvent'DblClick' '>Change' '>MouseDblClick')arg ⍝? Can't use either ItemDblClick or MouseDblClick

@@ -1,0 +1,58 @@
+ result←object Expand arg;opr;tree;NeverSuppress;node;ops;ndx;states;family
+
+ ⍝ [1]←Operation: expand, collapse, toggle, expandbranch, collapsebranch, collapsereset
+ ⍝ [2]←Node ID
+ ⍝ Return 0 if expanding a node with no children or one that is already expanded, for instance.
+
+ '∆WI ARGUMENT ERROR: Argument required for "Expand" method'##.##.Error 0=≢arg
+ '∆WI LENGTH ERROR: Expand'##.##.Error 2≠≢arg
+ (opr node)←arg
+ ops←'expand' 'collapse' 'toggle' 'expandbranch' 'collapsebranch' 'collapsereset'
+ tree←object ⎕VGET⊂'_list'(0 5⍴0)
+ '∆WI ACTION ERROR: Invalid operation for "Expand" method'##.##.Error~opr⊂⍛∊ops
+ '∆WI LENGTH ERROR: Expand'##.##.Error 1≠≢node
+ '∆WI DOMAIN ERROR: Expand'##.##.Error~##.##.IsInt node
+ '∆WI ACTION ERROR: collapsereset is not implemented because forceparent cannot be supported yet'##.##.Error opr≡'collapsereset'
+ ('∆WI ARGUMENT ERROR: Item ',(⍕⊃node~tree[;1]),' not found ("SetInfo" method)')##.##.Error~∧/node∊tree[;1]
+ ndx←tree[;1]⍳⊃node
+ states←{⊃2 ##.##.∆NQ object'GetItemState'⍵}¨⍳≢tree
+
+ :Select opr
+ :Case 'expand' ⍝ Opens the children for display
+     :If result←~5 ##.##.BitOf states[ndx] ⍝ If not already expanded
+     :AndIf result←</(tree[;2],0)[ndx+0 1] ⍝ And if there are children ⍝? Watch out for future forceparent support
+         2 ##.##.∆NQ object'Expanding'ndx ⍝ Expand it
+     :EndIf
+ :Case 'collapse' ⍝ Hides only the children (but not grandchildren) so they do not or will not display
+     :If result←5 ##.##.BitOf states[ndx] ⍝ If already expanded
+     :AndIf result←</(tree[;2],0)[ndx+0 1] ⍝ And if there are children ⍝? Watch out for future forceparent support
+         2 ##.##.∆NQ object'Retracting'ndx ⍝ Collapse it
+     :EndIf
+ :Case 'toggle' ⍝ Switches between expanded and collapsed
+     :If result←</(tree[;2],0)[ndx+0 1] ⍝ If no children ⍝? Watch out for future forceparent support
+         :If 5 ##.##.BitOf states[ndx] ⍝ It's expanded
+             2 ##.##.∆NQ object'Retracting'ndx ⍝ Collapse it
+         :Else ⍝ It's collapsed
+             2 ##.##.∆NQ object'Expanding'ndx ⍝ Expand it
+         :EndIf
+     :EndIf
+ :Case 'expandbranch' ⍝ Opens all decendants for display
+     family←ndx+0,⍸∧\ndx↓tree[;2]>tree[ndx;2] ⍝ All of this node's descendants, plus itself
+     family/⍨←</(tree[;2],0)[family∘.+0 1] ⍝ But restricted to those who have children of their own
+     family/⍨←~5 ##.##.BitOf states[family] ⍝ And only those that aren't expanded now
+     :If result←×≢family ⍝ Are there any left to do?
+         {}{2 ##.##.∆NQ object'Expanding'⍵}¨family ⍝ Expand them all
+     :EndIf
+ :Case 'collapsebranch' ⍝ Hides all children and grandchildren so they will not display
+     family←ndx+0,⍸∧\ndx↓tree[;2]>tree[ndx;2] ⍝ All of this node's descendants, plus itself
+     family/⍨←</(tree[;2],0)[family∘.+0 1] ⍝ But restricted to those who have children of their own
+     family/⍨←5 ##.##.BitOf states[family] ⍝ And only those that are expanded now
+     :If result←×≢family ⍝ Are there any left to do?
+         {}{2 ##.##.∆NQ object'Retracting'⍵}¨family ⍝ Collapse them all
+     :EndIf
+ :Case 'collapsereset' ⍝ Removes all descendants; for use with forceparent
+     ⍝? Not implemented at present because it is intended for use with forceparent, which cannot currently be supported
+ :EndSelect
+
+
+ ⍝? If I expand or collapse a node, Dyalog also scrolls to show it. Is that the way APL+Win works, too?

@@ -1,0 +1,62 @@
+ result←object SortChildren arg;root;recurse;onsort;tree;children;ndx;depth;NeverSuppress;compare;grade;parents;t;top
+⍝ Sort some or all of the Tree structure
+⍝ The onSort event can be used to sort non-alphabetically
+⍝ ∇compare: Produce +1 if [1]>[2], ¯1 if [1]<[2], or 0 if [1]=[2]; numerically: -/[1 2]
+
+⍝ arg[1]←Parent node ID to be sorted, or 'root'
+⍝ arg,←⊂'recurse' (optional)
+⍝ arg,←⊂'onSort' (optional)
+⍝? Should these keywords be case-insensitive?
+
+ '∆WI LENGTH ERROR: SortChildren'##.##.Error 0=≢arg
+ '∆WI DOMAIN ERROR: SortChildren'##.##.Error~('root'≡⊃arg)∨##.##.IsInt⊃arg
+ (root recurse onsort)←'root' 'recurse' 'onSort'∊arg←⊆##.##.Single arg ⍝? Should these be case-insensitive?
+ tree←object ⎕VGET⊂'_list'(0 5⍴0)
+ arg~←'root' 'recurse' 'onSort'
+ :If root
+     '∆WI DOMAIN ERROR: SortChildren'##.##.Error×≢arg
+     :If 0=≢tree ⋄ result←0 ⋄ :Return ⋄ :EndIf ⍝? Is this the right thing to do on an empty tree?
+     parents←,¯1
+ :Else
+     '∆WI DOMAIN ERROR: SortChildren'##.##.Error 1<≢arg
+     parents←,⊃arg
+     ('∆WI ARGUMENT ERROR: Item ',(⍕⊃parents),' not found ("SortChildren" method)')##.##.Error~∧/parents∊tree[;1]
+ :EndIf
+
+ ⍝ Provide a pre-defined data comparison routine for the names of two tree ID #s
+ :If onsort
+     ⍝ A user-defined comparison is bound to be pretty slow because it constantly has to retrieve the full tree to examine
+     compare←{'Sort'##.##.Event object,##.##.Application,⍵} ⍝ Call their comparison routine
+ :Else
+     ⍝ This method still uses the custom-comparison algorithm with an internal comparison function.
+     ⍝ We can still use this if we have to for some reason, but otherwise we'll actually use standard ⍋ in its place below.
+     compare←tree[;1 3]∘{names←⍺[⍺[;1]⍳⍵;2] ⋄ 2 1≡⍋names:1 ⋄ 2 1≡⍒names:¯1 ⋄ 0} ⍝ Not the best formula, but it should work if needed
+ :EndIf
+
+ :While ×≢parents ⍝ Loop, in case of recursion
+
+     :If parents[1]=¯1 ⍝ Root nodes must be determined differently
+         children←tree[;1]/⍨tree[;2]=1+depth←¯1+⌊/tree[;2]
+     :Else
+         depth←tree[ndx←tree[;1]⍳parents[1];2]
+         children←tree[;1]/⍨(tree[;2]=depth+1)∧(ndx⍴0),∧\ndx↓tree[;2]>depth
+     :EndIf
+
+     :If 1<≢children
+         :If onsort ⍝ We have to use the slow, user-defined sorting
+             grade←(compare _supp.Sort)children ⍝ Produce ⍋-style ordering
+         :Else ⍝ We'll do this the fast way with ⍋
+             grade←⍋tree[tree[;1]⍳children;3]
+         :EndIf
+         :If grade≢⍳≢grade ⍝ Now we want to reorder the child sub-trees into the new order
+             tree←(≢top←(¯1+⌊/tree[;1]⍳children)↑tree)↓tree ⍝ First get the top part of the tree before the children
+             top⍪←t←↑⊃,/((tree[;2]≤depth+1)⊂↓tree)[grade] ⍝ And reassemble the children in their new order
+             tree←top⍪t≢⍛↓tree ⍝ And finally append the rest of the tree
+         :EndIf
+     :EndIf
+     parents←1↓parents,recurse/children ⍝ Do we need to recurse on each of these children?
+
+ :EndWhile
+
+ {}object list,⊂tree ⍝ Use my property assignment to redefine the structure in the new order ⍝? What about preserving state??
+ result←1

@@ -1,0 +1,9 @@
+ ok←run _on_ItemDown_ message;object;lastclicks
+⍝ Every time they click on an item, keep a record of the last few that they've clicked on.
+⍝ We need the previous-click item # for the next onChange event.
+
+ object←⊃message
+ lastclicks←object ⎕VGET⊂'_Last_Clicks'⍬
+ lastclicks←3↑message[3]∪lastclicks ⍝ Don't record duplicate clicks
+ object._Last_Clicks←lastclicks
+ ok←1

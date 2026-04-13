@@ -1,0 +1,11 @@
+ result←object DeleteNodes arg;tree;parents;ndx;children
+ '∆WI RANK ERROR: DeleteNodes'##.##.Error 1≠≢⍴arg←1/##.##.Single arg
+ '∆WI DOMAIN ERROR: DeleteNodes'##.##.Error~##.##.IsInt arg
+ tree←object ⎕VGET⊂'_list'(0 5⍴0)
+ ('∆WI ARGUMENT ERROR: Item ',(⍕⊃arg~tree[;1]),' not found ("DeleteNodes" method)')##.##.Error~∧/arg∊tree[;1]
+ parents←{⊃2 ##.##.∆NQ object'GetParentItem'⍵}¨⍳≢tree
+ children←parents{⍵∪⍸⍺⍺∊⍵}⍣≡ndx←tree[;1]⍳arg
+ tree←tree⌿⍨~children∊⍨⍳≢tree ⍝ Compress our master copy, which better be the same as what Dyalog does on its collection
+ object._list←tree ⍝ Remember our version
+ {}{2 ##.##.∆NQ object'DeleteItems'⍵ 1}¨ndx[⍒ndx] ⍝ Finally, have Dyalog do the work on its end, in descending order to preserve numbering
+ result←ndx≢⍛⍴1 ⍝? When does APL+Win return a 0?

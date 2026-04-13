@@ -1,0 +1,60 @@
+ result←object InsertNodes arg;parent;sibling;items;tree;sorton;parents;before;pndx;ndx;r;NeverSuppress
+ ⍝ arg[1]←Parent node ID, or 'root'
+ ⍝ arg[2]←Sibling node ID, or 'first', 'last', or 'sort'
+ ⍝ arg[3]←New row(s) to insert (vector or matrix)
+ '∆WI LENGTH ERROR: InsertNodes'##.##.Error 3≠≢arg
+ (parent sibling items)←arg ⋄ sorton←¯1
+ tree←object ⎕VGET⊂'_list'(0 5⍴0)
+ parents←{⊃2 ##.##.∆NQ object'GetParentItem'⍵}¨⍳≢tree ⍝ These are subscripts, not IDs
+
+ :If parent≡'root'
+     parent←0 ⍝ Signal 'root' numerical code for easier processing
+ :Else
+     '∆WI DOMAIN ERROR: InsertNodes'##.##.Error~##.##.IsInt parent
+     '∆WI LENGTH ERROR: InsertNodes'##.##.Error 1<≢parent
+     parent←⊃parent
+     ('∆WI ARGUMENT ERROR: Item ',(⍕⊃parent~tree[;1]),' not found ("InsertNodes" method)')##.##.Error~parent∊tree[;1]
+ :EndIf
+
+ :Select sibling
+ :Case 'first'
+     sibling←¯1 ⍝ Signal "first" sibling code
+ :Case 'last'
+     sibling←⊢/¯1,(parents=parent)/tree[;1] ⍝ Assign to follow the last child of this parent
+ :Case 'sort'
+     sorton←parent ⍝ Do any sorting afterwards
+     sibling←⊢/¯1,(parents=parent)/tree[;1] ⍝ Assign to follow the last child of this parent, until then
+ :Else
+     '∆WI DOMAIN ERROR: InsertNodes'##.##.Error~##.##.IsInt sibling
+     '∆WI LENGTH ERROR: InsertNodes'##.##.Error 1<≢sibling
+     ('∆WI ARGUMENT ERROR: Item ',(⍕⊃parent~tree[;1]),' not found ("InsertNodes" method)')##.##.Error~∧/tree[;1]∊⍨sibling←⊃sibling
+     ⍝? Note: APL+Win treats sibling IDs not at the correct depth as if it were 'last', or so it appears
+     :If parent≠parents[sibling] ⋄ sibling←'last' ⋄ :EndIf ⍝ Ignore this sort of problem?
+ :EndSelect
+
+ :If 1=≢⍴items ⋄ items←(1,≢items)⍴items ⋄ :EndIf
+ '∆WI RANK ERROR: InsertNodes'##.##.Error 2≠≢⍴items
+ ⍝ [;1]←Node ID
+ ⍝ [;2]←Depth (dense set of numbers ≥ 1)
+ ⍝ [;3]←Label text
+ ⍝ [;4]←Image indices ([1]←Unselected, [2]←Selected, [3]←Overlay, [4]←User state)
+ ⍝ [;5]←State information
+ :If 0∊⍴items ⋄ items←0 3⍴0 ⋄ :EndIf ⍝ Empty arrays are all treated the same
+ '∆WI LENGTH ERROR: InsertNodes'##.##.Error~3 4 5∊⍨⊢/⍴items
+ items←5↑[2]items,⍤1⊢(⊢/⍴items)↓0 1 ''(1 1 0 0)(0⍴⊂'') ⍝ Fill out argument structure with defaults
+ 'DOMAIN ERROR'##.##.Error 0∊(##.##.IsInt¨items[;1 2 4])∧0 0 1≥⍤1⊢≡¨items[;1 2 4] ⍝ Columns [;1 2 4] must be numeric (scalar for [;1 2] and scalar or vector for [;4])
+ '∆WI LENGTH ERROR: InsertNodes'##.##.Error∨/~1 2 3 4∊⍨≢¨items[;4] ⍝ [;4] may be 1, 2, 3, or 4 items
+ items[;4]←4↑¨items[;4],¨(≢¨items[;4])↓¨⊂1 1 0 0 ⍝ Default image indices
+ '∆WI DOMAIN ERROR: InsertNodes'##.##.Error∨/∨/¨¯2>items[;4] ⍝ Check minimum values for sub-components in [;2]
+ r←0=items[;1] ⋄ (r/items[;1])←(⌈/0,items[;1])+⍳+/r ⍝ Auto-number rows that specify row #0 (should actually use ⌈/ of any previous list)
+ result←items[;1] ⍝ Return the ID numbers of the inserted nodes
+
+⍝ Ok, let's adjust our 'list' property directly and just reassign the whole thing (and let it check for any further errors)
+ :If ¯1=before←sibling{⊃¯1,⍨(⍵⍳⍺)↓⍵}(parents=pndx←tree[;1]⍳parent)/tree[;1] ⍝ Which node ID will we put it *before*? (¯1=append child)
+     before←(tree[;1],¯1)[pndx+0⍳⍨pndx↓(∨\tree[;1]=parent)∧tree[;2]>tree[pndx;2]] ⍝ If it stays ¯1 after this, that means end-of-tree
+ :EndIf
+ ndx←¯1+tree[;1]⍳before ⋄ tree←(ndx↑tree)⍪items⍪ndx↓tree ⍝ Insert them at the calculated location
+ {}object list,⊂tree ⍝ Now just redefine the tree from scratch
+ :If sorton>¯1 ⍝ They've asked to insert the nodes in sorted order, so we'll call the SortChildren method afterwards to reorder them
+     {}object SortChildren{⍵=0:'root' ⋄ ⍵}¨,parent
+ :EndIf

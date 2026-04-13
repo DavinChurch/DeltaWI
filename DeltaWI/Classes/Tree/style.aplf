@@ -1,0 +1,31 @@
+ result←object style arg;bits;props
+
+⍝   1=Does not have buttons
+⍝   2=Does not have lines connecting children
+⍝   4=Has buttons/lines for top-level children
+⍝   8=Keep highlighted when focus lost
+⍝   16=Enable editing of labels
+⍝   32=Enable automatic check boxes as user state images
+⍝   64=Suppress info tips                                   ⍝? Not available
+⍝   128=Suppress unfolding of label tips                    ⍝? Not available
+
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_style' 0
+ :Else
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∧1≠≢arg
+     arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∨~##.##.IsInt arg
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∨/∊arg<0
+     bits←##.##.BitVals arg←+/∊arg
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error(arg≥256)∨arg<0
+     object._style←+/bits
+     props←⊂'FullRowSelect' 0
+     props,←⊂'HasButtons'(~1∊bits)
+     props,←⊂'HasLines'(+/∧\1 0≠2 4∊bits)
+     props,←⊂'AlwaysShowSelection'(8∊bits)
+     props,←⊂'EditLabels'(16∊bits)
+     props,←⊂'CheckBoxes'(32∊bits)
+
+     object ##.##.∆WS props
+     result←##.NoRes
+ :EndIf
