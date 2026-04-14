@@ -18,7 +18,7 @@
          '∆WI DOMAIN ERROR: range'##.##.Error 0≥rows←2⊃arg
          :If 1∊style ⍝ A simple box only changes the size (APL+Win & Dyalog) and we just have to make room for the new row count
              rowcnt←object ##.##.∆WG'Rows'
-             fsize←⊃object ##._supp.GetTextSize'Xy' ⍝ Determine old font size to tell us how big each row will be   ⍝? Does this need 1.25×?
+             fsize←⊃object ##._supp.GetTextSize'Xy' ⍝ Determine old font size to tell us how big each row will be
              {}object size object._size+2↑fsize×rows-rowcnt ⍝ Modify the object's size directly
          :Else ⍝ A drop-down box leaves the APL+Win size alone and changes the row count
              object ##.##.∆WS'Rows'rows

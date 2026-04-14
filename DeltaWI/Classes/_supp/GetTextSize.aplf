@@ -16,5 +16,5 @@
      fontname←0⍴⊂''
  :EndIf
 
- textsize←tunits÷⍨2 ##.##.∆NQ object'GetTextSize'text,fontname
+ textsize←tunits÷⍨⌈1.25 1×2 ##.##.∆NQ object'GetTextSize'text,fontname
  ⎕EX fontname
