@@ -6,7 +6,7 @@
 
  (∆border ∆style)←((1↓¨arg),⊂⍬)[actions⍳'border' 'style']
  ∆border←0⌈×+/∊∆border ⋄ ∆style←##.##.BitVals+/∊∆style
- arg←(parent:parent ⋄ border:∆border ⋄ stretch:0 0)##.##.New.Center arg
+ arg←(parent:parent ⋄ border:∆border)##.##.New.Center arg
 
  props←'TreeView'('Visible' 0) ⍝ Properties that should be used during creation
  props,←(~'border'⊂⍛∊actions)/⊂'Border'∆border ⍝ Set border upon creation if we have it

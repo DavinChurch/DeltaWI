@@ -3,12 +3,12 @@
 
  'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
  'f.f'∆WI Pass'f.f'⊢'New' 'Frame'
- 'f.f'∆WI Pass 12.96875 44 4 12⊢'where'
+ 'f.f'∆WI Pass 13 44 4 12⊢'where'
 
- 'f.f' ∆WI Pass MT⊢'style' 7
- 'f.f' ∆WI Pass 7⊢'style'
- 'f.f' ∆WI Pass MT⊢'style' 1
- 'f.f' ∆WI Pass 1⊢'style'
- 'f.f' ∆WI Fail '∆WI DOMAIN ERROR: style'⊢'style' 9
+ 'f.f'∆WI Pass MT⊢'style' 7
+ 'f.f'∆WI Pass 7⊢'style'
+ 'f.f'∆WI Pass MT⊢'style' 1
+ 'f.f'∆WI Pass 1⊢'style'
+ 'f.f'∆WI Fail'∆WI DOMAIN ERROR: style'⊢'style' 9
 
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

@@ -8,8 +8,8 @@
  from←⊃⎕RSI ⍝ Immediate source namespace calling me (where I can find settings)
  actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
  units←##.GUIroot._units ⍝ We'll want this for scale conversions
- _size←from ⎕VGET⊂'_size'(1.5 10) ⍝ Usual default object size, but allow an override to be specified
- (parent stretch border size)←opts ⎕VGET'parent'('stretch'(1 0))('border' 0)('size'_size) ⍝ Obtain named parameters
+ _size←from ⎕VGET⊂'_size'(1.5 10) ⍝ A common default object size, but allow an override to be specified
+ (parent stretch border size)←opts ⎕VGET'parent'('stretch'(0 0))('border' 0)('size'_size) ⍝ Obtain named parameters
 
  ⍝ If needed, modify or prepend a default 'where' for object creation
  (∆where ∆size ∆extent)←∊¨((1↓¨arg),⊂⍬)[actions⍳'where' 'size' 'extent'] ⍝ Which of our defaults are they giving us anyway (so we can skip adding defaults)
@@ -29,3 +29,5 @@
      :EndIf
      ⍝? We may also remove any existing 'extent' (or 'size') from their command line so we don't re-execute it? But is it worth it?
  :EndIf
+
+ ⍝? We could have this preset Border as well, but it doesn't belong with centering and not all (just most) classes call this

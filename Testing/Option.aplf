@@ -4,7 +4,7 @@
  'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
  'f.o'∆WI Pass'f.o'⊢'New' 'Option'
  'f.o'∆WI Pass 1.5 10⊢'size'
- 'f.o'∆WI Pass 14.21875 45 1.5 10⊢'where'
+ 'f.o'∆WI Pass 14.25 45 1.5 10⊢'where'
  'f.o'∆WI Pass(,'o')⊢'caption'
  'f.o'∆WI Pass MT⊢'caption' 'Testing'
  'f.o'∆WI Pass'Testing'⊢'caption'

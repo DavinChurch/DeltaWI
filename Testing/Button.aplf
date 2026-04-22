@@ -3,7 +3,7 @@
 
  'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
  'f.b'∆WI Pass'f.b'⊢'New' 'Button'
- 'f.b'∆WI Pass 14.21875 45 1.5 10⊢'where'
+ 'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
  'f.b'∆WI Pass 0⊢'value'
  'f.b'∆WI Pass MT⊢'value' 1
  'f.b'∆WI Pass 1⊢'value'

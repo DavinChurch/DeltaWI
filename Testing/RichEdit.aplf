@@ -4,7 +4,7 @@
  'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
  'f.r'∆WI Pass'f.r'⊢'New' 'RichEdit'
  'f.r'∆WI Pass 1.25 9.5⊢'size'
- 'f.r'∆WI Pass 14.21875 45 1.5 10⊢'where'
+ 'f.r'∆WI Pass 14.25 45 1.5 10⊢'where'
 
  ⍝ Test onChange event (implicitly called by 'text')
  changes←0
@@ -42,7 +42,7 @@
  'f.r'∆WI Pass ¯2⊢'selcolor'
  'f.r'∆WI Pass MT⊢'selcolor'(0 255 0)
  'f.r'∆WI Pass 0 255 0⊢'selcolor'
- 'f.r'∆WI Pass'System' (17÷24) 0 'ansi' 0⊢'selfont'
+ 'f.r'∆WI Pass'System'(17÷24)0 'ansi' 0⊢'selfont'
  'f.r'∆WI Pass MT⊢'selfont' 'Arial'
  'f.r'∆WI Pass'Arial' 1 0 'ansi' 0⊢'selfont'
  'f.r'∆WI Pass MT⊢'selfont'⍬ 2

@@ -16,5 +16,5 @@
      fontname←0⍴⊂''
  :EndIf
 
- textsize←tunits÷⍨⌈1.25 1×2 ##.##.∆NQ object'GetTextSize'text,fontname
+ textsize←tunits÷⍨⌈1.20 1×2 ##.##.∆NQ object'GetTextSize'text,fontname ⍝? Is 120% the best leading size to use?
  ⎕EX fontname

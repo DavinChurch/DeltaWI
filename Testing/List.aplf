@@ -4,7 +4,7 @@
  'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
  'f.l'∆WI Pass'f.l'⊢'New' 'List'('style' 1)
  ⍝'f.l'∆WI Pass 1.25 9.5⊢'size' ⍝? Not fixed yet
- ⍝'f.l'∆WI Pass 14.21875 45 1.5 10⊢'where' ⍝? Not fixed yet
+ ⍝'f.l'∆WI Pass 14.21875 45 1.5 10⊢'where' ⍝? Not fixed yet ⍝? Should be 12.5 40
 
  'f.l'∆WI Pass MT⊢'list' 'This' 'is a' 'test'
  'f.l'∆WI Pass'This' 'is a' 'test'⊢'list'

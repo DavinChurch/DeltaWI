@@ -11,7 +11,7 @@
  (∆style ∆border)←((1↓¨arg),⊂⍬)[actions⍳'style' 'border']
  ∆border←0⌈×+/∊∆border ⋄ ∆style←##.##.BitVals+/∊∆style
  size←_size⌈5 0×1∊∆style ⍝ style=1 has a different default size, override it
- stretch←60 0×~1∊∆style ⍝ Centering will need to happen as if it is sized for style=1, so adjust for default 'size'
+ stretch←59 0×~1∊∆style ⍝ Centering will need to happen as if it is sized for style=1, so adjust for default 'size'
  arg←(parent:parent ⋄ border:∆border ⋄ stretch:stretch ⋄ size:size)##.##.New.Center arg
 
 ⍝ We'll try always using a ComboEx and hope there are no incompatibilities that require old Combo.

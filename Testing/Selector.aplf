@@ -3,6 +3,8 @@
 
  'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
  'f.s'∆WI Pass'f.s'⊢'New' 'Selector'
+ 'f.s'∆WI Pass 9.5 29⊢'size'
+ 'f.s'∆WI Pass 10 35 10 30⊢'where'
  'f.s.p1'∆WI Pass'f.s.p1'⊢'New' 'Page'('caption' 'One')
  'f.s.p2'∆WI Pass'f.s.p2'⊢'New' 'Page'('caption' 'Two')
 

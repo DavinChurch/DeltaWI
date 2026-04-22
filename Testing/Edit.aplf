@@ -4,7 +4,7 @@
  'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
  'f.e'∆WI Pass'f.e'⊢'New' 'Edit'
  'f.e'∆WI Pass 1.25 9.5⊢'size'
- 'f.e'∆WI Pass 14.21875 45 1.5 10⊢'where'
+ 'f.e'∆WI Pass 14.25 45 1.5 10⊢'where'
 
  ⍝ Test onChange event (implicitly called by 'text')
  changes←0
@@ -13,7 +13,7 @@
  ⊢Pass 1⊢changes ⍝ Has the global changed?
  'f.e'∆WI Pass'testing'⊢'text'
  ⊢Pass 1⊢changes ⍝ Has the global not changed?
- 'f.e' ∆WI Pass MT⊢'suppress' 1 ⍝ Now let's test suppression
+ 'f.e'∆WI Pass MT⊢'suppress' 1 ⍝ Now let's test suppression
  'f.e'∆WI Pass MT⊢'text' 'Testing'
  ⊢Pass 1⊢changes ⍝ Has the global not changed?
  ⍝ We can't event test this manually without a ⎕DQ
