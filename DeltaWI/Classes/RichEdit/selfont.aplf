@@ -21,7 +21,7 @@
  pix_twip←units[4;] ⍝ Pixels per twip, for converting scales
  was←object ##.##.∆WG'CharFormat'
  new←was[2],was[3],0,'ansi'⊂⍛,was[5] ⋄ new[2 5]×←⊃pix_twip÷tunits ⍝ Convert back to APL+Win structure, including twips to scale-units
- :If 'MS Shell Dlg'≡⊃new ⋄ new[1]←⊂'System' ⋄ :EndIf ⍝ This a generic name for System - let's name it consistently
+ :If 'MS Shell Dlg'≡⊃new ⋄ new[1]←⊂'System' ⋄ :EndIf ⍝ This a generic selfont name for System - let's name it consistently
 
  :If 0=≢arg ⋄ result←new ⋄ :Return ⋄ :EndIf ⍝ Just give them back what we have
 
@@ -31,7 +31,7 @@
      arg←arg,arg≢⍛↓def←'System' 1 0 'ansi' 0 ⍝ Assume defaults (Dyalog cannot auto-select a font name)
      :If (×≢new)∧∨/t←0=≢¨arg ⋄ (t/arg)←t/new ⋄ :EndIf ⍝ Allow ⍬ to leave as-is (from APL+Win format)
      :If ∨/t←0=≢¨arg ⋄ (t/arg)←t/def ⋄ :EndIf ⍝ Allow ⍬ with no previous value to fill in with defaults
-     :If 'MS Shell Dlg'≡⊃arg ⋄ arg[1]←⊂'System' ⋄ :EndIf ⍝ This a generic name for System - let's name it consistently
+     :If 'MS Shell Dlg'≡⊃arg ⋄ arg[1]←⊂'System' ⋄ :EndIf ⍝ This a generic selfont name for System - let's name it consistently
      '∆WI DOMAIN ERROR: selfont'##.##.Error~##.##.IsChar 1⊃arg
      '∆WI DOMAIN ERROR: selfont'##.##.Error~1 3 5∊⍨10|⎕DR 2⊃arg
      '∆WI DOMAIN ERROR: selfont'##.##.Error~##.##.IsInt 3⊃arg
@@ -52,6 +52,7 @@
      :EndIf
      charset←0 ⍝ CharFormat does not support character sets ⍝? Does it need to? APL+Win fonts should be handled differently anyway, right?
      new←was[1],arg[1 2],was[4],arg[5]
+     :If 'System'≡2⊃new ⋄ new[2]←⊂'MS Shell Dlg' ⋄ :EndIf ⍝ Convert generic selfont name of System back to the one we really want to use
      new[3 5]←new[3 5]÷⊃pix_twip÷tunits ⍝ Convert scale-units to twips (can't round because it will throw off reverse calculation)
      object ##.##.∆WS'CharFormat'new ⍝ Redefine this property with the new values
  :EndSection

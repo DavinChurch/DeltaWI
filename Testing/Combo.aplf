@@ -1,17 +1,15 @@
- Combo;StopOnError
- StopOnError←0
+ Combo
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
  'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
  'f.c'∆WI Pass'f.c'⊢'Create' 'Combo'('style' 0)
  'f.c'∆WI Pass 1.3125 20⊢'size'
  'f.c'∆WI Pass 1.3125 20⊢'extent'
- ⍝'f.c'∆WI Pass 12.46875 40 1.3125 20⊢'where'
  'f.c'∆WI Pass 12.5 40 1.3125 20⊢'where'
  'f.c'∆WI Pass MT⊢'font'⍬ 2
  'f.c'∆WI Pass 2.5 20⊢'size'
  'f.c'∆WI Pass 2.5 20⊢'extent'
- 'f.c'∆WI Pass 12.46875 40 2.5 20⊢'where'
+ 'f.c'∆WI Pass 12.5 40 2.5 20⊢'where'
  'f.c'∆WI Pass MT⊢'list' 'hello' 'world'
  'f.c'∆WI Pass'hello' 'world'⊢'list'
  'f.c'∆WI Pass 0⊢'value'
@@ -38,7 +36,7 @@
  'f.c'∆WI Pass MT⊢'font'⍬ 2
  'f.c'∆WI Pass 2.5 20⊢'size'
  'f.c'∆WI Pass 2.5 20⊢'extent'
- 'f.c'∆WI Pass 12.46875 40 2.5 20⊢'where'
+ 'f.c'∆WI Pass 12.5 40 2.5 20⊢'where'
  'f.c'∆WI Pass MT⊢'list' 'hello' 'world'
  'f.c'∆WI Pass'hello' 'world'⊢'list'
  'f.c'∆WI Pass 0⊢'value'
