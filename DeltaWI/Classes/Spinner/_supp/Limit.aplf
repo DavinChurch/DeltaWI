@@ -1,0 +1,12 @@
+ newvalue←object Limit oldvalue;minmax
+⍝ Handle range-limitation of new spinner value, including optional wrapping
+ minmax←object ⎕VGET⊂'_range' (0 100) ⋄ minmax←minmax[⍋minmax] ⍝ What are our (normalized) limits?
+ :If object ⎕VGET⊂'_wrap' 0 ⍝ If we're wrapping around, recompute new value
+     :If oldvalue<minmax[1]
+         newvalue←minmax[2]-minmax[1]-oldvalue
+     :ElseIf oldvalue>minmax[2]
+         newvalue←minmax[1]+oldvalue-minmax[2]
+     :EndIf
+ :Else ⍝ If we're not wrapping, just apply minimums and maximums normally
+     newvalue←minmax[1]⌈minmax[2]⌊oldvalue
+ :EndIf

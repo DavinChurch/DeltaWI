@@ -13,6 +13,7 @@
      object._caption←new ⍝ Update the APL+Win record
      new←object ##.##.QuadAV new ⍝ Convert APL+Win fonts to ⎕AV order
      object ##.##.∆WS'Caption'((⎕UCS 10)@{⍵=⎕UCS 13}⊢new) ⍝ Change the Dyalog object so the screen actually changes
+     object ##.Spinner._supp.SetSpinner object._caption ⍝ Tell any connected Spinner that we've changed
      result←##.NoRes
  :EndIf
  ⍝? Does either APL+Win or Dyalog allow ⎕TCNL in these captions?

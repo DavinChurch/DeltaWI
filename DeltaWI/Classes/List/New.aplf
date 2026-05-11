@@ -6,7 +6,7 @@
 
  (∆border ∆style)←((1↓¨arg),⊂⍬)[actions⍳'border' 'style']
  ∆border←0⌈×+/∊∆border ⋄ ∆style←##.##.BitVals+/∊∆style
- arg←(parent:parent ⋄ stretch:30 0 ⋄ border:∆border)##.##.New.Center arg ⍝ (No idea why APL+Win doesn't center this well.)
+ arg←(parent:parent ⋄ stretch:24 0 ⋄ border:∆border)##.##.New.Center arg ⍝ (No idea why APL+Win doesn't center this well.)
 
  props←'List'('Visible' 0)('EdgeStyle' 'Recess') ⍝ Properties that should be used during creation
  props,←⊂'Style'('Single' 'Multi'⊃⍨1+1∊∆style)

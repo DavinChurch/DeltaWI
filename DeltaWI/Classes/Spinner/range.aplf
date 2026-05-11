@@ -1,0 +1,18 @@
+ result←object range arg;spin;minmax;oldspin
+
+ minmax←object ⎕VGET⊂'_range'(0 100)
+ :If 0=≢arg
+     result←minmax
+ :Else
+     arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: value'##.##.Error~##.##.IsInt arg
+     '∆WI LENGTH ERROR: value'##.##.Error 2≠≢arg
+     '∆WI DOMAIN ERROR: value'##.##.Error∨/(arg<¯32767)∨arg>32767 ⍝ Out of APL+Win's allowed range
+     object._range←minmax←arg ⋄ minmax←minmax[⍋minmax] ⍝ Allow reversed coordinates to swap increment direction
+     spin←minmax[1]⌈minmax[2]⌊oldspin←object ##.##.∆WG⊂'Thumb' ⍝ Constrain spinner value to remain within new range
+     object ##.##.∆WS('Limits'minmax)('Thumb'spin)
+     :If spin≠oldspin
+         'Change'##.##.Event object ##.##.Application,arg ⍝ Just let application know if there's a new value
+     :EndIf
+     result←##.NoRes
+ :EndIf

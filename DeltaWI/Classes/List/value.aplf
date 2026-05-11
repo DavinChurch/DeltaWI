@@ -1,10 +1,12 @@
- result←object value arg
+ result←object value arg;item;items
 ⍝ Allow reading and setting the list of highlighted items
 ⍝ This is not managed with a variable but reads and writes the object property directly
 
  :If 0=≢arg
      result←⍸object ##.##.∆WG'SelItems'
  :Else
-     object ##.##.∆WS'SelItems'((⍳≢object ##.##.∆WG'Items')∊∊##.##.Single arg) ⍝ Write the new value directly to Dyalog
+     object ##.##.∆WS'SelItems'(item←(⍳≢object ##.##.∆WG'Items')∊∊##.##.Single arg) ⍝ Write the new value directly to Dyalog
+     'Click?'##.##.Event object ##.##.Application ⍝ Now we need to fire an implied onClick event for them
+     object ##.Spinner._supp.SetSpinner⊃⍸item ⍝ Tell any connected Spinner that we've changed our position
      result←##.NoRes
  :EndIf

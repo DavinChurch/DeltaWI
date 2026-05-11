@@ -1,0 +1,15 @@
+ ok←run _on_KeyPress_ message;txt;object
+⍝ When a key is accepted, also let any associated Spinner know there's a change
+
+ ok←1 ⋄ object←⊃message
+ :If 9=object.⎕NC'_buddy_' ⍝ Is there a Spinner buddying-up to this object at all?
+     :If 0=⍴⍴3⊃message ⍝ Get the keystroke (if it's a single key)
+     ⍝ Then we'll want to (potentially) update it after the KeyPress has finished processing
+         :If ~'on9629'⊂⍛∊⊃¨object ##.##.∆WG'Event' ⍝ If it's not set up yet, we need to add event trapping for it
+             object ##.##.∆WS⊂'Event' 'on9629'(⎕THIS⍕⍛,'._on_9629') ⍝ Prepare a cleanup event to run later (9629 ← +/⎕UCS '→SetSpinner')
+         :EndIf
+         0 ##.##.∆NQ object 9629 ⍝ Call SetSpinner ASAP later after the new value is available
+     :ElseIf message[3]∊'UC' 'DC' ⍝ Was this a cursor up/down key?
+         object._buddy_ ##.Spinner._supp.ClickSpinner 3⊃message
+     :EndIf
+ :EndIf

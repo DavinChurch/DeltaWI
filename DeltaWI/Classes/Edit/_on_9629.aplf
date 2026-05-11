@@ -1,0 +1,4 @@
+ ok←_on_9629 message
+⍝ A non-final event should have completed processing and now we have to call SetSpinner to see if any synchronization is necessary
+
+ (⊃message)##.Spinner._supp.SetSpinner(⊃message)text ⍬ ⍝ See if we can update the Spinner from this

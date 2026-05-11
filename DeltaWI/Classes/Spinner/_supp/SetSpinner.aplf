@@ -1,0 +1,33 @@
+ buddy SetSpinner newvalue;spinner;minmax
+ ⍝ When a potential buddy object's contents change, call this routine to update the associated Spinner (if it has one)
+ ⍝ Disregard wrapping when specifying a new value directly
+
+ :If 9=buddy.⎕NC'_buddy_' ⍝ Is there a Spinner buddying-up to this object?
+     spinner←buddy._buddy_
+ :AndIf 16∊##.##.##.BitVals spinner ⎕VGET⊂'_style' 0 ⍝ Are buddies supposed to auto-update back here?
+ :AndIf ~'SetBuddy'⊂⍛∊5↑⎕SI ⍝ If we're immediately being called "recursively" from ∇SetBuddy, then don't do anything!
+     :If ##.##.##.IsChar newvalue
+         :If (,1)≢⊃newvalue←⎕VFI'¯'@{⍵='-'}newvalue~',' ⍝ Do we have a single valid number (after cleaning decorations)?
+         :OrIf ~##.##.##.IsInt newvalue←2⊃newvalue ⍝ That translates to an integer?
+             :Return ⍝ If we don't have a number, we can't do anything
+         :EndIf
+     :EndIf
+     minmax←spinner ⎕VGET⊂'_range'(0 100) ⋄ minmax←minmax[⍋minmax]
+     newvalue←minmax[1]⌈minmax[2]⌊newvalue ⍝ Constrain new value to remain within application's range
+     spinner ##.##.##.∆WS⊂'Thumb'newvalue
+     ⍝ We do not also fire the Spinner's Change event at this time
+ :EndIf
+
+
+⍝ These buddy controls need to also update my Thumb value here, from the following sources:
+⍝   Class       APL+Win/property    Dyalog
+⍝   -----       -------/--------    ------
+⍝   Edit        Change  text        KeyPress
+⍝   RichEdit    Change  [sel]text   KeyPress
+⍝   Combo       Change  text/value  KeyPress/Select
+⍝   List        Click   value       Select
+⍝   Label               caption
+⍝   Button              caption
+⍝   Check               caption
+⍝   Option              caption
+⍝   Frame               caption

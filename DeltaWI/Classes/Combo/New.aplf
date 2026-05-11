@@ -17,7 +17,7 @@
 ⍝ We'll try always using a ComboEx and hope there are no incompatibilities that require old Combo.
  props←'ComboEx'('Visible' 0) ⍝ Define properties that must be used during creation
  props,←('border'⊂⍛∊actions)/⊂'Border'∆border ⍝ Set border upon creation if we have it ⍝? It cannot be changed later
- props,←⊂'Style'('Drop' 'Simple' 'DropEdit'⊃⍨0 1 2⍳⊃1 2∩∆style) ⍝? Create-only style?
+ props,←⊂'Style'('DropEdit' 'Simple' 'Drop'⊃⍨0 1 2⍳⊃1 2∩∆style) ⍝? Create-only style?
  props,←(~1∊∆style)/⊂'Rows' 4 ⍝ Set the default size for non-Simple types
  props,←⊂'HScroll'(¯2×~8∊∆style) ⍝? Create-only style
  props,←⊂'VScroll'(¯1×16∊∆style) ⍝? Create-only style

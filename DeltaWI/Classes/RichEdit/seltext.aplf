@@ -16,8 +16,7 @@
      txt←(seltxt[1]↑txt),new,(+/seltxt)↓txt ⍝ Replace that portion of the text
      seltxt[2]←≢new ⍝ Update selected position
      {}object text,⊂txt ⋄ {}object selection,⊂seltxt ⍝ Write out the new properties the easy way
+     'Change?'##.##.Event object ##.##.Application ⍝ Now we need to fire an implied onChange event for them
+     object ##.Spinner._supp.SetSpinner txt ⍝ Tell any connected Spinner that we've changed
      result←##.NoRes
-
-     ⍝ Now we need to fire an implied onChange event for them
-     'Change?'##.##.Event object ##.##.Application
  :EndIf

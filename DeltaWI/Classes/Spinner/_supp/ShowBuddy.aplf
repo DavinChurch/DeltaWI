@@ -1,0 +1,98 @@
+ object ShowBuddy parms;oldbits;mywhere;hiswhere;newbits;oldalign;newalign;frombuddy;tobuddy;stdwidth;oldstyle;newstyle;oldbuddy;newbuddy;style;buddy;border;oldborder;newborder;postresize
+ ⍝ Change the manner in which spinners and their buddies are shown together
+
+⍝ parms namespace structure (all optional components, defaulting to current object settings):
+⍝       style       A style that's not changing (sets both old and new versions)
+⍝       oldstyle    The old style
+⍝       newstyle    The new style
+⍝       buddy       A buddy name that's not changing (sets both old and new versions)
+⍝       oldbuddy    The old buddy
+⍝       newbuddy    The new buddy
+⍝? border work not yet implemented...
+⍝       border      A border that's not changing (sets both old and new versions)
+⍝       oldborder   The old border
+⍝       newborder   The new border
+
+⍝ Important: Any buddy-alignment appears as if it were on the "interior" of the buddy control, with U/L corner alignment but not as a contained-child object.
+⍝       Setting a buddy-alignment changes size/where but the original setting needs to be remembered in case it becomes un-aligned.
+⍝       Removing a buddy-aligment restores the previous size/where
+⍝       The buddy is also re-whered to move it out from under the new Spinner's position.
+    ⍝? What happens if it's moved after that (not affecting the Spinner's where)? Does it properly un-do the previous special adjustment?
+⍝       Changing the buddy's where/size after alignment does not affect the Spinner - 'buddy' must be reestablished
+
+⍝? Alignment to a buddy also overrides any border property (removing it), but it too should be remembered and restored along with size (and extent).
+⍝? 'border' support still needs to be added (parameters just accepted so far)
+⍝? Changing the size of an attached spinner, then resetting the buddy, does not cause the new size (width) to change??
+
+ (style buddy border)←object ⎕VGET('_style' 0)('_buddy' '')('_border' 0) ⍝ Start assumptions with what the object currently has
+ (style buddy border)←parms ⎕VGET('style'style)('buddy'buddy)('border'border) ⍝ Stated defaults for both old and new settings (which aren't being changed)
+ (oldstyle newstyle oldbuddy newbuddy oldborder newborder)←parms ⎕VGET(↑'oldstyle' 'newstyle' 'oldbuddy' 'newbuddy' 'oldborder' 'newborder')(2/style buddy border)
+ (oldbits newbits)←##.##.##.BitVals¨(oldstyle newstyle)←+/¨oldstyle newstyle ⍝ We'll just be watching the old vs. new bit-flags
+ :Select ×≢¨oldbuddy newbuddy ⍝ See what overrides we need based on buddy-name changes
+ :Case 0 0 ⍝ There's no old buddy and no new buddy, so there's nothing for us to do regardless of style
+     :Return
+ :Case 0 1 ⍝ The buddy name is being added
+     oldbits←8,oldbits~4 ⍝ Pretend we had style=8 before
+ :Case 1 0 ⍝ The buddy name is being removed
+     newbits←8,newbits~4 ⍝ Pretend we're changing to style=8
+ :Case 1 1 ⍝ The buddy name is here, but it might not be the same name
+     ⍝ Just leave the bits as-is and compare names later
+ :EndSelect
+ oldalign←'L-R'⊃⍨1⍳⍨4 8∊oldbits ⋄ newalign←'L-R'⊃⍨1⍳⍨4 8∊newbits
+ frombuddy←⎕NULL ⋄ :If ×≢oldbuddy ⋄ frombuddy←object ##.##.##.Locate oldbuddy,⍨'#.'/⍨~(':'∊oldbuddy)∨'.'=⊃oldbuddy ⋄ :EndIf
+ tobuddy←⎕NULL ⋄ :If ×≢newbuddy ⋄ tobuddy←object ##.##.##.Locate newbuddy,⍨'#.'/⍨~(':'∊newbuddy)∨'.'=⊃newbuddy ⋄ :EndIf
+ :If (oldalign=newalign)∧frombuddy≡tobuddy ⋄ :Return ⋄ :EndIf ⍝ Nothing's changing - we're done
+ :If tobuddy∧.≢⎕NULL frombuddy ⍝ If we're connecting to a new buddy object
+ :AndIf object._Ancestry≢⍥⊃tobuddy._Ancestry ⍝ And it's not a true sibling of the Spinner
+     tobuddy←⎕NULL ⋄ newbuddy←'' ⍝ Then we're not really going to attach to the new buddy object at all
+ :EndIf
+
+ :If (frombuddy≢tobuddy)∧∧/×≢¨oldbuddy newbuddy ⍝ If the buddy control assignment is changing (regardless of the alignment) then we've got some extra work to do!
+     object ShowBuddy(oldstyle:oldstyle ⋄ newstyle:newstyle ⋄ oldbuddy:oldbuddy ⋄ newbuddy:'') ⍝ Let's remove the old control linkage (recursively) first
+     object ShowBuddy(oldstyle:oldstyle ⋄ newstyle:newstyle ⋄ oldbuddy:'' ⋄ newbuddy:newbuddy) ⍝ And then we'll create the new control linkage (recursively)
+ :ElseIf tobuddy≡⎕NULL ⍝ If we've got nothing there to buddy up with (and frombuddy must also be ⎕NULL by implication)
+     ⍝ There's nothing to do here
+ :Else
+     mywhere←object ##.##.where ⍬ ⋄ hiswhere←tobuddy ##.##.where ⍬ ⍝ Get our current 'where' settings
+     stdwidth←_alignV _alignH⊃⍨1+1∊newbits ⍝ Obtain standard attached control widths and adjustments based on orientation
+     stdwidth←1↓(stdwidth⍪1↑stdwidth)[stdwidth[;1]⍳⍥⎕C⊂tobuddy._class;] ⍝ Pick the correct adjustments based on buddy's class <sigh>
+     ⍝  stdwidth[1]←Width of Spinner control while attached to a buddy
+     ⍝  stdwidth[2]←Reduction in width of buddy control while spinner is attached
+     ⍝  stdwidth[3]←Fixed pixel-adjustment to Dyalog-only size of buddy control (only) when spinner is right-aligned against it
+     postresize←0 0 ⍝ Most control combinations will line up neatly by default, but allow for post-fixing Dyalog buddy alignment sizes in specific cases
+     :Select oldalign,newalign ⍝ How shall we be restructuring this companionship?
+     :Case '-R'
+         object._where_orig←mywhere ⋄ tobuddy._where_buddy←hiswhere ⍝ Remember our unaligned where settings
+         mywhere[1 2]←hiswhere[1],+/hiswhere[2 4],-stdwidth[1] ⍝ Align my top-right corner with my original buddy's top-right corner
+         mywhere[3 4]←hiswhere[3],stdwidth[1] ⍝ Change to matching height + standard width
+         hiswhere[4]-←stdwidth[2] ⍝ Narrow the right side of the buddy control so they don't overlap
+         postresize←0,stdwidth[3] ⍝ After creation of the Dyalog object, explicitly make it this many pixels bigger so it visually lines up better
+
+     :Case '-L'
+         object._where_orig←mywhere ⋄ tobuddy._where_buddy←hiswhere ⍝ Remember our unaligned where settings
+         mywhere[1 2]←hiswhere[1 2] ⍝ Align my top-left corner with my original buddy location
+         mywhere[3 4]←hiswhere[3],stdwidth[1] ⍝ Change to matching height + standard width
+         hiswhere[2]+←stdwidth[2] ⋄ hiswhere[4]-←stdwidth[2] ⍝ Narrow the left side of the buddy control so they don't overlap
+
+     :Case 'R-'
+         hiswhere[4]+←stdwidth[2] ⍝ Extend the right side to cover the area previously taken by the spinner
+         mywhere←(3↑object._where_orig),##._size[2] ⍝ Restore my pre-aligned 'where', but to standard (vertical) width
+
+     :Case 'L-'
+         hiswhere[2]-←stdwidth[2] ⋄ hiswhere[4]+←stdwidth[2] ⍝ Extend the left side to cover the area previously taken by the spinner
+         mywhere←(3↑object._where_orig),##._size[2] ⍝ Restore my pre-aligned 'where', but to standard (vertical) width
+
+     :Case 'RL'
+         mywhere[1 2]←hiswhere[1 2] ⍝ Align my top-left corner to my buddy location, but don't change size
+         hiswhere[2]+←stdwidth[2] ⍝ Shift the already-shortened buddy location over to make room for the spinner on the left
+
+     :Case 'LR'
+         mywhere[1 2]←hiswhere[1 2] ⍝ Align my top-right corner to my buddy's top-right corner, but don't change size
+         hiswhere[2]-←stdwidth[2] ⍝ Shift the already-shortened buddy location over to make room for the spinner on the right
+
+     :EndSelect
+     {}object ##.##.where,⊂mywhere ⋄ {}tobuddy ##.##.where,⊂hiswhere ⍝ Move them to their new operational locations
+     :If ∨/postresize≠0 ⍝ Do we need to do some special-case visual alignment tweaking here?
+         tobuddy ##.##.##.∆WS'Size'(postresize+tobuddy ##.##.##.∆WG'Size') ⍝ Give it a few extra pixels so the buddy bumps up against the spinner
+     :EndIf
+ :EndIf

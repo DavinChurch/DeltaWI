@@ -1,0 +1,552 @@
+ Spinner;c;sp;ed
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ :Section ⍝ Check all typical on-screen buddy sizing and positioning combinations
+
+     :Section ⍝ A vertical Spinner with an Edit buddy
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner' ⍝ Work with vertical Spinner
+         'f.s'∆WI Pass 1.5 2.125⊢'size'
+         'f.s'∆WI Pass 14.25 48.875 1.5 2.125⊢'where'
+
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Edit' ⍝ Let's try an Edit buddy with a default right-alignment
+         'f.b'∆WI Pass 1.25 9.5⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2.25⊢'size'
+         'f.s'∆WI Pass 14.25 52.75 1.5 2.25⊢'where'
+         'f.b'∆WI Pass 1.25 7.5⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 8⊢'where'
+
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 4) ⍝ Work with vertical Spinner, left-aligned
+         'f.s'∆WI Pass 1.5 2.125⊢'size'
+         'f.s'∆WI Pass 14.25 48.875 1.5 2.125⊢'where'
+
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Edit' ⍝ Let's try Edit again but on the left side
+         'f.b'∆WI Pass 1.25 9.5⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2.25⊢'size'
+         'f.s'∆WI Pass 14.25 45 1.5 2.25⊢'where'
+         'f.b'∆WI Pass 1.25 7.5⊢'size'
+         'f.b'∆WI Pass 14.25 47 1.5 8⊢'where'
+
+         'f.s'∆WI Pass MT⊢'style' 8 ⍝ Turn off the buddy attachment point that was previously on (so we see that it restores properly)
+         'f.s'∆WI Pass 1.5 2.125⊢'size'
+         'f.s'∆WI Pass 14.25 48.875 1.5 2.125⊢'where'
+         'f.s'∆WI Pass'f.b'⊢'buddy' ⍝ Even though the buddy is still attached, it's not visibly adjacent on-screen
+         'f.b'∆WI Pass 1.25 9.5⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+
+         :Section ⍝ Now let's try some of that again (right-justified only) using a taller Edit control, just to make sure it keeps aligning
+             'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+             'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner' ⍝ Work with vertical Spinner
+
+             'f.b'∆WI Pass'f.b'⊢'Create' 'Edit'('size' 1.75 9.5) ⍝ Let's try a two-line Edit buddy
+             'f.b'∆WI Pass 1.75 9.5⊢'size'
+             'f.b'∆WI Pass 14.125 45.25 2 10⊢'where'
+             'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+             'f.s'∆WI Pass 2 2.25⊢'size'
+             'f.s'∆WI Pass 14.125 53 2 2.25⊢'where'
+             'f.b'∆WI Pass 1.75 7.5⊢'size'
+             'f.b'∆WI Pass 14.125 45.25 2 8⊢'where'
+         :EndSection
+     :EndSection
+
+     :Section ⍝ Let's try it with a Label buddy control instead
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner' ⍝ Work with vertical Spinner
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Label'('caption' 'XXX') ⍝ Let's try a Label buddy with a default right-alignment
+         'f.b'∆WI Pass 1.5 10⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2⊢'size'
+         'f.s'∆WI Pass 14.25 53 1.5 2⊢'where'
+         'f.b'∆WI Pass 1.5 8⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 8⊢'where'
+
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 4) ⍝ Work with vertical Spinner, left-aligned
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Label'('caption' 'XXX') ⍝ Let's try Label again but on the left side
+         'f.b'∆WI Pass 1.5 10⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2⊢'size'
+         'f.s'∆WI Pass 14.25 45 1.5 2⊢'where'
+         'f.b'∆WI Pass 1.5 8⊢'size'
+         'f.b'∆WI Pass 14.25 47 1.5 8⊢'where'
+     :EndSection
+
+     :Section ⍝ Let's try it with a Combo buddy control instead
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner' ⍝ Work with vertical Spinner
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Combo' ⍝ Let's try a Combo buddy with a default right-alignment
+         'f.b'∆WI Pass 1.3125 20⊢'size'
+         'f.b'∆WI Pass 12.5 40 1.3125 20⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.3125 2⊢'size'
+         'f.s'∆WI Pass 12.5 58 1.3125 2⊢'where'
+         'f.b'∆WI Pass 1.3125 18⊢'size'
+         'f.b'∆WI Pass 12.5 40 1.3125 18⊢'where'
+
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 4) ⍝ Work with vertical Spinner, left-aligned
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Combo' ⍝ Let's try Combo again but on the left side
+         'f.b'∆WI Pass 1.3125 20⊢'size'
+         'f.b'∆WI Pass 12.5 40 1.3125 20⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.3125 2⊢'size'
+         'f.s'∆WI Pass 12.5 40 1.3125 2⊢'where'
+         'f.b'∆WI Pass 1.3125 18⊢'size'
+         'f.b'∆WI Pass 12.5 42 1.3125 18⊢'where'
+     :EndSection
+
+     :Section ⍝ Let's try it with a List buddy control instead
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner' ⍝ Work with vertical Spinner
+         'f.b'∆WI Pass'f.b'⊢'Create' 'List' ⍝ Let's try a List buddy with a default right-alignment
+         'f.b'∆WI Pass 3.25 19.5⊢'size'
+         'f.b'∆WI Pass 12.5 40 3.5 20⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 3.5 2⊢'size'
+         'f.s'∆WI Pass 12.5 58 3.5 2⊢'where'
+         'f.b'∆WI Pass 3.25 17.5⊢'size'
+         'f.b'∆WI Pass 12.5 40 3.5 18⊢'where'
+
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 4) ⍝ Work with vertical Spinner, left-aligned
+         'f.b'∆WI Pass'f.b'⊢'Create' 'List' ⍝ Let's try List again but on the left side
+         'f.b'∆WI Pass 3.25 19.5⊢'size'
+         'f.b'∆WI Pass 12.5 40 3.5 20⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 3.5 2⊢'size'
+         'f.s'∆WI Pass 12.5 40 3.5 2⊢'where'
+         'f.b'∆WI Pass 3.25 17.5⊢'size'
+         'f.b'∆WI Pass 12.5 42 3.5 18⊢'where'
+     :EndSection
+
+     :Section ⍝ Let's try it with a RichEdit buddy control instead
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner' ⍝ Work with vertical Spinner
+         'f.b'∆WI Pass'f.b'⊢'Create' 'RichEdit' ⍝ Let's try a RichEdit buddy with a default right-alignment
+         'f.b'∆WI Pass 1.25 9.5⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2⊢'size'
+         'f.s'∆WI Pass 14.25 53 1.5 2⊢'where'
+         'f.b'∆WI Pass 1.25 7.5⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 8⊢'where'
+
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 4) ⍝ Work with vertical Spinner, left-aligned
+         'f.b'∆WI Pass'f.b'⊢'Create' 'RichEdit' ⍝ Let's try RichEdit again but on the left side
+         'f.b'∆WI Pass 1.25 9.5⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2⊢'size'
+         'f.s'∆WI Pass 14.25 45 1.5 2⊢'where'
+         'f.b'∆WI Pass 1.25 7.5⊢'size'
+         'f.b'∆WI Pass 14.25 47 1.5 8⊢'where'
+     :EndSection
+
+     :Section ⍝ Let's try it with a Button buddy control instead
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner' ⍝ Work with vertical Spinner
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Button' ⍝ Let's try a Button buddy with a default right-alignment
+         'f.b'∆WI Pass 1.5 10⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2⊢'size'
+         'f.s'∆WI Pass 14.25 53 1.5 2⊢'where'
+         'f.b'∆WI Pass 1.5 8⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 8⊢'where'
+
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 4) ⍝ Work with vertical Spinner, left-aligned
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Button' ⍝ Let's try Button again but on the left side
+         'f.b'∆WI Pass 1.5 10⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2⊢'size'
+         'f.s'∆WI Pass 14.25 45 1.5 2⊢'where'
+         'f.b'∆WI Pass 1.5 8⊢'size'
+         'f.b'∆WI Pass 14.25 47 1.5 8⊢'where'
+     :EndSection
+
+     :Section ⍝ Let's try it with a Check buddy control instead
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner' ⍝ Work with vertical Spinner
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Check'('caption' 'XXX') ⍝ Let's try a Check buddy with a default right-alignment
+         'f.b'∆WI Pass 1.5 10⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2⊢'size'
+         'f.s'∆WI Pass 14.25 53 1.5 2⊢'where'
+         'f.b'∆WI Pass 1.5 8⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 8⊢'where'
+
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 4) ⍝ Work with vertical Spinner, left-aligned
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Check'('caption' 'XXX') ⍝ Let's try Check again but on the left side
+         'f.b'∆WI Pass 1.5 10⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2⊢'size'
+         'f.s'∆WI Pass 14.25 45 1.5 2⊢'where'
+         'f.b'∆WI Pass 1.5 8⊢'size'
+         'f.b'∆WI Pass 14.25 47 1.5 8⊢'where'
+     :EndSection
+
+     :Section ⍝ Let's try it with an Option buddy control instead
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner' ⍝ Work with vertical Spinner
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Option'('caption' 'XXX') ⍝ Let's try a Option buddy with a default right-alignment
+         'f.b'∆WI Pass 1.5 10⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2⊢'size'
+         'f.s'∆WI Pass 14.25 53 1.5 2⊢'where'
+         'f.b'∆WI Pass 1.5 8⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 8⊢'where'
+
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 4) ⍝ Work with vertical Spinner, left-aligned
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Option'('caption' 'XXX') ⍝ Let's try Option again but on the left side
+         'f.b'∆WI Pass 1.5 10⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2⊢'size'
+         'f.s'∆WI Pass 14.25 45 1.5 2⊢'where'
+         'f.b'∆WI Pass 1.5 8⊢'size'
+         'f.b'∆WI Pass 14.25 47 1.5 8⊢'where'
+     :EndSection
+
+     :Section ⍝ Let's try it with a Frame buddy control instead
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner' ⍝ Work with vertical Spinner
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Frame' ⍝ Let's try a Frame buddy with a default right-alignment
+         'f.b'∆WI Pass 4 12⊢'size'
+         'f.b'∆WI Pass 13 44 4 12⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 4 2⊢'size'
+         'f.s'∆WI Pass 13 54 4 2⊢'where'
+         'f.b'∆WI Pass 4 10⊢'size'
+         'f.b'∆WI Pass 13 44 4 10⊢'where'
+
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 4) ⍝ Work with vertical Spinner, left-aligned
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Frame' ⍝ Let's try Frame again but on the left side
+         'f.b'∆WI Pass 4 12⊢'size'
+         'f.b'∆WI Pass 13 44 4 12⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 4 2⊢'size'
+         'f.s'∆WI Pass 13 44 4 2⊢'where'
+         'f.b'∆WI Pass 4 10⊢'size'
+         'f.b'∆WI Pass 13 46 4 10⊢'where'
+     :EndSection
+
+     ⍝ Note: Almost any other GUI class may be used as a buddy, but these are unlikely because updating cannot be automated, so we'll skip testing those here
+
+
+     :Section ⍝ A horizontal Spinner with an Edit buddy
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 1) ⍝ Work with horizontal Spinner
+         'f.s'∆WI Pass 1.0625 3⊢'size'
+         'f.s'∆WI Pass 14.4375 48.5 1.0625 3⊢'where'
+
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Edit' ⍝ Let's try an Edit buddy with a default right-alignment
+         'f.b'∆WI Pass 1.25 9.5⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2.25⊢'size'
+         'f.s'∆WI Pass 14.25 52.75 1.5 2.25⊢'where'
+         'f.b'∆WI Pass 1.25 7.5⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 8⊢'where'
+
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 5) ⍝ Work with horizontal Spinner, left-aligned
+         'f.s'∆WI Pass 1.0625 3⊢'size'
+         'f.s'∆WI Pass 14.4375 48.5 1.0625 3⊢'where'
+
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Edit' ⍝ Let's try Edit again but on the left side
+         'f.b'∆WI Pass 1.25 9.5⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2.25⊢'size'
+         'f.s'∆WI Pass 14.25 45 1.5 2.25⊢'where'
+         'f.b'∆WI Pass 1.25 7.5⊢'size'
+         'f.b'∆WI Pass 14.25 47 1.5 8⊢'where'
+
+         'f.s'∆WI Pass MT⊢'style' 8 ⍝ Turn off the buddy attachment point that was previously on (so we see that it restores properly)
+         'f.s'∆WI Pass 1.0625 2.125⊢'size'
+         'f.s'∆WI Pass 14.4375 48.5 1.0625 2.125⊢'where'
+         'f.s'∆WI Pass'f.b'⊢'buddy' ⍝ Even though the buddy is still attached, it's not visibly adjacent on-screen
+         'f.b'∆WI Pass 1.25 9.5⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+
+         :Section ⍝ Now let's try some of that again (right-justified only) using a taller Edit control, just to make sure it keeps aligning
+             'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+             'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 1) ⍝ Work with horizontal Spinner
+
+             'f.b'∆WI Pass'f.b'⊢'Create' 'Edit'('size' 1.75 9.5) ⍝ Let's try a two-line Edit buddy
+             'f.b'∆WI Pass 1.75 9.5⊢'size'
+             'f.b'∆WI Pass 14.125 45.25 2 10⊢'where'
+             'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+             'f.s'∆WI Pass 2 2.25⊢'size'
+             'f.s'∆WI Pass 14.125 53 2 2.25⊢'where'
+             'f.b'∆WI Pass 1.75 7.5⊢'size'
+             'f.b'∆WI Pass 14.125 45.25 2 8⊢'where'
+         :EndSection
+     :EndSection
+
+     :Section ⍝ Let's try it with a Label buddy control instead
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 1) ⍝ Work with horizontal Spinner
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Label'('caption' 'XXX') ⍝ Let's try a Label buddy with a default right-alignment
+         'f.b'∆WI Pass 1.5 10⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2⊢'size'
+         'f.s'∆WI Pass 14.25 53 1.5 2⊢'where'
+         'f.b'∆WI Pass 1.5 8⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 8⊢'where'
+
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 5) ⍝ Work with horizontal Spinner, left-aligned
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Label'('caption' 'XXX') ⍝ Let's try Label again but on the left side
+         'f.b'∆WI Pass 1.5 10⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2⊢'size'
+         'f.s'∆WI Pass 14.25 45 1.5 2⊢'where'
+         'f.b'∆WI Pass 1.5 8⊢'size'
+         'f.b'∆WI Pass 14.25 47 1.5 8⊢'where'
+     :EndSection
+
+     :Section ⍝ Let's try it with a Combo buddy control instead
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 1) ⍝ Work with horizontal Spinner
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Combo' ⍝ Let's try a Combo buddy with a default right-alignment
+         'f.b'∆WI Pass 1.3125 20⊢'size'
+         'f.b'∆WI Pass 12.5 40 1.3125 20⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.3125 2⊢'size'
+         'f.s'∆WI Pass 12.5 58 1.3125 2⊢'where'
+         'f.b'∆WI Pass 1.3125 18⊢'size'
+         'f.b'∆WI Pass 12.5 40 1.3125 18⊢'where'
+
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 5) ⍝ Work with horizontal Spinner, left-aligned
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Combo' ⍝ Let's try Combo again but on the left side
+         'f.b'∆WI Pass 1.3125 20⊢'size'
+         'f.b'∆WI Pass 12.5 40 1.3125 20⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.3125 2⊢'size'
+         'f.s'∆WI Pass 12.5 40 1.3125 2⊢'where'
+         'f.b'∆WI Pass 1.3125 18⊢'size'
+         'f.b'∆WI Pass 12.5 42 1.3125 18⊢'where'
+     :EndSection
+
+     :Section ⍝ Let's try it with a List buddy control instead
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 1) ⍝ Work with horizontal Spinner
+         'f.b'∆WI Pass'f.b'⊢'Create' 'List' ⍝ Let's try a List buddy with a default right-alignment
+         'f.b'∆WI Pass 3.25 19.5⊢'size'
+         'f.b'∆WI Pass 12.5 40 3.5 20⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 3.5 2⊢'size'
+         'f.s'∆WI Pass 12.5 58 3.5 2⊢'where'
+         'f.b'∆WI Pass 3.25 17.5⊢'size'
+         'f.b'∆WI Pass 12.5 40 3.5 18⊢'where'
+
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 5) ⍝ Work with horizontal Spinner, left-aligned
+         'f.b'∆WI Pass'f.b'⊢'Create' 'List' ⍝ Let's try List again but on the left side
+         'f.b'∆WI Pass 3.25 19.5⊢'size'
+         'f.b'∆WI Pass 12.5 40 3.5 20⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 3.5 2⊢'size'
+         'f.s'∆WI Pass 12.5 40 3.5 2⊢'where'
+         'f.b'∆WI Pass 3.25 17.5⊢'size'
+         'f.b'∆WI Pass 12.5 42 3.5 18⊢'where'
+     :EndSection
+
+     :Section ⍝ Let's try it with a RichEdit buddy control instead
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 1) ⍝ Work with horizontal Spinner
+         'f.b'∆WI Pass'f.b'⊢'Create' 'RichEdit' ⍝ Let's try a RichEdit buddy with a default right-alignment
+         'f.b'∆WI Pass 1.25 9.5⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2⊢'size'
+         'f.s'∆WI Pass 14.25 53 1.5 2⊢'where'
+         'f.b'∆WI Pass 1.25 7.5⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 8⊢'where'
+
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 5) ⍝ Work with horizontal Spinner, left-aligned
+         'f.b'∆WI Pass'f.b'⊢'Create' 'RichEdit' ⍝ Let's try RichEdit again but on the left side
+         'f.b'∆WI Pass 1.25 9.5⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2⊢'size'
+         'f.s'∆WI Pass 14.25 45 1.5 2⊢'where'
+         'f.b'∆WI Pass 1.25 7.5⊢'size'
+         'f.b'∆WI Pass 14.25 47 1.5 8⊢'where'
+     :EndSection
+
+     :Section ⍝ Let's try it with a Button buddy control instead
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 1) ⍝ Work with horizontal Spinner
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Button' ⍝ Let's try a Button buddy with a default right-alignment
+         'f.b'∆WI Pass 1.5 10⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2⊢'size'
+         'f.s'∆WI Pass 14.25 53 1.5 2⊢'where'
+         'f.b'∆WI Pass 1.5 8⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 8⊢'where'
+
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 5) ⍝ Work with horizontal Spinner, left-aligned
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Button' ⍝ Let's try Button again but on the left side
+         'f.b'∆WI Pass 1.5 10⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2⊢'size'
+         'f.s'∆WI Pass 14.25 45 1.5 2⊢'where'
+         'f.b'∆WI Pass 1.5 8⊢'size'
+         'f.b'∆WI Pass 14.25 47 1.5 8⊢'where'
+     :EndSection
+
+     :Section ⍝ Let's try it with a Check buddy control instead
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 1) ⍝ Work with horizontal Spinner
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Check'('caption' 'XXX') ⍝ Let's try a Check buddy with a default right-alignment
+         'f.b'∆WI Pass 1.5 10⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2⊢'size'
+         'f.s'∆WI Pass 14.25 53 1.5 2⊢'where'
+         'f.b'∆WI Pass 1.5 8⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 8⊢'where'
+
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 5) ⍝ Work with horizontal Spinner, left-aligned
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Check'('caption' 'XXX') ⍝ Let's try Check again but on the left side
+         'f.b'∆WI Pass 1.5 10⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2⊢'size'
+         'f.s'∆WI Pass 14.25 45 1.5 2⊢'where'
+         'f.b'∆WI Pass 1.5 8⊢'size'
+         'f.b'∆WI Pass 14.25 47 1.5 8⊢'where'
+     :EndSection
+
+     :Section ⍝ Let's try it with a Option buddy control instead
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 1) ⍝ Work with horizontal Spinner
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Option'('caption' 'XXX') ⍝ Let's try a Option buddy with a default right-alignment
+         'f.b'∆WI Pass 1.5 10⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2⊢'size'
+         'f.s'∆WI Pass 14.25 53 1.5 2⊢'where'
+         'f.b'∆WI Pass 1.5 8⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 8⊢'where'
+
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 5) ⍝ Work with horizontal Spinner, left-aligned
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Option'('caption' 'XXX') ⍝ Let's try Option again but on the left side
+         'f.b'∆WI Pass 1.5 10⊢'size'
+         'f.b'∆WI Pass 14.25 45 1.5 10⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 1.5 2⊢'size'
+         'f.s'∆WI Pass 14.25 45 1.5 2⊢'where'
+         'f.b'∆WI Pass 1.5 8⊢'size'
+         'f.b'∆WI Pass 14.25 47 1.5 8⊢'where'
+     :EndSection
+
+     :Section ⍝ Let's try it with a Frame buddy control instead
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 1) ⍝ Work with horizontal Spinner
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Frame' ⍝ Let's try a Frame buddy with a default right-alignment
+         'f.b'∆WI Pass 4 12⊢'size'
+         'f.b'∆WI Pass 13 44 4 12⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 4 2⊢'size'
+         'f.s'∆WI Pass 13 54 4 2⊢'where'
+         'f.b'∆WI Pass 4 10⊢'size'
+         'f.b'∆WI Pass 13 44 4 10⊢'where'
+
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 5) ⍝ Work with horizontal Spinner, left-aligned
+         'f.b'∆WI Pass'f.b'⊢'Create' 'Frame' ⍝ Let's try Frame again but on the left side
+         'f.b'∆WI Pass 4 12⊢'size'
+         'f.b'∆WI Pass 13 44 4 12⊢'where'
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass 4 2⊢'size'
+         'f.s'∆WI Pass 13 44 4 2⊢'where'
+         'f.b'∆WI Pass 4 10⊢'size'
+         'f.b'∆WI Pass 13 46 4 10⊢'where'
+     :EndSection
+
+     ⍝ Note: Almost any other GUI class may be used as a buddy, but these are unlikely because updating cannot be automated, so we'll skip testing those here
+
+ :EndSection
+
+ :Section ⍝ Test buddy-updating processes
+     :For c :In 'Edit' 'RichEdit'('Combo'('list'(⍕¨1 12 77 99))) ⍝ Try the list of text-buddies
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 16) ⍝ Work with vertical Spinner
+         'f.b'∆WI Pass'f.b'⊢'Create',⍥⊆c
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass MT⊢'value' 77
+         'f.b'∆WI Pass'77'⊢'text'
+         'f.b'∆WI Pass MT⊢'text' '12'
+         'f.s'∆WI Pass 12⊢'value'
+     :EndFor
+     :For c :In ⊂'List'('list'(⍕¨1 12 77 99)) ⍝ Try the (singular list) of value-buddies
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 16) ⍝ Work with vertical Spinner
+         'f.b'∆WI Pass'f.b'⊢'Create',⍥⊆c
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass MT⊢'value' 3
+         'f.b'∆WI Pass(,3)⊢'value'
+         'f.b'∆WI Pass MT⊢'value' 2
+         'f.s'∆WI Pass 2⊢'value'
+     :EndFor
+     :For c :In 'Label' 'Button' 'Check' 'Option' 'Frame' ⍝ Try the list of caption-buddies
+         'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+         'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 16) ⍝ Work with vertical Spinner
+         'f.b'∆WI Pass'f.b'⊢'Create',⍥⊆c
+         'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+         'f.s'∆WI Pass MT⊢'value' 77
+         'f.b'∆WI Pass'77'⊢'caption'
+         'f.b'∆WI Pass MT⊢'caption' '12'
+         'f.s'∆WI Pass 12⊢'value'
+     :EndFor
+ :EndSection
+
+⍝? Also add in checks for onClick/onChange events when coded and Dyalog can support them
+ :Section ⍝ Check for events firing
+     'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+     'f.s'∆WI Pass'f.s'⊢'Create' 'Spinner'('style' 16) ⍝ Work with vertical Spinner
+     'f.b'∆WI Pass'f.b'⊢'Create' 'Edit'
+     'f.s'∆WI Pass MT⊢'buddy' 'f.b'
+
+     sp←ed←0⍴⊂''
+     'f.s'∆WI Pass MT⊢'onSpin' 'sp←sp,⊂''Spin'''
+     ⍝'f.s'∆WI Pass MT⊢'onChange' 'sp←sp,⊂''Change'''
+     'f.b'∆WI Pass MT⊢'onChange' 'ed←ed,⊂''Change'''
+
+     'f.s'∆WI Pass MT⊢'value' 77
+     ⊢Pass(0⍴⊂'')⊢sp
+     ⊢Pass(,⊂'Change')⊢ed
+     'f.b'∆WI Pass MT⊢'text' '12'
+     ⊢Pass(0⍴⊂'')⊢sp
+     ⊢Pass 'Change' 'Change'⊢ed
+ :EndSection
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

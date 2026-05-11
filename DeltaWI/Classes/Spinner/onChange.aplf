@@ -1,0 +1,2 @@
+ result←object onChange arg
+ result←object(''##.##.SetEvent'Change' '>Spin')arg ⍝? Dyalog can't provide this; it needs to fire after spinner has already updated

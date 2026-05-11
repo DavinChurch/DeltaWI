@@ -1,4 +1,4 @@
- result←object New arg;parent;name;actions;∆style;props;newobj;∆border
+ result←object New arg;parent;name;actions;∆style;props;newobj;∆border;stretch
 ⍝ Create a new Edit object
 
 ⍝ Style bits:
@@ -25,7 +25,8 @@
 
  (∆style ∆border)←((1↓¨arg),⊂⍬)[actions⍳'style' 'border']
  ∆border←0⌈×+/∊∆border ⋄ ∆style←##.##.BitVals+/∊∆style
- arg←(parent:parent ⋄ border:∆border)##.##.New.Center arg
+ stretch←¯4 ¯4×∨/'size' 'extent'∊actions ⍝ The APL+Win control does weird things with a starting position if 'size' is specified at all
+ arg←(parent:parent ⋄ stretch:stretch ⋄ border:∆border)##.##.New.Center arg
  arg,←(~'edge'⊂⍛∊actions)/⊂'edge' 1 ⍝ Edit boxes have a default 'edge'
 
  props←'Edit'('FieldType' 'Char')('Visible' 0) ⍝ Define properties that must be used during creation

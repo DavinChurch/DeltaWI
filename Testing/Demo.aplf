@@ -1,0 +1,21 @@
+ Demo dummy;states;∆WSELF
+ '#'∆WI'Reset'
+ ∆WSELF←'f'∆WI'New' 'Form'('size' 23 80)('caption' 'Demo')
+ ∆WSELF←':lN'∆WI'New' 'Label'('where' 1 1 1 15)('caption' 'Name:')
+ ∆WSELF←':eN'∆WI'New' 'Edit'('where' 0.75 20 1.5 15)('text' 'Davin Church')
+ ∆WSELF←':lA'∆WI'New' 'Label'('where' 3 1 1 15)('caption' 'Address:')
+ ∆WSELF←':eA'∆WI'New' 'Edit'('where' 2.75 20 1.5 25)('text' '12345 Anywhere Way')
+ ∆WSELF←':lS'∆WI'New' 'Label'('where' 5 1 1 15)('caption' 'State:')
+ states←↓50 2⍴'ALAKAZARCACOCTDEFLGAHIIDILINIAKSKYLAMEMDMAMIMNMSMOMTNENVNHNJNMNYNCNDOHOKORPARISCSDTNTXUTVTVAWAWVWIWY'
+ ∆WSELF←':cS'∆WI'New' 'Combo'('where' 4.75 20 10 5)('list'states)('value' 43)
+ ∆WSELF←':lP'∆WI'New' 'Label'('where' 7 1 1 15)('caption' 'Phone #:')
+ ∆WSELF←':eP'∆WI'New' 'Edit'('where' 6.75 20 1.5 10)('text' '(123)456-7890')
+ ∆WSELF←':fG'∆WI'New' 'Frame'('where' 1 50 3.5 15)('caption' 'Gender')
+ ∆WSELF←'.oM'∆WI'New' 'Option'('where' 1 1 1 10)('caption' 'Male')('value' 1)
+ ∆WSELF←'..oF'∆WI'New' 'Option'('where' 2 1 1 10)('caption' 'Female')
+ ∆WSELF←':lC'∆WI'New' 'List'('where' 5 50 15 25)('list'('#'∆WI'classes'))('value' 10)
+ ∆WSELF←':x'∆WI'New' 'Label'('where' 9 1 1 15)('caption' 'Languages:')
+ ∆WSELF←':x1'∆WI'New' 'Check'('where' 9 20 1 15)('caption' 'APL')('value' 1)
+ ∆WSELF←':x2'∆WI'New' 'Check'('where' 10 20 1 15)('caption' 'Java')('value' 0)
+ ∆WSELF←':bOk'∆WI'New' 'Button'('where' 19 1 1.5 10)('caption' 'Ok')('style' 1)
+ ∆WSELF←':bCn'∆WI'New' 'Button'('where' 19 15 1.5 10)('caption' 'Cancel')('style' 2)

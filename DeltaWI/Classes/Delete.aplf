@@ -1,6 +1,5 @@
- result←object Delete arg;hidden;kids
+ result←object Delete arg;hidden;kids;mybuddy
 ⍝ Delete a GUI object (we're already sure it's here)
-
 
  '∆WI ACTION ERROR: Method "Delete" does not accept an argument'##.Error×≢arg
  :If ×≢kids←object children ⍬
@@ -17,6 +16,23 @@
          object.(_opened _enabled)←0 0 ⍝ Just in case something wonders about this before it's gone (or after it's a ghost)
          object ##.∆WSet⊂'Active' 0
          'Destroy'##.Event object ##.Application ⍝ Run the onDestroy event handler
+     :EndIf
+ :EndSection
+
+ :Section ⍝ Clean out any Spinner-buddies
+     :If 9=object.⎕NC'_buddy_' ⍝ Check the primary buddy-connection signal
+     :AndIf ⎕NULL≢mybuddy←object._buddy_ ⍝ Who am I connected to?
+         :If object._class≡'Spinner' ⍝ If I'm the spinner being deleted
+             ⍝ (I don't need to disconnect myself at the original name level because I'm going away)
+             {}mybuddy where,⊂mybuddy._where_buddy ⋄ mybuddy.⎕EX'_where_buddy' ⍝ Restore my buddy's original 'where' & disconnect
+         :Else ⍝ Then I must be the buddy itself
+             mybuddy._buddy←'' ⍝ Disconnect him at the original name level so he no longer tries to point to me
+             {}mybuddy where,⊂mybuddy._where_orig ⋄ mybuddy.⎕EX'_where_orig' ⍝ Restore the spinner's original 'where' & disconnect
+         :EndIf
+         ⍝ (I don't need to restore my own 'where' because I'm going away)
+         mybuddy.⎕EX'_buddy_' ⍝ Disconnect his logical cross-connection to me
+         object.⎕EX'_buddy_' ⍝ Disconnect my own logical cross-connection to him
+⍝? Should we check here to make sure that the cross-connected pointers have removed the appropriate objects from ⎕WN?
      :EndIf
  :EndSection
 
@@ -45,7 +61,7 @@
 
  'Delete'##.Event object ##.Application ⍝ Run the onDelete event handler
 
-_supp.waitoff object ⍝ Clean up any waiting-form situations
+ _supp.waitoff object ⍝ Clean up any waiting-form situations
 
 ⍝? Anything else to clean up?
 

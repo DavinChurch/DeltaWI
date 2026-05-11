@@ -9,6 +9,6 @@
  arg←(parent:parent ⋄ border:∆border)##.##.New.Center arg
 
  props←'Label'('FieldType' 'Char')('Visible' 0) ⍝ Properties that must be used during creation
- props,←(~'border'⊂⍛∊actions)/⊂'Border'∆border ⍝ Set border upon creation if we have it ⍝? It cannot be changed later
+ props,←('border'⊂⍛∊actions)/⊂'Border'∆border ⍝ Set border upon creation if we have it ⍝? It cannot be changed later
  newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
  result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure

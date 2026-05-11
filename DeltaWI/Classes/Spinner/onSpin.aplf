@@ -1,0 +1,5 @@
+ result←object onSpin arg
+
+ ⍝ Automatic spin acceleration is handled by Dyalog, with the step used in message[4].
+ ⍝ If a Spin event detects wrapping, message[4] is still just the same as before and the new value jumps to the other end.
+ result←object('Spin'##.##.SetEvent'Spin')arg

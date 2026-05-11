@@ -1,4 +1,4 @@
- result←object text arg;new;style;items
+ result←object text arg;new;style;items;txt
 ⍝ Read or change the text in the Combo box edit-area
 ⍝ This property is not stored as an APL variable, but directly references the native object which the user can control
 
@@ -7,13 +7,12 @@
      result←('←',⊃object ⎕VGET⊂'_font' '')##.##.QuadAV result ⍝ Reverse-engineer the on-screen font back to Unicode, as best possible, if needed
  :Else
      '∆WI DOMAIN ERROR: text'##.##.Error 1≠≢arg
-     new←1/##.##.Single arg
+     new←txt←1/##.##.Single arg
      '∆WI RANK ERROR: text'##.##.Error 1≠≢⍴new
      '∆WI DOMAIN ERROR: text'##.##.Error 1≠≡new
      '∆WI DOMAIN ERROR: text'##.##.Error~##.##.IsChar new
      new←object ##.##.QuadAV new ⍝ Convert Unicode to ⎕AV as best we can if we're using one of those fonts
      object ##.##.∆WS⊂'Text'new
-     result←##.NoRes
 
      ⍝ Now we need to cause any side effects (including events) for them
      style←##.##.BitVals object ⎕VGET⊂'_style' 0
@@ -23,6 +22,7 @@
      :Else
          {}object value,0 ⍝ For style=0,1 boxes, this resets any current selection
      :EndIf
-     ⍝ onClick is already run by ∇value
-     'Change?'##.##.Event object ##.##.Application ⍝ Process onChange for them
+     ⍝ onClick & onChange are already being run by ∇value
+     object ##.Spinner._supp.SetSpinner txt ⍝ Tell any connected Spinner that we've changed
+     result←##.NoRes
  :EndIf

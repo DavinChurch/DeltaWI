@@ -1,0 +1,22 @@
+ ok←run _onSpin message;thumb;object
+
+ ⍝ message[3]←Thumb new value
+ ⍝ message[4]←Adjustment from previous value
+
+ ok←(message[4 3])(message[4])##.##.Run run
+
+ :If ok⊂⍛∊⍬ 1⍴¨0
+     ok←0 ⍝? Does this keep onChange from running (i.e. is it in the same event-path?) If not, how do we do that?
+⍝? I can't test this because Dyalog has no onChange event to intercept in the first place
+ :Else
+⍝? How do we validate a result from the event handler that's not an integer or not within range?
+⍝? Bad error messages, at the very least?
+     'Nonce Error'##.##.Error~##.##.IsInt ok
+     'Nonce Error'##.##.Error 1≠≢ok
+     'Nonce Error'##.##.Error(ok<¯32767)∨ok>32767 ⍝ Out of APL+Win's allowed range
+     object←⊃message
+     thumb←object ##.##.∆WG'Thumb' ⍝ Obtain the previous Thumb value before the change is being made
+     ok←thumb+⊃ok ⍝ Change previous adjustment to new difference
+     message[3]←object _supp.Limit ok ⍝ Apply range limitations
+     ok←message ⍝ Tell Dyalog the new Thumb value, ignore [4]
+ :EndIf

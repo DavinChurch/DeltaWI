@@ -9,7 +9,8 @@
      '∆WI DOMAIN ERROR: value'##.##.Error~##.##.IsInt arg
      '∆WI LENGTH ERROR: value'##.##.Error 1≠≢arg
      object ##.##.∆WS'SelItems'(arg∊⍨⍳≢object ##.##.∆WG'Items') ⍝ Write the new value directly to Dyalog
+     'Click?'##.##.Event object ##.##.Application ⍝ Now we need to fire an implied onClick event for them
+     'Change?'##.##.Event object ##.##.Application ⍝ Now we need to fire an implied onChange event for them ⍝? Right?
+     object ##.Spinner._supp.SetSpinner object text ⍬ ⍝ Tell any connected Spinner that we've changed
      result←##.NoRes
-
-     'Click?'##.##.Event object ##.##.Application ⍝ Process onClick for them
  :EndIf

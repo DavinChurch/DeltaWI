@@ -1,0 +1,2 @@
+ ok←run _onChange message
+ ok←1⊣message[3]##.##.Run run ⍝ (We never care about the result when called internally anyway)

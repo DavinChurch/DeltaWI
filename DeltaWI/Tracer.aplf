@@ -1,8 +1,9 @@
- {T__msg}Tracer T__vars;T__t;T__SI;T__TIME;T__ttls;⎕PW;⎕ML;T__u;T__x;T__XSI
+ {T__msg}Tracer T__vars;T__t;T__SI;T__TIME;T__ttls;⎕IO;⎕PW;⎕ML;T__u;T__x;T__XSI;T__ML;T__PW;T__IO
  ⍝ Provide a way to insert logic-tracing messages within code
  ⍝ These can be switched on/off with a semi-global boolean variable "Tracing"
  ⍝ Right argument: Potentially-nested list of expressions (typically variable names) to be displayed on the session
  ⍝                 (If providing multiple scalar-only names, be sure to ,¨ them first to force them to be separated)
+ ⍝                 (Names beginning with "T__" are reserved for this function's local variables)
  ⍝ Left argument: Optional message text to be displayed indicating where in the logic the tracing occurred
  ⍝                (May be a matrix, nested vector or vector with ⎕UCS 13s)
  ⍝ Expressions may begin with "]" (for a user command), ")" (for special commands), or "⎕←" (to skip labelling & indents)
@@ -11,9 +12,9 @@
  ⍝      )SI     )TIME   )XSI
 
  :If 0≠⎕NC'Tracing' ⋄ :AndIf ~1∊Tracing ⋄ :Return ⋄ :EndIf ⍝ If not tracing, just exit (default = tracing on)
- :If 2≠⎕NC'T__msg' ⋄ T__msg←0⍴⊂'' ⋄ :EndIf
- ⎕ML←1 ⋄ ⎕PW←1000 ⍝ Allow almost anything to display without any wrapping (may be modified to suit)
- T__TIME←{' '~⍨,'I2,2(<:>,ZI2),<.>,ZI3'⎕FMT 1 4⍴12 0 0 0|3↓⎕TS} ⍝ Show formatted current timestamp for )TIME
+ :If 2≠⎕NC'T__msg' ⋄ T__msg←0⍴⊂'' ⋄ :EndIf ⋄ (T__IO T__ML T__PW)←⎕IO ⎕ML ⎕PW ⋄ (⎕IO ⎕ML)←1 1
+ ⎕PW←1000 ⍝ Allow almost anything to display without any wrapping (this ⎕PW may be modified to suit)
+ T__TIME←{' '~⍨,'I2,2(<:>,ZI2),<.>,ZI3'⎕FMT 1 4⍴1+12 0 0 0|¯1+3↓⎕TS} ⍝ Show formatted current timestamp for )TIME
  T__XSI←1↓∊',',¨1↓,¨(⎕LC{⍵,'[',(⍕⍺),']'}¨(⊂'{}')@(0∘=≢¨)⊢⎕XSI)@(' '∘≡¨)⊢⎕STACK[;2] ⍝ Support for )XSI
  T__SI←1↓∊',',¨T__t←1↓,¨(⎕LC{⍵,'[',(⍕⍺),']'}¨(⊂'{}')@(0∘=≢¨)⊢⎕SI)@(' '∘≡¨)⊢⎕STACK[;2] ⍝ Current line & support for )SI
  ⎕←'*** ',⊃((1 ⎕C⊃¨T__t)∊¨⊂⎕A,'_∆')/T__t ⍝ Show executing code location (e.g. top line of ⎕SI that called this)
@@ -27,7 +28,9 @@
  ((T__t\T__u=0)/T__vars)←(T__x/⍨T__u=0),¨' ',¨'''',¨'''',¨⍨(T__t\T__u=0)/T__vars/¨⍨1+T__vars='''' ⍝ Spell out executable user-command code
  :Trap 0
      ⎕CS⊃⎕RSI ⍝ Let's refer to all their executable expressions from within the calling namespace
+     T__t←⎕PW ⋄ (⎕IO ⎕ML ⎕PW)←T__IO T__ML T__PW ⍝ Restore their values of ⎕IO, ⎕ML & ⎕PW for expression evaluation
      T__vars←((×≢¨T__ttls)/¨T__ttls,¨':'),⍪⍎¨T__vars ⍝ Obtain the data values to be shown
+     (⎕IO ⎕ML ⎕PW)←1 1 T__t ⍝ Put them back to what we like to use internally
  :Else
      ('Error in traced expression: ',⎕DMX.Message)⎕SIGNAL ⎕EN
  :EndTrap

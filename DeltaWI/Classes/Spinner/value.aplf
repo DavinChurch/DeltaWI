@@ -1,0 +1,20 @@
+ result←object value arg;minmax;style
+ ⍝ This value is user-controlled so we won't keep it in a variable
+
+ minmax←object ⎕VGET⊂'_range'(0 100) ⋄ minmax←minmax[⍋minmax]
+ :If 0=≢arg
+     result←object ##.##.∆WG⊂'Thumb'
+ :Else
+     arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: value'##.##.Error~##.##.IsInt arg
+     '∆WI LENGTH ERROR: value'##.##.Error 1≠≢arg
+     '∆WI DOMAIN ERROR: value'##.##.Error(arg<¯32767)∨arg>32767 ⍝ Out of APL+Win's allowed range
+     arg←minmax[1]⌈minmax[2]⌊⊃arg ⍝ Constrain change to remain within application's range
+     object ##.##.∆WS'Thumb'arg
+     'Change'##.##.Event object ##.##.Application,arg ⍝ Just let application know there's a new value
+     :If 16∊style←##.##.BitVals object ⎕VGET⊂'_style' 0 ⍝ Are we supposed to auto-update buddies?
+     :AndIf 9=object.⎕NC'_buddy_' ⍝ Is there a buddy control to update?
+         object._buddy_ _supp.SetBuddy(style:style ⋄ value:arg) ⍝ Synchronize buddy to new spinner value
+     :EndIf
+     result←##.NoRes
+ :EndIf

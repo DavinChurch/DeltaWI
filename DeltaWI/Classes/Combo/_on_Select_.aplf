@@ -1,0 +1,4 @@
+ ok←run _on_Select_ message
+ ⍝ When a choice is picked off the item list, this fires and needs to immediately tell any Spinner that a change has been made
+
+ ok←1⊣(⊃message)##.Spinner._supp.SetSpinner(⊃message)text ⍬ ⍝ See if we can update the Spinner from this

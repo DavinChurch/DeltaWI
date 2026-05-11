@@ -1,0 +1,31 @@
+ result←object style arg;bits;props;style
+
+⍝   +0=Vertical spinner
+⍝   +1=Horizonal spinner
+⍝   0=Right-aligned on buddy control
+⍝   4=Left-aligned on buddy control
+⍝   8=No alignment
+⍝   16=Update buddy automatically
+⍝   32=Use thousands separator (w/16)
+⍝   64=Keyboard arrow keys do not change spinner
+ style←object ⎕VGET⊂'_style' 0 ⍝ What style were we?
+ :If 0=≢arg
+     result←style
+ :Else
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∨1≠≢arg
+     arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∨~##.##.IsInt arg
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∨/∊arg<0
+     bits←##.##.BitVals arg←+/∊arg
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error×≢bits~0 1 4 8 16 32 64
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∧/4 8∊bits
+     object._style←+/bits
+     props←0⍴⊂''
+     props,←0/⊂'VScroll'(-~1∊bits) ⍝ Changing orientation will not change size/where     ⍝? Create-only
+     props,←0/⊂'HScroll'(-1∊bits) ⍝ Changing orientation will not change size/where      ⍝? Create-only
+     ⍝object ##.##.∆WS props ⍝? Nothing changeable here ATM
+
+     object _supp.ShowBuddy(oldstyle:style ⋄ newstyle:bits) ⍝ Move objects around on the screen as needed
+
+     result←##.NoRes
+ :EndIf

@@ -1,0 +1,9 @@
+ ok←run _on_Spin_ message;object;style
+ ⍝ When the spinner gets incremented we need to update our buddy control, too
+
+ object←⊃message
+ :If 16∊style←##.##.BitVals object ⎕VGET⊂'_style' 0 ⍝ Are we supposed to auto-update buddies?
+ :AndIf 9=object.⎕NC'_buddy_' ⍝ Is there a buddy control to update?
+     object._buddy_ _supp.SetBuddy (style:style ⋄ value:3⊃message) ⍝ Synchronize buddy to new spinner value
+ :EndIf
+ ok←1

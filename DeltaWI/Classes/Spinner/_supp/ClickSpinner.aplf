@@ -1,0 +1,10 @@
+ spinner ClickSpinner keypressed;dir;new
+⍝∇ When a buddy control gets an up or down arrow pressed in it, use that to affect the spinner
+
+ :If keypressed⊂⍛∊'DC' 'UC' ⍝ Safety check
+ :AndIf 1 0≡16 64∊##.##.##.BitVals spinner ⎕VGET⊂'_style' 0 ⍝ Are they using cursor-keys to adjust the spinner directly?
+     dir←(¯2+'DC' '' 'UC'⍳⊂keypressed)×¯1*>/spinner ⎕VGET⊂'_range'(0 100) ⍝ Get direction, but watch for a reversed spinner
+     new←dir+spinner ##.##.##.∆WG'Thumb' ⍝ Apply only a single tick to the spinner ⍝? I can't think of any good way to auto-accelerate this
+     new←spinner Limit new ⍝ Apply range limitations
+     0 ##.##.##.∆NQ spinner'Spin'new dir ⍝ Cause the spinner to be activated
+ :EndIf

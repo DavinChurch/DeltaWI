@@ -1,0 +1,13 @@
+ result←object wrap arg
+
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_wrap' 0
+ :Else
+     arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: value'##.##.Error~##.##.IsInt arg
+     '∆WI LENGTH ERROR: value'##.##.Error 1≠≢arg
+     'DOMAIN ERROR: value'##.##.Error~0 1∊⍨arg←⊃arg
+     object._wrap←arg
+     object ##.##.∆WS'Wrap'arg
+     result←##.NoRes
+ :EndIf

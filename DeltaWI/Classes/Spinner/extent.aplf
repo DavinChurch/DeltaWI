@@ -1,0 +1,3 @@
+ result←object extent arg
+ result←object ##.extent arg
+ :If ×≢arg ⋄ object._where_orig←object ##.where ⍬ ⋄ :EndIf ⍝ Update unattached 'where'

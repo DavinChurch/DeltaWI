@@ -1,21 +1,30 @@
- arg←opts Center arg;from;actions;units;∆where;∆size;∆extent;where;parent;stretch;psize;pscale;punits;extent;Borders;where_extent;border;_size;size
+ arg←opts Center arg;from;actions;units;∆where;∆size;∆extent;where;parent;stretch;psize;pscale;punits;extent;Borders;where_extent;border;_size;size;t
 ⍝ Generic routine to auto-center new objects on their parent by modifying the provided argument list before ∆WI execution
 ⍝ opts← namespace with optional controlling variables
-⍝       parent: reference to parent object [required]
-⍝       stretch: pretend new object is this many pixels bigger (vertical, horizontal) for centering calculations
+⍝       parent: Reference to parent object [required]
+⍝       stretch: Pretend new object is this many pixels bigger (vertical, horizontal) for centering calculations
+⍝       border: Make sure the created object takes into account any requested borders
+⍝       size: Override size creation with an explicit value
 ⍝ If this routine is not used during ∇New processing, be sure to at least set _where, _extent, & _size variables before calling ∇Initialize.
 
  from←⊃⎕RSI ⍝ Immediate source namespace calling me (where I can find settings)
  actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
- units←##.GUIroot._units ⍝ We'll want this for scale conversions
+ parent←opts ⎕VGET'parent' ⍝ They have to tell us this, at least
+ (punits units)←1 0 1/##.Classes._supp.MyUnits parent ⍝ Get the unit-conversions for the parent object's scale
+ ⍝? Oops! Watch out for 'scale' being specified on the creation line which changes all the default measurements (after that point?)! (Won't be using units[1;] any more!)
  _size←from ⎕VGET⊂'_size'(1.5 10) ⍝ A common default object size, but allow an override to be specified
- (parent stretch border size)←opts ⎕VGET'parent'('stretch'(0 0))('border' 0)('size'_size) ⍝ Obtain named parameters
+ :If ∨/t←actions∊'size' 'extent' ⍝ Look to see if they're specifying a starting size/extent
+     :Select (t←⌈/⍸t)⊃actions ⍝ Use the last-specified one to determine the default size
+     :Case 'size' ⋄ _size←##.Single 1↓t⊃arg ⍝ Use the specified size as the default
+     :Case 'extent' ⋄ _size←(##.Single 1↓t⊃arg)×punits÷units[1;] ⍝ Use the specified size as the default, but converted from parent's scale
+     :EndSelect
+ :EndIf
+ (stretch border size)←opts ⎕VGET('stretch'(0 0))('border' 0)('size'_size) ⍝ Obtain named optional parameters
 
  ⍝ If needed, modify or prepend a default 'where' for object creation
  (∆where ∆size ∆extent)←∊¨((1↓¨arg),⊂⍬)[actions⍳'where' 'size' 'extent'] ⍝ Which of our defaults are they giving us anyway (so we can skip adding defaults)
  :If 4≠≢where←∆where ⍝ If they're not giving us a full 4⍴ "where", generate a default they can modify later
      (psize pscale)←parent ⎕VGET'_size' '_scale' ⍝ What's the parent's size & scale? ⍝? Does this give us the right data for scale=0?
-     punits←⊃##.Classes._supp.MyUnits parent ⍝ Get the unit-conversions for the parent object's scale
      :If 2≠≢extent←∆extent ⍝ Use an extent they gave us if we have one, otherwise calculate it
          extent←size×units[1;]÷punits ⍝ Compute an extent using parent's scale
      :EndIf

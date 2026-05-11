@@ -1,0 +1,13 @@
+ ok←run _on_Spin message;object;thumb
+ ⍝ When a reversed spinner gets incremented we need to change the message to go in the other direction instead
+ ⍝ Return a modified message to be passed on to the rest of the system
+
+ ⍝ message[3]←Thumb value (new)
+ ⍝ message[4]←Adjustment
+
+ object←⊃ok←message ⍝ Return incoming message, unless we need to modify it
+ :If >/object ⎕VGET⊂'_range'(0 100)
+     thumb←object ##.##.∆WG'Thumb' ⍝ Previous Thumb value
+     ok[3]←thumb+ok[4]←-ok[4] ⍝ Compute a new Thumb value
+     ok[3]←object _supp.Limit ok[3] ⍝ Apply range limitations
+ :EndIf

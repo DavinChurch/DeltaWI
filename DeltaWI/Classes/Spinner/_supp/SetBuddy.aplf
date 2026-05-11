@@ -1,0 +1,33 @@
+ buddy SetBuddy parms;textvalue;style;newvalue
+⍝ When a spinner changes, adjust it's buddy object to match the new value (whenever possible)
+⍝ This is a one-way change, only when the Spinner is spun or its value set does the buddy change with it.
+⍝ When the buddy is changed directly, the UpDown:Thumb is directly modified by SetSpinner (not by calling 'value') and therefore does not call this routine recursively.
+
+ (style newvalue)←parms ⎕VGET'style' 'value'
+ textvalue←##.##.##.∆dim,('M<->CI7'~'C'/⍨~32∊style)⎕FMT newvalue ⍝ Format text version of spinner's value as requested
+ :If buddy._class⊂⍛∊'Edit' 'RichEdit'
+     buddy('text'##.##.##.Invoke),⊂textvalue
+ :ElseIf buddy._class⊂⍛∊⊂'Combo'
+     ⍝ We don't want to call the APL+Win 'text' property fn here because it will reset the 'value' property which erases 'text'
+     buddy ##.##.##.∆WS⊂'Text'textvalue ⍝ So write directly to the Dyalog 'Text' property instead
+     'Click?'##.##.##.Event buddy ##.##.##.Application ⍝ Allow suppression ⍝? right?
+     'Change?'##.##.##.Event buddy ##.##.##.Application ⍝ Allow suppression ⍝? right?
+ :ElseIf buddy._class⊂⍛∊⊂'List'
+     buddy('value'##.##.##.Invoke),newvalue ⍝ Selects a specific item of the list, not a value
+ :ElseIf buddy._class⊂⍛∊'Label' 'Button' 'Check' 'Option' 'Frame'
+     buddy('caption'##.##.##.Invoke),⊂textvalue
+ :EndIf
+
+
+⍝ These buddy controls need to also update my Thumb value, using SetSpinner, in the following ways:
+⍝   Class       APL+Win/property    Dyalog
+⍝   -----       -------/--------    ------
+⍝   Edit        Change  text        KeyPress
+⍝   RichEdit    Change  [sel]text   KeyPress
+⍝   Combo       Change  text/value  KeyPress/Select
+⍝   List        Click   value       Select
+⍝   Label               caption
+⍝   Button              caption
+⍝   Check               caption
+⍝   Option              caption
+⍝   Frame               caption
