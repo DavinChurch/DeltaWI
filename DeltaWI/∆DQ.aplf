@@ -1,4 +1,4 @@
  {R}←∆DQ Y
 ⍝ Cover function for ⎕DQ; Extend for use with EWC
 
- R←⎕DQ Y
+ :If ⎕NULL≡GUIroot ⎕VGET⊂'_EWC_'⎕NULL ⋄ R←⎕DQ Y ⋄ :Return ⋄ :EndIf

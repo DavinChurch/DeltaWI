@@ -1,11 +1,11 @@
-rpt←showactions;class;common;meths;props;events;active;override;cls;fns;sort;nofns;pw;except;planning
+ rpt←showactions;class;common;meths;props;events;active;override;cls;fns;sort;nofns;pw;except;planning
 ⍝ A developer-only tool, produce a quick report of all the properties/methods/events/defaults for all classes that have implementations
 ⍝ Can be used to compare with APL+Win to see what is missing (or what might need to be class-overridden)
 ⍝ rpt[;1]←Class (namespace) name; rpt[;2]←'methods' 'properties' 'events' 'defaults'; rpt[;3]←list of names
 
  rpt←0 3⍴⊂''
- meths←{'Create' 'Delete',⍵/⍨⍵⊃¨⍛∊'⍙',1 ⎕C ⎕A}
- props←{'data' '∆',¨⍛,(events ⍵)~⍨⍵/⍨⍵⊃¨⍛∊⎕C ⎕A}
+ meths←{'Create' 'Delete','⍙'⎕R'⎕'⊢⍵/⍨(⊃¨⍵~¨'⍙')∊'⍙',1 ⎕C ⎕A}
+ props←{'data' '∆',¨⍛,'⍙'⎕R'⎕'⊢(events ⍵)~⍨⍵/⍨(⊃¨⍵~¨'⍙')∊⎕C ⎕A}
  events←{⍵{⍺⍺∊⍨⊂'_',⍵:⍵ ⋄ '(',⍵,')'}¨⍵/⍨(⊂'on')≡¨2↑¨⍵}
  active←{⍵/⍨(⊂1 2 0)≡¨⊃¨⍺.⎕AT¨⍵} ⍝ Determine if these function definitions are "active"
  override←{⍵/⍨(⊂1 2 0)≢¨⊃¨⍺.⎕AT¨⍵} ⍝ Determine if these function definitions are class overrides
@@ -13,7 +13,7 @@ rpt←showactions;class;common;meths;props;events;active;override;cls;fns;sort;n
  common←{((⊂'New')~⍨meths ⍵)(props ⍵)(events ⍵)}Classes.⎕NL ¯3 ⍝ [1]←methods, [2]←properties, [3]←events
  sort←{∪⍵[⍋⍵~¨⊂'()']~⍺,⊂''}
  except←'supress' '(onNew)' ⍝ Names I don't want to be carrying around everywhere, such as obsolete spellings or things w/o event handler fns
- rpt⍪←'(shared)' '(planned)' (planning Classes)
+ rpt⍪←'(shared)' '(planned)'(planning Classes)
  :For class :In 'System'⊂⍛,(Classes.⎕NL ¯9)~'System' 'ActiveX' 'Dyalog' '_supp'
      cls←Classes ⎕VGET class ⍝ Point to the class definition
      fns←except~⍨cls active cls.⎕NL ¯3 ⋄ nofns←cls override cls.⎕NL ¯3

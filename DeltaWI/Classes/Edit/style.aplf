@@ -25,11 +25,11 @@
      arg←##.##.Single arg
      '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∨~##.##.IsInt arg
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∨/∊arg<0
-     bits←##.##.BitVals arg←+/∊arg
+     arg←+/bits←##._supp.SetBitVals arg
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error(∧/1 2∊bits)∨(~4∊bits)∧∨/1 2 8 16 8192∊bits ⍝ Interactions w/1,2,4
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∧/256 512∊bits
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error(arg≥524288×2)∨∨/(bits>16384)∧bits≠524288
-     object._style←+/bits
+     object._style←arg
      props←0/⊂'Style'('Single' 'Multi'⊃⍨1+4∊bits) ⍝? Can only be set during creation
      props,←0/⊂'Justify'('Center' 'Right' 'Left'⊃⍨1⍳⍨1 2∊bits) ⍝? Can only be set during creation
      ⍝? Center or Right justification forces word-wrapping and disables horizontal scrolling (32∊bits)

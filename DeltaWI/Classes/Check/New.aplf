@@ -5,7 +5,7 @@
  actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
 
  (∆border ∆style)←((1↓¨arg),⊂⍬)[actions⍳'border' 'style']
- ∆border←0⌈×+/∊∆border ⋄ ∆style←##.##.BitVals+/∊∆style
+ ∆border←0⌈×+/∊∆border ⋄ ∆style←##._supp.SetBitVals ∆style
  arg,⍨←(~'caption'⊂⍛∊actions)/⊂'caption'name
  arg←(parent:parent ⋄ border:∆border)##.##.New.Center arg
 

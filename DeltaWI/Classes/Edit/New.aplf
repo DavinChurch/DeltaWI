@@ -24,7 +24,7 @@
  actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
 
  (∆style ∆border)←((1↓¨arg),⊂⍬)[actions⍳'style' 'border']
- ∆border←0⌈×+/∊∆border ⋄ ∆style←##.##.BitVals+/∊∆style
+ ∆border←0⌈×+/∊∆border ⋄ ∆style←##._supp.SetBitVals ∆style
  stretch←¯4 ¯4×∨/'size' 'extent'∊actions ⍝ The APL+Win control does weird things with a starting position if 'size' is specified at all
  arg←(parent:parent ⋄ stretch:stretch ⋄ border:∆border)##.##.New.Center arg
  arg,←(~'edge'⊂⍛∊actions)/⊂'edge' 1 ⍝ Edit boxes have a default 'edge'

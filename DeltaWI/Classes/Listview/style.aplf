@@ -29,10 +29,10 @@
      arg←##.##.Single arg
      '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∨~##.##.IsInt arg
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∨/∊arg<0
-     bits←##.##.BitVals arg←+/∊arg
+     arg←+/bits←##._supp.SetBitVals arg
      view←object ⎕VGET⊂'_viewmode' 'report'
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error(arg≥1048576)∨(arg<0)∨131072∊bits
-     object._style←+/bits
+     object._style←arg
      props←⊂'FullRowSelect'(1∊bits)
      props,←⊂'AlwaysShowSelection'(4∊bits)
      props,←0/⊂'Style'('Multi' 'Single'⊃⍨1+8∊bits)                      ⍝? Creation only

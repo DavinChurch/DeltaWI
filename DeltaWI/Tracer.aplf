@@ -27,7 +27,7 @@
  ((T__t\T__u>0)/T__vars)←(T__x/⍨T__u>0),¨{⍵↓⍨¯1+⍵⍳' '}¨T__vars/⍨T__t\T__u>0 ⍝ Spell out overridden user-command code
  ((T__t\T__u=0)/T__vars)←(T__x/⍨T__u=0),¨' ',¨'''',¨'''',¨⍨(T__t\T__u=0)/T__vars/¨⍨1+T__vars='''' ⍝ Spell out executable user-command code
  :Trap 0
-     ⎕CS⊃⎕RSI ⍝ Let's refer to all their executable expressions from within the calling namespace
+     ⎕CS⊃⎕RSI↓⍨'IfDebug'≡⊃1↓⎕SI ⍝ Let's refer to all their executable expressions from within the calling namespace
      T__t←⎕PW ⋄ (⎕IO ⎕ML ⎕PW)←T__IO T__ML T__PW ⍝ Restore their values of ⎕IO, ⎕ML & ⎕PW for expression evaluation
      T__vars←((×≢¨T__ttls)/¨T__ttls,¨':'),⍪⍎¨T__vars ⍝ Obtain the data values to be shown
      (⎕IO ⎕ML ⎕PW)←1 1 T__t ⍝ Put them back to what we like to use internally

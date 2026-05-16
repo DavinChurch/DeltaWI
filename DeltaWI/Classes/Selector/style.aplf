@@ -25,11 +25,11 @@
      arg←##.##.Single arg
      '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∨~##.##.IsInt arg
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∨/∊arg<0
-     bits←##.##.BitVals arg←+/∊arg
+     arg←+/bits←##._supp.SetBitVals arg
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∧/1 2∊bits
      'Selector style=2 (NoTabs) cannot be supported in Dyalog at present'##.##.Error 2∊bits
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error(arg≥65536×2)∨∨/4 8192∊bits
-     object._style←+/bits
+     object._style←arg
      props←⍬
      props,←⊂'Style'('Tabs' 'Buttons' 'FlatButtons'⊃⍨1++/∧\1 16384∊bits)
      props,←⊂'MultiLine'(∨/8 4096∊bits)
@@ -46,7 +46,7 @@
          ⍝? If it's multi-line, how do we know how many tabs are on each line?
          ⍝? Dyalog cannot set different tab sizes for each line of a multi-line TabControl!
          ⍝? The number of tabs (perhaps added later) changes the width of each tab for "fitting" - ask for help?
-         props,←⊂'TabSize'⍬ (⌊width÷3) ⍝? Just leave room for three tabs at present
+         props,←⊂'TabSize'⍬(⌊width÷3) ⍝? Just leave room for three tabs at present
      :Else
          props,←⊂'TabSize'⍬ ¯1
      :EndIf

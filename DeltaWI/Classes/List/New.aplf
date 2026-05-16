@@ -5,7 +5,7 @@
  actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
 
  (∆border ∆style)←((1↓¨arg),⊂⍬)[actions⍳'border' 'style']
- ∆border←0⌈×+/∊∆border ⋄ ∆style←##.##.BitVals+/∊∆style
+ ∆border←0⌈×+/∊∆border ⋄ ∆style←##._supp.SetBitVals ∆style
  arg←(parent:parent ⋄ stretch:24 0 ⋄ border:∆border)##.##.New.Center arg ⍝ (No idea why APL+Win doesn't center this well.)
 
  props←'List'('Visible' 0)('EdgeStyle' 'Recess') ⍝ Properties that should be used during creation

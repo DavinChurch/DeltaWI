@@ -1,0 +1,19 @@
+ {left}(function IfDebug bits)right;debug
+⍝ Provide a way to run a function only if debugging is turned on in the system configuration.
+⍝ This is most likely to be used with the ∇Tracer function, for turning explicit diagnostic tracking on and off
+⍝ in a global fashion, but it can be used with any debugging function that needs to be conditionally executed.
+⍝ Usage:
+⍝   The left operand is the function to be conditionally executed.
+⍝   The right operand is a list of "bit numbers" (0-30; 0=LSB) that determine when to execute the function.
+⍝       The specified bits of the Debug configuration flag are checked and if any of those bits are on,
+⍝       then the function is executed. Otherwise the function call is ignored completely.
+⍝   The left and right arguments are passed to the function when it is executed.
+⍝ Example:
+⍝   (Tracer IfDebug 3) 'xyz' ⍝ Execute   Tracer 'xyz'   if the 3rd debugging bit (numeric value=8) is turned on.
+⍝ Using this operator allows the developer to place semi-permanent debugging facilites into their code
+⍝ but only activate them when specific debugging "modes" are turned on at run-time.
+
+ :If debug←9=⎕NC'GUIroot' ⋄ debug←GUIroot ⎕VGET⊂'_Debug'⍬ ⋄ :EndIf ⍝ What's our current Debug configuration setting?
+ :If 0=bits BitOf+/debug ⋄ :Return ⋄ :EndIf ⍝ No matching debugging bits are active, so we won't do anything
+ :If 0=⎕NC'left' ⋄ left←⊢ ⋄ :EndIf
+ left function right ⍝ Just run their function, whatever it is

@@ -12,10 +12,10 @@
      arg←##.##.Single arg
      '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∨~##.##.IsInt arg
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∨/∊arg<0
-     bits←##.##.BitVals arg←+/∊arg
+     arg←+/bits←##._supp.SetBitVals arg
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error×≢bits~0 1 2
      'Unable to support style=2 checkboxes'##.##.Error 2∊bits
-     object._style←+/bits
+     object._style←arg
      object ##.##.∆WS 0/⊂'Align'(⊃'Left' 'Right'/⍨1,⍨1∊bits) ⍝? Can only be done during object creation
      result←##.NoRes
  :EndIf

@@ -17,7 +17,7 @@
  ]
 
  (border caption)←object ⎕VGET('_border' 0)('_caption' '') ⍝ Check important properties
- border←##.##.##.BitVals+/border ⍝ Convert to bit flags for analysis
+ border←##.##._supp.SetBitVals border ⍝ Convert to bit flags for analysis
 
  :Section ⍝ Build APL+Win settings
      :If ×≢caption ⍝ If they gave us a caption, we must allow room for it regardless

@@ -1,7 +1,7 @@
- CreateRoot root;inches;this;tpp;devcaps;wa
+ CreateRoot root;inches;this;tpp;devcaps;wa;en;ev;GUIroot
 ⍝ The first time that ∆WI is used, we need to create and populate the root of the GUI structure
 
- this←⎕VGET root ⎕NS'' ⍝ Create the root GUI namespace that we can build from
+ this←GUIroot←⎕VGET root ⎕NS'' ⍝ Create the root GUI namespace that we can build from
 
  this.(_name _self _class)←,¨'#' '#' 'System' ⍝ Constant properties
  this._Ancestry←0⍴this._Class←Classes.System ⍝ Base references
@@ -34,3 +34,7 @@
 
  ⍝ Assign class default properties
  this ⎕VSET Classes.System ⎕VGET ¯2
+
+ ⍝ Initialize all DeltaWI configuration options (from standard sources)
+ ev←2 ⎕NQ'.' 'GetEnvironment'((⊂'DeltaWI\'),¨en←'Debug' 'Developer' 'EWC' 'EWCMode' 'Migration')
+ {}this Classes.System.⍙Config en,⍤0⊢ev ⍝ Pass configuration to the ⎕Config synthetic method for setup

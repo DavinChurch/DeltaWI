@@ -1,0 +1,53 @@
+ result←object ⍙Config arg;setting;value;from;to;dev
+⍝ Read and/or write the DeltaWI configuration settings from a list of name-value pairs
+⍝ Reading-only names requires an extra level of nesting in order to make it look like shortened name-value pairs
+
+ result←⍬ ⍝ Return the list of current or previous settings
+ dev←1 ⍝? Override default developer setting while under construction
+ :If 2=≢⍴arg ⋄ arg←↓arg ⋄ :EndIf ⍝ Allow a one- or two-column matrix instead of a vector of pairs
+ :If 2≥|≡arg ⋄ arg←,⊂arg ⋄ :EndIf ⍝ Force it into a depth-3 vector of name-value pairs
+ :For setting :In arg
+     :If 1=≢setting←⊆setting ⍝ They're asking for the current value
+         :Select ⎕C⊃setting
+         :Case ⎕C'Debug' ⋄ result,←+/object ⎕VGET⊂'_Debug' 0
+         :Case ⎕C'Developer' ⋄ result,←object ⎕VGET⊂'_Developer'dev
+         :Case ⎕C'EWC' ⋄ result,←⊂object ⎕VGET⊂'_EWC' ''
+         :Case ⎕C'EWCMode' ⋄ result,←⊂object ⎕VGET⊂'_EWCMode' 'Desktop'
+         :Case ⎕C'Migration' ⋄ result,←⊂object ⎕VGET⊂'_Migration' ''
+         :Else ⋄ ##.##.Error'Domain Error'
+         :EndSelect
+     :Else ⍝ They're changing the current value (but return previous value)
+         'Length Error'##.##.Error 2≠≢setting
+         (setting value)←' '##.##.∆dlt¨setting
+         :Select ⎕C setting
+         :Case ⎕C'Debug' ⋄ result,←+/object ⎕VGET⊂'_Debug' 0
+             :If 0=≢value←##.##.∆dtr value ⋄ value←0 ⋄ :EndIf
+             :If ##.##.IsChar value ⋄ value←⌊⊃//⎕VFI value ⋄ :EndIf
+             object._Debug←##.##.∆dim ##._supp.SetBitVals value ⍝ Debugging flags
+         :Case ⎕C'Developer' ⋄ result,←object ⎕VGET⊂'_Developer'dev
+             object._Developer←(1 0 '1' '0' 'T' 'F' 'Y' 'N'⍳⍥⎕C⊃value)⊃(8⍴1 0),dev ⍝ Developer (non-production) error-handling mode
+         :Case ⎕C'EWC' ⋄ result,←⊂object ⎕VGET⊂'_EWC' ''
+             :If 0≠≢value ⋄ :AndIf 9=⎕NC value ⋄ :AndIf 3=value ⎕VGET⍛.⎕NC'EWC' ⍝? Specify the EWC interface namespace to use
+                 object._EWC_←⎕VGET object._EWC←value ⍝ Set up a link to the separate EWC support system
+⍝? Also initialize the EWC system here, but we have to know what mode it will be in first
+             :Else
+                 object._EWC←'' ⋄ object._EWC_←⎕NULL
+             :EndIf
+         :Case ⎕C'EWCMode' ⋄ result,←⊂object ⎕VGET⊂'_EWCMode' 'Desktop'
+             'EWCMode Domain Error'##.##.Error~value⊂⍛∊'' 'Desktop' 'Browser' 'Multi'
+             object._EWCMode←value,(0=≢value)/'Desktop'
+⍝? We need to re-initialize the EWC system with this new environment setting
+         :Case ⎕C'Migration' ⋄ result,←⊂object ⎕VGET⊂'_Migration' ''
+             :If 0≠≢value←'.'##.##.∆dtr value ⋄ :AndIf 9=⎕NC value ⋄ :AndIf 4=(⎕VGET value).⎕NC'⍙_Each' ⍝ Does this look like a valid migration-support namespace?
+                 object._Migration←value ⍝ Set up a pre-defined migration translation function connected to this namespace
+                 (from to)←↓⍉↑'%'(≠⊆¨⊢)'#.'⎕R(value,'.')⍠'Regex' 0⊢_supp.apw_replacements
+                 (from to)⊂⍛,⍨←'''[^'']*''|⍝.*' '&'
+                 object._Translate←from ⎕R to ⍝ Predefine the translation function for use by ∇Requote
+             :Else
+                 object._Migration←''
+                 object._Translate←⊢ ⍝ Otherwise assume there won't be any dynamic migration-translation
+             :EndIf
+         :Else ⋄ ##.##.Error'Domain Error'
+         :EndSelect
+     :EndIf
+ :EndFor

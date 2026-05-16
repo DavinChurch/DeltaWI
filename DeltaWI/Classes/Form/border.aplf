@@ -17,8 +17,8 @@
  :Else
      new←##.##.Single arg
      '∆WI DOMAIN ERROR: border'##.##.Error(1<|≡new)∨~##.##.IsInt new
-     new←+/∊arg ⍝ New border property
-     '∆WI ATTRIBUTE ERROR: Invalid "border" attribute specified'##.##.Error(new<0)∨(new≥1024)∨∨/4 8∊##.##.BitVals new ⍝ Is it out of range?
+     new←+/arg←##._supp.SetBitVals arg ⍝ New border property
+     '∆WI ATTRIBUTE ERROR: Invalid "border" attribute specified'##.##.Error(new<0)∨(new≥1024)∨∨/4 8∊arg ⍝ Is it out of range?
      object._border←new ⍝ Update APL+Win value
 
      ⍝ Adjust Dyalog settings

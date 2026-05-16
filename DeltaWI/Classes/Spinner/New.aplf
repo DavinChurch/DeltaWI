@@ -3,7 +3,7 @@
  actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
 
  (∆border ∆style)←((1↓¨arg),⊂⍬)[actions⍳'border' 'style']
- ∆border←0⌈×+/∊∆border ⋄ ∆style←##.##.BitVals+/∊∆style
+ ∆border←0⌈×+/∊∆border ⋄ ∆style←##._supp.SetBitVals ∆style
  size←(1+1∊∆style)⊃_supp.(_sizeV _sizeH) ⍝ Allow different default sizing based on orientation
  stretch←(1+1∊∆style)⊃(0 1)(1 0)
  arg←(parent:parent ⋄ stretch:stretch ⋄ border:∆border ⋄ size:size)##.##.New.Center arg

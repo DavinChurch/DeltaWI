@@ -16,10 +16,10 @@
      arg←##.##.Single arg
      '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∨~##.##.IsInt arg
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∨/∊arg<0
-     bits←##.##.BitVals arg←+/∊arg
+     arg←+/bits←##._supp.SetBitVals arg
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error×≢bits~0 1 4 8 16 32 64
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∧/4 8∊bits
-     object._style←+/bits
+     object._style←arg
      props←0⍴⊂''
      props,←0/⊂'VScroll'(-~1∊bits) ⍝ Changing orientation will not change size/where     ⍝? Create-only
      props,←0/⊂'HScroll'(-1∊bits) ⍝ Changing orientation will not change size/where      ⍝? Create-only

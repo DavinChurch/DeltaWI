@@ -27,10 +27,10 @@
      arg←##.##.Single arg
      '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∨~##.##.IsInt arg
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∨/∊arg<0
-     bits←##.##.BitVals arg←+/∊arg
+     arg←+/bits←##._supp.SetBitVals arg
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error(~4∊bits)∧∨/8 16 8192∊bits ⍝ Interactions w/4
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error(arg≥262144×2)∨∨/1 2 128 256 512∊bits
-     object._style←+/bits
+     object._style←arg
 
      props,←0/⊂'VScroll'((~8∊bits)×¯2+16∊bits) ⍝ Can't support 8∧16 ⍝? Can only be set during creation
      props,←0/⊂'HScroll'((~32∊bits)×¯2+64∊bits) ⍝ Can't support 32∧64 ⍝? Can only be set during creation

@@ -16,9 +16,9 @@
      arg←##.##.Single arg
      '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∨~##.##.IsInt arg
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∨/∊arg<0
-     bits←##.##.BitVals arg←+/∊arg
+     arg←+/bits←##._supp.SetBitVals arg
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∨/bits>32
-     object._style←+/bits
+     object._style←arg
      object ##.##.∆WS'OnTop'(16∊bits)
 ⍝? Dyalog cannot support Form:style bits 2, 8, or 32 - maybe we can simulate something?
  :EndIf

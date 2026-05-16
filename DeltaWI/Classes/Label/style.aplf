@@ -16,10 +16,10 @@
      arg←##.##.Single arg
      '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∨~##.##.IsInt arg
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∨/∊arg<0
-     bits←##.##.BitVals arg←+/∊arg
+     arg←+/bits←##._supp.SetBitVals arg
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∧/1 2∊bits
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error×≢bits~0 1 2 4 8 32 64
-     object._style←+/bits
+     object._style←arg
      object ##.##.∆WS 0/⊂'Justify'(⊃'Center' 'Right' 'Left'/⍨1,⍨1 2∊bits)
 ⍝? styles>2 are not supported by Dyalog
 ⍝? However, we might use the Accelerator property to simulate (or not) access characters, though they won't be underlined.

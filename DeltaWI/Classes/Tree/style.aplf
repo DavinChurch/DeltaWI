@@ -16,9 +16,9 @@
      arg←##.##.Single arg
      '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∨~##.##.IsInt arg
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∨/∊arg<0
-     bits←##.##.BitVals arg←+/∊arg
+     arg←+/bits←##._supp.SetBitVals arg
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error(arg≥256)∨arg<0
-     object._style←+/bits
+     object._style←arg
      props←⊂'FullRowSelect' 0
      props,←⊂'HasButtons'(~1∊bits)
      props,←⊂'HasLines'(+/∧\1 0≠2 4∊bits)
