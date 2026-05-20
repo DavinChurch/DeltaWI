@@ -1,0 +1,14 @@
+ result←object New arg;parent;name;props;newobj;actions;∆style;size
+ (parent name)←object ⍝ Separate non-standard two-part argument
+ actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
+
+ ∆style←##._supp.SetBitVals⊃((1↓¨arg),⊂⍬)[actions⍳⊂'style'] ⍝ Obtain separate style bits (+1=Smooth, +2=Vertical)
+ size←(1+2∊∆style)⊃_supp.(_sizeH _sizeV) ⍝ Allow different default sizing based on orientation
+ arg←(parent:parent ⋄ size:size)##.##.New.Center arg
+
+ props←'ProgressBar'('Visible' 0) ⍝ Properties that must be used during creation
+ props,←('Wrap' 1)('Thumb' 0)('Limits' 0 100)('Step' 10) ⍝ Default like APL+Win
+ props,←⊂'ProgressStyle'('Normal' 'Smooth'⊃⍨1+1∊∆style)     ⍝? Create-only
+ props,←⊂'Style'('Horz' 'Vert'⊃⍨1+2∊∆style)             ⍝? Create-only
+ newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
+ result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure

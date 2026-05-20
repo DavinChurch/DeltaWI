@@ -1,0 +1,9 @@
+ result←object Stepit arg;now;max;step;min
+ (now max step min)←object ⎕VGET⊂'_value' (0 100 10 0)
+ :If 0=≢arg ⋄ arg←step ⋄ :EndIf ⍝ Use the default step value if none is supplied
+ arg←##.##.Single arg
+ '∆WI DOMAIN ERROR: Stepit'##.##.Error~##.##.IsInt arg
+ '∆WI LENGTH ERROR: Stepit'##.##.Error(1≠≢arg)∨1≠≢⍴1/arg
+ object ##.##.∆WS⊂'Thumb'(now+arg) ⍝ Update the bar directly
+ object._value←(object ##.##.∆WG⊂'Thumb'),max,step,min
+ result←##.NoRes

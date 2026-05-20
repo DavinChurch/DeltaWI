@@ -1,0 +1,16 @@
+ result←object value arg;was
+ was←object ⎕VGET⊂'_value'(0 100 10 0)
+ :If 0=≢arg
+     result←was
+ :Else
+     arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: value'##.##.Error~##.##.IsInt arg
+     '∆WI RANK ERROR: value'##.##.Error 1<≢⍴arg
+     '∆WI LENGTH ERROR: value'##.##.Error~arg≢⍛∊⍳4
+     arg←arg,arg≢⍛↓was
+     '∆WI DOMAIN ERROR: value'##.##.Error≥/arg[4 2]
+     object ##.##.∆WS('Step'(3⊃arg))('Limits'(arg[4 2]))
+     object ##.##.∆WS⊂'Thumb'(arg[1]) ⍝ Now update the position once it can wrap appropriately
+     object._value←(object ##.##.∆WG⊂'Thumb'),1↓arg
+     result←##.NoRes
+ :EndIf

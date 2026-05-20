@@ -1,0 +1,36 @@
+ Progress
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+ 'f.p'∆WI Pass'f.p'⊢'Create' 'Progress'
+ 'f.p'∆WI Pass 0.875 9.75⊢'size'
+ 'f.p'∆WI Pass 14.5 45 1 10⊢'where'
+
+ 'f.p'∆WI Pass 0 100 10 0⊢'value'
+ 'f.p'∆WI Pass MT⊢'value' 5 100 5 0
+ 'f.p'∆WI Pass 5 100 5 0⊢'value'
+ 'f.p'∆WI Pass MT⊢'value' 50
+ 'f.p'∆WI Pass 50 100 5 0⊢'value'
+
+ 'f.p'∆WI Pass MT⊢'Stepit'
+ 'f.p'∆WI Pass 55 100 5 0⊢'value'
+ 'f.p'∆WI Pass MT⊢'Stepit' 10
+ 'f.p'∆WI Pass 65 100 5 0⊢'value'
+ 'f.p'∆WI Pass MT⊢'Stepit' ¯20
+ 'f.p'∆WI Pass 45 100 5 0⊢'value'
+
+ 'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+ 'f.p'∆WI Pass'f.p'⊢'Create' 'Progress'('style' 2)
+ 'f.p'∆WI Pass 4.875 1.75⊢'size'
+ 'f.p'∆WI Pass 12.5 49 5 2⊢'where'
+ 'f.p' ∆WI Pass MT⊢'Stepit' 50
+
+ 'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+ 'f.p'∆WI Pass'f.p'⊢'Create' 'Progress'('style' 1)
+ 'f.p' ∆WI Pass MT⊢'Stepit' 50
+
+ 'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+ 'f.p'∆WI Pass'f.p'⊢'Create' 'Progress'('style' 3)
+ 'f.p' ∆WI Pass MT⊢'Stepit' 50
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

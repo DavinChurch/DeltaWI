@@ -1,0 +1,24 @@
+ result←object style arg;bits;props
+⍝? Dyalog does not permit this to be changed once the object is created!
+
+⍝   0=Horizontal; Normal
+⍝   +1=Smooth
+⍝   +2=Vertical
+
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_style' 0
+ :Else
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∨1≠≢arg
+     arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∨~##.##.IsInt arg
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∨/∊arg<0
+     arg←+/bits←##._supp.SetBitVals arg
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error×≢bits~0 1 2
+     object._style←arg
+     props←⍬
+     props,←⊂'ProgressStyle'('Normal' 'Smooth'⊃⍨1+1∊bits)       ⍝? Create-only
+     props,←⊂'Style'('Horz' 'Vertical'⊃⍨1+2∊bits)               ⍝? Create-only
+     ⍝? object ##.##.∆WS props ⍝ Nothing can be changed after creation in Dyalog
+     ⍝? Change default size if orientation changed?
+     result←##.NoRes
+ :EndIf
