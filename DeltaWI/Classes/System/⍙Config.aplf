@@ -25,7 +25,8 @@
              :If ##.##.IsChar value ⋄ value←⌊⊃//⎕VFI value ⋄ :EndIf
              object._Debug←##.##.∆dim ##._supp.SetBitVals value ⍝ Debugging flags
          :Case ⎕C'Developer' ⋄ result,←object ⎕VGET⊂'_Developer'dev
-             object._Developer←(1 0 '1' '0' 'T' 'F' 'Y' 'N'⍳⍥⎕C⊃value)⊃(8⍴1 0),dev ⍝ Developer (non-production) error-handling mode
+             object._Developer←(1 0 '1' '0' 'T' 'F' 'Y' 'N' 2 '2'⍳⍥⎕C⊃value)⊃(8⍴1 0),2 2,dev ⍝ Developer (non-production) error-handling mode
+             ⍝ Allow Developer=2 to mean that it also stops where Error produces a message
          :Case ⎕C'EWC' ⋄ result,←⊂object ⎕VGET⊂'_EWC' ''
              :If 0≠≢value ⋄ :AndIf 9=⎕NC value ⋄ :AndIf 3=value ⎕VGET⍛.⎕NC'EWC' ⍝? Specify the EWC interface namespace to use
                  object._EWC_←⎕VGET object._EWC←value ⍝ Set up a link to the separate EWC support system
