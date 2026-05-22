@@ -1,4 +1,4 @@
- result←object New arg;parent;name;actions;∆style;props;newobj;∆border;t;size;stretch
+ result←object New arg;parent;name;actions;∆style;props;newobj;∆border;t;stretch;extent
 ⍝ Create a new Combo object
 
 ⍝ Note that for style∊0 2, any heights are ignored and all vertical sizing is determined solely by font size and row count.
@@ -10,9 +10,9 @@
 
  (∆style ∆border)←((1↓¨arg),⊂⍬)[actions⍳'style' 'border']
  ∆border←0⌈×+/∊∆border ⋄ ∆style←##._supp.SetBitVals ∆style
- size←_size⌈5 0×1∊∆style ⍝ style=1 has a different default size, override it
+ extent←_size⌈5 0×1∊∆style ⍝ style=1 has a different default size, override it
  stretch←59 0×~1∊∆style ⍝ Centering will need to happen as if it is sized for style=1, so adjust for default 'size'
- arg←(parent:parent ⋄ border:∆border ⋄ stretch:stretch ⋄ size:size)##.##.New.Center arg
+ arg←(parent:parent ⋄ border:∆border ⋄ stretch:stretch ⋄ extent:extent)##.##.New.Center arg
 
 ⍝ We'll try always using a ComboEx and hope there are no incompatibilities that require old Combo.
  props←'ComboEx'('Visible' 0) ⍝ Define properties that must be used during creation

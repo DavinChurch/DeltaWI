@@ -46,7 +46,7 @@
  ⍝ Disallow deletion of the System (root) object
  ('∆WI ACTION ERROR: Action "',action,'" not found')Error(obj≡GUIroot)∧action≡'Delete'
 
- :If action≡⍥⎕C'⎕Send' ⍝ (I'll be flexible with capitalization here)
+ :If action≡⍥⎕C'⎕Send' ⍝ (I'll ignore capitalization here)
      ⍝ Allow an out-of-thread command to 'Send' a one-way message to an object in the primary thread!
      ⍝ This will function OUTSIDE of the usual :Hold, permitting execution while ∆WI is in use elsewhere!
      ⍝ Note that ∇ObjectName is therefore not being protected from changes elsewhere while it runs, but

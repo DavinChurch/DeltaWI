@@ -4,8 +4,8 @@
  ⎕TRAP←(870 'C' '⎕DM⊃⍛⎕SIGNAL ⎕EN')(888 'S')((0 1000)'C'ErrorSignal)    ⍝ Report all errors directly back to the application
  Application←⊃⎕THIS,⍨⎕THIS~⍨⎕RSI/⍨⎕THIS⍕⍛{(⊂⍺)≢¨⍵↑¨⍨≢⍺}⎕NSI             ⍝ Global: Where are we being called from (outside DeltaWI)?
  :If 0=⎕NC'#.⍙WI' ⋄ CreateRoot'#.⍙WI' ⋄ :EndIf                          ⍝ On our first call, create a root from which everything GUI grows
- GUIroot←#.⍙WI                                                          ⍝ Global: A reference to our GUI structure root (for later use)
- :If GUIroot ⎕VGET⊂'_Developer' 0 ⋄ ⎕TRAP[3]←⊂(0 1000)'S' ⋄ :EndIf      ⍝ But for developers, just stop there if errors happen
+ GUIroot←#.⍙WI                                                          ⍝ Global: A master reference to our GUI structure root
+ :If GUIroot ⎕VGET⊂'_Developer' 0 ⋄ ⎕TRAP[3]←⊂(0 1000)'S' ⋄ :EndIf      ⍝ But for developers, just stop immediately if errors happen
 
  :Hold '∆WI#',⍕⎕TID ⋄ top←1 ⋄ :Else ⋄ top←0 ⋄ :EndHold                  ⍝ Is this a recursive call? ⍝? This sequence could theoretically be interrupted by an in-thread event that might happen any time (high-priority??)
  top,⍨←0/⍨top∧'⎕Send'≡⍥⎕C⊃⊆action                                       ⍝ Allow a ⎕Send to execute even while another thread is using ∆WI!

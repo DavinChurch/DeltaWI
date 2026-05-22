@@ -1,10 +1,10 @@
- result←object New arg;parent;name;props;newobj;actions;∆style;size
+ result←object New arg;parent;name;props;newobj;actions;∆style;extent
  (parent name)←object ⍝ Separate non-standard two-part argument
  actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
 
  ∆style←##._supp.SetBitVals⊃((1↓¨arg),⊂⍬)[actions⍳⊂'style'] ⍝ Obtain separate style bits (+1=Smooth, +2=Vertical)
- size←(1+2∊∆style)⊃_supp.(_sizeH _sizeV) ⍝ Allow different default sizing based on orientation
- arg←(parent:parent ⋄ size:size)##.##.New.Center arg
+ extent←(1+2∊∆style)⊃_supp.(_extentH _extentV) ⍝ Allow different default sizing based on orientation
+ arg←(parent:parent ⋄ extent:extent)##.##.New.Center arg
 
  props←'ProgressBar'('Visible' 0) ⍝ Properties that must be used during creation
  props,←('Wrap' 1)('Thumb' 0)('Limits' 0 100)('Step' 10) ⍝ Default like APL+Win

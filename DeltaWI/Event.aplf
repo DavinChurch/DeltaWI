@@ -20,7 +20,7 @@
 
  ⎕TRAP←(870 'C' '⎕DM⊃⍛⎕SIGNAL ⎕EN')(888 'S')((0 1000)'C'ErrorSignal)    ⍝ Report all errors directly back to the application
  :If 9=⎕NC'GUIroot' ⋄ :AndIf GUIroot ⎕VGET⊂'_Developer' 0
-     ⎕TRAP[3]←⊂(0 1000)'S'                                              ⍝ But for developers, just stop there if errors happen
+     ⎕TRAP[3]←⊂(0 1000)'S'                                              ⍝ But for developers, just stop immediately if errors happen
  :EndIf
  ⍝? Since this normally happens within an event callback rather than an application call, how do we really want to handle ∆WI-style (or other) errors??
  ⍝? And since we often call this implicitly during internal processing, do we want to do the same thing to report back to our internal code (probably OK?)?
