@@ -1,4 +1,4 @@
- result←object where arg;size;extent;where;scale;pscale;psize;dthick;Borders;margins;t;tunits;punits;dyposn;dysize;resize;at;rewhere;pxsize
+ result←object where arg;size;extent;where;scale;pscale;psize;dthick;Borders;margins;t;tunits;punits;dyposn;dysize;resize;at;rewhere;pxsize;mdi
 ⍝ Request or modify the location and size of a GUI object
 
 ⍝ Note: 'where' is outside dimensions, relative to parent and using parent's scale
@@ -14,6 +14,8 @@
 ⍝? Caution: You cannot change the position or size of an object if it is minimized or maximized!
 
  arg←##.Single arg ⍝ Make sure a nested argument is disclosed
+ '∆WI DOMAIN ERROR: where'##.Error~##.IsNum arg
+ '∆WI RANK ERROR: where'##.Error 1<≢⍴arg
 
  :Select ≢arg
 
@@ -28,30 +30,6 @@
          (tunits punits)←2↑_supp.MyUnits object
          Borders←_supp.GetBorders object ⍝ Time to figure out what the border definitions are for this class (capitalized because it represents a global)
          (rewhere resize)←where size ⍝ Remember these
-⍝         :If 0 ⍝ Don't use this code - ignore it until we capture any comments in new "Form" code
-⍝             ⍝ [Strange notes:
-⍝             ⍝  Border=2 (w/caption) shifts the visible image up and left by a few pixels and leaves a little
-⍝             ⍝  bottom/right margin inside the borders, but these are not reflected in 'where' or 'extent' at all!
-⍝             ⍝  This shifting does not happen when the caption is off.
-⍝             ⍝  Border=0 (w/o caption) shows a visible border (3pix?) anyway, but not shown in 'where'/'extent'.
-⍝             ⍝  Are these effects caused by default 3D-controls in Windows?
-⍝             ⍝ ]
-⍝             ⍝ MDIForms don't change measurement behavior if they don't have a caption.
-⍝                     :If (×≢caption)∨object._class≡'MDIForm'
-⍝                         a_outside←26 3 3 3+5×2=4|border
-⍝                     :Else
-⍝                         a_outside←0 0 0 0+(2|border)+7×2=4|border
-⍝                     :EndIf
-⍝                 :CaseList 'DateTime' 'Edit' 'List' 'Listview' 'RichEdit' 'Tree'
-⍝                     a_inside←4⍴2 ⍝ Some have large internal borders
-⍝                 :Case 'Progress'
-⍝                     a_inside←4⍴1 ⍝ Some have small internal borders
-⍝                 :Case 'Selector'
-⍝                     a_inside←4⍴4 ⍝ Some have extra-large internal borders
-⍝                 :Case 'Status'
-⍝                     a_outside←a_inside←4⍴0 ⍝ Some have fixed positions & sizes
-⍝                 :EndSelect
-⍝         :EndIf
      :EndSection
 
      :Section ⍝ Recompute APL+Win 'where'
@@ -103,6 +81,10 @@
              ⍝? What happens if there's a Picture within a Picture?
          :EndIf
          object ##.∆WSet('Posn'dyposn)('Size'dysize)
+         :If ⎕NULL≠mdi←object ⎕VGET⊂'_mdi'⎕NULL ⍝ If there's an MDI Client area here, resize it too
+         :AndIf 0=≢mdi ⎕VGET⊂'_clientwhere'⍬ ⍝ If it's using automatic sizing
+             mdi ##.∆WSet⊂'Size'dysize
+         :EndIf
      :EndSection
 
      :If (2↑where,'⊢⊣')≢2↑rewhere,'⊣⊢'

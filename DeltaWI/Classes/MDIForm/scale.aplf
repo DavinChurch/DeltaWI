@@ -1,0 +1,9 @@
+ result←object scale arg;cw;oldsize;newsize
+ oldsize←¯2↑result←object ##.scale ⍬ ⋄ :If 0=≢arg ⋄ ⋄ :Return ⋄ :EndIf ⍝ Get "before" size
+ result←object ##.scale arg ⍝ Then go ahead and change 'scale' normally
+
+ ⍝ Change 'clientwhere' as needed to match
+ :If ×≢cw←object ⎕VGET⊂'_clientwhere'⍬ ⍝ Only if they have a non-default clientwhere
+     newsize←¯2↑object ##.scale ⍬ ⍝ Get "after" size
+     object._clientwhere←cw×4⍴oldsize÷newsize ⍝ Rescale to the new units and we should be done
+ :EndIf

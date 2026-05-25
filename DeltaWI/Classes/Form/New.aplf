@@ -1,19 +1,31 @@
- result←object New arg;parent;name;actions;where;newobj;props;border;nocaption;∆where;∆caption;∆border
+ result←object New arg;parent;name;actions;where;newobj;props;border;nocaption;∆where;∆caption;∆border;at;ws;mdi;psize
 ⍝ Create a new Form object
 
  (parent name)←object ⍝ Separate non-standard two-part argument
  actions←⊃¨arg ⍝ The names of the actions that we'll be using to create this object with
  ⍝? Just reminders for us to use elsewhere - not needed here
  ⍝only←'VScroll' 'HScroll' ⍝ These properties may only be set during ∆WC; but only used for Pictures[SubForms] and things like that
- ⍝(border style)←0~⍨¨##.##.BitVals¨+/¨∊¨(0,⍨1↓¨arg)[actions⍳'border' 'style'] ⍝ Get the bit-flag values they've provided on this line
 
  ⍝ Optionally prepend object defaults (in reverse order) to be handled
  (∆where ∆caption ∆border)←((1↓¨arg),⊂⍬)[actions⍳'where' 'caption' 'border'] ⍝ Which of our defaults are they giving us anyway (so we can skip the defaults)
 
- ⍝? Is where supposed to be centered on the screen? If so, can we use New.Center in some way?
+ mdi←parent ⎕VGET⊂'_Owner'⎕NULL
  :If 4≠≢∊∆where
-     where←,parent._size÷⍤1⊢2 2⍴4 4 2 2 ⍝ Default APL+Win Form size and position ⍝? Does this give us the right data for scale=0?
-     arg,⍨←⊂'where'where ⍝ [2] Start us with a default 'where' size and position (APL+Win measure) -- will usually be overridden later
+     :If mdi≠⎕NULL
+     :AndIf mdi._class≡'MDIForm'
+         ⍝ We're creating this Form inside of an MDIForm.
+         ⍝ In this case "parent" is the client window (Dyalog parent) and "mdi" is the MDIForm container (APL+Win parent)
+         ⍝ When creating a Form inside of an MDIForm the placement of the new Form is not centered, it cascades every 26:26 pixels
+⍝? Still need to figure out how to determine child Form sizes - formulas are not apparent
+         at←mdi ⎕VGET⊂'_next_position'(0 0) ⋄ psize←mdi._Class._supp.ClientSize mdi
+         where←at,ws←psize÷2 2 ⍝? Just guess at the new size for now
+         :If ∨/psize≤ws+at←at+26 26÷⊃##._supp.MyUnits mdi ⋄ at←0 0 ⋄ :EndIf ⍝ Where should the next one go? ⍝? Check formula for overflow detection
+         mdi._next_position←at ⍝ Keep track of where our next default starting location will be (wrap-around on overflow)
+         arg,⍨←⊂'where'where ⍝ [2] Start us with a default 'where' size and position (APL+Win measure) -- will usually be overridden later
+     :Else
+         where←,parent._size÷⍤1⊢2 2⍴4 4 2 2 ⍝ Default APL+Win Form size and position ⍝? Does this give us the right data for scale=0?
+         arg,⍨←⊂'where'where ⍝ [2] Start us with a default 'where' size and position (APL+Win measure) -- will usually be overridden later
+     :EndIf
  :EndIf
  :If ~'caption'⊂⍛∊actions ⍝ If they're not setting a caption at all immediately, we'll put in a default
      arg,⍨←⊂'caption'name ⍝ [1] Use the object name as a caption, though this will almost certainly be changed later by the application
@@ -23,9 +35,12 @@
  :Else
      border←+/##._supp.SetBitVals border
  :EndIf
- ⍝? This sequence may cause a little flickering, but see if it's a problem before we look into changing it
 
- props←'Form'('Visible' 0)
+ :If mdi=⎕NULL ⋄ :AndIf parent._class≡'System' ⍝ If this is a top-level object, then create it as a Form
+     props←'Form'('Visible' 0)
+ :Else ⍝ Otherwise it's in an MDIForm and this is going to be a SubForm
+     props←'SubForm'('Visible' 0)
+ :EndIf
  nocaption←∆caption≡'' ⍝ (This won't match a ⍬ default, thus it's been provided this way)
  :If nocaption∧16>border ⍝ No border; no title bar
      props,←('Sizeable' 0)('Moveable' 0)('SysMenu' 0)('MinButton' 0)('MaxButton' 0)('Border' 0)

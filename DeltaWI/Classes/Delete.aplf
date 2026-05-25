@@ -1,9 +1,9 @@
- result←object Delete arg;hidden;kids;mybuddy
+ result←object Delete arg;hidden;kids;mybuddy;support
 ⍝ Delete a GUI object (we're already sure it's here)
 
  '∆WI ACTION ERROR: Method "Delete" does not accept an argument'##.Error×≢arg
  :If ×≢kids←object children ⍬
-     result←(object ⎕VGET ##.LeafName¨kids)('Delete'##.Invoke)¨⊂⍬ ⍝ Recursively delete all my children
+     result←(object ##.Locate¨##.LeafName¨kids)('Delete'##.Invoke)¨⊂⍬ ⍝ Recursively delete all my immediate children
  :EndIf
 
  :Section ⍝ Make sure it's closed first
@@ -47,15 +47,15 @@
          :Case '_pic'
 ⍝? Add any special handling for this
          :EndSelect
-         :If ×≢hidden←'_'(object ⎕VGET hidden).⎕NL ¯9 ⍝ This may have (mostly for Pictures) other hidden Dyalog (drawing) objects contained within it
-         :AndIf ×≢hidden/⍨←∧/(1↓¨hidden)∊¨⊂⎕D ⍝ Look for _999-style native objects
-             ##.∆EX⍕¨object ⎕VGET hidden
+         :If ×≢support←'_'(object ⎕VGET hidden).⎕NL ¯9 ⍝ This may have (mostly for Pictures) other hidden Dyalog (drawing) objects contained within it
+         :AndIf ×≢support←(∧/¨(1↓¨support)∊¨⊂⎕D)/support ⍝ Look for _999-style native objects
+             ##.∆EX⍕¨object ⎕VGET support
          :EndIf
          ##.∆EX⍕object ⎕VGET hidden
      :EndFor
-     :If ×≢hidden←'_'object.⎕NL ¯9 ⍝ Other hidden Dyalog objects
-     :AndIf ×≢hidden←(∧/¨(1↓¨hidden)∊¨⊂⎕D)/hidden ⍝ Look for _999-style native objects
-         ##.∆EX⍕¨object ⎕VGET hidden
+     :If ×≢support←'_'object.⎕NL ¯9 ⍝ Other hidden Dyalog objects
+     :AndIf ×≢support←(∧/¨(1↓¨support)∊¨⊂⎕D)/support ⍝ Look for _999-style native objects
+         ##.∆EX⍕¨object ⎕VGET support
      :EndIf
  :EndSection
 

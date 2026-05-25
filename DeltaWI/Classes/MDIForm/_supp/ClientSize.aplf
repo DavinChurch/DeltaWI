@@ -1,0 +1,6 @@
+ size←ClientSize object
+⍝ Return the size of the client window
+ :If 0=≢size←object ⎕VGET⊂'_clientwhere'⍬
+     size←object ##.##.size ⍬
+ :EndIf
+ size←¯2↑size

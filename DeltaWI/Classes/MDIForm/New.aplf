@@ -1,0 +1,34 @@
+ result←object New arg;parent;name;actions;where;newobj;props;border;nocaption;∆where;∆caption;∆border
+ (parent name)←object ⍝ Separate non-standard two-part argument
+ actions←⊃¨arg ⍝ The names of the actions that we'll be using to create this object with
+
+ ⍝ Optionally prepend object defaults (in reverse order) to be handled
+ (∆where ∆caption ∆border)←((1↓¨arg),⊂⍬)[actions⍳'where' 'caption' 'border'] ⍝ Which of our defaults are they giving us anyway (so we can skip the defaults)
+
+ ⍝? Is where supposed to be centered on the screen? If so, can we use New.Center in some way?
+ :If 4≠≢∊∆where
+     where←,parent._size÷⍤1⊢2 2⍴4 4 2 2 ⍝ Default APL+Win Form size and position ⍝? Does this give us the right data for scale=0? even inverted?
+     arg,⍨←⊂'where'where ⍝ [2] Start us with a default 'where' size and position (APL+Win measure) -- will usually be overridden later
+ :EndIf
+ :If ~'caption'⊂⍛∊actions ⍝ If they're not setting a caption at all immediately, we'll put in a default
+     arg,⍨←⊂'caption'name ⍝ [1] Use the object name as a caption, though this will almost certainly be changed later by the application
+ :EndIf
+ :If 0=≢border←∆border
+     border←_border
+ :Else
+     border←+/##._supp.SetBitVals border
+ :EndIf
+
+ props←'Form'('Visible' 0)
+ nocaption←∆caption≡'' ⍝ (This won't match a ⍬ default, thus it's been provided to us this way)
+ :If nocaption∧16>border ⍝ No border; no title bar
+     props,←('Sizeable' 0)('Moveable' 0)('SysMenu' 0)('MinButton' 0)('MaxButton' 0)('Border' 0)
+ :ElseIf nocaption∧1∊border←##._supp.SetBitVals border ⍝ Thin border; no title bar
+     props,←('Sizeable' 0)('Moveable' 0)('SysMenu' 0)('MinButton' 0)('MaxButton' 0)('Border' 1)
+ :Else ⍝ Normal border and title bar
+     props,←(16 32 64∊border),¨⍨⊂¨'SysMenu' 'MinButton' 'MaxButton'
+     props,←('Sizeable' 1)('Moveable' 1)('Border' 1)
+ :EndIf
+
+ newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
+ result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure (including the hidden _mdi child)

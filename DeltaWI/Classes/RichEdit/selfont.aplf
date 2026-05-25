@@ -33,7 +33,7 @@
      :If ∨/t←0=≢¨arg ⋄ (t/arg)←t/def ⋄ :EndIf ⍝ Allow ⍬ with no previous value to fill in with defaults
      :If 'MS Shell Dlg'≡⊃arg ⋄ arg[1]←⊂'System' ⋄ :EndIf ⍝ This a generic selfont name for System - let's name it consistently
      '∆WI DOMAIN ERROR: selfont'##.##.Error~##.##.IsChar 1⊃arg
-     '∆WI DOMAIN ERROR: selfont'##.##.Error~1 3 5∊⍨10|⎕DR 2⊃arg
+     '∆WI DOMAIN ERROR: selfont'##.##.Error~##.##.IsNum 2⊃arg
      '∆WI DOMAIN ERROR: selfont'##.##.Error~##.##.IsInt 3⊃arg
      '∆WI DOMAIN ERROR: selfont'##.##.Error(arg[3]<0)∨arg[3]>4095
      '∆WI DOMAIN ERROR: selfont'##.##.Error(~##.##.IsInt 4⊃arg)∧~arg[4]∊⍥⎕C'ansi' 'oem' 'symbol' 'default'

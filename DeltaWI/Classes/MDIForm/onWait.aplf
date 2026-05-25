@@ -1,0 +1,4 @@
+ result←object onWait arg
+ result←object(''##.##.SetEvent'Wait')arg ⍝ This is never activated by a native Dyalog event
+ ⍝? Be sure to fire this explicitly when Waiting.
+ ⍝? Watch out for special Form mode-handling upon Waiting

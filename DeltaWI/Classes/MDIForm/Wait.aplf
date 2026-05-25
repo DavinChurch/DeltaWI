@@ -1,6 +1,6 @@
  result←object Wait arg;message;off;waiting;style
-⍝? Watch out for different ways for the Form's style to interact with this Wait
-⍝?  2∊style     Make Form independent of any other Form that is Waiting ⍝? What does "independent" mean?
+⍝? Watch out for different ways for the MDIForm's style to interact with this Wait
+⍝?  2∊style     Make MDIForm independent of any other Form that is Waiting ⍝? What does "independent" mean?
 ⍝?  8∊style     Do not disable for Wait on a secondary Form - A second Wait adds to the current one instead of starting a new one - how do Closes interact?
 
  'Cannot Wait on an object that is already part of another Wait'##.##.Error 0≠object.⎕NC'_WaitOn' ⍝? Verify how this happens in APL+Win

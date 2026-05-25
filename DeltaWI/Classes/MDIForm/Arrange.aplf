@@ -1,0 +1,31 @@
+ result←object Arrange arg;child;tunits;now;punits;Borders;margins
+ '∆WI DOMAIN ERROR: Arrange'##.##.Error~##.##.IsNum arg
+ 'DOMAIN ERROR'##.##.Error~##.##.IsInt arg
+ '∆WI LENGTH ERROR: Arrange'##.##.Error 1≠≢arg←,arg
+ '∆WI DOMAIN ERROR: Arrange'##.##.Error~arg⊃⍛∊0 1 2 3
+ :Select ⊃arg
+ :Case 0 ⍝ Arrange child form icons for minimized forms
+     2 ##.##.∆NQ object._mdi'MDIArrange'
+ :Case 1 ⍝ Tile non-minimized child forms horizontally
+     2 ##.##.∆NQ object._mdi'MDITile' 1
+ :Case 2 ⍝ Tile non-minimized child forms vertically
+     2 ##.##.∆NQ object._mdi'MDITile' 0
+ :Case 3 ⍝ Cascade non-minimized child forms
+     2 ##.##.∆NQ object._mdi'MDICascade'
+ :EndSelect
+
+ ⍝ After arranging everything, recalculate their where-family properties
+ ⍝? What do we need to do when scale=0?
+ :For child :In object ##.##.Locate¨##.##.LeafName¨object ##.children ⍬
+     'Child not found!'##.##.Halt child=⎕NULL ⍝? This better never happen
+     (tunits punits)←2↑##._supp.MyUnits child
+     now←child ##.##.∆WG'Posn' 'Size' ⍝ Start with what Dyalog says they've been changed to
+     Borders←##._supp.GetBorders object ⍝ Time to figure out what the border definitions are for this class (capitalized because it represents a global)
+     margins←,¯1 1×[1]+⍀2 2⍴+⌿Borders[1;1 3;] ⍝ Differences between 'extent' and 'where' (in pixels)
+     child._size←tunits÷⍨2⊃now ⍝? Does this work with child scale=0?
+     child._extent←punits÷⍨2⊃now ⍝? Does this work with parent scale=0?
+     child._where←(margins+∊now)÷4⍴punits ⍝? Does this work with parent scale=0?
+     child._pix_size←2⊃now
+ :EndFor
+
+ result←##.NoRes

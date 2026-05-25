@@ -1,0 +1,36 @@
+ MDIForm
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f'∆WI Pass(,'f')⊢'Create' 'MDIForm'('size' 30 100)
+ 'f'∆WI Pass(,'f')⊢'self'
+ 'f'∆WI Pass 30 100⊢'size'
+ ⍝ Can't test default 'where' because it will vary by monitor
+
+ 'f'∆WI Pass ⍬⊢'clientwhere'
+ 'f'∆WI Pass MT⊢'Arrange' 3
+ 'f'∆WI Pass''⊢'activeform'
+
+ 'f.a'∆WI Pass'f.a'⊢'Create' 'Form'
+ 'f'∆WI Pass(,⊂'f.a')⊢'children'
+ 'f'∆WI Pass'f.a'⊢'activeform'
+ 'f.b'∆WI Pass'f.b'⊢'Create' 'Form'
+ 'f'∆WI Pass'f.a' 'f.b'⊢'children'
+ 'f'∆WI Pass'f.b'⊢'activeform'
+ 'f'∆WI Pass MT⊢'Arrange' 1
+ 'f.a'∆WI Pass 12.5625 98⊢'size'
+ 'f.b'∆WI Pass 12.5625 98⊢'size'
+ 'f.a'∆WI Pass 15 0 15 100⊢'where'
+ 'f.b'∆WI Pass 0 0 15 100⊢'where'
+ 'f'∆WI Pass MT⊢'activeform' 'f.a'
+ 'f'∆WI Pass'f.a'⊢'activeform'
+
+ 'f'∆WI Pass 0⊢'value'
+ 'f'∆WI Pass MT⊢'value' 'Testing'
+ 'f'∆WI Pass'Testing'⊢'value'
+
+ 'f'∆WI Pass''⊢'onWait'
+ 'f'∆WI Pass MT⊢'onWait' 'something'
+ 'f'∆WI Pass'something'⊢'onWait'
+⍝? Add tests for onWait firing
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

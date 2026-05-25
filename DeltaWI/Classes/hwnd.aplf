@@ -1,6 +1,6 @@
  result←object hwnd arg
 ⍝ Return the internal Windows handle for this control
-⍝ This only works for visible GUI objects (and should be force-suppressed for other classes)
+⍝? This only works for visible GUI objects (and should be force-suppressed for other classes)
 
  '∆WI ACTION ERROR: Property "hwnd" is read-only'##.Error×≢arg
  :If 0=object._opened ⋄ result←0 ⍝ There is no hwnd if closed

@@ -36,7 +36,7 @@
          :If (×≢was)∧∨/t←0=≢¨arg ⋄ (t/arg)←t/was ⋄ :EndIf ⍝ Allow ⍬ to leave as-is
          :If ∨/t←0=≢¨arg ⋄ (t/arg)←t/def ⋄ :EndIf ⍝ Allow ⍬ with no previous value to fill in with defaults
          '∆WI DOMAIN ERROR: font'##.Error~##.IsChar 1⊃arg
-         '∆WI DOMAIN ERROR: font'##.Error~1 3 5∊⍨10|⎕DR 2⊃arg ⍝ This might be a negative number to remove internal leading
+         '∆WI DOMAIN ERROR: font'##.Error~##.IsNum 2⊃arg ⍝ This might be a negative number to remove internal leading
          '∆WI DOMAIN ERROR: font'##.Error~##.IsInt 3⊃arg
          '∆WI DOMAIN ERROR: font'##.Error(arg[3]<0)∨arg[3]>4095
          '∆WI DOMAIN ERROR: font'##.Error(~##.IsInt 4⊃arg)∧~arg[4]∊⍥⎕C'ansi' 'oem' 'symbol' 'default'

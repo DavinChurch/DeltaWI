@@ -1,4 +1,4 @@
- result←object extent arg;size;extent;where;dthick;Borders;margins;t;tunits;punits;dysize;resize;pscale;scale;pxsize
+ result←object extent arg;size;extent;where;dthick;Borders;margins;t;tunits;punits;dysize;resize;pscale;scale;pxsize;mdi
 ⍝ Request or modify the size of a GUI object
 
 ⍝ Note: 'where' is outside dimensions, relative to parent and using parent's scale
@@ -12,6 +12,8 @@
 ⍝       Upon opening, all are resynchronized ⍝? Do we need to do this?
 
  arg←##.Single arg ⍝ Make sure a nested argument is disclosed
+ '∆WI DOMAIN ERROR: extent'##.Error~##.IsNum arg
+ '∆WI RANK ERROR: extent'##.Error 1<≢⍴arg
 
  :Select ≢arg
 
@@ -57,6 +59,10 @@
              ⍝? What happens if there's a Picture within a Picture?
          :EndIf
          object ##.∆WSet⊂'Size'dysize
+         :If ⎕NULL≠mdi←object ⎕VGET⊂'_mdi'⎕NULL ⍝ If there's an MDI Client area here, resize it too
+         :AndIf 0=≢mdi ⎕VGET⊂'_clientwhere'⍬ ⍝ If it's using automatic sizing
+             mdi ##.∆WSet⊂'Size'dysize
+         :EndIf
      :EndSection
 
      :If size≢resize ⍝ Only if the size is changing

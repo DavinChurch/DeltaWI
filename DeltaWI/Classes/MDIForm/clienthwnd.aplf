@@ -1,0 +1,7 @@
+ result←object clienthwnd arg
+⍝ Return the internal Windows handle for the client area of this control
+
+ '∆WI ACTION ERROR: Property "hwnd" is read-only'##.Error×≢arg
+ :If 0=object._opened ⋄ result←0 ⍝ There is no hwnd if closed
+ :Else ⋄ result←object._mdi ##.∆WG'Handle'
+ :EndIf

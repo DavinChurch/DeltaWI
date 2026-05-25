@@ -3,11 +3,11 @@
 
  '∆WI ACTION ERROR: Property "children" is read-only'##.Error×≢arg
  :If 0=≢result←1↓(⊂''),⍕¨##.∆WN object ⋄ :Return ⋄ :EndIf
- :For hidden :In result∩'_mb' '_mdi' '_pic' ⍝ Search under known-invisible children
-     at←result⍳⊂hidden
+ :While ×≢hidden←'_mb' '_mdi' '_pic'∩⍨##.LeafName¨result ⍝ Search under known-invisible children
+     at←(##.LeafName¨result)⍳⊂hidden←⊃hidden
      here←1↓(⊂''),⍕¨##.∆WN object ⎕VGET hidden
      result←((at-1)↑result),here,at↓result
- :EndFor
+ :EndWhile
  result/⍨←~##.IsPrivate¨result ⍝ Eliminate numbered invisible children
  result←##.LeafName¨result ⍝ Don't include any prefixes of these names
  result,⍨¨←⊂{⍵↓⍨2×'#.'≡2↑⍵}object._self,'.' ⍝ Result must return full APL+Win GUI names (including APL+Win parentage), except '#.'

@@ -10,6 +10,7 @@
 ⍝ 64 = Maximize box
 ⍝ 256 = Help ("?") button
 ⍝ 512 = Tool palette (no longer used?)
+⍝? A Form within an MDIForm MUST HAVE border=114!  ⍝? Make sure we enforce this
 
  old←object ⎕VGET⊂'_border' '' ⍝ Existing border
  :If 0=≢arg
@@ -19,6 +20,10 @@
      '∆WI DOMAIN ERROR: border'##.##.Error(1<|≡new)∨~##.##.IsInt new
      new←+/arg←##._supp.SetBitVals arg ⍝ New border property
      '∆WI ATTRIBUTE ERROR: Invalid "border" attribute specified'##.##.Error(new<0)∨(new≥1024)∨∨/4 8∊arg ⍝ Is it out of range?
+     :If (⊃object._Ancestry)._class≡'MDIForm' ⍝ If this is contained in an MDI, then we can't change it at all
+         '∆WI DOMAIN ERROR: border'##.##.Error 0=new ⍝ For some reason, this has a separate error message (and somehow sets border←0 anyway)
+         ##.##.Error'∆WI ATTRIBUTE ERROR: Invalid "border" attribute specified'
+     :EndIf
      object._border←new ⍝ Update APL+Win value
 
      ⍝ Adjust Dyalog settings

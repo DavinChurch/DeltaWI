@@ -1,4 +1,4 @@
- result←object Initialize arg;parent;class;name;this;sub;illegal;final;v0;vars;acts;action;aarg;isdef;margins
+ result←object Initialize arg;parent;class;name;this;sub;illegal;final;v0;vars;acts;action;aarg;isdef;margins;props
 ⍝ Properly set up a newly-created object, starting with it's required system control information
 ⍝ It must be called directly(!) from the creating-class namespace.
 ⍝? (Watch out if it's a special-case class type such as ActiveX or Dyalog)
@@ -9,7 +9,7 @@
 
  (parent object)←object ⍝ Separate object references
  :While 0≠parent.⎕NC'_Owner' ⍝ If this is an intermediate hidden parent object...
-     parent←parent._Owner ⍝ Redirect parentage up to its APL+Win parent
+     parent←parent._Owner ⍝ Redirect parentage up to its APL+Win parent (just in case)
  :EndWhile
  name←##.LeafName⍕object ⍝ The text name of the object that I just created
  class←##.LeafName⍕this←⊃⎕RSI ⍝ Namespace that I'm being called from gives me the name of the class and a reference to it
@@ -45,9 +45,13 @@
 ⍝? Can we look backwards (up the stack) to handle this properly?
 ⍝? Is there anything else we need to do specially here?
      :Case 'MDIForm'
-         sub←⎕VGET(object⍕⍛,'._mdi')##.∆WC'MDIClient'('Coord' 'RealPixel')('AutoConf' 0)
+         props←'MDIClient'('Coord' 'RealPixel')('Posn' 0 0)('Size'(object ##.∆WG'Size'))
+         sub←⎕VGET(object⍕⍛,'._mdi')##.∆WC props
          sub._Owner←object
          sub.⎕WX←0 ⍝ Also tell the invisible child to hide properties as well
+         ⍝ The Dyalog MDIClient defaults to occupying the entirety of the parent Form,
+         ⍝ but adjustments may be made to reserve space for other objects to be added within the Form.
+         ⍝? Is there anything else special that we should be handling here?⌈
      :Case 'Picture'
          object ##.∆WS'Coord' 'User' ⍝ A picture object's parent needs an exception to Coord
          sub←⎕VGET(object⍕⍛,'._pic')##.∆WC'SubForm'('Coord' 'RealPixel')('AutoConf' 0)

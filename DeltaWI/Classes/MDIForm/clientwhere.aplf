@@ -1,0 +1,18 @@
+ result←object clientwhere arg;tunits;mysize
+ tunits←⊃##._supp.MyUnits object
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_clientwhere'⍬ ⍝ We'll manage this directly, once set
+ :Else
+     arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: clientwhere'##.##.Error~##.##.IsNum arg
+     '∆WI RANK ERROR: clientwhere'##.##.Error 1<≢⍴arg
+     '∆WI LENGTH ERROR: clientwhere'##.##.Error~arg≢⍛∊0 4
+     '∆WI DOMAIN ERROR: clientwhere'##.##.Error∨/arg<0
+     object._clientwhere←arg ⍝ Remember this
+     :If 0=≢arg ⍝ We're resetting it to default
+         object._mdi ##.##.∆WS('Posn'(0 0))('Size'(object ##.##.∆WG'Size')) ⍝ Force it to match the internal size on the screen
+     :Else
+         object._mdi ##.##.∆WS('Posn'(tunits×2↑arg))('Size'(tunits×2↓arg))
+     :EndIf
+     result←##.NoRes
+ :EndIf

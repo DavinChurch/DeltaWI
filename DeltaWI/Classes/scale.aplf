@@ -2,6 +2,8 @@
 ⍝ Request or modify the scaling factor of a GUI object
 
  arg←##.Single arg ⍝ Make sure a nested argument is disclosed
+ '∆WI DOMAIN ERROR: scale'##.Error~##.IsNum arg
+ '∆WI RANK ERROR: scale'##.Error 1<≢⍴arg
 
  :Section ⍝ Get all our basic information
      (extent size scale)←object ⎕VGET('_extent'⍬)('_size'⍬)('_scale'⍬) ⍝ My current settings

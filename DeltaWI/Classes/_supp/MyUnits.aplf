@@ -1,7 +1,11 @@
- (tunits punits units)←MyUnits object;units;ppxsize;pscale;scale;pxsize
+ (tunits punits units)←MyUnits object;units;ppxsize;pscale;scale;pxsize;parent
 ⍝ Determine what pixel-size my object's (and my parent's, and all the system's) unit sizes are
 
- ((scale pxsize)(pscale ppxsize))←(object,⊃object._Ancestry,##.##.GUIroot)⎕VGET('_scale' 1)('_pix_size'(0 0))
+ parent←⊃object._Ancestry,##.##.GUIroot
+ :While 0≠parent.⎕NC'_Owner' ⍝ If this is an intermediate hidden parent object...
+     parent←parent._Owner ⍝ Redirect parentage up to its APL+Win parent
+ :EndWhile
+ ((scale pxsize)(pscale ppxsize))←(object,parent)⎕VGET('_scale' 1)('_pix_size'(0 0))
  units←##.##.GUIroot._units ⍝ Get system conversion factors
  tunits←(units⍪⍨pxsize÷1⌈|2↑3↓scale)[1+⊃scale;] ⍝ Compute unit-conversions for this object's scale ⍝? Is this anywhere close to right for scale=0??
  punits←(units⍪⍨ppxsize÷1⌈|2↑3↓pscale)[1+⊃pscale;] ⍝ Compute unit-conversions for the parent object's scale

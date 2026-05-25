@@ -1,0 +1,16 @@
+ result←object activeform arg;new
+ :If 0=≢arg
+     :If ×≢result←object._mdi ##.##.∆WG'MDIActive'
+         result←(⎕VGET result)._self
+     :EndIf
+ :Else
+     :If ×≢arg←##.##.Single arg                         ⍝ Have they given us a new name?
+     :AndIf ⎕NULL≠new←##.##.GUIroot ##.##.Locate arg    ⍝ And the full name exists
+     :AndIf new._class≡'Form'                           ⍝ And it's a Form
+     :AndIf object=⊃new._Ancestry                       ⍝ And the right parentage
+         object._mdi ##.##.∆WS⊂'MDIActiveObject'new     ⍝ Switch to the new Form
+     :Else
+         ⍝ APL+Win just ignores errors here
+     :EndIf
+     result←##.NoRes
+ :EndIf

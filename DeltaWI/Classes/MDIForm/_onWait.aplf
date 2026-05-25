@@ -1,0 +1,2 @@
+ ok←run _onWait message
+ ok←NoRes⊣message 0 ##.##.Run run

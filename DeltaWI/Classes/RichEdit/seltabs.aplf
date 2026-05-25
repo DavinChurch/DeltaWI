@@ -13,7 +13,7 @@
      arg←##.##.Single arg ⍝ Make sure a nested singleton is flattened
      '∆WI LENGTH ERROR: seltabs'##.##.Error 32<≢arg
      '∆WI LENGTH ERROR: seltabs'##.##.Error∨/3<≢¨arg
-     '∆WI DOMAIN ERROR: seltabs'##.##.Error~1 3 5∊⍨10|⎕DR∊arg
+     '∆WI DOMAIN ERROR: seltabs'##.##.Error~##.##.IsNum ∊arg
      '∆WI DOMAIN ERROR: seltabs'##.##.Error~∧/∧/¨(1↓¨arg)∊¨⊂0,⍳15
 ⍝? Report unsupported use of non-left-tabs in 1↓¨?
      arg←(⊃¨arg)÷2⊃pix_twip÷tunits ⍝ Convert scale-units to twips ⍝? Ignore non-left settings
