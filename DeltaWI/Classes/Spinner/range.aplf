@@ -4,8 +4,7 @@
  :If 0=≢arg
      result←minmax
  :Else
-     arg←##.##.Single arg
-     '∆WI DOMAIN ERROR: value'##.##.Error~##.##.IsInt arg
+     '∆WI DOMAIN ERROR: value'##.##.Error~##.##.IsInt arg←##.##.Single arg
      '∆WI LENGTH ERROR: value'##.##.Error 2≠≢arg
      '∆WI DOMAIN ERROR: value'##.##.Error∨/(arg<¯32767)∨arg>32767 ⍝ Out of APL+Win's allowed range
      object._range←minmax←arg ⋄ minmax←minmax[⍋minmax] ⍝ Allow reversed coordinates to swap increment direction

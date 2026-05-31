@@ -21,9 +21,7 @@
  :If 0=≢arg
      result←object ⎕VGET⊂'_style' 0
  :Else
-     '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∧1≠≢arg
-     arg←##.##.Single arg
-     '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∨~##.##.IsInt arg
+     '∆WI DOMAIN ERROR: style'##.##.Error~##.##.IsInt arg←##.##.Single arg
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∨/∊arg<0
      arg←+/bits←##._supp.SetBitVals arg
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∧/1 2∊bits

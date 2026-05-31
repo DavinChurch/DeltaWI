@@ -4,8 +4,7 @@
  :If 0=≢arg
      result←object ##.##.∆WG'State'
  :Else
-     arg←##.##.Single arg
-     '∆WI DOMAIN ERROR: value'##.##.Error~##.##.IsInt arg
+     '∆WI DOMAIN ERROR: value'##.##.Error~##.##.IsInt arg←##.##.Single arg
      '∆WI LENGTH ERROR: value'##.##.Error 1≠≢arg
      '∆WI DOMAIN ERROR: value'##.##.Error~arg⊂⍛∊0 1 2
      '3-state checkboxes cannot be supported at present'##.##.Error 2∊arg

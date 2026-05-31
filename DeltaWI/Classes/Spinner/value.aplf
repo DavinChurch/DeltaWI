@@ -5,8 +5,7 @@
  :If 0=≢arg
      result←object ##.##.∆WG⊂'Thumb'
  :Else
-     arg←##.##.Single arg
-     '∆WI DOMAIN ERROR: value'##.##.Error~##.##.IsInt arg
+     '∆WI DOMAIN ERROR: value'##.##.Error~##.##.IsInt arg←##.##.Single arg
      '∆WI LENGTH ERROR: value'##.##.Error 1≠≢arg
      '∆WI DOMAIN ERROR: value'##.##.Error(arg<¯32767)∨arg>32767 ⍝ Out of APL+Win's allowed range
      arg←minmax[1]⌈minmax[2]⌊⊃arg ⍝ Constrain change to remain within application's range

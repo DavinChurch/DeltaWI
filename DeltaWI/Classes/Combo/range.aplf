@@ -12,8 +12,7 @@
  :Else
      arg←##.##.Single arg
      style←##.##.BitVals object ⎕VGET⊂'_style' 0
-     '∆WI DOMAIN ERROR: range'##.##.Error(1<|≡arg)∨~1 2∊⍨≢arg
-     '∆WI DOMAIN ERROR: range'##.##.Error~##.##.IsInt arg
+     '∆WI DOMAIN ERROR: range'##.##.Error(~##.##.IsInt arg)∨~1 2∊⍨≢arg
      :If 2=≢arg ⍝ If they give us 2⍴
          '∆WI DOMAIN ERROR: range'##.##.Error 0≥rows←2⊃arg
          :If 1∊style ⍝ A simple box only changes the size (APL+Win & Dyalog) and we just have to make room for the new row count

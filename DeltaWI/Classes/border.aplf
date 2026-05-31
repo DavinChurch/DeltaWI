@@ -5,8 +5,7 @@
  :If 0=≢arg
      result←old
  :Else
-     new←##.Single arg
-     '∆WI DOMAIN ERROR: border'##.Error(1<|≡new)∨~##.IsInt new
+     '∆WI DOMAIN ERROR: border'##.Error~##.IsInt new←##.Single arg
      new←+/∊arg ⍝ New border property
      '∆WI ATTRIBUTE ERROR: Invalid "border" attribute specified'##.Error~new∊0 1
      object._border←new ⍝ Update APL+Win value

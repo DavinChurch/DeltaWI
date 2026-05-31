@@ -16,8 +16,7 @@
  :If 0=≢arg
      result←old
  :Else
-     new←##.##.Single arg
-     '∆WI DOMAIN ERROR: border'##.##.Error(1<|≡new)∨~##.##.IsInt new
+     '∆WI DOMAIN ERROR: border'##.##.Error~##.##.IsInt new←##.##.Single arg
      new←+/arg←##._supp.SetBitVals arg ⍝ New border property
      '∆WI ATTRIBUTE ERROR: Invalid "border" attribute specified'##.##.Error(new<0)∨(new≥1024)∨∨/4 8∊arg ⍝ Is it out of range?
      :If (⊃object._Ancestry)._class≡'MDIForm' ⍝ If this is contained in an MDI, then we can't change it at all

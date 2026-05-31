@@ -7,9 +7,8 @@
  :If 0=≢arg
      result←old
  :Else
-     new←1/##.##.Single arg
-     '∆WI LENGTH ERROR: style'##.##.Error(1≠≢new)∨1>≢⍴new
-     '∆WI DOMAIN ERROR: style'##.##.Error 1<|≡new
+     '∆WI DOMAIN ERROR: style'##.##.Error~##.##.IsInt new←##.##.Single arg
+     '∆WI LENGTH ERROR: style'##.##.Error(1≠≢new)∨1<≢⍴new
      '∆WI DOMAIN ERROR: style'##.##.Error~(new←⊃new)∊0,⍳7
      object._style←new ⍝ Update the APL+Win record
      result←##.NoRes

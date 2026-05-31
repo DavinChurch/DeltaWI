@@ -1,6 +1,4 @@
  result←object style arg;bits;props
-⍝ List:style
-
 ⍝   1=Multiple selections
 ⍝   2=Show vertical fraction of a line
 ⍝   16=Vertical scroll bar
@@ -12,9 +10,7 @@
  :If 0=≢arg
      result←object ⎕VGET⊂'_style' 0
  :Else
-     '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∧1≠≢arg
-     arg←##.##.Single arg
-     '∆WI DOMAIN ERROR: style'##.##.Error(1<|≡arg)∨~##.##.IsInt arg
+     '∆WI DOMAIN ERROR: style'##.##.Error~##.##.IsInt arg←##.##.Single arg
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∨/∊arg<0
      arg←+/bits←##._supp.SetBitVals arg
      '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error(arg≥512)∨(arg<0)∨×≢bits~0 1 2 16 32 64 128 256

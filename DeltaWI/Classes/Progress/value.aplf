@@ -3,8 +3,7 @@
  :If 0=≢arg
      result←was
  :Else
-     arg←##.##.Single arg
-     '∆WI DOMAIN ERROR: value'##.##.Error~##.##.IsInt arg
+      '∆WI DOMAIN ERROR: value'##.##.Error~##.##.IsInt arg←##.##.Single arg
      '∆WI RANK ERROR: value'##.##.Error 1<≢⍴arg
      '∆WI LENGTH ERROR: value'##.##.Error~arg≢⍛∊⍳4
      arg←arg,arg≢⍛↓was

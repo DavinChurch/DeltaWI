@@ -1,6 +1,4 @@
  result←object New arg;parent;name;props;newobj;actions;∆border
-⍝ Create a new Label object
-
  (parent name)←object ⍝ Separate non-standard two-part argument
  actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
 
