@@ -1,0 +1,3 @@
+ ok←run _onClick message
+ ⍝ ⎕WARG is supposed to reflect the value of the check-mark, but APL+Win appears to always be passing a 0 instead
+ ok←1⊣0 0 ##.##.Run run

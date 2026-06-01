@@ -1,0 +1,33 @@
+ result←object separator arg;was;oname;vars;p
+ was←object ⎕VGET⊂'_separator' 0
+ :If 0=≢arg
+     result←was
+ :Else
+     '∆WI DOMAIN ERROR: value'##.##.Error~##.##.IsInt arg←##.##.Single arg
+     '∆WI LENGTH ERROR: value'##.##.Error 1≠≢arg
+     '∆WI DOMAIN ERROR: value'##.##.Error~arg⊂⍛∊0 1
+     :If was=arg←⊃arg
+         ⍝ Nothing changing
+     :ElseIf arg ⍝ We're changing this Menu[Item] to be a Separator mark
+         '∆WI support problem: Unable to convert a Menu with children into a Separator'##.##.Error×≢##.##.∆WN object
+         ⍝? What happens if we already have an onClick handler assigned here?
+         ⍝ In order to recreate, we need to first capture all the important information so we can reproduce it
+         oname←⍕object ⍝ We'll keep the name around for reuse after erasing the object
+         vars←object ⎕VGET 2 9 ⍝ Capture all our local variables (and namespaces?) for reproduction ⍝? If it has GUI child objects, do something extra with EWC!
+         p←'Posn' 'Event' ⋄ p←↓p,⍤0⊢object ##.##.∆WG p ⍝ Capture all the important properties
+         ##.##.∆EX⍕object ⋄ object←⎕VGET oname ##.##.∆WC'Separator'⊂⍛,p ⍝ Kill the old one and recreate it as a Separator
+         object ⎕VSET vars ⍝ Make sure the new one knows all the things that the original one did
+         ⍝? What happens in APL+Win if a leaf Menu has onClick or separator or style bits/value and it gets a child afterwards?
+         ⍝? Caption, separator remains but gets ignored. onClick, style, value continues operating normally
+     :Else ⍝ We're changing this Separator to be a normal Menu
+         oname←⍕object ⍝ We'll keep the name around for reuse after erasing the object
+         vars←object ⎕VGET 2 9 ⍝ Capture all our local variables (and namespaces?) for reproduction
+         p←'Posn' 'Event' ⋄ p←↓p,⍤0⊢object ##.##.∆WG p ⍝ Capture all the important properties
+         ##.##.∆EX⍕object ⋄ object←⎕VGET oname ##.##.∆WC'Menu'⊂⍛,p ⍝ Kill the old one and recreate it so it will accept children
+         object ⎕VSET vars ⍝ Make sure the new one knows all the things that the original one did
+         {}object caption,⊂(object ⎕VGET⊂'_caption'(##.##.LeafName oname)) ⍝ Re-instantiate the original caption
+         ⍝? What about a shortcut key (→Accelerator)?
+         ⍝ If we delete any children later, this separator flag is retained but it doesn't actually turn back into a Separator object.
+     :EndIf
+     result←##.NoRes
+ :EndIf

@@ -1,0 +1,2 @@
+ result←object onClick arg
+ result←object('Select'##.##.SetEvent'Click' '>MouseDown' '>MouseDouble' '>MouseUp')arg

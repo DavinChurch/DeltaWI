@@ -1,0 +1,18 @@
+ Menu;clicked
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
+ 'f.a'∆WI Pass'f.a'⊢'New' 'Menu'('caption' '&File') ⍝? Note: The & accelerator key isn't displayed or activated
+ 'f.b'∆WI Pass'f.b'⊢'New' 'Menu'('caption' '&Edit')
+ 'f.c'∆WI Pass'f.c'⊢'New' 'Menu'('caption' '&Window')('style' 2)
+ 'f.a.a'∆WI Pass'f.a.a'⊢'New' 'Menu'('caption' 'Open')('shortcut' 'O' 2)
+ 'f.a.a'∆WI Pass MT⊢'style' 0
+ 'f.a.b'∆WI Pass'f.a.b'⊢'New' 'Menu'('caption' 'Close')
+ 'f.a.x'∆WI Pass'f.a.x'⊢'New' 'Menu'('separator' 1)
+ 'f.a.c'∆WI Pass'f.a.c'⊢'New' 'Menu'('caption' 'Exit')('shortcut' 'X')
+
+ clicked←0
+ 'f.b'∆WI Pass MT⊢'onClick' 'clicked←1'
+ 'f.b'∆WI Pass{1∊clicked}⊢'Click'
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

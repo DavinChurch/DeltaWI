@@ -1,0 +1,58 @@
+ result←object New arg;parent;name;props;newobj;actions;∆separator;from;vars;p;pname;∆style
+⍝ The APL+Win Menu class may generate one or more of four different Dyalog classes (MenuBar, Menu, MenuItem, Separator), depending on usage
+
+ (parent name)←object ⍝ Separate non-standard two-part argument
+ actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
+
+ (∆separator ∆style)←((1↓¨arg),⊂⍬)[actions⍳'separator' 'style']
+ ∆separator←0⌈×⊃∊∆separator ⋄ ∆style←##._supp.SetBitVals ∆style
+ arg,⍨←(~'caption'⊂⍛∊actions)/⊂'caption'name ⍝ If they're not setting a caption immediately at all, we'll put in a default ⍝? Can they use "&"?
+
+ from←parent ⋄ :While 0≠from.⎕NC'_Owner' ⋄ from←from._Owner ⋄ :EndWhile ⍝ Find logical parent
+ props←'MenuItem' ⍝ Default to a MenuItem, but it might need to be converted to a Menu later if it gets its own children
+ :Select from._class
+ :CaseList 'Form' 'MDIForm'
+     :If ~'_mb'⊂⍛∊##.##.LeafName¨##.##.∆WN⍕parent ⍝ If we're not already attaching to a MenuBar object...
+         parent←⎕VGET(from⍕⍛,'._mb')##.##.∆WC'MenuBar' ⍝ ...then we need to create one to hold all our menus
+         parent._Owner←from ⋄ parent.⎕WX←0 ⍝? Any other invisible initializations?
+     :Else
+         parent←⎕VGET from⍕⍛,'._mb' ⍝ Point to the existing MenuBar for my internal parent
+     :EndIf
+ :Case 'Menu'
+⍝? May change the internal Dyalog class of the parent; watch out if being deleted later?
+     :Select parent ##.##.∆WG'Type' ⍝ We may need to adjust our parent Dyalog type before continuing
+     :Case 'MenuBar' ⍝ This cannot accept a Separator child, but otherwise it's fine
+         '∆WI DOMAIN ERROR: separator'##.##.Error ∆separator
+     :Case 'MenuItem' ⍝ This needs to be converted to a Menu object
+         ⍝ Fortunately, I don't think this can have any children yet (except a Timer or BitMap) ⍝? Be careful, just in case
+         ⍝? But watch out later if the only child is deleted - should we consider changing it back? It probably will never be used afterwards anyway.
+         ⍝? What happens if we already have an onClick handler assigned here?
+         ⍝ In order to recreate, we need to first capture all the important information so we can reproduce it
+         pname←⍕parent ⍝ We'll keep the name around for reuse after erasing the object
+         vars←parent ⎕VGET 2 9 ⍝ Capture all our local variables (and namespaces?) for reproduction ⍝? If it has GUI child objects, do something extra with EWC!
+         p←'Caption' 'Posn' 'Active' 'Accelerator' 'Event' ⋄ p←↓p,⍤0⊢parent ##.##.∆WG p ⍝ Capture all the important properties
+         ##.##.∆EX⍕parent ⋄ parent←⎕VGET pname ##.##.∆WC'Menu'⊂⍛,p ⍝ Kill the old one and recreate it so it will accept children
+         parent ⎕VSET vars ⍝ Make sure the new one knows all the things that the original one did
+⍝? What happens in APL+Win if a leaf Menu has onClick or separator or style bits/value and it gets a child afterwards?
+⍝? Caption, separator remains but gets ignored. onClick, style, value continues operating normally
+     :Case 'Separator' ⍝ We must first convert this into a Menu (non-Separator) object
+         pname←⍕parent ⍝ We'll keep the name around for reuse after erasing the object
+         vars←parent ⎕VGET 2 9 ⍝ Capture all our local variables (and namespaces?) for reproduction
+         p←'Posn' 'Event' ⋄ p←↓p,⍤0⊢parent ##.##.∆WG p ⍝ Capture all the important properties
+         ##.##.∆EX⍕parent ⋄ parent←⎕VGET pname ##.##.∆WC'Menu'⊂⍛,p ⍝ Kill the old one and recreate it so it will accept children
+         parent ⎕VSET vars ⍝ Make sure the new one knows all the things that the original one did
+         {}parent caption,⊂(parent ⎕VGET⊂'_caption'(##.##.LeafName pname)) ⍝ Re-instantiate the original caption
+         ⍝? What about a shortcut key (→Accelerator)?
+         ⍝ If we delete this child later, this separator flag is retained but it doesn't actually turn back into a Separator.
+     :EndSelect
+     :If ∆separator ⋄ props←'Separator' ⋄ :EndIf ⍝ They've told us this will be a separator up front, so we'll override it's starting Type
+ :Else
+     ⍝ Almost any control (or System) can contain a hidden menu activated by a shortcut key or PopUp
+     props←'Menu' ⍝ APL+Win pop-up menus must include children to be usable, so we might as well assume that here
+ :EndSelect
+ props←⊂props
+ props,←(~∆separator)/⊂'Style'('Check' 'Radio'⊃⍨1+4∊∆style)           ⍝? Create-only
+
+ newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
+ newobj.(_size _extent _where)←⍬ ⍬ ⍬ ⍝ This is an immovable object ⍝? Will these ⍬s hurt any assumptions that are made elsewhere?
+ result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure

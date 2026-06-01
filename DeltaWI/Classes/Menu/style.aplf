@@ -1,0 +1,34 @@
+ result←object style arg;bits;props;mb
+⍝   1=The menu item allows a visible check mark to be shown and toggled
+⍝   2=Automatically add a sibling Form list to this Form's menu
+⍝   4=Use radio buttons (or images) instead of check marks, and only one in the group may be active at once
+⍝   8=Default selection (shows in bold font)        ⍝? Not available in Dyalog
+
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_style' 0
+ :Else
+     '∆WI DOMAIN ERROR: style'##.##.Error~##.##.IsInt arg←##.##.Single arg
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∨/∊arg<0
+     arg←+/bits←##._supp.SetBitVals arg
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error×≢bits~0 1 2 4 8
+     object._style←arg
+     props←⍬
+
+     :If 'Form'≡(⊃object._Ancestry)._class ⍝ Make sure it's a top-level Menu of a Form
+     :AndIf '_mb'≡##.##.LeafName mb←##.##.ParentName⍕object ⍝ Get the MenuBar's name and make sure it's spelled correctly
+         :If 2∊bits ⋄ mb ##.##.∆WS⊂'MDIMenu'object ⍝ Turn the MenuBar feature on
+         :Else ⋄ mb ##.##.∆WS⊂'MDIMenu' '' ⍝ Turn the MenuBar feature off
+         :EndIf
+     :EndIf
+
+     :Select object ##.##.∆WG'Type'
+     :Case 'Menu'
+     :Case 'MenuItem'
+         props,←⊂'Checked'(1∊bits)
+         props,←(0∧~object ⎕VGET⊂'_separator' 0)/⊂'Style'('Check' 'Radio'⊃⍨1+4∊bits)           ⍝? Create-only
+         ⍝? style=8 cannot be supported. Dyalog won't do this for me and I can't intercept a double-click to simulate it myself
+     :EndSelect
+
+     :If ×≢props ⋄ object ##.##.∆WS props ⋄ :EndIf
+     result←##.NoRes
+ :EndIf

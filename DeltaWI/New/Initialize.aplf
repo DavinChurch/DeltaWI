@@ -8,7 +8,7 @@
 ⍝       [2] Reference to the just-created object (not its name at this point)
 
  (parent object)←object ⍝ Separate object references
- :While 0≠parent.⎕NC'_Owner' ⍝ If this is an intermediate hidden parent object...
+ :While 0≠parent.⎕NC'_Owner' ⍝ If this is an intermediate hidden parent object... ⍝? When does this occur?
      parent←parent._Owner ⍝ Redirect parentage up to its APL+Win parent (just in case)
  :EndWhile
  name←##.LeafName⍕object ⍝ The text name of the object that I just created
@@ -41,9 +41,9 @@
      :Case 'Menu'
          ⍝ An APL+Win Menu object may be any of four Dyalog object-types depending on context.
          ⍝ That much should have been handled by Menu.New by now.
-⍝? Hmmm... will Menu.New create the MenuBar part of a top-level menu (probably not) or the named Menu item upon it? Start hidden and relocate??
-⍝? Can we look backwards (up the stack) to handle this properly?
+         ⍝ Menu.New should have already created an interim MenuBar by now as well, because it has to be the parent of this object
 ⍝? Is there anything else we need to do specially here?
+⍝? A Dyalog Menu object should set Coord, but nothing else
      :Case 'MDIForm'
          props←'MDIClient'('Coord' 'RealPixel')('Posn' 0 0)('Size'(object ##.∆WG'Size'))
          sub←⎕VGET(object⍕⍛,'._mdi')##.∆WC props

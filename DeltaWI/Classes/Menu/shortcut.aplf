@@ -1,0 +1,19 @@
+ result←object shortcut arg
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_shortcut' 0
+ :Else
+     arg←##.##.Single arg
+     '∆WI RANK ERROR: shortcut'##.##.Error 1<≢⍴arg
+     '∆WI LENGTH ERROR: shortcut'##.##.Error~1 2∊⍨≢arg
+     arg←2↑arg,2 ⍝ Assign default = Ctrl-key
+     '∆WI DOMAIN ERROR: shortcut'##.##.Error~##.##.IsInt 2⊃arg
+     '∆WI DOMAIN ERROR: shortcut'##.##.Error~(##.##.IsInt 1⊃arg)∨##.##.IsChar 1⊃arg
+     '∆WI RANK ERROR: shortcut'##.##.Error 0≠≢⍴1⊃arg
+     '∆WI DOMAIN ERROR: shortcut'##.##.Error~(⎕UCS⍣(##.##.IsChar 1⊃arg)⊢1⊃arg)∊0,⍳255
+     '∆WI DOMAIN ERROR: shortcut'##.##.Error~(2⊃arg)∊0,⍳7
+
+     object._shortcut←arg
+     :If ##.##.IsChar 1⊃arg ⋄ (1⊃arg)←⎕UCS 1⊃arg ⋄ :EndIf
+     object ##.##.∆WS⊂'Accelerator'arg
+     result←##.NoRes
+ :EndIf

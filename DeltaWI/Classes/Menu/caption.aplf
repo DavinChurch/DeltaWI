@@ -1,0 +1,17 @@
+ result←object caption arg;old;new
+ old←object ⎕VGET⊂'_caption' '' ⍝ Existing caption
+ :If 0=≢arg
+     result←old
+ :Else
+     '∆WI DOMAIN ERROR: caption'##.##.Error 1≠≢arg
+     new←1/##.##.Single arg
+     '∆WI RANK ERROR: caption'##.##.Error 1≠≢⍴new
+     '∆WI DOMAIN ERROR: caption'##.##.Error 1≠≡new
+     '∆WI DOMAIN ERROR: caption'##.##.Error~##.##.IsChar new
+     object._caption←new ⍝ Update the APL+Win record
+     :If 'Separator'≢object ##.##.∆WG'Type'
+         new←object ##.##.QuadAV new ⍝ Convert APL+Win fonts to ⎕AV order
+         object ##.##.∆WS'Caption'((⎕UCS 10)@{⍵=⎕UCS 13}⊢new) ⍝ Change the Dyalog object so the screen actually changes
+     :EndIf
+     result←##.NoRes
+ :EndIf
