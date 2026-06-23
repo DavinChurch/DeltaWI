@@ -1,0 +1,3 @@
+ result←object pixelmargin arg
+ '∆WI ACTION ERROR: Property "pixelmargin" is read-only'##.##.Error×≢arg
+ result←object._pixelmargin ⍝ This should be predefined

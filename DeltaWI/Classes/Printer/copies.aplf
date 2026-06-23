@@ -1,0 +1,13 @@
+ result←object copies arg;devmode
+⍝ Note: Changing the number of copies starts a new page
+ :If 0=≢arg←##.##.Single arg
+     result←object ⎕VGET⊂'_copies' 1
+ :Else
+     '∆WI DOMAIN ERROR: copies'##.##.Error~##.##.IsInt arg
+     '∆WI LENGTH ERROR: copies'##.##.Error(1≠≢arg)∨~0 1∊⍨≢⍴arg
+     '∆WI DOMAIN ERROR: collate'##.##.Error arg<0
+     object._copies←arg←1⌈32767⌊⊃arg
+     object ##.##.∆WS⊂'Copies'arg ⍝? Does Dyalog force a page eject here, or must we?
+     devmode←object DevMode ⍬ ⋄ devmode[54+⍳2]←80 ⎕DR⊃(163,⍨⎕DR arg)⎕DR arg ⋄ object._devmode←devmode ⍝ Update DevMode to match
+     result←##.NoRes
+ :EndIf

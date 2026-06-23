@@ -1,0 +1,13 @@
+ result←object collate arg;devmode
+ :If 0=≢arg←##.##.Single arg
+     result←object ⎕VGET⊂'_collate' ¯1
+ :Else
+     '∆WI DOMAIN ERROR: collate'##.##.Error~##.##.IsInt arg
+     '∆WI LENGTH ERROR: collate'##.##.Error(1≠≢arg)∨~0 1∊⍨≢⍴arg
+     '∆WI DOMAIN ERROR: collate'##.##.Error~arg⊃⍛∊¯1 0 1
+     :If ¯1=arg←⊃arg ⋄ arg←object._collate_default ⋄ :EndIf ⍝ Restore our starting value
+     object._collate←arg
+     object ##.##.∆WS⊂'Collate'arg
+     devmode←object DevMode ⍬ ⋄ devmode[68+⍳2]←80 ⎕DR⊃(163,⍨⎕DR arg)⎕DR arg ⋄ object._devmode←devmode ⍝ Update DevMode to match
+     result←##.NoRes
+ :EndIf

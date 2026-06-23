@@ -1,0 +1,27 @@
+ action←data Setup_do message;∆WG;∆WS
+⍝ Perform all event processing on the Setup form
+
+ ∆WG←##.##.##.∆WG ⋄ ∆WS←##.##.##.∆WS ⍝ I'll need to use these several times
+ :Select (1+≢data.name)↓⍕⊃message
+ :Case 'gPrinter.dName' ⍝ Select a new printer name
+     ⍝ Populate the only description area that I can get
+     (data.name,'.gPrinter.dWhere')∆WS⊂'Caption'(⊃data.printers[data.printers[;1]⍳⊂message[1]∆WG'Text';2])
+     action←0 ⍝ Default processing continues
+ :Case 'gPrinter.bProps' ⍝ Ask for printer Properties (use Dyalog 'Setup' method)
+     2 ##.##.##.∆NQ data.name'Setup' ⍝ Invoke the actual printer's custom properties dialog
+     action←0 ⍝ Default processing continues
+ :Case 'bOK' ⍝ OK button
+     ⍝ Fill data storage area with all their entered data from the form
+     ⍝ Copy off all the screen inputs and pass them back to the parent function
+     data.pname←(data.name,'.gPrinter.dName')∆WG'Text'
+     data.psize←(data.name,'.gPaper.dSize')∆WG'Text'
+     data.psource←(data.name,'.gPaper.dSource')∆WG'Text'
+     data.oportrait←(data.name,'.gOrient.dPortrait')∆WG'State'
+     data.olandscape←(data.name,'.gOrient.dLandscape')∆WG'State'
+     data.OK←1 ⍝ Signal that we exited normally
+     action←data.name'Close' ⍝ Exit the modal ∆DQ
+ :Case 'bCancel' ⍝ Cancel button
+     action←data.name'Close' ⍝ Exit the modal ∆DQ
+ :Else
+     ##.##.##.Halt'Unexpected Printer Setup event reported'
+ :EndSelect

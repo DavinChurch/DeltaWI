@@ -1,0 +1,14 @@
+ result←object Eject arg
+ :If ×≢arg
+     '∆WI DOMAIN ERROR: Eject'##.##.Error~##.##.IsInt arg
+     '∆WI LENGTH ERROR: Eject'##.##.Error 1<≢arg
+     '∆WI DOMAIN ERROR: Eject'##.##.Error~0 1∊⍨arg←⊃arg
+ :EndIf
+ :If arg←⊃arg,0 ⍝ If 1, override 'dirty' check
+ :OrIf object dirty ⍬
+     2 ##.##.∆NQ object'NewPage'
+     object._page←1+object ⎕VGET⊂'_page' 0
+ :EndIf
+ object._position←0 0 ⋄ object._dirty←0
+ 'Page'##.##.Event object ##.##.Application object._page
+ result←##.NoRes

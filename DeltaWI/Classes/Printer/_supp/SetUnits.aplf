@@ -1,0 +1,55 @@
+ units←SetUnits object;tpp
+⍝ Determine the 'units' array for this particular Printer (object)
+⍝ This can vary when PName or FontObj changes!
+
+ tpp←⌈/1440÷25.4×⊃÷/2↑object ##.##.##.∆WG'DevCaps' ⍝ Twips/pixel
+ units←1 2⍴2 ##.##.##.∆NQ object'GetTextSize' 'X' ⍝ 1=Character units
+ units⍪←units[1;]÷8 4 ⍝ 2=Dialog units
+ units⍪←2⍴20÷tpp ⍝ screensize÷inches÷72 ⍝ 3=Points (72/in)
+ units⍪←2⍴÷tpp ⍝ 4=Twips (1440/in)
+ units⍪←1 1 ⍝ 5=Virtual pixels; always true pixels on a printer
+ units⍪←1 1 ⍝ 6=True pixels
+
+
+
+
+
+⍝? Notes on printer controls...
+⍝ 'DevCaps' returns printable area only, but can calculate resolution from that
+⍝ ⎕WG 'PaperSize' 'PaperSizes' - can obtain current paper dimensions
+
+⍝      :If prt
+⍝         ⍝ If we're printing, pre-adjust font scaling
+⍝         ⍝ Ok, the only way I see to find actual printer measurements is to ask .Net, so here we go
+⍝         ⎕USING←',System.Drawing.dll'
+⍝         p←⎕NEW System.Drawing.Printing.PrintDocument
+⍝         p.PrinterSettings.PrinterName←⊃','(≠⊆⊢)objInfo.fullName eWG'PName'
+⍝         res←p.PrinterSettings.DefaultPageSettings.PrinterResolution.(Y X) ⍝ Printer pixel resolution (per inch)
+⍝         p←⍬ ⍝ Throw out the temporary .Net object
+⍝         size←⌊0.5+size×res[1]÷96⌊150 ⍝ 150 is an arbitrary choice to make it look about right - don't know how to compute it
+⍝     :EndIf
+⍝     id eWC'Font'('PName'pName)('Size'size)('Fixed'fixed)('Italic'italic)('Underline'underline)('Weight'bold)('Rotate' 0)('CharSet' 0)
+
+⍝⍝ Ok, the only way I see to find actual printer measurements is to ask .Net, so here we go
+⍝ ⎕USING←',System.Drawing.dll'
+⍝ p←⎕NEW System.Drawing.Printing.PrintDocument
+⍝ p.PrinterSettings.PrinterName←⊃','(≠⊆⊢)objInfo.fullName eWG'PName'
+⍝⍝p.PrinterSettings.DefaultPageSettings.Landscape←'Landscape'≡objInfo.fullName eWG'Orientation' ⍝ Do we want portrait or landscape?
+⍝ size←p.PrinterSettings.DefaultPageSettings.PrintableArea.(Height Width)÷100 ⍝ Printable paper size (inches)
+⍝ res←p.PrinterSettings.DefaultPageSettings.PrinterResolution.(Y X) ⍝ Printer pixel resolution (per inch)
+⍝ p←⍬ ⍝ Throw out the temporary .Net object
+⍝ size←⌊0.5+size×res ⍝ Figure printable pixel size
+⍝ size←('Landscape'≡objInfo.fullName eWG'Orientation')⌽size ⍝ Do we want portrait or landscape?
+⍝ s,←0 0,⌊size÷res÷96÷sizeCorrector ⍝ Convert sizeCorrector to equivalent printer resolution (12pt)
+
+⍝⍝ Ok, the only way I see to find actual printer measurements is to ask .Net, so here we go
+⍝ ⎕USING←',System.Drawing.dll'
+⍝ p←⎕NEW System.Drawing.Printing.PrintDocument
+⍝ p.PrinterSettings.PrinterName←⊃','(≠⊆⊢)objInfo.fullName eWG'PName'
+⍝⍝p.PrinterSettings.DefaultPageSettings.Landscape←'Landscape'≡objInfo.fullName eWG'Orientation' ⍝ Do we want portrait or landscape?
+⍝ size←p.PrinterSettings.DefaultPageSettings.PrintableArea.(Height Width)÷100 ⍝ Printable paper size (inches)
+⍝ res←p.PrinterSettings.DefaultPageSettings.PrinterResolution.(Y X) ⍝ Printer pixel resolution (per inch)
+⍝ p←⍬ ⍝ Throw out the temporary .Net object
+⍝ size←⌊0.5+size×res ⍝ Figure printable pixel size
+⍝ size←('Landscape'≡objInfo.fullName eWG'Orientation')⌽size ⍝ Do we want portrait or landscape?
+⍝ s←⌊size÷res÷96÷sizeCorrector ⍝ Convert sizeCorrector to equivalent printer resolution (12pt)

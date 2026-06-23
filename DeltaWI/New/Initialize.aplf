@@ -76,6 +76,7 @@
      :EndFor
 
      ⍝ Activate/show the new object as requested
+⍝? This will have problems on the Printer object -- what do we do about that?
      object._opened←1 ⍝ It will end up opened after completion, unless 'Close' turns it off below
      :For action :In final∩⍨acts,(~∨/final∊acts)/¯1↑final ⍝ There should usually only be one of these at most; default=Open
 ⍝? This will still work for 'def', won't it?

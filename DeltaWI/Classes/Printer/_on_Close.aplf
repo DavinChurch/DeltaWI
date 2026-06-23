@@ -1,0 +1,4 @@
+ ok←run _on_Close message
+⍝ If the Dyalog printer object is deleted, run our onDelete hander first
+
+ok←1⊣'Delete'##.Event (⊃message) ##.Application ⍝ Run the onDelete event handler

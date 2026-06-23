@@ -1,0 +1,6 @@
+ result←object caption arg
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_caption' ''
+ :Else
+     ##.##.Error'The "caption" property cannot be supported in Dyalog'
+ :EndIf

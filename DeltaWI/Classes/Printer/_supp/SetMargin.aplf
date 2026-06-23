@@ -1,0 +1,11 @@
+ pixelmargin←SetMargin object;devcaps;psize;psizes;ppm;printarea
+⍝ Determine the pixel-unit margins for this particular Printer (object)
+⍝ This can vary when PName or current paper assignment changes
+⍝? For now, must assume equal distribution of margins, which is often wrong
+
+ (devcaps psize psizes)←object ##.##.##.∆WG'DevCaps' 'PaperSize' 'PaperSizes'
+ :If ##.##.##.IsChar psize ⋄ psize←2⊃((⊃¨psizes)⍳⊂psize)⊃psizes ⋄ :EndIf ⍝ Convert paper name to dimensions
+ ppm←⊃÷/2↑devcaps ⍝ 2⍴ pixels/mm
+ psize←⌊0.5+ppm×psize÷10 ⍝ Physical size (H,W) of the paper in pixels (larger than printable area)
+ printarea←⊃devcaps ⍝ Printable area (H,W) of the paper in pixels
+ pixelmargin←0.5×2/⌽psize-printarea ⍝ Left, Right, Top, & Bottom margins, in pixels (assumed; might not calculate to integers)

@@ -17,7 +17,7 @@
      'No emulated event name provided'⎕SIGNAL 5/⍨0=≢myevent
      'Too many emulated event names provided'⎕SIGNAL 5/⍨1<≢myevent
      myevent←⊃myevent ⍝ We only set up one emulated event with a call here
-     :if custom←(IsInt realevent)∧0=≡realevent ⋄ realevent←⍕realevent ⋄ :endif ⍝ Allow for numeric custom event numbers
+     :If custom←(IsInt realevent)∧0=≡realevent ⋄ realevent←⍕realevent ⋄ :EndIf ⍝ Allow for numeric custom event numbers
      'Improper specification of event names'⎕SIGNAL 11/⍨0∊IsChar¨realevent myevent,before,after
      'Do not use "on" prefix on event names'⎕SIGNAL 11/⍨(⊂'on')∊2↑¨realevent myevent,before,after
      'Not an available native event name'⎕SIGNAL 11/⍨(custom~⍛∧×≢realevent)∧~realevent⊂⍛∊'Event',⍥⊆object ∆WG'EventList'
@@ -53,7 +53,7 @@
          ⍝? This process hasn't been written yet, but works entirely differently than APL+Win events
      :Else
          event←0~⍨object ∆WG'Event'
-         :If (≢event)≥t←realevent⍳⍨⍥⊆{⍵↓⍨2×'on'≡2↑⍵}¨⊃¨event
+         :If event≢⍛≥t←realevent⍳⍨⍥⊆{⍵↓⍨2×'on'≡2↑⍵}¨⊃¨event
              event←t⊃event ⍝ Obtain existing event definition
          :Else
              event←('on',realevent)((⍕⎕THIS),'.Event')⍬ ⍝ Create a new event definition

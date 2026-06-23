@@ -18,11 +18,11 @@
          :Case 2 ⍝ Is it a matrix of lines?
              new←##.##.∆dtr¨↓new
          :EndSelect
-     :Elseif 2=≢⍴new
+     :ElseIf 2=≢⍴new
          new←,,¨new ⍝ For some reason, a 3 1⍴ nested matrix is allowed, probably as a variant of a nested vector - this should handle it, I hope
      :EndIf
 
      new←object ##.##.QuadAV¨new ⍝ Convert Unicode to ⎕AV as best we can if we're using one of those fonts
-     object ##.##.∆WS('Items'new)('SelItems'((≢new)⍴0))
+     object ##.##.∆WS('Items'new)('SelItems'(new≢⍛⍴0))
      result←##.NoRes
  :EndIf

@@ -1,0 +1,3 @@
+ result←object units arg
+ '∆WI ACTION ERROR: Property "units" is read-only'##.##.Error×≢arg
+ result←object._units ⍝ This should be predefined

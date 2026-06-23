@@ -63,6 +63,7 @@
 
  _supp.waitoff object ⍝ Clean up any waiting-form situations
 
+⍝? Do we need to specially handle any current page data before deleting a Printer object?
 ⍝? Anything else to clean up?
 
 ⍝ Finally, time to actually get rid of it!

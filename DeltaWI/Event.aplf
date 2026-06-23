@@ -71,7 +71,7 @@
                  fn←'_on','_'@{'⍎'=⍵}⊢event
                  ('Required "',fn,'" event handler is not defined')Error 3≠Classes.⎕NC fn
                  ('Required "',fn,'" event handler has incorrect syntax')Error 1 2 0≢⊃Classes.⎕AT fn
-                 (wevent warg wres force)←4↑3↓message,(≢message)↓⍬ ⍬'' ''⍬ Classes.NoRes 0 ⍝ System variables to pass in, with defaults
+                 (wevent warg wres force)←4↑3↓message,message≢⍛↓⍬ ⍬'' ''⍬ Classes.NoRes 0 ⍝ System variables to pass in, with defaults
                  force←3 BitVals⊃force ⍝ Do they want to allow firing during special conditions?
                  :If ((2-object._opened)⊃1,1 2∊force)∧(4∊force)∨~'*'∊¯1↓⎕STACK[;2] ⍝ Are we allowed to run the event?
                      Application.(∆WSELF ∆WEVENT ∆WARG ∆WRES)←object._self wevent warg wres ⍝ Assign values from fixed-syntax method input

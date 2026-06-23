@@ -1,0 +1,3 @@
+ result←object page arg
+ '∆WI ACTION ERROR: Property "page" is read-only'##.##.Error×≢arg
+ result←object ⎕VGET⊂'_page' 0

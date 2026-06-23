@@ -6,8 +6,9 @@
      parent←parent._Owner ⍝ Redirect parentage up to its APL+Win parent
  :EndWhile
  ((scale pxsize)(pscale ppxsize))←(object,parent)⎕VGET('_scale' 1)('_pix_size'(0 0))
- units←##.##.GUIroot._units ⍝ Get system conversion factors
- tunits←(units⍪⍨pxsize÷1⌈|2↑3↓scale)[1+⊃scale;] ⍝ Compute unit-conversions for this object's scale ⍝? Is this anywhere close to right for scale=0??
- punits←(units⍪⍨ppxsize÷1⌈|2↑3↓pscale)[1+⊃pscale;] ⍝ Compute unit-conversions for the parent object's scale
+ punits←units←##.##.GUIroot._units ⍝ Get system conversion factors
+ tunits←object ⎕VGET⊂'_units'punits ⍝ Watch for local override (for Printers)
+ tunits←(tunits⍪⍨pxsize÷1⌈|2↑3↓scale)[1+⊃scale;] ⍝ Compute unit-conversions for this object's scale ⍝? Is this anywhere close to right for scale=0??
+ punits←(punits⍪⍨ppxsize÷1⌈|2↑3↓pscale)[1+⊃pscale;] ⍝ Compute unit-conversions for the parent object's scale
 
  ⍝? Note: We might need to use ∆Border for some of these calculations?? Or won't it matter?

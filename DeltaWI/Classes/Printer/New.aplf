@@ -1,0 +1,19 @@
+ result←object New arg;parent;name;props;newobj;actions;tunits;punits
+ (parent name)←object ⍝ Separate non-standard two-part argument
+ actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
+
+ props←'Printer'('Coord' 'RealPixel')('PagesBeginDirty' 0) ⍝ Set standard creation properties
+ newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
+
+ :Section ⍝ Set up special Printer parameters
+     newobj._units←_supp.SetUnits newobj ⍝ Each Printer (& font!) has its own 'units' definition
+⍝? If they change the Printer font, does that immediately change the unit definitions? If so, do things that depend on units also adjust to match?
+     newobj._Ancestry←,parent ⍝ Fake this to check units
+     (tunits punits)←2↑##._supp.MyUnits newobj ⍝ Set hard sizing of immovable object
+     newobj.(_size _extent)←(⊂⊃newobj ##.##.∆WG'DevCaps')÷tunits punits ⍝ Figure out the logical printer size
+     newobj._where←0 0,newobj._extent ⍝ _where & _extent are dummy information, just present so shared code will continue to work
+     newobj._pixelmargin←_supp.SetMargin newobj ⍝ Each Printer has its own default margin setting
+     newobj._collate_default←newobj ##.##.∆WG'Collate' ⍝ Determine default setting
+ :EndSection
+
+ result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure

@@ -15,7 +15,7 @@
 
  ⍝ Proceed to close the object, starting by force-closing all its children
  :If ×≢kids←object ##.children ⍬
- :AndIf ×≢kids←object ⎕VGET ##.##.LeafName¨kids ⍝ Except our own tree
+ :AndIf ×≢kids←object ⎕VGET ##.##.LeafName¨kids ⍝ Except our own tree ⍝? (what's this comment mean?)
      kids(1 close)¨⊂⍬ ⍝ Force-close all my children recursively
  :EndIf
 
@@ -27,3 +27,6 @@
  ⍝ And now we can mark myself as gone, but not forgotten
  object._opened←0
  object ##.##.∆WSet('Active' 0)('Visible' 0) ⍝ Update Dyalog control properties
+
+ ⍝? If we're closing a Printer object, what cleanup might we need to do (flushing the page, for instance)?
+ ⍝? Have *everything* watch for the ~opened flag!

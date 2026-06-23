@@ -7,7 +7,7 @@
  this._Ancestry←0⍴this._Class←Classes.System ⍝ Base references
 
  ⍝ Define system settings
- devcaps←'.'⎕WG'DevCaps'
+ devcaps←'.'∆WG'DevCaps'
  this.ScreenSize←1⊃devcaps ⍝ The pixel-size of the entire screen
  this.AspectRatio←÷/⌽2⊃devcaps ⍝ The ratio (W÷H) of inch-size of the screen; estimated; used for visual concerns like square- and circle-drawing
  ⍝inches←(2⊃devcaps)÷25.4 ⍝ How big is the screen in inches (h,w); estimated
@@ -36,5 +36,5 @@
  this ⎕VSET Classes.System ⎕VGET ¯2
 
  ⍝ Initialize all DeltaWI configuration options (from standard sources)
- ev←2 ⎕NQ'.' 'GetEnvironment'((⊂'DeltaWI\'),¨en←'Debug' 'Developer' 'EWC' 'EWCMode' 'Migration')
+ ev←2 ∆NQ'.' 'GetEnvironment'((⊂'DeltaWI\'),¨en←'Debug' 'Developer' 'EWC' 'EWCMode' 'Migration')
  {}this Classes.System.⍙Config en,⍤0⊢ev ⍝ Pass configuration to the ⎕Config synthetic method for setup

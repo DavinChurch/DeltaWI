@@ -1,0 +1,25 @@
+ result←object PageSetup arg;flags;minmargin
+ ⍝ flags:
+ ⍝ +1 = Disable margin control
+ ⍝ +2 = Disable orientation control
+ ⍝ +4 = Disable paper control
+ ⍝ +8 = Disable printer control (there is none - ignore this)
+ ⍝ +16 = Display units in inches (≠32)
+ ⍝ +32 = Display units in millimeters (≠16)
+ ⍝ +65536 = Hide Network button ⍝? (this never appears anyway??)
+ ⍝ +131072 = Suppress no-default-printer warning ⍝? (not supported)
+
+ ⍝ minmargin = Left/Right/Top/Bottom minimums (but no less than device minimums) ⍝? Dyalog does not currently support device or logical minimums
+
+ '∆WI LENGTH ERROR: PageSetup'##.##.Error 2<≢arg
+ (flags minmargin)←arg,arg≢⍛↓0 ⍬
+ '∆WI DOMAIN ERROR: PageSetup'##.##.Error~##.##.IsInt flags
+ '∆WI ATTRIBUTE ERROR: Invalid "PageSetup" attribute specified'##.##.Error(∨/∊flags<0)∨(+/∊flags)≥2*31
+ '∆WI LENGTH ERROR: PageSetup'##.##.Error(2=≢arg)∧4=≢minmargin
+ flags←##._supp.SetBitVals flags
+ '∆WI DOMAIN ERROR: PageSetup'##.##.Error~##.##.IsNum minmargin
+ '∆WI ATTRIBUTE ERROR: Invalid "PageSetup" attribute specified'##.##.Error×≢flags~0 65536 131072,2*0,⍳5
+ '∆WI ATTRIBUTE ERROR: Duplicate or conflicting "PageSetup" attributes specified'##.##.Error∧/16 32∊flags
+ '∆WI DOMAIN ERROR: PageSetup'##.##.Error∨/minmargin<0
+
+ result←object _supp.PageSetup flags(4↑minmargin) ⍝ Call the modal GUI processing system

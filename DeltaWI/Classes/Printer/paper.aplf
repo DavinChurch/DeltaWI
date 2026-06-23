@@ -1,0 +1,15 @@
+ result←object paper arg;psizes;devmode
+ psizes←object ##.##.∆WG'PaperSizes'
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_paper'(×≢psizes)
+ :Else
+     arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: paper'##.##.Error~##.##.IsInt arg
+     '∆WI LENGTH ERROR: paper'##.##.Error 1≠≢arg
+     '∆WI DOMAIN ERROR: paper'##.##.Error 0>arg←⊃arg
+     object._paper←arg←⊃1,⍨arg∩⍳≢psizes
+     object ##.##.∆WS⊂'PaperSize'(⊃arg⊃psizes)
+     object._pixelmargin←_supp.SetMargin object
+     devmode←object DevMode ⍬ ⋄ devmode[46+⍳2]←80 ⎕DR⊃(163,⍨⎕DR arg)⎕DR arg ⋄ object._devmode←devmode ⍝ Update DevMode to match
+     result←##.NoRes
+ :EndIf

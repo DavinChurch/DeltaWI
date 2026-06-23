@@ -10,7 +10,7 @@
  :If 0=≢arg
      result←object ⎕VGET⊂'_columndisplay'(0 7⍴'')
  :Else
-     units←##.##.GUIroot._units ⍝ Get the system unit conversions
+     units←3⊃##._supp.MyUnits object ⍝ Get the system unit conversions
      arg←##.##.Single arg
      '∆WI DOMAIN ERROR: columndisplay'##.##.Error 2<|≡arg
      '∆WI RANK ERROR: columndisplay'##.##.Error 2<≢⍴arg
@@ -37,7 +37,7 @@
      :EndFor
      ⍝ Redefine all the data columns in case they've been switched around
      ⍝? Do we need to preserve highlighting and such when we do this?
-     vals←object value⍬ ⍝ We need to preserve the list of selected items
+     vals←object value ⍬ ⍝ We need to preserve the list of selected items
      {}object list,⊂object ⎕VGET⊂'_list'(0 2⍴0) ⍝ Re-set the property with its current value
      {}object value,⊂vals ⍝ Put the selection back
      result←##.NoRes

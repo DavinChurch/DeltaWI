@@ -1,0 +1,3 @@
+ result←object Setup arg
+ '∆WI ACTION ERROR: Method "Setup" does not accept an argument'##.##.Error×≢arg
+ result←object _supp.Setup ⍬ ⍝ Call the modal GUI processing system

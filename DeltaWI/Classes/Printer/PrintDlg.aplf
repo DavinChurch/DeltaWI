@@ -1,0 +1,31 @@
+ result←object PrintDlg arg;flags;pages
+ ⍝ flags:
+ ⍝ +0 = Print range = All
+ ⍝ +1 = Print range = Selection
+ ⍝ +2 = Print range = Pages
+ ⍝ +4 = Print to File is selected ⍝? (not supported)
+ ⍝ +8 = Collate is selected
+ ⍝ +16 = Selection is disabled
+ ⍝ +32 = Pages is disabled
+ ⍝ +64 = Print to File is disabled ⍝? (not supported)
+ ⍝ +128 = Print to File is hidden
+ ⍝ +256 = Copies and Collate are always displayed ⍝? (ignored as always true)
+ ⍝ +65536 = Hide Network button ⍝? (this never appears anyway??)
+ ⍝ +131072 = Suppress no-default-printer warning ⍝? (not supported)
+
+ ⍝ pages[1 2] = Min/Max page range
+ ⍝ pages[3 4] = Initial From/To page range
+
+ '∆WI LENGTH ERROR: PrintDlg'##.##.Error 2<≢arg
+ (flags pages)←arg,arg≢⍛↓0 ⍬
+ '∆WI DOMAIN ERROR: PrintDlg'##.##.Error∨/~##.##.IsInt¨flags pages
+ '∆WI ATTRIBUTE ERROR: Invalid "PrintDlg" attribute specified'##.##.Error(∨/∊flags<0)∨(+/∊flags)≥2*31
+ '∆WI LENGTH ERROR: PrintDlg'##.##.Error(2=≢arg)∧~pages≢⍛∊2 4
+ flags←##._supp.SetBitVals flags
+ '∆WI ATTRIBUTE ERROR: Invalid "PrintDlg" attribute specified'##.##.Error×≢flags~0 65536 131072,2*0,⍳8
+ '∆WI ATTRIBUTE ERROR: Invalid "PrintDlg" attribute specified'##.##.Error∧/1 2∊flags
+ flags←(5/⍨2>≢arg)##.##.BitOn flags ⍝ Force +32 if no page range is set
+ '∆WI PRINTER ERROR: Print Setup Error 4102'##.##.Error(>/2↑pages)∨∨/2↑(pages<0)∨pages≥2*31
+ pages←4↑pages ⋄ pages[3 4]←pages[1]⌈pages[2]⌊pages[3 4]
+
+ result←object _supp.PrintDlg flags pages ⍝ Call the modal GUI processing system

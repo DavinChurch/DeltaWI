@@ -1,0 +1,57 @@
+ Printer;devmode;devnames
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'p'∆WI Pass(,'p')⊢'Create' 'Printer'
+ 'p'∆WI Pass(⊃'#'∆WI'Printers')⊢'printername'
+ ⍝'p'∆WI'Setup' ⍝ Testing requires user interaction
+ ⍝'p'∆WI'PrintDlg' ⍝ Testing requires user interaction
+ ⍝'p'∆WI'PageSetup' ⍝ Testing requires user interaction
+
+ 'p'∆WI Pass 0⊢'page'
+ 'p'∆WI Pass 0⊢'dirty'
+ 'p'∆WI Pass MT⊢'Print'('This is a test',⎕UCS 13)
+ 'p'∆WI Pass 1⊢'page'
+ 'p'∆WI Pass 1⊢'dirty'
+ 'p'∆WI Pass MT⊢'Eject'
+ 'p'∆WI Pass 2⊢'page'
+ 'p'∆WI Pass 0⊢'dirty'
+ 'p'∆WI Pass MT⊢'position' 5 0
+ 'p'∆WI Pass 2⊢'page'
+ 'p'∆WI Pass MT⊢'Print'('This is another page',⎕UCS 13)
+ 'p'∆WI Pass 2⊢'page'
+ 'p'∆WI Pass 1⊢'dirty'
+ 'p'∆WI Pass MT⊢'Abort'
+ 'p'∆WI Pass 0⊢'page'
+ 'p'∆WI Pass 0⊢'dirty'
+ 'p'∆WI Pass 0 0⊢'position'
+
+ 'p'∆WI Pass{156=≢⍵}⊢'DevMode'
+ devmode←'p'∆WI'DevMode'
+ 'p'∆WI Pass MT⊢'DevMode'devmode
+ 'p'∆WI Pass{16≤≢⍵}⊢'DevNames'
+ devnames←'p'∆WI'DevNames'
+ 'p'∆WI Pass MT⊢'DevNames'devnames
+ 'p'∆WI Pass{0≠⍵}⊢'hdc'
+
+ 'p'∆WI Pass 1⊢'bin'
+ 'p'∆WI Pass MT⊢'bin' 2
+ 'p'∆WI Pass 2⊢'bin'
+ 'p'∆WI Pass 1⊢'paper'
+ 'p'∆WI Pass MT⊢'paper' 2
+ 'p'∆WI Pass 2⊢'paper'
+ 'p'∆WI Pass MT⊢'copies' 2
+ 'p'∆WI Pass ¯1⊢'collate'
+ 'p'∆WI Pass MT⊢'collate' 1
+ 'p'∆WI Pass 1⊢'collate'
+ 'p'∆WI Pass MT⊢'collate' ¯1
+ 'p'∆WI Pass 0⊢'collate'
+ 'p'∆WI Pass 1⊢'default'
+
+ ⍝'p'∆WI Pass MT⊢'margin' 2 2 1 1
+ ⍝'p'∆WI Pass 2 2 1 1⊢'margin'
+ 'p'∆WI Pass'portrait'⊢'orientation'
+ 'p'∆WI Pass MT⊢'orientation' 'landscape'
+ 'p'∆WI Pass{4=≢⍵}⊢'pixelmargin'
+ 'p'∆WI Pass 0 0⊢'position'
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

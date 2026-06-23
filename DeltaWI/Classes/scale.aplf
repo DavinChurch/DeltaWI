@@ -1,4 +1,4 @@
- result←object scale arg;size;scale;Borders;tunits;punits;margins;extent;units
+ result←object scale arg;size;scale;Borders;tunits;punits;margins;extent;units;pfactor;child;where;margin
 ⍝ Request or modify the scaling factor of a GUI object
 
  arg←##.Single arg ⍝ Make sure a nested argument is disclosed
@@ -13,7 +13,7 @@
 
  :Section  ⍝ Are they just asking for the current setting?
      :If 0=≢arg
-         result←scale
+         result←scale ⍝ (This better not be empty by now)
          :If ×⊃scale ⍝ If it's a fixed scale, make sure we return the proper final four items
              result←(1↑scale),0 0,size
          :Else
@@ -43,7 +43,8 @@
      :EndIf
  :EndSection
 
- :Section ⍝ Figure out conversion needs for 'size'
+ :Section ⍝ Figure out conversion needs for 'size' & children
+     pfactor←size
      :Select ×⊃¨scale arg ⍝ Are we converting to or from proportional scaling?
      :Case 0 0 ⍝ Staying in proportional, but maybe changing factors
          size←arg[4 5] ⍝ Just directly setting new 'size' values
@@ -51,11 +52,20 @@
          margins←+/2 2⍴+⌿Borders[1;,2;] ⍝ Differences between 'extent' and 'size' (in pixels)
          size←tunits×margins-⍨extent×punits ⍝ Convert to new units
      :Case 1 0 ⍝ Converting from fixed to proportional
-         ⍝ This needs to create an actual pixel-size notation for later use
+         ⍝? This needs to create an actual pixel-size notation for later use
          size←arg[4 5] ⍝ Just directly setting new 'size' values
      :Case 1 1 ⍝ Remaining fixed, but maybe changing units
          size←size×tunits÷units[⊃arg;] ⍝ Convert size to new units
      :EndSelect
+     pfactor←size÷pfactor ⍝ Conversion factor to use on childrens' extent/where
+     :If 4=≢margin←object ⎕VGET⊂'_margin'⍬ ⋄ object._margin←margin×pfactor[2 2 1 1] ⋄ :EndIf ⍝ Left, right, top, bottom
+⍝? Note: (physical?) margins can be maintained across changes to the printer, especially to a different resolution -- what do we need to do, and where?
+
+     ⍝ Convert extent and where values of children to match my new scaling factor
+     :For child :In ##.GUIroot ##.Locate¨object children ⍬
+         :If 2=≢extent←child ⎕VGET⊂'_extent'⍬ ⋄ child._extent←extent×pfactor ⋄ :EndIf
+         :If 4=≢where←child ⎕VGET⊂'_extent'⍬ ⋄ child._where←where×4⍴pfactor ⋄ :EndIf
+     :EndFor
  :EndSection
 
  :Section ⍝ Set APL+Win properties (Dyalog properties don't change)

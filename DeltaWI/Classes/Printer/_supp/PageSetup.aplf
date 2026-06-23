@@ -1,0 +1,75 @@
+ result←object PageSetup(bits minmargin);∆WC;∆WS;∆WG;wsiz;siz;pos;me;fr;always;do;data;papersizes;papersources;orient;margins;tunits;margprops;devmode;dm
+⍝ Implement an emulation of the printer 'Setup' method's GUI
+⍝ This method does not take arguments or accept current printer settings - it always starts with defaults and directly changes the object
+
+ ∆WC←##.##.##.∆WC ⋄ ∆WS←##.##.##.∆WS ⋄ ∆WG←##.##.##.∆WG ⍝ These are going to be commonly needed here
+ always←('Coord' 'RealPixel')('AutoConf' 0)
+ papersizes←⊃¨object ∆WG'PaperSizes'
+ papersources←object ∆WG'PaperSources'
+ tunits←⊃##.##._supp.MyUnits object
+
+ :Section ⍝ Build the GUI dialog box
+     wsiz←##.##.##.GUIroot._size×##.##.##.GUIroot._units[1;] ⍝ How big is the full screen we're putting this on, in pixels?
+     siz←390 360 ⍝ All sizing and positioning are determined by WYSIWYG pixel-matching with APL+Win
+     pos←⌊0.5×wsiz-siz ⍝ Center it on the screen
+     me←(##.##.##.GUIroot⍕⍛,'.',##.##.##.Next ##.##.##.GUIroot)∆WC('Form'⊂⍛,always),('SysMenu' 1)('MaxButton' 0)('MinButton' 0)('Sizeable' 0)('Visible' 0)
+     me ∆WS('Posn'pos)('Size'siz)('Caption' 'Print Setup')
+     data←(name:me ⋄ printer:object ⋄ minmargin:minmargin) ⍝ Storage area where data can be passed to and from the screen
+     do←(⎕THIS⍕⍛,'.PageSetup_do')data ⍝ The generic event-handling function for this Form (passing a reference to the storage area as left argument)
+     fr←(me,'.gPaper')∆WC('Group'⊂⍛,always),('EdgeStyle' 'Groove')('Caption' 'Paper')('Posn' 155 12)('Size' 92 334)('Active'(~4∊bits))
+     (fr,'.lSize')∆WC('Label'⊂⍛,always),('Posn' 27 12)('Size' 16 50)('Caption' 'Size:')
+     (fr,'.dSize')∆WC('ComboEx'⊂⍛,always),('Posn' 23 84)('Size' 22 237)
+     (fr,'.lSource')∆WC('Label'⊂⍛,always),('Posn' 58 12)('Size' 16 50)('Caption' 'Source:')
+     (fr,'.dSource')∆WC('ComboEx'⊂⍛,always),('Posn' 56 84)('Size' 22 237)
+     fr←(me,'.gOrient')∆WC('Group'⊂⍛,always),('EdgeStyle' 'Groove')('Caption' 'Orientation')('Posn' 254 12)('Size' 91 94)('Active'(~2∊bits))
+     (fr,'.dPortrait')∆WC('Button'⊂⍛,always),('Style' 'Radio')('Posn' 25 12)('Size' 14 75)('Caption' 'Portrait')
+     (fr,'.dLandscape')∆WC('Button'⊂⍛,always),('Style' 'Radio')('Posn' 58 12)('Size' 14 75)('Caption' 'Landscape')
+     fr←(me,'.gMargins')∆WC('Group'⊂⍛,always),('EdgeStyle' 'Groove')('Posn' 254 120)('Size' 91 226)('Active'(~1∊bits))
+     fr ∆WS'Caption'('Margins (',('inches' 'millimeters'⊃⍨1+32∊bits),')')
+     margprops←('FieldType' 'Numeric')('ValidIfEmpty' 1)('Event' 'onKeyPress',do)('FormatString' 'K3G<ZZ9.ZZZ>')('Justify' 'Left')
+     (fr,'.lLeft')∆WC('Label'⊂⍛,always),('Posn' 25 12)('Size' 16 40)('Caption' 'Left:')
+     (fr,'.dLeft')∆WC('Edit'⊂⍛,always),('Posn' 22 57)('Size' 18 46),margprops
+     (fr,'.lRight')∆WC('Label'⊂⍛,always),('Posn' 25 125)('Size' 16 40)('Caption' 'Right:')
+     (fr,'.dRight')∆WC('Edit'⊂⍛,always),('Posn' 22 171)('Size' 18 46),margprops
+     (fr,'.lTop')∆WC('Label'⊂⍛,always),('Posn' 57 12)('Size' 16 40)('Caption' 'Top:')
+     (fr,'.dTop')∆WC('Edit'⊂⍛,always),('Posn' 55 57)('Size' 18 46),margprops
+     (fr,'.lBottom')∆WC('Label'⊂⍛,always),('Posn' 57 125)('Size' 16 40)('Caption' 'Bottom:')
+     (fr,'.dBottom')∆WC('Edit'⊂⍛,always),('Posn' 55 171)('Size' 18 46),margprops
+⍝? What happens if they enter a negative number (in Dyalog)?
+⍝? Will not currently minimize margins to a value as they type/tab.
+⍝     (me,'.bNet')∆WC('Button'⊂⍛,always),('Style' 'Push')('EdgeStyle' 'Plinth')('Posn' 250 12)('Size' 23 88)('Caption' 'Network...')('Active' 0)
+     (me,'.bOK')∆WC('Button'⊂⍛,always),('Style' 'Push')('EdgeStyle' 'Plinth')('Posn' 358 198)('Size' 23 72)('Caption' 'OK')('Default' 1)('Event' 'onSelect',do)
+     (me,'.bCancel')∆WC('Button'⊂⍛,always),('Style' 'Push')('EdgeStyle' 'Plinth')('Posn' 358 275)('Size' 23 72)('Caption' 'Cancel')('Cancel' 1)('Event' 'onSelect',do)
+ :EndSection
+
+ :Section ⍝ Populate initial data
+     (me,'.gPaper.dSize')∆WS('Items'papersizes)('SelItems'({∨/⍵:⍵ ⋄ ⍵≢⍛↑1}papersizes∊⊂object ∆WG'PaperSize'))
+     (me,'.gPaper.dSource')∆WS('Items'papersources)('SelItems'({∨/⍵:⍵ ⋄ ⍵≢⍛↑1}papersources∊⊂object ∆WG'PaperSource'))
+     (me,'.gOrient.dPortrait')∆WS'State' 1
+⍝? How can I detect the device margin minimum to set here?
+⍝? Also pre- and post-adjust all margins so they cannot together exceed the page size
+     margins←{1000÷⍨⌊0.5+1000×⍵}72÷⍨object._pixelmargin÷2/⌽object._units[3;] ⍝ Current margins in inches (3 decimal places)
+     :If 32∊bits ⋄ margins×←25.4 ⋄ :EndIf ⍝ Convert to mm upon request
+     ((⊂me,'.gMargins.'),¨'dLeft' 'dRight' 'dTop' 'dBottom')∆WS¨(⊂⊂'Value'),¨margins
+     me ∆WS⊂'Visible' 1
+ :EndSection
+
+ ##.##.##.∆DQ me ⍝ Modally wait on an answer
+ ##.##.##.∆EX⍕me ⍝ And now we're done with the input dialog
+
+ ⍝ Process screen results (passed back via namespace) directly onto the Printer
+ :If result←1∊data ⎕VGET⊂'OK' 0 ⍝ Did they click the OK button?
+     devmode←object ##.DevMode ⍬
+     orient←('Portrait' 'Landscape'⊃⍨1+1∊data.olandscape)
+     object._paper←dm←papersizes⍳⊂data.psize ⋄ devmode[46+⍳2]←80 ⎕DR⊃(163,⍨⎕DR dm)⎕DR dm
+     object._bin←dm←papersources⍳⊂data.psource ⋄ devmode[56+⍳2]←80 ⎕DR⊃(163,⍨⎕DR dm)⎕DR dm
+     object._orientation←dm←⎕C orient ⋄ devmode[44+⍳2]←80 ⎕DR⊃83 163 ⎕DR'portrait' 'landscape'⍳⊂dm
+     object ∆WS('PaperSize'data.psize)('PaperSource'data.psource)('Orientation'orient)
+     margins←data.margins
+     :If 32∊bits ⋄ margins÷←25.4 ⋄ :EndIf ⍝ Convert from mm back to inches upon request
+     margins←{1000÷⍨⌊0.5+1000×⍵}margins×72×2/⌽object._units[3;]÷tunits ⍝ Convert back to scaled units for updating
+⍝? Also pre- and post-adjust all margins so they cannot together exceed the page size
+     ⍝{}object ##.margin,⊂margins ⍝? margins cannot be changed at present
+     object._devmode←devmode ⍝ Update DevMode to match
+     {}object ##.printername,⊂data.pname ⍝ Update DevNames as well
+ :EndIf

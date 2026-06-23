@@ -1,0 +1,7 @@
+ result←object hdc arg
+⍝ Return the internal Windows device context handle
+
+ '∆WI ACTION ERROR: Property "hdc" is read-only'##.##.Error×≢arg
+ :If 0=object._opened ⋄ result←0 ⍝ There is no hwnd if closed
+ :Else ⋄ result←object ##.##.∆WGet'Handle'
+ :EndIf

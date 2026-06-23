@@ -1,0 +1,4 @@
+ ok←run _onError message
+⍝? This isn't called by anything because we can't trap any errors
+⍝ message[3]←WinAPI error #
+ ok←message 0 ##.##.Run run

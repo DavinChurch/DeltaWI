@@ -24,6 +24,11 @@
 
  _supp.waiton object ⍝ Add this to any currently-waiting primary Form
 
+⍝? Have *everything* watch for the ~opened flag!
+
+
+
+
 
 ⍝? Old coding I want to remember for a while...
 ⍝ :Section ⍝ Get rid of hidden objects

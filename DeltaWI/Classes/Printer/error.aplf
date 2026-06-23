@@ -1,0 +1,10 @@
+result←object error arg
+⍝? This property is not supported under Dyalog - printing errors cannot be trapped
+ :If 0=≢arg
+     result←0
+ :Else
+     '∆WI DOMAIN ERROR: error'##.##.Error~##.##.IsInt arg
+     '∆WI LENGTH ERROR: error'##.##.Error(1≠≢arg)∨~0 1∊⍨≢⍴arg
+     '∆WI DOMAIN ERROR: error'##.##.Error~arg⊃⍛∊0
+     ⍝ There's nothing we can do here!
+ :EndIf

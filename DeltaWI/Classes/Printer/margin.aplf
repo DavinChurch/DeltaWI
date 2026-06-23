@@ -1,0 +1,13 @@
+ result←object margin arg
+ :If 0=≢arg
+     result←object._pixelmargin÷object._units[1;] ⍝ These should be predefined
+ :Else
+     '∆WI DOMAIN ERROR: margin'##.##.Error~##.##.IsNum arg←##.##.Single arg
+     '∆WI LENGTH ERROR: margin'##.##.Error 4≠≢arg
+     '∆WI DOMAIN ERROR: margin'##.##.Error∨/arg<0
+     ##.##.Error'∆WI ACTION ERROR: Property "margin" is currently read-only'
+     ⍝? If margins are below minimum physical values (defaults), then set to the minimum
+     ⍝? If left or top margins are larger than remaining paper size, then set them to the maximum possible
+     ⍝? Don't forget to change _pixelmargin, too
+     ⍝? Could we simulate specified margins with the Print method, at least? Full Dyalog support would be much better if possible.
+ :EndIf

@@ -1,0 +1,3 @@
+ result←object default arg
+ 'Setting the default property is not available'##.##.Error×≢arg
+ result←(object ##.##.∆WG'PName')≡⊃'.'##.##.∆WG'PrintList'

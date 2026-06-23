@@ -1,0 +1,14 @@
+ result←object orientation arg;devmode;was
+ was←object ⎕VGET⊂'_orientation' 'portrait'
+ :If 0=≢arg
+     result←was
+ :Else
+     '∆WI DOMAIN ERROR: orientation'##.##.Error 1≠≢arg
+     '∆WI DOMAIN ERROR: orientation'##.##.Error~##.##.IsChar arg←⊃arg
+     '∆WI ATTRIBUTE ERROR: Invalid "orientation" attribute specified'##.##.Error~'portrait' 'landscape'∊⍨⊂arg←⎕C arg
+     object._orientation←arg
+     object ##.##.∆WS'Orientation'(1∘⎕C@1 ⎕C arg)
+     :If was≢arg ⋄ :AndIf object ⎕VGET⊂'_dirty' 0 ⋄ {}object Eject ⍬ ⋄ :EndIf ⍝ Changing orientation starts a new page
+     devmode←object DevMode ⍬ ⋄ devmode[44+⍳2]←80 ⎕DR⊃83 163 ⎕DR'portrait' 'landscape'⍳⊂arg ⋄ object._devmode←devmode ⍝ Update DevMode to match
+     result←##.NoRes
+ :EndIf

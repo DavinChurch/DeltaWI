@@ -1,0 +1,18 @@
+ result←object printername arg;plist;devnames;t
+⍝ Changing this value closes and reopens the APL+Win Printer ⍝? Will Dyalog also do this (once it can be changed at all)?
+ plist←↑2↑¨','##.##.∆cuts¨'.'##.##.∆WG'PrintList'
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_printername'(⊃plist)
+ :Else
+     '∆WI DOMAIN ERROR: printername'##.##.Error 1≠≢arg
+     '∆WI DOMAIN ERROR: printername'##.##.Error~##.##.IsChar arg←⊃arg
+     arg,←(0=≢arg)/⊃plist ⍝ Set '' to default printer name
+     ('∆WI PRINTER ERROR:  Printer "',arg,'" not found')##.##.Error~plist[;1]∊⍨⍥⎕C⊂arg
+     object._printername←arg←plist[;1]##.##.Canonize arg
+     ⍝object ##.##.∆WS'PName'(','##.##.∆sew plist[plist[;1]⍳⊂arg;]) ⍝? Create-only
+     object._pixelmargin←_supp.SetMargin object
+     object._units←_supp.SetUnits object
+     devnames←''⊂⍛,plist[plist[;1]⍳⊂arg;],⍕arg≡plist[1;1] ⍝ Reconstruct DevNames as best we can
+     t←+\8,¯1↓≢¨devnames←devnames,¨⎕UCS 0 ⋄ object._devnames←(80 ⎕DR t),∊devnames
+     result←##.NoRes
+ :EndIf

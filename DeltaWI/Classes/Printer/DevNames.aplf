@@ -1,0 +1,27 @@
+ result←object DevNames arg;devnames;t;names;n;NeverSuppress
+⍝ Simulate as much of the basic DEVNAMES structure as we can (can't do anything about [1], for instance)
+
+ :If 0=≢devnames←object ⎕VGET⊂'_devnames'⍬
+     devnames←''⊂⍛,','##.##.∆cut t←object ##.##.∆WG'PName' ⋄ devnames,←⊂⍕t≡⊃'.'##.##.∆WG'PrintList' ⍝ (Default flag in [4] won't be managed)
+     t←+\8,¯1↓≢¨devnames←devnames,¨⎕UCS 0 ⋄ devnames←(80 ⎕DR⊃(163,⍨⎕DR t)⎕DR t),∊devnames
+     object._devnames←devnames
+ :EndIf
+
+ :If 0=≢arg
+     result←devnames
+ :Else
+     '∆WI DOMAIN ERROR: DevNames'##.##.Error 1≠≢arg
+     '∆WI DOMAIN ERROR: DevNames'##.##.Error~##.##.IsChar arg←##.##.Single arg
+     t←163 ⎕DR 8↑arg
+     '∆WI DOMAIN ERROR: DevNames'##.##.Error~(∧/2</t)∧t[1]=8
+     names←(¯2-/t,≢arg)↑¨t↓¨⊂arg
+     '∆WI DOMAIN ERROR: DevNames'##.##.Error~∧/0 ⎕UCS⍛=⊢/¨names ⍝ Does each name end in NUL?
+     '∆WI DOMAIN ERROR: DevNames'##.##.Error∨/(⎕UCS 0)∊¨names←(⎕UCS 0)##.##.∆dtr¨names ⍝ And there are no non-trailing NULs left there?
+     t←','##.##.∆sew names[2 3] ⋄ n←'.'##.##.∆WG'PrintList'
+     '∆WI ERROR: Unexpected result from Windows OS ("DevNames" action, OS function "OpenPrinter")'##.##.Error~t⊂⍛∊n
+     {}object printername,names[2]
+     names[4]←⊂⍕t≢⊃n ⍝ Ignore their default bit flag and reconstruct
+     t←+\8,¯1↓≢¨devnames←devnames,¨⎕UCS 0 ⋄ devnames←(80 ⎕DR t),∊devnames
+     object._devnames←devnames ⍝ Remember it this way
+     result←##.NoRes
+ :EndIf

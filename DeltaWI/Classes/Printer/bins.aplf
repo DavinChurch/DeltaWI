@@ -1,0 +1,4 @@
+ result←object bins arg
+ '∆WI ACTION ERROR: Property "bins" is read-only'##.##.Error×≢arg
+ result←object ##.##.∆WG'PaperSources'
+ result←(⍳≢result),⍤0⊢result

@@ -1,0 +1,77 @@
+ result←object PrintDlg(bits pages);∆WC;∆WS;∆WG;wsiz;siz;pos;me;fr;always;do;data;printers;pname;range;copies;collate;devmode;dm
+⍝ Implement an emulation of the printer 'PrintDlg' method's GUI
+
+ ∆WC←##.##.##.∆WC ⋄ ∆WS←##.##.##.∆WS ⋄ ∆WG←##.##.##.∆WG ⍝ These are going to be commonly needed here
+ always←('Coord' 'RealPixel')('AutoConf' 0)
+ printers←↑','##.##.##.∆cut¨'.'∆WG'PrintList'
+
+ :Section ⍝ Build the GUI dialog box
+     wsiz←##.##.##.GUIroot._size×##.##.##.GUIroot._units[1;] ⍝ How big is the full screen we're putting this on, in pixels?
+     siz←302 432 ⍝ All sizing and positioning are determined by WYSIWYG pixel-matching with APL+Win
+     pos←⌊0.5×wsiz-siz ⍝ Center it on the screen
+     me←(##.##.##.GUIroot⍕⍛,'.',##.##.##.Next ##.##.##.GUIroot)∆WC('Form'⊂⍛,always),('SysMenu' 1)('MaxButton' 0)('MinButton' 0)('Sizeable' 0)('Visible' 0)
+     me ∆WS('Posn'pos)('Size'siz)('Caption' 'Print')
+     data←(name:me ⋄ printer:object ⋄ printers:printers) ⍝ Storage area where data can be passed to and from the screen
+     do←(⎕THIS⍕⍛,'.PrintDlg_do')data ⍝ The generic event-handling function for this Form (passing a reference to the storage area as left argument)
+     fr←(me,'.gPrinter')∆WC('Group'⊂⍛,always),('EdgeStyle' 'Groove')('Caption' 'Printer')('Posn' 6 12)('Size' 139 408)
+     (fr,'.lName')∆WC('Label'⊂⍛,always),('Posn' 26 12)('Size' 16 50)('Caption' 'Name:')
+     (fr,'.dName')∆WC('ComboEx'⊂⍛,always),('Posn' 23 66)('Size' 16 225)('Style' 'Drop')('Event' 'onSelect',do)
+     (fr,'.bProps')∆WC('Button'⊂⍛,always),('Style' 'Push')('EdgeStyle' 'Plinth')('Posn' 23 306)('Size' 22 88)('Caption' 'Properties...')('Event' 'onSelect',do)
+     (fr,'.lStatus')∆WC('Label'⊂⍛,always),('Posn' 52 12)('Size' 16 50)('Caption' 'Status:')
+     (fr,'.dStatus')∆WC('Label'⊂⍛,always),('Posn' 52 66)('Size' 16 328)('Caption' '')
+     (fr,'.lType')∆WC('Label'⊂⍛,always),('Posn' 71 12)('Size' 16 50)('Caption' 'Type:')
+     (fr,'.dType')∆WC('Label'⊂⍛,always),('Posn' 71 66)('Size' 16 328)('Caption' '')
+     (fr,'.lWhere')∆WC('Label'⊂⍛,always),('Posn' 91 12)('Size' 16 50)('Caption' 'Where:')
+     (fr,'.dWhere')∆WC('Label'⊂⍛,always),('Posn' 91 66)('Size' 16 328)('Caption' '')
+     (fr,'.lComm')∆WC('Label'⊂⍛,always),('Posn' 111 12)('Size' 16 50)('Caption' 'Comment:')
+     (fr,'.dComm')∆WC('Label'⊂⍛,always),('Posn' 111 66)('Size' 16 328)('Caption' '')
+     (fr,'.dFile')∆WC('Button'⊂⍛,always),('Style' 'Check')('Posn' 113 306)('Size' 16 88)('Caption' 'Print to file')('Active' 0)
+     fr←(me,'.gRange')∆WC('Group'⊂⍛,always),('EdgeStyle' 'Groove')('Caption' 'Print range')('Posn' 150 12)('Size' 107 214)
+     (fr,'.dAll')∆WC('Button'⊂⍛,always),('Style' 'Radio')('Posn' 25 12)('Size' 16 70)('Caption' 'All')
+     (fr,'.dPages')∆WC('Button'⊂⍛,always),('Style' 'Radio')('Posn' 50 12)('Size' 16 55)('Caption' 'Pages')
+     (fr,'.lFrom')∆WC('Label'⊂⍛,always),('Posn' 50 72)('Size' 16 25)('Caption' 'from:')
+     (fr,'.dFrom')∆WC('Edit'⊂⍛,always),('Posn' 46 100)('Size' 24 40)('FieldType' 'Numeric')('Decimals' 0)('MaxLength' 10)('Justify' 'Left')
+     (fr,'.lTo')∆WC('Label'⊂⍛,always),('Posn' 50 150)('Size' 16 15)('Caption' 'to:')
+     (fr,'.dTo')∆WC('Edit'⊂⍛,always),('Posn' 46 168)('Size' 24 40)('FieldType' 'Numeric')('Decimals' 0)('MaxLength' 10)('Justify' 'Left')
+     (fr,'.dSelection')∆WC('Button'⊂⍛,always),('Style' 'Radio')('Posn' 75 12)('Size' 16 70)('Caption' 'Selection')
+     fr←(me,'.gCopies')∆WC('Group'⊂⍛,always),('EdgeStyle' 'Groove')('Caption' 'Copies')('Posn' 150 239)('Size' 107 179)
+     (fr,'.lCopies')∆WC('Label'⊂⍛,always),('Posn' 26 12)('Size' 16 100)('Caption' 'Number of copies:')
+     (fr,'.dCopies')∆WC('Spinner'⊂⍛,always),('FieldType' 'Numeric')('Decimals' 0)('MaxLength' 10)('Justify' 'Left')('Posn' 24 120)('Size' 18 47)('Limits'(1,¯1+2*31))
+     (fr,'.dCollate')∆WC('Button'⊂⍛,always),('Style' 'Check')('Posn' 64 120)('Size' 16 50)('Caption' 'Collate')
+     ⍝(me,'.bNet')∆WC('Button'⊂⍛,always),('Style' 'Push')('EdgeStyle' 'Plinth')('Posn' 266 12)('Size' 22 88)('Caption' 'Network...')('Active' 0) ⍝ APL+Win doesn't show this
+     (me,'.bOK')∆WC('Button'⊂⍛,always),('Style' 'Push')('EdgeStyle' 'Plinth')('Posn' 266 269)('Size' 22 72)('Caption' 'OK')('Default' 1)('Event' 'onSelect',do)
+     (me,'.bCancel')∆WC('Button'⊂⍛,always),('Style' 'Push')('EdgeStyle' 'Plinth')('Posn' 266 347)('Size' 22 72)('Caption' 'Cancel')('Cancel' 1)('Event' 'onSelect',do)
+ :EndSection
+
+ :Section ⍝ Populate initial data
+     (me,'.gPrinter.dName')∆WS('Items'(printers[;1]))('SelItems'(printers≢⍛↑1))
+     1 ##.##.##.∆NQ(me,'.gPrinter.dName')'Select'
+     ((me,'.gRange.'),⊃'dSelection' 'dPages' 'dAll'/⍨1,⍨1 2∊bits)∆WS⊂'State' 1
+     (me,'.gCopies.dCopies')∆WS⊂'Value' 1
+     (me,'.gCopies.dCollate')∆WS⊂'State'(8∊bits)
+     (me,'.gRange.dSelection')∆WS⊂'Active'(~16∊bits)
+     ((⊂me,'.gRange.'),¨'dPages' 'lFrom' 'dFrom' 'lTo' 'dTo')∆WS¨⊂⊂'Active'(~32∊bits)
+     (me,'.gPrinter.dFile')∆WS⊂'Visible'(~128∊bits)
+     :If ~32∊bits
+         (me,'.gRange.dFrom')∆WS⊂'Value'(pages[3])
+         (me,'.gRange.dTo')∆WS⊂'Value'(pages[4])
+     :EndIf
+     me ∆WS⊂'Visible' 1
+ :EndSection
+
+ ##.##.##.∆DQ me ⍝ Modally wait on an answer
+ ##.##.##.∆EX⍕me ⍝ And now we're done with the input dialog
+
+ ⍝ Process screen results (passed back via namespace) directly onto the Printer
+ :If result←1∊data ⎕VGET⊂'OK' 0 ⍝ Did they click the OK button?
+     devmode←object ##.DevMode ⍬
+     pname←','##.##.##.∆sew printers[printers[;1]⍳⊂data.pname;] ⍝ Translate to extended Dyalog name
+     object._printername←data.pname
+     object._copies←dm←data.copies ⋄ devmode[54+⍳2]←80 ⎕DR⊃(163,⍨⎕DR dm)⎕DR dm
+     object._collate←data.collate ⋄ devmode[68+⍳2]←80 ⎕DR⊃(163,⍨⎕DR dm)⎕DR dm
+     :If 3∊result←data.range ⋄ result,←data.pages⊂⍛,(256∊bits)/data.copies,data.collate ⋄ :EndIf
+ ⍝? Unfortunately, the printer name cannot be changed once created
+     object ∆WS 1↓('PName'pname)('Copies'data.copies)('Collate'data.collate)
+     object._devmode←devmode ⍝ Update DevMode to match
+     {}object ##.printername,⊂data.pname ⍝ Update DevNames as well
+ :EndIf

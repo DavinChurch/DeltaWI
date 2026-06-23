@@ -1,0 +1,13 @@
+ result←object dirty arg;was
+ was←object ##.##.∆WG'Dirty'
+ :If 0=≢arg
+     result←was
+ :Else
+     '∆WI DOMAIN ERROR: dirty'##.##.Error~##.##.IsInt arg
+     '∆WI LENGTH ERROR: dirty'##.##.Error(1≠≢arg)∨~0 1∊⍨≢⍴arg
+     '∆WI DOMAIN ERROR: dirty'##.##.Error~arg⊃⍛∊0 1
+     :If (1=arg)∧0=was ⍝ It can only be turned on, not off
+         ##.##.Error'Setting the dirty bit is not presently supported'
+         ⍝object ##.##.∆WG'Dirty' 1 ⍝? Dyalog does not permit setting this property
+     :EndIf
+ :EndIf

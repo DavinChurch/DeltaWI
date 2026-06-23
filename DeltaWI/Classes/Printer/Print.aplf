@@ -1,0 +1,53 @@
+ result←object Print arg;dr;NL;FF;position;t;line;tunits;page;fs;pagesize;NeverSuppress
+ '∆WI ARGUMENT ERROR: Argument required for "Print" method'##.##.Error 0=≢arg
+ '∆WI DOMAIN ERROR: Print'##.##.Error 1≠≢arg
+ '∆WI RANK ERROR: Print'##.##.Error 1<≢⍴arg←⊃arg
+ '∆WI DOMAIN ERROR: Print'##.##.Error~0 1∊⍨≡arg
+
+ :If 0=object._opened ⍝ If the Printer is currently closed, we need to Open it first
+     object('Open'##.##.Invoke)⍬
+ :EndIf
+
+ ⍝ Clean up the argument
+ :If ##.##.IsChar arg←,arg ⍝ The usual case
+     ⍝ We should be able to print this as-is
+ :ElseIf ##.##.IsInt arg
+     'DOMAIN ERROR: Unicode values out of range'##.##.Error∨/~(0∘≤∧≤∘65535)arg
+     arg←⎕UCS⌊0.5+arg ⍝ Convert this whole thing to text first
+ :ElseIf ∧/0 1 2 3 5∊⍨dr←10|⎕DR¨arg ⍝ Check if it's mixed text and numbers
+     'DOMAIN ERROR: Unicode values out of range'##.##.Error∨/~(0∘≤∧≤∘65535)(dr∊1 3 5)/arg
+     arg←{⎕UCS⌊0.5+⍵}@(⍸dr∊1 3 5)⊢arg ⍝ Convert only the numbers to text
+ :Else
+     ##.##.Error'∆WI DOMAIN ERROR: Print'
+ :EndIf
+
+ ⍝ Now we should have a simple character vector to process
+ (NL FF)←⎕UCS 13 12 ⋄ tunits←⊃##._supp.MyUnits object
+ (pagesize position page)←object ⎕VGET('_size'⍬)('_position'(0 0))('_page' 0)
+ :While ×≢arg
+     :Select ⊃arg
+     :Case NL
+         position←2↑position,⍥⊃object ##._supp.GetTextSize'X' ⍝? Don't we need to accumulate this across the course of the whole line?
+         arg←1↓arg
+     :Case FF
+         :If object dirty ⍬ ⍝ Don't auto-eject if the page is not yet dirty
+             2 ##.##.∆NQ object'NewPage'
+             page+←1 ⋄ position←0 0
+             'Page'##.##.Event object ##.##.Application page
+         :EndIf
+         arg←1↓arg
+     :Else
+         line←(t←¯1+⌊/arg⍳NL,FF)↑arg ⋄ arg←t↓arg
+         fs←object ##._supp.GetTextSize line
+         :If (position[1]>0)∧⊃pagesize<position+fs ⍝ If this will overflow the page vertically, eject first
+             2 ##.##.∆NQ object'NewPage'
+             page+←1 ⋄ position←0 0
+             'Page'##.##.Event object ##.##.Application page
+         :EndIf
+         (object⍕⍛,'.')##.##.∆WC'Text'('Coord' 'RealPixel')('Text'line)('Points'(⌽position))
+         page⌈←1 ⋄ position[2]+←fs[2]
+     :EndSelect
+ :EndWhile
+ object._position←position÷tunits ⋄ object._page←page
+
+ result←##.NoRes

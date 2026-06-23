@@ -6,6 +6,7 @@
 
  canon←given ⍝ Begin by assuming case-sensitivity
  :Select ⎕NC'dictionary'
+ :Case 0 ⍝? What if the left argument is not provided? Do we have a default meaning?
  :Case 2
      :If 2=≡dictionary
          ⍝ This is a nested list of properly-capitalized terms for use to recapitalize other areas that may allow case insensitivity (e.g. Draw).

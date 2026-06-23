@@ -1,0 +1,2 @@
+ result←object onError arg
+ result←object(''##.##.SetEvent'Error')arg ⍝ This is never activated by anything

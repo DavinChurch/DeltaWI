@@ -1,0 +1,4 @@
+ result←object papers arg
+ '∆WI ACTION ERROR: Property "papers" is read-only'##.##.Error×≢arg
+ result←⊃¨object ##.##.∆WG 'PaperSizes'
+ result←(⍳≢result),⍤0⊢result

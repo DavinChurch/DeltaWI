@@ -1,0 +1,5 @@
+ result←object Abort arg
+ ⍝ (Ignore any argument)
+ object.(_page _dirty _position)←0 0(0 0)
+ 2 ##.##.∆NQ object'Abort' ⍝? Is this all we need to do?
+ result←##.NoRes

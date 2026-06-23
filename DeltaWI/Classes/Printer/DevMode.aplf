@@ -1,0 +1,57 @@
+ result←object DevMode arg;devmode;dm;props;t;old;new;chg;data
+⍝ Simulate as much of the basic DEVMODEA structure as we can
+
+ :If 0=≢devmode←object ⎕VGET⊂'_devmode'⍬
+     devmode←156⍴⎕UCS 0 ⋄ (6↑32↓devmode)←80 ⎕DR 1025 0 156 ⍝ Set up minimalist definition
+     props←object ##.##.∆WG'Orientation' 'PaperSize' 'PaperSizes' 'Copies' 'PaperSource' 'PaperSources' 'Resolution' 'Resolutions' 'ColorMode' 'Duplex' 'Collate'
+     t←(⊃¨3⊃props)⍳props[2]
+     dm←(1+'L'∊1⊃props),t,((t>≢3⊃props)×props⊃⍨3,t,2),100,props[4],((⊃¨6⊃props)⍳props[5]),0,(1+props[9]),('SHV'⍳⊃10⊃props),0,3,props[11]
+     ((2×≢dm)↑44↓devmode)←80 ⎕DR⊃(163,⍨⎕DR dm)⎕DR dm ⍝ Define initial value matching current printer settings
+     object._devmode←devmode
+ :EndIf
+
+ :If 0=≢arg
+     result←devmode
+ :Else
+     '∆WI DOMAIN ERROR: DevMode'##.##.Error 1≠≢arg
+     '∆WI DOMAIN ERROR: DevMode'##.##.Error~##.##.IsChar arg←##.##.Single arg
+     '∆WI LENGTH ERROR: DevMode'##.##.Error 156≠≢arg ⍝ Only fits our simulated value
+     '∆WI LENGTH ERROR: DevMode'##.##.Error 156≠163 ⎕DR 2↑36↓arg ⍝ Only fits our simulated value
+     old←13 2⍴44↓devmode ⋄ new←13 2⍴44↓arg
+     :For chg :In ⍸old≢⍤1⊢new
+         data←163 ⎕DR new[chg;]
+         :Select chg ⍝ Now we need to make adjustments to the actual Printer (for both systems)
+         :Case 1 ⍝ Orientation
+             object ##.##.∆WS'Orientation'('Portrait' 'Landscape'⊃⍨data)
+             object._orientation←'portrait' 'landscape'⊃⍨data
+         :Case 2 ⍝ PaperSize
+             object ##.##.∆WS'PaperSize'data
+             object._paper←data
+         :Case 3 ⍝ Changing to a non-standard paper size is not supported in APL+Win
+         :Case 4 ⍝ Changing to a non-standard paper size is not supported in APL+Win
+         :Case 5 ⍝ Treat scale as a fixed number
+         :Case 6 ⍝ Copies
+             object ##.##.∆WS'Copies'(1⌈32767⌊data)
+             object._copies←1⌈32767⌊data
+         :Case 7 ⍝ Source
+             object ##.##.∆WS'PaperSource'data
+             object._bin←data
+         :Case 8 ⍝ X-Resolution
+             :If ##.##.IsChar t←object ##.##.∆WS'Resolution' ⋄ t←2⍴data ⋄ :EndIf ⍝ Force it to be numeric
+             object ##.##.∆WS'Resolution'(data,t[2]) ⍝ Can only change this numerically
+         :Case 9 ⍝ Color
+             object ##.##.∆WS'ColorMode'(data-1)
+         :Case 10 ⍝ Duplex
+             object ##.##.∆WS'Duplex'(data⊃'Simplex' 'Horizontal' 'Vertical')
+         :Case 11 ⍝ Y-Resolution
+             :If ##.##.IsChar t←object ##.##.∆WS'Resolution' ⋄ t←2⍴data ⋄ :EndIf ⍝ Force it to be numeric
+             object ##.##.∆WS'Resolution'(t[1],data) ⍝ Can only change this numerically
+         :Case 12 ⍝ Can't work with TT-options
+         :Case 13 ⍝ Collate
+             object ##.##.∆WS'Collate'data
+         :EndSelect
+         devmode[0 1+44+2×chg-1]←arg[0 1+44+2×chg-1] ⍝ Update simulated copy
+     :EndFor
+     object._devmode←devmode ⍝ Remember it
+     result←##.NoRes
+ :EndIf

@@ -57,7 +57,7 @@
 
  :Section ⍝ Resolve imbedded parentage signals just in case there's an error before we get to the next step
      object←'.'∆cuts object ⍝ Cut into pieces between every '.'
-     :While (≢object)≥t←object≢¨⍛⍳0 ⍝ Resolve each parentage reference until clean
+     :While object≢⍛≥t←object≢¨⍛⍳0 ⍝ Resolve each parentage reference until clean
          '∆WI OBJECT ERROR: Parent not found (too many ..''s)'Error t≤1
          :If nametesting<2
              '∆WI OBJECT ERROR: Cannot use ".." notation on undefined object'Error ⎕NULL≡GUIroot Locate(t-1)↑object
@@ -75,7 +75,7 @@
      '∆WI OBJECT ERROR: DOMAIN ERROR in argument'Error~(0 1∊⍨≢⍴prefix)∧IsChar prefix
      '∆WI OBJECT NAME ERROR: Improperly formed object name'Error'#'∊1↓prefix ⍝ No imbedded "#" in prefix
      prefix↑⍨←⌈/0,⍸,prefix∊':.' ⍝ Extract any name-prefix portion of the command
-     (1⊃action)←∆dlt(≢prefix)↓1⊃action ⋄ prefix←∆dlt prefix~'*' ⍝ Strip off any name-prefix and remove redundant spaces/'*'
+     (1⊃action)←∆dlt prefix≢⍛↓1⊃action ⋄ prefix←∆dlt prefix~'*' ⍝ Strip off any name-prefix and remove redundant spaces/'*'
      (1⊃action)←∆dlt(t←'*'=⊃1⊃action)↓1⊃action ⋄ (1⊃action),⍨←'*'/⍨star∨t ⍝ Clean up '*' prefixes
  :EndSection
 
@@ -106,7 +106,7 @@
 
  :Section ⍝ Resolve any new imbedded parentage signals
      object←'.'∆cuts object ⍝ Cut into pieces between every '.'
-     :While (≢object)≥t←object≢¨⍛⍳0 ⍝ Resolve each parentage reference until clean
+     :While object≢⍛≥t←object≢¨⍛⍳0 ⍝ Resolve each parentage reference until clean
          '∆WI OBJECT ERROR: Parent not found (too many ..''s)'Error t≤1+'#'∊⊃object
          :If nametesting<2
              '∆WI OBJECT ERROR: Cannot use ".." notation on undefined object'Error ⎕NULL≡GUIroot Locate(t-1)↑object

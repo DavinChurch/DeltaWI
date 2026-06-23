@@ -1,5 +1,6 @@
  bitvals←SetBitVals values
 ⍝ Given a list of bit-encoded numeric values, combine them together into a single set of bit values resulting from ∇BitVals
-⍝ Handle the situation where there are duplicated bits among the listed integers
+⍝ APL+Win bit-arguments may be provided as a combination of vectors and sums, so this processes the whole list as a unit
+⍝ Handle the situation where there may be duplicated bits among the listed integers
 
  bitvals←##.##.BitVals+/∪,##.##.BitVals∊values
