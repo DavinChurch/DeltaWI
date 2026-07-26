@@ -13,6 +13,6 @@
  props,←⊂'VScroll'(-16∊∆style)
  ⍝props,←⊂'HScroll'(-64∊∆style) ⍝? Dyalog does not allow this property!
  props,←⊂'MultiColumn'(32∊∆style)
- props,←(~'border'⊂⍛∊actions)/⊂'Border'∆border ⍝ Set border upon creation if we have it
+ props,←⊂'Border'∆border ⍝ Set border upon creation ⍝? Create-only
  newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
  result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure

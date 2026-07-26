@@ -2,7 +2,7 @@
 
  pgs←object pages ⍬ ⍝ And what are our Page names (in order)?
  :If was←×≢tab←object ##.##.∆WG'TabObj'
-     was←(1+≢pgs)|pgs⍳⊂##.##.LeafName⍕tab._Owner ⍝ Get the index number of the Page currently selected
+     was←(1+≢pgs)|pgs⍳⊂##.##.LeafName⍕tab ##.##.∆WG'TabObj' ⍝ Get the index number of the Page currently selected
  :EndIf
  :If 0=≢arg
      result←was ⍝ Just return the current Page index number

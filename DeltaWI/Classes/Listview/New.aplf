@@ -12,6 +12,6 @@
  props,←⊂'View' 'Report' ⍝ Start with a different default
  props,←⊂'Style'('Multi' 'Single'⊃⍨1+8∊∆style) ⍝? Creation only
  props,←⊂'Header'(~128∊∆style) ⍝? Creation only
- props,←(~'border'⊂⍛∊actions)/⊂'Border'∆border ⍝ Set border upon creation if we have it
+ props,←⊂'Border'∆border ⍝ Set border upon creation ⍝? Create-only
  newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
  result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure

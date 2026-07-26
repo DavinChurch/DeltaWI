@@ -1,0 +1,6 @@
+ cbits←pic ReadBMP filename;bmp;name
+ ⍝ Extract pixel array from a .BMP file
+
+ bmp←⎕VGET name←(##.##.Next pic._Owner)##.##.∆WC'BitMap'('File'filename) ⍝ Create an ephemeral Bitmap object
+ cbits←bmp ##.##.∆WG'CBits' ⍝ Capture the pixels directly
+ ##.##.∆EX name ⍝ Destroy our Bitmap - we don't need it any more

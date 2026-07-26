@@ -1,4 +1,4 @@
- result←object Initialize arg;parent;class;name;this;sub;illegal;final;v0;vars;acts;action;aarg;isdef;margins;props
+ result←object Initialize arg;parent;class;name;this;sub;illegal;final;v0;vars;acts;action;aarg;isdef;margins;props;siz
 ⍝ Properly set up a newly-created object, starting with it's required system control information
 ⍝ It must be called directly(!) from the creating-class namespace.
 ⍝? (Watch out if it's a special-case class type such as ActiveX or Dyalog)
@@ -8,9 +8,7 @@
 ⍝       [2] Reference to the just-created object (not its name at this point)
 
  (parent object)←object ⍝ Separate object references
- :While 0≠parent.⎕NC'_Owner' ⍝ If this is an intermediate hidden parent object... ⍝? When does this occur?
-     parent←parent._Owner ⍝ Redirect parentage up to its APL+Win parent (just in case)
- :EndWhile
+ :While 0≠parent.⎕NC'_Owner' ⋄ parent←parent._Owner ⋄ :EndWhile ⍝ Find logical parent
  name←##.LeafName⍕object ⍝ The text name of the object that I just created
  class←##.LeafName⍕this←⊃⎕RSI ⍝ Namespace that I'm being called from gives me the name of the class and a reference to it
  :If isdef←class≡'def' ⍝ But if we're redefining a class from a 'def' variable, go get the previous settings instead of inferring them
@@ -25,6 +23,8 @@
  :EndIf
 
  object ##.∆WSet('Coord' 'RealPixel')('AutoConf' 0)('Visible' 0) ⍝ Everybody needs these set (where they exist)
+ siz←object ⎕VGET⊂'_pix_size'(100 100) ⋄ siz←⊃object ##.∆WGet⊂'Size'siz ⍝ Figure out a reasonable object size to use
+ object ##.∆WSet↓'YRange' 'XRange',⍤0⊢0,¨siz ⍝ Set default ranges for everyone in case a child needs Coord=User
  object.⎕WX←0 ⍝ Let's hide all GUI properties, etc., so that they won't be accidentally used directly - ∆WS/∆WG should be used instead
  :If ~isdef ⍝ If we're restoring from a 'def', don't initialize base settings normally
      object.(_scale _opened _visible _enabled)←1 0 1 1 ⍝ All new objects default to scale=1, not-yet-logically-open, but otherwise visible
@@ -45,6 +45,7 @@
 ⍝? Is there anything else we need to do specially here?
 ⍝? A Dyalog Menu object should set Coord, but nothing else
      :Case 'MDIForm'
+⍝? Should we really be doing this here? Or will it fit better in each ∇New?
          props←'MDIClient'('Coord' 'RealPixel')('Posn' 0 0)('Size'(object ##.∆WG'Size'))
          sub←⎕VGET(object⍕⍛,'._mdi')##.∆WC props
          sub._Owner←object
@@ -53,11 +54,7 @@
          ⍝ but adjustments may be made to reserve space for other objects to be added within the Form.
          ⍝? Is there anything else special that we should be handling here?⌈
      :Case 'Picture'
-         object ##.∆WS'Coord' 'User' ⍝ A picture object's parent needs an exception to Coord
-         sub←⎕VGET(object⍕⍛,'._pic')##.∆WC'SubForm'('Coord' 'RealPixel')('AutoConf' 0)
-         sub._Owner←object
-         sub.⎕WX←0 ⍝ Also tell the invisible child to hide properties as well
-⍝? Now we're going to need to attach a file-less Bitmap object so this can be drawn on.
+⍝? We're now doing this processing within ∇New
      :EndSelect
 
      :If ~isdef ⍝ If we're creating from a 'def', then all the values should already be set
@@ -72,11 +69,13 @@
      acts←⊃¨arg←⊆¨arg
      :For action :In (~acts∊final)/arg
          ⍝ We'll handle these by calling ∆WI recursively and hope we won't get interrupted or slow down
-         {}object._self ##.∆WI action ⍝ Call ∆WI to do the work, but we can never use a returned result from these operations
+⍝? Ack! We have to error out here if they don't pass a value to a property (but a method ⍬ is OK) -- how can we do this?
+         {}object._self ##.∆WI action ⍝ Call ∆WI to do the work, but we can never use any returned result from these operations
      :EndFor
 
      ⍝ Activate/show the new object as requested
 ⍝? This will have problems on the Printer object -- what do we do about that?
+⍝? What about inheriting active/visible/opened state from the object's parentage? Does that have an effect on this if it disagrees?
      object._opened←1 ⍝ It will end up opened after completion, unless 'Close' turns it off below
      :For action :In final∩⍨acts,(~∨/final∊acts)/¯1↑final ⍝ There should usually only be one of these at most; default=Open
 ⍝? This will still work for 'def', won't it?
@@ -110,4 +109,4 @@
 
  SysEvents object ⍝ Set up any system-level events that need to be included
 
- result←object._self ⍝ Finally, give them back the full GUI name of the object that they created
+ result←object._self ⍝ Finally, give them back the full GUI name of the object that they created (which will be returned from the 'New' call)

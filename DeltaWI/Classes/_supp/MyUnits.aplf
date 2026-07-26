@@ -2,9 +2,7 @@
 ⍝ Determine what pixel-size my object's (and my parent's, and all the system's) unit sizes are
 
  parent←⊃object._Ancestry,##.##.GUIroot
- :While 0≠parent.⎕NC'_Owner' ⍝ If this is an intermediate hidden parent object...
-     parent←parent._Owner ⍝ Redirect parentage up to its APL+Win parent
- :EndWhile
+ :While 0≠parent.⎕NC'_Owner' ⋄ parent←parent._Owner ⋄ :EndWhile ⍝ Find logical parent
  ((scale pxsize)(pscale ppxsize))←(object,parent)⎕VGET('_scale' 1)('_pix_size'(0 0))
  punits←units←##.##.GUIroot._units ⍝ Get system conversion factors
  tunits←object ⎕VGET⊂'_units'punits ⍝ Watch for local override (for Printers)

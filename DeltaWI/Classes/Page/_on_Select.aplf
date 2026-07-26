@@ -4,9 +4,9 @@
  object←⊃message ⍝ The Page's TabButton that was pressed
  :If 'SubForm'≡object ##.##.∆WG'Type' ⋄ ok←1 ⋄ :Return ⋄ :EndIf ⍝ Ignore Select events coming directly from the SubForm instead of the TabButton
  by←3⊃message,2 ⍝ Assume the mouse changed it (if we're not told from another routine) ⍝? Can we detect a keyboard-invoked Select here?
- newpage←object._Owner ⍝ The matching Page (SubForm) object
+ newpage←object ##.##.∆WG'TabObj' ⍝ The matching Page (SubForm) object
  sel←⊃newpage._Ancestry ⍝ The Selector (parent) object
- waspage←(sel ##.##.∆WG'TabObj')._Owner ⍝ The previously-selected Page object that we're leaving
+ waspage←(sel ##.##.∆WG'TabObj')##.##.∆WG'TabObj' ⍝ The previously-selected Page (SubForm) object that we're about to leave
  pgs←sel sel._Class.pages ⍬ ⍝ What are our sibling Page (object) names (in order)?
  (wasndx newndx)←(1+≢pgs)|pgs⍳##.##.LeafName¨⍕¨waspage newpage
  :If ok←wasndx=newndx ⋄ :Return ⋄ :EndIf ⍝ If the page hasn't actually changed, don't do anything

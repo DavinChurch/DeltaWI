@@ -27,7 +27,7 @@
  :While ×≢arg
      :Select ⊃arg
      :Case NL
-         position←2↑position,⍥⊃object ##._supp.GetTextSize'X' ⍝? Don't we need to accumulate this across the course of the whole line?
+         position←position,⍥⊃object ##._supp.GetTextSize'X'
          arg←1↓arg
      :Case FF
          :If object dirty ⍬ ⍝ Don't auto-eject if the page is not yet dirty

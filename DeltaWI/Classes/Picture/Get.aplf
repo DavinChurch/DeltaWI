@@ -1,0 +1,12 @@
+ result←object Get arg
+ result←object._pic ##.##.∆WG'CBits' ⍝ The Bitmap child will always exist
+ :If ×≢arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: Get'##.##.Error~##.##.IsNum arg
+     '∆WI RANK ERROR: Get'##.##.Error 1≠≢⍴arg
+     '∆WI LENGTH ERROR: Get'##.##.Error 4≠≢arg
+     '∆WI DOMAIN ERROR: Get'##.##.Error∨/arg<0
+     arg←⌊0.5+arg×4⍴⊃##._supp.MyUnits object ⍝ Convert scaled arg to whole pixels
+     '∆WI DOMAIN ERROR: Get'##.##.Error∨/result⍴⍛<+⌿2 2⍴arg
+     result←arg[3 4]↑arg[1 2]↓result
+ :EndIf
+ result←256⊥⊖(3⍴256)⊤result

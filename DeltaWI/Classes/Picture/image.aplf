@@ -1,0 +1,15 @@
+ result←object image arg;cbits
+ cbits←object._pic ##.##.∆WG'CBits' ⍝ The Bitmap child will always exist
+ :If 0=≢arg
+     result←256⊥⊖(3⍴256)⊤cbits
+
+ :ElseIf ##.##.IsInt arg←⊃arg
+     arg←arg⍴⍨¯2↑1 1,⍴arg ⍝ Force to be a matrix
+     arg←(cbits⌊⍥⍴arg)↑arg ⍝ Truncate to fit
+     ((⍴arg)↑cbits)←256⊥⊖(3⍴256)⊤arg ⍝ Replace just those pixels (origin 0 0), retaining bitmap size
+     object._pic ##.##.∆WS⊂'CBits'cbits
+     result←##.NoRes
+
+ :Else
+     result←##.NoRes ⍝ Ignore bad data
+ :EndIf

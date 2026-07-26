@@ -1,0 +1,48 @@
+ result←object New arg;parent;name;props;newobj;actions;newpic;∆border;px;∆style;psize;bkg
+ (parent name)←object ⍝ Separate non-standard two-part argument
+ actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
+
+⍝? Never mind --- What if argument parameter names are repeated? How do I figure out which ones are in effect when the others execute, and which take final effect? Do I need a subroutine??
+⍝? Still, shouldn't I be looking at the last occurance of properties instead of the first (in the case where there are dups)?
+⍝? Or maybe the last before an Open or Show action, since we're detecting how the object is first created?
+⍝? ∇GetInitialProps?? Maybe auto-BitVals border/style/? in result?
+
+ (∆style ∆border)←((1↓¨arg),⊂⍬)[actions⍳'style' 'border']
+ ∆border←(0=≢∆border)⌈×+/∊∆border ⋄ ∆style←##._supp.SetBitVals ∆style
+ arg←(parent:parent ⋄ border:∆border)##.##.New.Center arg
+ props←'SubForm'('Visible' 0) ⍝ Set standard creation properties
+ props,←⊂'Border'∆border ⍝ Set border upon creation ⍝? Create-only
+ props,←⊂'VScroll'(-16∊∆style) ⍝ Create-only
+ props,←⊂'HScroll'(-64∊∆style) ⍝ Create-only
+ newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
+ newobj._imagesize←_size ⍝ Set default size (in scaled units; in case it's never set)
+ px←⌊0.5+_size×1⌷3⊃##._supp.MyUnits parent ⍝ Assume defult size in pixels (in case it's never set)
+ newobj ##.##.∆WS('Coord' 'User')('YRange'(0,px[1]))('XRange'(0,px[2])) ⍝ Special case which the Picture needs for Zooming and Scrolling
+⍝? Note: Make sure that ##.Size & friends don't mess with Coord=User objects (I don't think they will)
+⍝? How can we exclude scroll bars from this(??) sizing process? May have to work with ##.size & family (and without breaking anything else)??
+
+ props←⊂'Bitmap'
+ bkg←256⊥3⍴240 ⍝ Default background color (before being able to set its own 'color')
+ props,←⊂'CBits'(px⍴bkg) ⍝ Start with a blank screen by default (it will get overwritten entirely if there is bitmap or image data)
+ newpic←⎕VGET(newobj⍕⍛,'._pic')##.##.∆WC props ⍝ Create the hidden Dyalog object to hold the dynamic image
+ ##.##.New.InitChild newobj newpic
+
+⍝ Must do this after creating the child because argument-processing will depend on it
+ result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure
+ newobj ##.##.∆WS'Picture'(newpic 0) ⍝? Will the SubForm auto-update when the Bitmap's CBits are changed (explicitly or implicitly)?
+
+
+⍝? Note for child bitmaps: If the image is smaller than the imagesize, then it ends up centered. If larger, then it ends up upper-left justified. Can we change this initially and dynamically (only when resizing?)?
+
+⍝? Questions:
+⍝? What happens in APL+Win if the 'imagesize' is changed while it contains an image? Changing 'Size' in Dyalog rescales the image.
+⍝?      Answer (file): If using a bitmap file, the image is unscaled and centered. Increasing the imagesize causes it to be redrawn from the file, centered in the new size.
+⍝?      Answer (graphics): Anything drawn on the picture is erased first.
+⍝?      Note: Don't change 'Size' in Dyalog, change 'CBits' ⍴ instead, explicitly reconstructing as desired.
+⍝? When changing Size in Dyalog, how does it interact with X/YRange and in what order should they be changed? -- Don't use Size
+⍝? Does Dyalog re-scale Pictures when the Size changes even if the Picture definition is oversized and specified top-left alignment? -- Don't use Size
+⍝? Can we change Size in Dyalog without rescaling what's in the image? -- Not needed, Win clears the window (must have a way to replicate) -- Don't use Size
+⍝? Can Dyalog's 'File' property be changed any time? What about APL+Win's equivalent 'bitmap' property when using a file name? ⍝ Dyalog=Yes ⍝ Win=Yes, redrawn
+⍝? How do I cause Dyalog to clear the Picture area?
+⍝?      Answer: Set CBits to an array of "blank"
+⍝? Changing APL+Win style resets image too

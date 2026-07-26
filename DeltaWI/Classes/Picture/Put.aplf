@@ -1,0 +1,16 @@
+ result←object Put arg;cbits;new;at
+ cbits←object._pic ##.##.∆WG'CBits' ⍝ The Bitmap child will always exist
+ arg←##.##.Single arg
+ '∆WI RANK ERROR: Put'##.##.Error 1≠≢⍴arg
+ '∆WI LENGTH ERROR: Put'##.##.Error~1 3∊⍨≢arg
+ new←⊃arg ⋄ at←2↑1↓arg,0 0
+ new←new⍴⍨¯2↑1 1,⍴new ⍝ Force to be a matrix
+ '∆WI DOMAIN ERROR: Put'##.##.Error~##.##.IsInt new
+ '∆WI DOMAIN ERROR: Put'##.##.Error~##.##.IsNum at
+ '∆WI DOMAIN ERROR: Put'##.##.Error∨/∨/new<0
+ '∆WI DOMAIN ERROR: Put'##.##.Error∨/at<0
+ at←(⍴new),⍨⌊0.5+at×⊃##._supp.MyUnits object ⍝ Convert scaled arg to whole pixels
+ '∆WI DOMAIN ERROR: Put'##.##.Error∨/cbits⍴⍛<+⌿2 2⍴at
+ (at[3 4]↑at[1 2]↓cbits)←256⊥⊖(3⍴256)⊤new ⍝ Replace just those pixels
+ object._pic ##.##.∆WS⊂'CBits'cbits
+ result←##.NoRes

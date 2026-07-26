@@ -1,0 +1,15 @@
+ result←object imagesize arg;psize;isize;yr;xr;pxsize
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_imagesize'⍬
+ :Else
+     '∆WI DOMAIN ERROR: imagesize'##.##.Error~##.##.IsNum arg←##.##.Single arg
+     '∆WI RANK ERROR: imagesize'##.##.Error 1<≢⍴arg
+     '∆WI LENGTH ERROR: imagesize'##.##.Error 2≠≢arg
+     '∆WI DOMAIN ERROR: imagesize'##.##.Error∨/arg≤0
+     object._imagesize←arg
+     pxsize←⌊0.5+arg×⊃##._supp.MyUnits object ⍝ How big is it going to be in pixels?
+     (yr xr)←0,¨pxsize ⋄ object ##.##.∆WS('YRange'yr)('XRange'xr) ⍝ Redefine scales
+     object origin,⊂object origin ⍬ ⍝ Changing imagesize doesn't change origin, except if it's too small to fit
+     {}object bitmap,⊂object ⎕VGET⊂'_bitmap' '' ⍝ Reconstitute the starting bitmap they previously defined
+     result←##.NoRes
+ :EndIf

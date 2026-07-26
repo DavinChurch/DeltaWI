@@ -1,0 +1,45 @@
+ Picture;clip;big
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+ 'f.p'∆WI Pass'f.p'⊢'Create' 'Picture'('style' 80)
+ 'f.p'∆WI Pass 4.875 9.75⊢'size'
+ 'f.p'∆WI Pass 4.875 9.75⊢'imagesize'
+ 'f.p'∆WI Pass 0 0⊢'origin'
+ 'f.p'∆WI Pass MT⊢'where' 5 10 20 50
+ 'f.p'∆WI Pass 4.875 9.75⊢'imagesize'
+ 'f.p'∆WI Pass MT⊢'imagesize' 20 50
+ 'f.p'∆WI Pass 20 50⊢'imagesize'
+ 'f.p'∆WI Pass 0 0⊢'origin'
+ 'f.p'∆WI Pass''⊢'bitmap'
+ 'f.p'∆WI Pass ⍬⊢'bitmapsize'
+
+ 'f.p'∆WI Pass(320 400⍴256⊥3⍴240)⊢'image'
+ 'f.p'∆WI Pass MT⊢'image'(320 400⍴256⊥0 1 1×240)
+ 'f.p'∆WI Pass(320 400⍴256⊥0 1 1×240)⊢'image'
+ 'f.p'∆WI Pass MT⊢'imagesize' 100 100
+ 'f.p'∆WI Pass 100 100⊢'imagesize'
+ 'f.p'∆WI Pass 0 0⊢'origin'
+ 'f.p'∆WI Pass MT⊢'origin' 25 25
+ 'f.p'∆WI Pass 25 25⊢'origin'
+
+ 'f.p'∆WI Pass{32 16≡⍴⍵}⊢'Get' 1 1 2 2
+ clip←'f.p'∆WI'Get' 1 1 2 2
+ 'f.p'∆WI Pass MT⊢'Put'clip 1 1
+ 'f.p'∆WI Pass MT⊢'Push' 2 2 1.5 2.5
+ 'f.p'∆WI Pass MT⊢'Pop' 2 2
+
+ 'f.p'∆WI Pass''⊢'bitmap'
+ 'f.p'∆WI Pass ⍬⊢'bitmapsize'
+ 'f.p'∆WI Pass MT⊢'bitmap'(160 320⍴256⊥0 1 0×128) ⍝ Put a green box in the middle of the grey background
+ 'f.p'∆WI Pass 10 40⊢'bitmapsize'
+ 'f.p'∆WI Pass 100 100⊢'imagesize'
+ 'f.p'∆WI Pass{1600 800≡⍴⍵}⊢'image'
+ big←'f.p'∆WI'image'
+ 'f.p'∆WI Pass MT⊢'imagesize' 100 100
+ 'f.p'∆WI Pass big⊢'image' ⍝ Is the green box still there after "resizing"?
+
+⍝? We could add tests to predefine a background color for use when setting or reusing 'bitmap'
+⍝? I need to do some more human-testing to see how things look visually
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

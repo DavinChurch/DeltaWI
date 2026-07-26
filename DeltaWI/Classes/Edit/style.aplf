@@ -1,6 +1,4 @@
  result←object style arg;bits;props
-⍝ Edit:style
-
 ⍝   1=Centered (only ∊ 4)
 ⍝   2=Right justified (only ∊ 4)
 ⍝   4=Multi-line

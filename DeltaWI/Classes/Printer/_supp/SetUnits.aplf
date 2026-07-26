@@ -1,10 +1,10 @@
  units←SetUnits object;tpp
 ⍝ Determine the 'units' array for this particular Printer (object)
-⍝ This can vary when PName or FontObj changes!
+⍝ This can vary when PName changes!
 
  tpp←⌈/1440÷25.4×⊃÷/2↑object ##.##.##.∆WG'DevCaps' ⍝ Twips/pixel
- units←1 2⍴2 ##.##.##.∆NQ object'GetTextSize' 'X' ⍝ 1=Character units
- units⍪←units[1;]÷8 4 ⍝ 2=Dialog units
+ units←1 2⍴2 ##.##.##.∆NQ object'GetTextSize' 'X' ⍝ 1=Character units ⍝? This is wrong! units don't depend on font, or resolution either -- what then??
+ units⍪←units[1;]÷8 4 ⍝ 2=Dialog units (this calculation works regardless of how units[1;] is derived)
  units⍪←2⍴20÷tpp ⍝ screensize÷inches÷72 ⍝ 3=Points (72/in)
  units⍪←2⍴÷tpp ⍝ 4=Twips (1440/in)
  units⍪←1 1 ⍝ 5=Virtual pixels; always true pixels on a printer

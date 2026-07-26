@@ -1,0 +1,13 @@
+ result←object Push arg;cbits
+ cbits←object._pic ##.##.∆WG'CBits' ⍝ The Bitmap child will always exist
+ :If ×≢arg←##.##.Single arg
+     '∆WI DOMAIN ERROR: Push'##.##.Error~##.##.IsNum arg
+     '∆WI RANK ERROR: Push'##.##.Error 1≠≢⍴arg
+     '∆WI LENGTH ERROR: Push'##.##.Error 4≠≢arg
+     '∆WI DOMAIN ERROR: Push'##.##.Error∨/arg<0
+     arg←⌊0.5+arg×4⍴⊃##._supp.MyUnits object ⍝ Convert scaled arg to whole pixels
+     '∆WI DOMAIN ERROR: Push'##.##.Error∨/cbits⍴⍛<+⌿2 2⍴arg
+     cbits←arg[3 4]↑arg[1 2]↓cbits
+ :EndIf
+ object._push_image←cbits ⍝ Keep in ⊥RGB-form
+ result←##.NoRes

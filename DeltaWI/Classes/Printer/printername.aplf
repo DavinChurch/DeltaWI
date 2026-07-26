@@ -12,7 +12,6 @@
      ⍝object ##.##.∆WS'PName'(','##.##.∆sew plist[plist[;1]⍳⊂arg;]) ⍝? Create-only
      object._pixelmargin←_supp.SetMargin object
      object._units←_supp.SetUnits object
-     devnames←''⊂⍛,plist[plist[;1]⍳⊂arg;],⍕arg≡plist[1;1] ⍝ Reconstruct DevNames as best we can
-     t←+\8,¯1↓≢¨devnames←devnames,¨⎕UCS 0 ⋄ object._devnames←(80 ⎕DR t),∊devnames
+     object.⎕EX'_devmode' '_devnames' ⍝ Recompute DevMode & DevNames next time we need them
      result←##.NoRes
  :EndIf

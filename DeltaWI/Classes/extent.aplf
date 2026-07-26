@@ -53,12 +53,13 @@
      :EndSection
      :Section ⍝ Compute and set Dyalog positioning properties
          dysize←(extent×punits)+_supp.GetSizes object
-         :If 'User'≡object ##.∆WGet⊂'Coord' 'Prop' ⍝ In this case, we've got to do something about using custom coordinates (used for Pictures)
-             ##.Halt'How do we need to handle this??'
+         :If 'User'≡object ##.∆WGet⊂'Coord' 'Prop' ⍝ In this case, we may have to do something about using custom coordinates (used for Pictures)
+             ##.Halt'How do we need to handle this??' ⍝? Perhaps this will work OK if we depend on _supp.MyUnits??
              ⍝? How can I relocate the Picture parent when its Coord=User? Does it use the parent's Coord?
-             ⍝? What happens if there's a Picture within a Picture?
+             ⍝? What happens if there's a Picture within a Picture??
          :EndIf
          object ##.∆WSet⊂'Size'dysize
+         object _supp.SetRange dysize
          :If ⎕NULL≠mdi←object ⎕VGET⊂'_mdi'⎕NULL ⍝ If there's an MDI Client area here, resize it too
          :AndIf 0=≢mdi ⎕VGET⊂'_clientwhere'⍬ ⍝ If it's using automatic sizing
              mdi ##.∆WSet⊂'Size'dysize

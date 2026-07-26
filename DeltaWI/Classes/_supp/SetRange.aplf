@@ -1,0 +1,9 @@
+ object SetRange newsize;ranges;new
+⍝ Change the object's YRange & XRange to match it's size so that any Coord=User children can be properly addressed
+⍝ Keep the actual ranges in pixels, matching the usual Coord=RealPixel sizes
+⍝? I don't know if this will do the entire job - we'll have to play with it and look for loopholes
+⍝? Is this supposed to apply to Coord=User objects as well?
+
+ :If ∨/0∊¨≢¨ranges←object ##.##.∆WGet('YRange'⍬)('XRange'⍬) ⋄ :Return ⋄ :EndIf ⍝ Can't do anything here
+ new←(⊃¨ranges),¨newsize
+ object ##.##.∆WSet↓'YRange' 'XRange',⍤0⊢new

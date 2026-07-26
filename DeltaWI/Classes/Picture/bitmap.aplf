@@ -1,0 +1,47 @@
+ result←object bitmap arg;stylebits;pxsize;isize;tunits;pic;cbits;psize;bkg;px
+⍝ May be a file name or a pixel array
+⍝ We store the value they gave us in the local variable (file name or pixel matrix), but this will not be modified by later
+⍝ operations that affect 'image' directly. Nor is an original array here modified by style or imagesize (they just change the final image).
+
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_bitmap' ''
+     :Return
+ :EndIf
+
+ (stylebits isize psize)←object ⎕VGET('_style' 0)('_imagesize'⍬)('_size'⍬)
+ stylebits←##.##.BitVals stylebits
+ :If 0=≢isize ⋄ isize←psize ⋄ :EndIf
+ bkg←256⊥⌽⊃object ⎕VGET⊂'_color_'((3⍴240)⍬) ⍝ Background color to use
+ tunits←⊃##._supp.MyUnits object
+ pic←⎕VGET object⍕⍛,'._pic' ⍝ The Bitmap child will always exist
+ px←⌊0.5+isize×tunits ⍝ How big is the Picture (in pixels)?
+ :If ##.##.IsChar arg←##.##.Single arg ⍝ This is for processing file names
+     '∆WI RANK ERROR: bitmap'##.##.Error 1<≢⍴arg
+     :If 0=≢arg ⍝ We're resetting it back to background-only
+         object._bitmap←''
+         cbits←px⍴bkg
+
+     :ElseIf '.bmp'≡⍥⎕C ¯4↑arg ⍝ APL+Win only accepts .BMP files
+     :AndIf ⎕NEXISTS arg ⍝ If it's not an existing file, don't change the bitmapsize or image/imagesize
+         object._bitmap←arg
+         pxsize←⍴cbits←pic _supp.ReadBMP arg ⍝ Build our base pixel-image from their file
+         cbits←pic _supp.AlignPic cbits stylebits px ⍝ Align declared image within whole Picture
+         object._bitmapsize←pxsize÷tunits
+     :EndIf
+
+ :ElseIf ##.##.IsInt arg ⍝ This is for processing direct pixel-source images
+     object._bitmap←arg
+     :If 2≥≢⍴arg ⍝ Is it a matrix or can it be coerced into one? ⍝? Should this instead just truncate to 2 dimensions?
+         arg←arg⍴⍨¯2↑1 1,⍴arg ⍝ Force to be a matrix
+         pxsize←⍴arg ⍝ How big is the bitmap (in pixels)?
+         object._bitmapsize←pxsize÷tunits
+         arg←256⊥⊖(3⍴256)⊤arg ⍝ Convert APL+Win ⊥BGR form into Dyalog ⊥RGB form (throw away overflows/wraparounds)
+         cbits←pic _supp.AlignPic arg stylebits px ⍝ Align declared image within whole Picture
+     :EndIf
+
+ :Else
+     ##.##.Error'∆WI DOMAIN ERROR: bitmap'
+ :EndIf
+
+ pic ##.##.∆WS⊂'CBits'cbits ⍝ Directly specify the pixels to be displayed
+ result←##.NoRes

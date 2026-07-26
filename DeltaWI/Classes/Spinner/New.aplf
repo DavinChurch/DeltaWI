@@ -9,9 +9,9 @@
  arg←(parent:parent ⋄ stretch:stretch ⋄ border:∆border ⋄ extent:extent)##.##.New.Center arg
 
  props←'UpDown'('Visible' 0) ⍝ Properties that should be used during creation
- props,←⊂'VScroll'(-~1∊∆style)                                                              ⍝? Create-only
- props,←⊂'HScroll'(-1∊∆style)                                                               ⍝? Create-only
- props,←(~'border'⊂⍛∊actions)/⊂'Border'∆border ⍝ Set border upon creation if we have it     ⍝? Create-only
+ props,←⊂'VScroll'(-~1∊∆style) ⍝? Create-only
+ props,←⊂'HScroll'(-1∊∆style) ⍝? Create-only
+ props,←⊂'Border'∆border ⍝ Set border upon creation ⍝? Create-only
  props,←⊂'Wrap' 0 ⍝ APL+Win has a different default
  newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
  result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure

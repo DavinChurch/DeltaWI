@@ -1,0 +1,25 @@
+ result←object style arg;bits;props;isize;psize;defn;pxsize;yr;xr
+⍝   0=Image unscaled and centered (but truncated to imagesize first)
+⍝   2=Image is tiled to fill
+⍝   4=Image is scaled to fit
+⍝   16=Vertical scroll bar
+⍝   64=Horizontal scroll bar
+
+ :If 0=≢arg
+     result←object ⎕VGET⊂'_style' 0
+ :Else
+     '∆WI DOMAIN ERROR: style'##.##.Error~##.##.IsInt arg←##.##.Single arg
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∨/∊arg<0
+     arg←+/bits←##._supp.SetBitVals arg
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∧/2 4∊bits
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error(arg≥64×2)∨×≢bits~0 2 4 16 64
+     object._style←arg
+     props←⍬
+     props,←0/⊂'VScroll'(-16∊bits) ⍝? Can only be set during creation
+     props,←0/⊂'HScroll'(-64∊bits) ⍝? Can only be set during creation
+     ⍝object ##.##.∆WS props ⍝? Uncomment when we can change scroll bars
+     (psize isize defn)←object ⎕VGET('_size'⍬)('_imagesize'⍬)('_bitmap' '')
+     ⍝ Note: ANY assignment of style will reset the image to empty, except for any restored bitmap value
+     {}object bitmap,⊂defn ⍝ Reconstitute the starting bitmap information they previously defined
+     result←##.NoRes
+ :EndIf

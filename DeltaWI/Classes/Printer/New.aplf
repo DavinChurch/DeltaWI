@@ -6,8 +6,7 @@
  newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
 
  :Section ⍝ Set up special Printer parameters
-     newobj._units←_supp.SetUnits newobj ⍝ Each Printer (& font!) has its own 'units' definition
-⍝? If they change the Printer font, does that immediately change the unit definitions? If so, do things that depend on units also adjust to match?
+     newobj._units←_supp.SetUnits newobj ⍝ Each Printer has its own 'units' definition
      newobj._Ancestry←,parent ⍝ Fake this to check units
      (tunits punits)←2↑##._supp.MyUnits newobj ⍝ Set hard sizing of immovable object
      newobj.(_size _extent)←(⊂⊃newobj ##.##.∆WG'DevCaps')÷tunits punits ⍝ Figure out the logical printer size

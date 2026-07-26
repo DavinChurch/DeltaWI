@@ -1,0 +1,26 @@
+ cbits←pic AlignPic(image style pxsize);pad;bkg
+⍝ Align image-bits within pxsize⍴ full picture using style
+
+ :If 2∊style
+     :Section   ⍝ ***** Initial bitmap is tiled to fill the image
+         cbits←pxsize↑⊃⍪/⊃,/(⌈pxsize÷⍴image)⍴⊂image ⍝ Just do it explicitly
+     :EndSection
+
+ :ElseIf 4∊style
+     :Section   ⍝ ***** Initial bitmap is scaled to fill the image
+        ⍝ We're going to use the object's own Bitmap to compute this for us - it's going to be overwritten anyway
+         pic ##.##.∆WS'CBits'image ⍝ Place the original-size pixels in the Bitmap
+         pic ##.##.∆WS'Size'pxsize ⍝ Let Dyalog rescale it to fit
+         cbits←pic ##.##.∆WG'CBits' ⍝ Retrieve/return the final scaled image
+     :EndSection
+ :Else
+     :Section   ⍝ ***** Initial bitmap is unscaled and centered in the image (truncate to maximum imagesize first)
+         cbits←(pxsize⌊⍴image)↑image ⍝ Truncate oversized images before centering
+         bkg←256⊥⌽⊃pic._Owner ⎕VGET⊂'_color_'((3⍴240)⍬) ⍝ Background color to use
+         pad←2÷⍨pxsize-⍴cbits
+         cbits⍪⍨←bkg⍴⍨⌊pad[1],2⊃⍴cbits ⍝ Top-pad
+         cbits⍪←bkg⍴⍨⌈pad[1],2⊃⍴cbits ⍝ Bottm-pad
+         cbits,⍨←bkg⍴⍨⌊pad[2],⍨1⊃⍴cbits ⍝ Left-pad
+         cbits,←bkg⍴⍨⌈pad[2],⍨1⊃⍴cbits ⍝ Right-pad
+     :EndSection
+ :EndIf

@@ -1,0 +1,15 @@
+ result←object Pop arg;cbits;at;new
+ :If ⍬≢new←object ⎕VGET⊂'_push_image'⍬
+     cbits←object._pic ##.##.∆WG'CBits' ⍝ The Bitmap child will always exist
+     arg←##.##.Single arg
+     '∆WI RANK ERROR: Pop'##.##.Error 1≠≢⍴arg
+     '∆WI LENGTH ERROR: Pop'##.##.Error 2≠≢arg
+     at←2↑1↓arg,0 0
+     '∆WI DOMAIN ERROR: Pop'##.##.Error~##.##.IsNum at
+     '∆WI DOMAIN ERROR: Pop'##.##.Error∨/at<0
+     at←(⍴new),⍨⌊0.5+at×⊃##._supp.MyUnits object ⍝ Convert scaled arg to whole pixels
+     '∆WI DOMAIN ERROR: Pop'##.##.Error∨/cbits⍴⍛<+⌿2 2⍴at
+     (at[3 4]↑at[1 2]↓cbits)←new ⍝ Replace just those pixels (previously stored in ⊥RGB form)
+     object._pic ##.##.∆WS⊂'CBits'cbits
+ :EndIf
+ result←##.NoRes

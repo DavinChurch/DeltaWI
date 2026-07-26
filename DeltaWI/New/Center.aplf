@@ -19,8 +19,11 @@
      (punits units)←1 0 1/##.Classes._supp.MyUnits parent ⍝ Get the unit-conversions for the parent object's scale
      _size←from ⎕VGET⊂'_size'(1.5 10) ⍝ Look for a class-specified size, but default to a common size if not there
      _extent←from ⎕VGET⊂'_extent'⍬ ⍝ Look for a class-specified extent
- ⍝? Oops! Watch out for 'scale' being specified on the creation line which changes all the default measurements (after that point?)! (Won't be using units[1;] any more!)
      (stretch_ border_ extent_ size_)←opts ⎕VGET('stretch'(0 0))('border' 0)('extent'⍬)('size'⍬) ⍝ Obtain named optional parameters being passed in
+     ⍝? Ok, if the size parameter is specified here then we also have to figure out what the scale is in use at the current point of the argument line.
+     ⍝? However, so far, only the extent parameter is being used and that doesn't depend on the creation-argument line at all.
+     ⍝? Watch out for this becoming a problem if we decide to use size in the future!
+     'Can''t center with a size without checking for scale changes first!'##.Halt×≢size_
      ps←units[1;]÷punits ⍝ How to translate a size to an extent ⍝? Watch out for borders?
      ⍝ Compute the correct extent in priority order given all the different inputs
      :If 2≠≢extent←∆extent ⍝ First look to see if they provided an extent in the command line

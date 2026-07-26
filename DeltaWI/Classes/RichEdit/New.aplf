@@ -32,7 +32,7 @@
  props,←⊂'VScroll'((~8∊∆style)×¯2+16∊∆style) ⍝ Can't support 8∧16 ⍝? Can only be set during creation
  props,←⊂'HScroll'((~32∊∆style)×¯2+64∊∆style) ⍝ Can't support 32∧64 ⍝? Can only be set during creation
  props,←⊂'PageWidth'((~32∊∆style)×99999) ⍝? Can only be set during creation
- props,←(~'border'⊂⍛∊actions)/⊂'Border'∆border ⍝ Set border upon creation if we have it ⍝? It cannot be changed later
+ props,←⊂'Border'∆border ⍝ Set border upon creation ⍝? Create-only
  props,←⊂'WantsReturn'(8192∊∆style) ⍝ Override default (1) if 8192 not specified ⍝? (Dyalog always allows Ctrl-Enter anyway unless we suppress it?) ⍝? Create-only style
 
  newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object with required parameters
