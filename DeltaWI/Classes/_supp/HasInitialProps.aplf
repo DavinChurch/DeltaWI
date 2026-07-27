@@ -1,0 +1,8 @@
+ present←args HasInitialProps props;names;simple
+⍝ Determine if the object's initial-creation line contain the specified properties.
+⍝ Ignore anything after the first 'Open' and account for a property being set multiple times (which doesn't really matter here).
+
+ simple←1≥|≡props ⋄ props←,,¨⊆props ⍝ Make sure argument is used as a nested list
+ names←⊃¨⊆¨args ⋄ names←(¯1+names⍳⊂'Open')↑names ⍝ Action names (up until 'Open')
+ present←×⌈/0,⍸⍤1⊢(props~¨'←')∘.≡names ⍝ Is each property found (any occurrance) anywhere in the argument line
+ present←⊃⍣simple⊢present ⍝ If the argument was simple, return a scalar result

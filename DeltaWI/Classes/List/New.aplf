@@ -1,11 +1,6 @@
- result←object New arg;parent;name;actions;props;newobj;∆border;∆style
-⍝ Create a new List object
-
+ result←object New arg;parent;name;props;newobj;∆border;∆style
  (parent name)←object ⍝ Separate non-standard two-part argument
- actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
-
- (∆border ∆style)←((1↓¨arg),⊂⍬)[actions⍳'border' 'style']
- ∆border←0⌈×+/∊∆border ⋄ ∆style←##._supp.SetBitVals ∆style
+ (∆border ∆style)←arg ##._supp.GetInitialProps'border' 'style'
  arg←(parent:parent ⋄ stretch:24 0 ⋄ border:∆border)##.##.New.Center arg ⍝ (No idea why APL+Win doesn't center this well.)
 
  props←'List'('Visible' 0)('EdgeStyle' 'Recess') ⍝ Properties that should be used during creation

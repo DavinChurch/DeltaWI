@@ -1,7 +1,5 @@
- result←object New arg;parent;name;props;newobj;size;punits;units;extent;newtab;previous;actions
-
+ result←object New arg;parent;name;props;newobj;size;punits;units;extent;newtab;previous
  (parent name)←object ⍝ Separate non-standard two-part argument
- actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
  previous←'TabButton'##.##.∆WN parent
 
  newtab←⎕VGET(parent⍕⍛,'.',##.##.Next parent)##.##.∆WC'TabButton' ⍝ First create a hidden "Tab" object using the next available arbitrary number
@@ -17,7 +15,7 @@
  extent←parent._size ⋄ size←extent÷units[1;]÷punits ⍝ Occupy full client area of parent Selector
  newobj.(_where _extent _size)←(0 0,extent)extent size
 
- arg,←(~'caption'⊂⍛∊actions)/⊂'caption'name
+ arg,←(~arg ##._supp.HasInitialProps'caption')/⊂'caption'name
  result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure
 
  newtab ##.##.New.SysEvents newobj ⍝ Set up any system-level events (e.g. _on_Select) that need to come from the TabButton instead of the SubForm

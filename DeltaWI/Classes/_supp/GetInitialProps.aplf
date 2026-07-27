@@ -1,0 +1,16 @@
+ values←args GetInitialProps props;names;at;t;simple
+⍝ Obtain the values of specified properties being set on an object's initial-creation line.
+⍝ Ignore anything after the first 'Open' and account for a property being set multiple times.
+⍝ Special-case pre-processing on certain properties (e.g. style, border) to auto-run ∇SetBitVals on them before returning their values.
+
+ simple←1≥|≡props ⋄ props←,,¨⊆props ⍝ Make sure argument is used as a nested list
+ names←⊃¨⊆¨args ⋄ names←(¯1+names⍳⊂'Open')↑names ⍝ Action names (up until 'Open')
+ at←⌈/0,⍸⍤1⊢(props~¨'←')∘.≡names ⍝ Where is the last occurance of each requested property name in the argument line
+ values←(⍬⊂⍛,(names≢⍛↑2↓¨0,¨args),⊂⍬)[1+at] ⍝ Get each action's argument list (found with no data also ≡ ⍬)
+ :If ∨/t←props∊'border←' 'border' 'separator' 'style' ⍝ We'll pre-process these with ∇SetBitVals
+     (t/values)←SetBitVals¨t/values ⍝ Turn each one into individual bit-values for easier processing
+ :EndIf
+ :If ∨/t←props∊'border' 'separator' ⍝ 'border' (as opposed to 'border←') and 'separator' returns only the first value (0/1)
+     (t/values)←⊃¨t/values
+ :EndIf
+ values←⊃⍣simple⊢values ⍝ If the argument was simple, return a simple result

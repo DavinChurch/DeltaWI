@@ -1,12 +1,7 @@
- result←object New arg;parent;name;props;newobj;actions;∆border;∆style
-⍝ Create a new Check object
-
+ result←object New arg;parent;name;props;newobj;∆border;∆style
  (parent name)←object ⍝ Separate non-standard two-part argument
- actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
-
- (∆border ∆style)←((1↓¨arg),⊂⍬)[actions⍳'border' 'style']
- ∆border←0⌈×+/∊∆border ⋄ ∆style←##._supp.SetBitVals ∆style
- arg,⍨←(~'caption'⊂⍛∊actions)/⊂'caption'name
+ (∆border ∆style)←arg ##._supp.GetInitialProps'border' 'style'
+ arg,⍨←(~arg ##._supp.HasInitialProps'caption')/⊂'caption'name
  arg←(parent:parent ⋄ border:∆border)##.##.New.Center arg
 
  props←'Button'('Style' 'Check'),(~1∊∆style)↓('Align' 'Left')('Visible' 0) ⍝ Properties that must be used during creation

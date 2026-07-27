@@ -1,22 +1,17 @@
- result←object New arg;parent;name;actions;∆style;props;newobj;∆border;t;stretch;extent
-⍝ Create a new Combo object
-
+ result←object New arg;parent;name;∆style;props;newobj;∆border;t;stretch;extent
 ⍝ Note that for style∊0 2, any heights are ignored and all vertical sizing is determined solely by font size and row count.
 ⍝ For style∊1, size/extent determine total height (minimum 5 char-units, no maximum)
 ⍝ Maximum number of rows displayed (style≠1) keeps total default control height ≤22 char-units for whatever font is in use
 
  (parent name)←object ⍝ Separate non-standard two-part argument
- actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
-
- (∆style ∆border)←((1↓¨arg),⊂⍬)[actions⍳'style' 'border']
- ∆border←0⌈×+/∊∆border ⋄ ∆style←##._supp.SetBitVals ∆style
+ (∆style ∆border)←arg ##._supp.GetInitialProps'style' 'border'
  extent←_size⌈5 0×1∊∆style ⍝ style=1 has a different default size, override it
  stretch←59 0×~1∊∆style ⍝ Centering will need to happen as if it is sized for style=1, so adjust for default 'size'
  arg←(parent:parent ⋄ border:∆border ⋄ stretch:stretch ⋄ extent:extent)##.##.New.Center arg
 
 ⍝ We'll try always using a ComboEx and hope there are no incompatibilities that require old Combo.
  props←'ComboEx'('Visible' 0) ⍝ Define properties that must be used during creation
- props,←('border'⊂⍛∊actions)/⊂'Border'∆border ⍝ Set border upon creation if we have it ⍝? It cannot be changed later
+ props,←⊂'Border'∆border ⍝ Set border upon creation ⍝? It cannot be changed later
  props,←⊂'Style'('DropEdit' 'Simple' 'Drop'⊃⍨0 1 2⍳⊃1 2∩∆style) ⍝? Create-only style?
  props,←(~1∊∆style)/⊂'Rows' 4 ⍝ Set the default size for non-Simple types
  props,←⊂'HScroll'(¯2×~8∊∆style) ⍝? Create-only style

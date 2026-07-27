@@ -1,8 +1,6 @@
- result←object New arg;parent;name;props;newobj;actions;∆style;extent
+ result←object New arg;parent;name;props;newobj;∆style;extent
  (parent name)←object ⍝ Separate non-standard two-part argument
- actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
-
- ∆style←##._supp.SetBitVals⊃((1↓¨arg),⊂⍬)[actions⍳⊂'style'] ⍝ Obtain separate style bits (+1=Smooth, +2=Vertical)
+ ∆style←arg ##._supp.GetInitialProps'style' ⍝ Obtain separate style bits (+1=Smooth, +2=Vertical)
  extent←(1+2∊∆style)⊃_supp.(_extentH _extentV) ⍝ Allow different default sizing based on orientation
  arg←(parent:parent ⋄ extent:extent)##.##.New.Center arg
 

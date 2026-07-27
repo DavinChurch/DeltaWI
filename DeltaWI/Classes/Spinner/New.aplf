@@ -1,9 +1,6 @@
- result←object New arg;parent;name;actions;props;newobj;∆border;∆style;stretch;extent
+ result←object New arg;parent;name;props;newobj;∆border;∆style;stretch;extent
  (parent name)←object ⍝ Separate non-standard two-part argument
- actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
-
- (∆border ∆style)←((1↓¨arg),⊂⍬)[actions⍳'border' 'style']
- ∆border←0⌈×+/∊∆border ⋄ ∆style←##._supp.SetBitVals ∆style
+ (∆border ∆style)←arg ##._supp.GetInitialProps'border' 'style'
  extent←(1+1∊∆style)⊃_supp.(_extentV _extentH) ⍝ Allow different default sizing based on orientation
  stretch←(1+1∊∆style)⊃(0 1)(1 0)
  arg←(parent:parent ⋄ stretch:stretch ⋄ border:∆border ⋄ extent:extent)##.##.New.Center arg

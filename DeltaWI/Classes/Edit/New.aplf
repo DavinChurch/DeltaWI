@@ -1,6 +1,4 @@
- result←object New arg;parent;name;actions;∆style;props;newobj;∆border;stretch
-⍝ Create a new Edit object
-
+ result←object New arg;parent;name;∆style;props;newobj;∆border;stretch
 ⍝ Style bits:
 ⍝ 0 = One line; left-justified
 ⍝ 1 = Centered text (4∊)
@@ -21,13 +19,10 @@
 ⍝ 524288 = Disable Past context menu (4096∊)
 
  (parent name)←object ⍝ Separate non-standard two-part argument
- actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
-
- (∆style ∆border)←((1↓¨arg),⊂⍬)[actions⍳'style' 'border']
- ∆border←0⌈×+/∊∆border ⋄ ∆style←##._supp.SetBitVals ∆style
- stretch←¯4 ¯4×∨/'size' 'extent'∊actions ⍝ The APL+Win control does weird things with a starting position if 'size' is specified at all
+ (∆style ∆border)←arg ##._supp.GetInitialProps'style' 'border'
+ stretch←¯4 ¯4×∨/arg ##._supp.HasInitialProps'size' 'extent' ⍝ The APL+Win control does weird things with a starting position if 'size' is specified at all
  arg←(parent:parent ⋄ stretch:stretch ⋄ border:∆border)##.##.New.Center arg
- arg,←(~'edge'⊂⍛∊actions)/⊂'edge' 1 ⍝ Edit boxes have a default 'edge'
+ arg,←(~arg ##._supp.HasInitialProps'edge')/⊂'edge' 1 ⍝ Edit boxes have a default 'edge'
 
  props←'Edit'('FieldType' 'Char')('Visible' 0) ⍝ Define properties that must be used during creation
  props,←⊂'Style'('Single' 'Multi'⊃⍨1+4∊∆style) ⍝? Create-only style

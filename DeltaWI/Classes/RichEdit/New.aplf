@@ -1,6 +1,4 @@
- result←object New arg;parent;name;actions;∆style;props;newobj;∆border
-⍝ Create a new RichEdit object
-
+ result←object New arg;parent;name;∆style;props;newobj;∆border
 ⍝ Style bits (missing bits only used for Edit, otherwise shared codes):
 ⍝ 0 = One line
 ⍝ 4 = Multiline                                                                 ⍝? Dyalog does not provide single-line - simulate?
@@ -21,12 +19,9 @@
 ⍝? bits≥32768 not yet implemented
 
  (parent name)←object ⍝ Separate non-standard two-part argument
- actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
-
- (∆style ∆border)←((1↓¨arg),⊂⍬)[actions⍳'style' 'border']
- ∆border←0⌈×+/∊∆border ⋄ ∆style←##._supp.SetBitVals ∆style
+ (∆style ∆border)←arg ##._supp.GetInitialProps'style' 'border'
  arg←(parent:parent ⋄ border:∆border)##.##.New.Center arg
- arg,←(~'edge'⊂⍛∊actions)/⊂'edge' 1 ⍝ RichEdit boxes have a default 'edge'
+ arg,←(~arg ##._supp.HasInitialProps'edge')/⊂'edge' 1 ⍝ RichEdit boxes have a default 'edge'
 
  props←'RichEdit'('Visible' 0) ⍝ Define properties that must be used during creation
  props,←⊂'VScroll'((~8∊∆style)×¯2+16∊∆style) ⍝ Can't support 8∧16 ⍝? Can only be set during creation

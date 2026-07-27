@@ -1,15 +1,8 @@
- result←object New arg;parent;name;props;newobj;actions;newpic;∆border;px;∆style;psize;bkg
+ result←object New arg;parent;name;props;newobj;newpic;∆border;px;∆style;psize;bkg
  (parent name)←object ⍝ Separate non-standard two-part argument
- actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
-
-⍝? Never mind --- What if argument parameter names are repeated? How do I figure out which ones are in effect when the others execute, and which take final effect? Do I need a subroutine??
-⍝? Still, shouldn't I be looking at the last occurance of properties instead of the first (in the case where there are dups)?
-⍝? Or maybe the last before an Open or Show action, since we're detecting how the object is first created?
-⍝? ∇GetInitialProps?? Maybe auto-BitVals border/style/? in result?
-
- (∆style ∆border)←((1↓¨arg),⊂⍬)[actions⍳'style' 'border']
- ∆border←(0=≢∆border)⌈×+/∊∆border ⋄ ∆style←##._supp.SetBitVals ∆style
+ (∆style ∆border)←arg ##._supp.GetInitialProps'style' 'border'
  arg←(parent:parent ⋄ border:∆border)##.##.New.Center arg
+
  props←'SubForm'('Visible' 0) ⍝ Set standard creation properties
  props,←⊂'Border'∆border ⍝ Set border upon creation ⍝? Create-only
  props,←⊂'VScroll'(-16∊∆style) ⍝ Create-only

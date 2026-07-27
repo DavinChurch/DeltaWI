@@ -1,12 +1,10 @@
- result←object New arg;parent;name;props;newobj;actions;∆border
+ result←object New arg;parent;name;props;newobj;∆border
  (parent name)←object ⍝ Separate non-standard two-part argument
- actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
-
- ∆border←0⌈×+/∊⊃((1↓¨arg),⊂⍬)[actions⍳⊂'border']
- arg,⍨←(~'caption'⊂⍛∊actions)/⊂'caption'name ⍝ If they're not setting a caption immediately at all, we'll put in a default
+ ∆border←arg ##._supp.GetInitialProps'border'
+ arg,⍨←(~arg ##._supp.HasInitialProps'caption')/⊂'caption'name ⍝ If they're not setting a caption immediately at all, we'll put in a default
  arg←(parent:parent ⋄ border:∆border)##.##.New.Center arg
 
  props←'Label'('FieldType' 'Char')('Visible' 0) ⍝ Properties that must be used during creation
- props,←('border'⊂⍛∊actions)/⊂'Border'∆border ⍝ Set border upon creation if we have it ⍝? It cannot be changed later
+ props,←⊂'Border'∆border ⍝ Set border upon creation if we have it ⍝? It cannot be changed later
  newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
  result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure

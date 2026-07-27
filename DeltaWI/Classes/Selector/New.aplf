@@ -1,6 +1,4 @@
- result←object New arg;parent;name;props;newobj;actions
-⍝ Create a new Selector object
-
+ result←object New arg;parent;name;props;newobj
 ⍝ style bits:
 ⍝ 0=Tabs
 ⍝ 1=Buttons
@@ -21,8 +19,7 @@
 ⍝ 65536=Hot track
 
  (parent name)←object ⍝ Separate non-standard two-part argument
- actions←⊃¨⊆¨arg ⍝ The names of the actions that they've asked to create this object with
- arg,←(~'style'⊂⍛∊actions)/⊂'style' 0 ⍝ Force 'style' settings upon creation
+ arg,←(~arg ##._supp.HasInitialProps'style')/⊂'style' 0 ⍝ Force 'style' settings upon creation
  arg←(parent:parent)##.##.New.Center arg
 
  props←'TabControl'('Visible' 0) ⍝ Define properties that must be used during creation
