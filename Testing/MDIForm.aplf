@@ -24,6 +24,12 @@
  'f'∆WI Pass MT⊢'activeform' 'f.a'
  'f'∆WI Pass'f.a'⊢'activeform'
 
+ 'f'∆WI Pass MT⊢'clientwhere' 1 2 28 98
+ 'f'∆WI Pass 1 2 28 98⊢'clientwhere'
+ 'f'∆WI Pass MT⊢'size' 33 105
+ 'f'∆WI Pass 1 2 28 98⊢'clientwhere'
+ 'f'∆WI Pass 33 105⊢'size'
+
  'f'∆WI Pass 0⊢'value'
  'f'∆WI Pass MT⊢'value' 'Testing'
  'f'∆WI Pass'Testing'⊢'value'

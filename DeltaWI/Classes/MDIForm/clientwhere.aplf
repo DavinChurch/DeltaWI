@@ -10,9 +10,11 @@
      '∆WI DOMAIN ERROR: clientwhere'##.##.Error∨/arg<0
      object._clientwhere←arg ⍝ Remember this
      :If 0=≢arg ⍝ We're resetting it to default
-         object._mdi ##.##.∆WS('Posn'(0 0))('Size'(object ##.##.∆WG'Size')) ⍝ Force it to match the internal size on the screen
+         ⍝ Force it to match the internal size on the screen and stay that way
+         object._mdi ##.##.∆WS('Posn'(0 0))('Size'(object ##.##.∆WG'Size'))('Attach' ('Top' 'Left' 'Bottom' 'Right'))
      :Else
-         object._mdi ##.##.∆WS('Posn'(tunits×2↑arg))('Size'(tunits×2↓arg))
+         ⍝ Set it to a specific size and quit resizing it automatically
+         object._mdi ##.##.∆WS('Posn'(tunits×2↑arg))('Size'(tunits×2↓arg))('Attach' ('None' 'None' 'None' 'None'))
      :EndIf
      result←##.NoRes
  :EndIf

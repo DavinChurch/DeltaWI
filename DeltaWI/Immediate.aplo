@@ -3,7 +3,7 @@
 ⍝ This includes UDP assignments or references, handling non-existent objects, or operating on certain global synthetic actions.
 ⍝ If nothing needs to be performed here, return ⎕NULL. Otherwise return the correct ∆WI result.
 
- :If obj≡⎕NULL ⍝ Check for non-existant object processing (a pointer to the parent can't be non-existant)
+ :If obj=⎕NULL ⍝ Check for non-existant object processing (a pointer to the parent can't be non-existant)
      :If action⊂⍛∊'Delete' 'self' ⍝ Special actions where object existence is optional
          :If action≡'self' ⋄ result←'' ⋄ :Else ⋄ result←0 0⍴'' ⋄ :EndIf
          :Return ⍝ Processed; exit with this result
@@ -46,7 +46,7 @@
  ⍝ Disallow deletion of the System (root) object
  ('∆WI ACTION ERROR: Action "',action,'" not found')Error(obj≡GUIroot)∧action≡'Delete'
 
- :If action≡⍥⎕C'⎕Send' ⍝ (I'll ignore capitalization here)
+ :If action≡'⎕Send'
      ⍝ Allow an out-of-thread command to 'Send' a one-way message to an object in the primary thread!
      ⍝ This will function OUTSIDE of the usual :Hold, permitting execution while ∆WI is in use elsewhere!
      ⍝ Note that ∇ObjectName is therefore not being protected from changes elsewhere while it runs, but

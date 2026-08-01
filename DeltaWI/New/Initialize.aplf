@@ -35,29 +35,7 @@
      illegal←'Create' 'New' ⍝? What else might be illegal here (by name)?
      '∆WI OBJECT ERROR: Object already exists'##.Error∨/illegal∊⊃¨⊆¨arg
 
-     :Select isdef~⍛/object._class ⍝ Create any needed "hidden" sub-objects (if not from a 'def')
-⍝? We'd better watch out here! If we have to create our own hidden sub-objects, how will we know what creation-only parms we should be using?
-⍝? Do we need to require the class to define these for us? And if so, how do we keep it simple enough for them to build (if possible/needed)?
-     :Case 'Menu'
-         ⍝ An APL+Win Menu object may be any of four Dyalog object-types depending on context.
-         ⍝ That much should have been handled by Menu.New by now.
-         ⍝ Menu.New should have already created an interim MenuBar by now as well, because it has to be the parent of this object
-⍝? Is there anything else we need to do specially here?
-⍝? A Dyalog Menu object should set Coord, but nothing else
-     :Case 'MDIForm'
-⍝? Should we really be doing this here? Or will it fit better in each ∇New?
-         props←'MDIClient'('Coord' 'RealPixel')('Posn' 0 0)('Size'(object ##.∆WG'Size'))
-         sub←⎕VGET(object⍕⍛,'._mdi')##.∆WC props
-         sub._Owner←object
-         sub.⎕WX←0 ⍝ Also tell the invisible child to hide properties as well
-         ⍝ The Dyalog MDIClient defaults to occupying the entirety of the parent Form,
-         ⍝ but adjustments may be made to reserve space for other objects to be added within the Form.
-         ⍝? Is there anything else special that we should be handling here?⌈
-     :Case 'Picture'
-⍝? We're now doing this processing within ∇New
-     :EndSelect
-
-     :If ~isdef ⍝ If we're creating from a 'def', then all the values should already be set
+     :If ~isdef ⍝ If we're creating from a 'def', then all the values should already be set and won't need this initialization
          ⍝ Assign class default pseudo-properties and variables
          vars←this.⎕NL ¯2.1 ⍝ What variables are in this namespace (including currently-executing locals)
          vars←(~1∊¨⊃¨this.⎕STATE¨vars)/vars ⍝ Remove currently-executing locals to leave only globals (there better not be any shadowed ones!)
@@ -69,8 +47,14 @@
      acts←⊃¨arg←⊆¨arg
      :For action :In (~acts∊final)/arg
          ⍝ We'll handle these by calling ∆WI recursively and hope we won't get interrupted or slow down
-⍝? Ack! We have to error out here if they don't pass a value to a property (but a method ⍬ is OK) -- how can we do this?
-         {}object._self ##.∆WI action ⍝ Call ∆WI to do the work, but we can never use any returned result from these operations
+         '∆WI ACTION NAME ERROR: Improperly formed action name'##.Error 0=≢action ⍝ We'll catch this problem ahead of time so they get the correct message
+         '∆WI ACTION ERROR: Property-reference not permitted in this context'##.Error(1=≢action)∧1∘⎕C⍛≠⊃'⎕'~⍨⊃action ⍝ Only upper-case actions can be niladic
+         :Trap 870 ⍝ We're going to abort creation if a ∆WI error occurs here
+             {}object._self ##.∆WI action ⍝ Call ∆WI to do the work, but we can never use any returned result from these operations
+         :Else
+             object('Delete'##.Invoke)⍬ ⍝ Get rid of the object we were trying to create
+             ##.Error⊃⎕DMX.DM ⍝ Re-signal the original error upwards
+         :EndTrap
      :EndFor
 
      ⍝ Activate/show the new object as requested

@@ -21,7 +21,7 @@
 
  :Section ⍝ Clean out any Spinner-buddies
      :If 9=object.⎕NC'_buddy_' ⍝ Check the primary buddy-connection signal
-     :AndIf ⎕NULL≢mybuddy←object._buddy_ ⍝ Who am I connected to?
+     :AndIf ⎕NULL≠mybuddy←object._buddy_ ⍝ Who am I connected to?
          :If object._class≡'Spinner' ⍝ If I'm the spinner being deleted
              ⍝ (I don't need to disconnect myself at the original name level because I'm going away)
              {}mybuddy where,⊂mybuddy._where_buddy ⋄ mybuddy.⎕EX'_where_buddy' ⍝ Restore my buddy's original 'where' & disconnect

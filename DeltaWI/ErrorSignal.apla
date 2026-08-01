@@ -1,1 +1,1 @@
-'⎕SIGNAL⊂''Category'' ''EM'' ''EN'' ''ENX'' ''Message'' ''Vendor'',⍤0⊢''Reported'' ''Internal Error'' 16 ⎕DMX.EN (⎕DMX.EM,'': '',{∨\'' ''≠⍵}⍛/2⊃⎕DMX.DM) ''DeltaWI'''
+'⎕SIGNAL⊂''Category'' ''EM'' ''EN'' ''ENX'' ''Message'' ''Vendor'',⍤0⊢''Reported'' (''Internal Error'',{(0=≢⍵)↓'': '',⍵}{⍵/⍨∨/'' ''≠2⊃⍵}⎕DMX.DM) 16 ⎕DMX.EN (⎕DMX.EM,'': '',{∨\'' ''≠⍵}⍛/2⊃⎕DMX.DM) ''DeltaWI'''

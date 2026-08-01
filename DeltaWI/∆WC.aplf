@@ -2,4 +2,4 @@
 ⍝ Cover function for ⎕WC; Extend for use with EWC
 ⍝ Left argument (must be a full text name) is not optional!
 
- :If ⎕NULL≡GUIroot ⎕VGET⊂'_EWC_'⎕NULL ⋄ R←X ⎕WC Y ⋄ :Return ⋄ :EndIf
+ :If ⎕NULL=GUIroot ⎕VGET⊂'_EWC_'⎕NULL ⋄ R←X ⎕WC Y ⋄ :Return ⋄ :EndIf

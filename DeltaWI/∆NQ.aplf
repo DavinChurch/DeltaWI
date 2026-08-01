@@ -2,4 +2,4 @@
 ⍝ Cover function for ⎕NQ; Extend for use with EWC
 
  :If 0=⎕NC'X' ⋄ X←⊢ ⋄ :EndIf
- :If ⎕NULL≡GUIroot ⎕VGET⊂'_EWC_'⎕NULL ⋄ R←X ⎕NQ Y ⋄ :Return ⋄ :EndIf
+ :If ⎕NULL=GUIroot ⎕VGET⊂'_EWC_'⎕NULL ⋄ R←X ⎕NQ Y ⋄ :Return ⋄ :EndIf

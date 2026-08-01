@@ -1,6 +1,6 @@
  result←object ⍙Config arg;setting;value;from;to;dev
 ⍝ Read and/or write the DeltaWI configuration settings from a list of name-value pairs
-⍝ Reading-only names requires an extra level of nesting in order to make it look like shortened name-value pairs
+⍝ Reading-only multiple names requires an extra level of nesting in order to make it look like shortened name-value pairs
 
  result←⍬ ⍝ Return the list of current or previous settings
  dev←1 ⍝? Override default developer setting while under construction
@@ -14,6 +14,7 @@
          :Case ⎕C'EWC' ⋄ result,←⊂object ⎕VGET⊂'_EWC' ''
          :Case ⎕C'EWCMode' ⋄ result,←⊂object ⎕VGET⊂'_EWCMode' 'Desktop'
          :Case ⎕C'Migration' ⋄ result,←⊂object ⎕VGET⊂'_Migration' ''
+         :Case ⎕C'Pixels' ⋄ result,←⊂object ⎕VGET⊂'_Pixels' ''
          :Else ⋄ ##.##.Error'Domain Error'
          :EndSelect
      :Else ⍝ They're changing the current value (but return previous value)
@@ -23,23 +24,25 @@
          :Case ⎕C'Debug' ⋄ result,←+/object ⎕VGET⊂'_Debug' 0
              :If 0=≢value←##.##.∆dtr value ⋄ value←0 ⋄ :EndIf
              :If ##.##.IsChar value ⋄ value←⌊⊃//⎕VFI value ⋄ :EndIf
-             object._Debug←##.##.∆dim ##._supp.SetBitVals value ⍝ Debugging flags
+             object._Debug←##.##.∆dim ##._supp.SetBitVals value ⍝ Debugging flags (integer vector of bit-values for convenient use with "∊")
          :Case ⎕C'Developer' ⋄ result,←object ⎕VGET⊂'_Developer'dev
              object._Developer←(1 0 '1' '0' 'T' 'F' 'Y' 'N' 2 '2'⍳⍥⎕C⊃value)⊃(8⍴1 0),2 2,dev ⍝ Developer (non-production) error-handling mode
-             ⍝ Allow Developer=2 to mean that it also stops where Error produces a message
+             ⍝ Allow Developer=2 to mean that it also stops when ##.##.Error would produce a message
          :Case ⎕C'EWC' ⋄ result,←⊂object ⎕VGET⊂'_EWC' ''
-             :If 0≠≢value ⋄ :AndIf 9=⎕NC value ⋄ :AndIf 3=value ⎕VGET⍛.⎕NC'EWC' ⍝? Specify the EWC interface namespace to use
+             :If 0≠≢value ⋄ :AndIf '#.'≡2↑value ⋄ :AndIf 9=⎕NC value ⋄ :AndIf 3=(⎕VGET value).⎕NC'EWC' ⍝? Specify the EWC interface namespace to use
                  object._EWC_←⎕VGET object._EWC←value ⍝ Set up a link to the separate EWC support system
 ⍝? Also initialize the EWC system here, but we have to know what mode it will be in first
              :Else
                  object._EWC←'' ⋄ object._EWC_←⎕NULL
              :EndIf
          :Case ⎕C'EWCMode' ⋄ result,←⊂object ⎕VGET⊂'_EWCMode' 'Desktop'
-             'EWCMode Domain Error'##.##.Error~value⊂⍛∊'' 'Desktop' 'Browser' 'Multi'
+             'EWCMode Domain Error'##.##.Error~(⊂value←1∘⎕C@(⍳×≢value)⎕C value)∊'' 'Desktop' 'Browser' 'Multi'
              object._EWCMode←value,(0=≢value)/'Desktop'
 ⍝? We need to re-initialize the EWC system with this new environment setting
          :Case ⎕C'Migration' ⋄ result,←⊂object ⎕VGET⊂'_Migration' ''
-             :If 0≠≢value←'.'##.##.∆dtr value ⋄ :AndIf 9=⎕NC value ⋄ :AndIf 4=(⎕VGET value).⎕NC'⍙_Each' ⍝ Does this look like a valid migration-support namespace?
+             ⍝ Does this look like a valid migration-support namespace?
+             :If 0≠≢value←'.'##.##.∆dtr value ⋄ :AndIf '#.'≡2↑value ⋄ :AndIf 9=⎕NC value ⋄ :AndIf 4=(⎕VGET value).⎕NC'⍙_Each'
+⍝? What happens if this namespace disappears during execution? Will translations just blow up, and is that OK?
                  object._Migration←value ⍝ Set up a pre-defined migration translation function connected to this namespace
                  (from to)←↓⍉↑'%'(≠⊆¨⊢)'#.'⎕R(value,'.')⍠'Regex' 0⊢_supp.apw_replacements
                  (from to)⊂⍛,⍨←'''[^'']*''|⍝.*' '&'
@@ -48,6 +51,11 @@
                  object._Migration←''
                  object._Translate←⊢ ⍝ Otherwise assume there won't be any dynamic migration-translation
              :EndIf
+         :Case ⎕C'Pixels' ⋄ result,←⊂object ⎕VGET⊂'_Pixels' 'Virtual'
+             'Pixels Domain Error'##.##.Error~(⊂value←1∘⎕C@(⍳×≢value)⎕C value)∊'' 'Virtual' 'Real' 'Scaled' 'True'
+             value←'Scaled' 'True'⎕R'Virtual' 'Real'⊢value ⍝ Allow undocumented synonyms
+             object._Pixels←value←value,(0=≢value)/'Virtual'
+             object._units[5;]←×⍣('V'≠⊃value)⊢object.DevCaps[4]÷100 ⍝ Adjust system 'units' to match
          :Else ⋄ ##.##.Error'Domain Error'
          :EndSelect
      :EndIf

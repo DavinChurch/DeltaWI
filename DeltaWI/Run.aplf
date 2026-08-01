@@ -1,4 +1,4 @@
- {WRES}←{parms}Run expression;back;wres;ns
+ {WRES}←{parms}Run expression;back;wres;ns;dm;prefix
 ⍝ Execute the given expression in the Application's calling name scope (no explicit result from expression, just ∆WRES)
 ⍝ Allow setting of both (not just one) ∆WARG and ∆WRES (in that order) in the optional argument. Or alternatively, a
 ⍝ namespace containing either or both of these variables may be supplied.
@@ -25,7 +25,16 @@
  :If ×≢expression
      back←Application⍕⍛,'.'                     ⍝ Which namespace are we looking for?
      back←1-⍨back⍳⍨⍥⊆⎕XSI↑¨⍨≢back               ⍝ How far back is it in the )SI?
-     back(86⌶)Requote expression                ⍝ Execute the expression at the correct (most recent) point of the application
+     expression←Requote expression              ⍝ Adjust expression syntax where needed
+     :Trap 0 1000
+         back(86⌶)expression                    ⍝ Execute the expression at the correct (most recent) point of the application
+     :Else
+         dm←⎕DMX.DM                             ⍝ Capture the application's error so we can report it
+         prefix←⊃(⊂'???'),⍨{3↓¨⍵/⍨(⊂'_on')∊⍨3↑¨⍵}1↓⎕SI                      ⍝ What's our APL+Win event name?
+         prefix←'>[',Application.∆WSELF,';',prefix,'] '
+         (⊃dm)←('⍎'=⊃⊃dm)↓⊃dm ⋄ dm[2 3]←dm[2 3],¨⍨(≢prefix)⍴¨prefix' '      ⍝ Convert to APL+Win formatting
+         Error 13 ⎕UCS⍛∆sew dm                  ⍝ Send the error message back to the application or session
+     :EndTrap
  :EndIf
 ⍝? Instead of just going back until we hit the application scope, should we instead be going all the way back to the ∆WI call itself?
 ⍝? Does it make a difference? (Only for interim-shadowed variables??)
@@ -40,8 +49,7 @@
  ⍝? Don't do this for quoted strings unless they're being ⍎'d, which makes it an even a bigger mess.
  ⍝? Got any better ideas?
 
- ⍝? Shouldn't we be checking the contents for an ⍎ anyway and replacing it with a function call to handle special cases, including double-quotes?
+ ⍝? Shouldn't we be checking the contents for an ⍎ anyway and replacing it with a function call to handle special cases, including double-quotes? ∇Requote is handling this now?
 
  ⍝? Create ⎕-vars in the system and localize them here?
- ⍝? Create/use PrepExec (recusively)
  ⍝? Hmmm... was thinking about a subroutine (∇RunIt?) that could localize the sys vars differently, but I don't remember which level I worked out it should do that

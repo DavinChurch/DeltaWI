@@ -2,4 +2,4 @@
 ⍝ Cover function for ⎕WN; Extend for use with EWC
 
  :If 0=⎕NC'X' ⋄ X←⊢ ⋄ :EndIf
- :If ⎕NULL≡GUIroot ⎕VGET⊂'_EWC_'⎕NULL ⋄ R←X ⎕WN Y ⋄ :Return ⋄ :EndIf
+ :If ⎕NULL=GUIroot ⎕VGET⊂'_EWC_'⎕NULL ⋄ R←X ⎕WN Y ⋄ :Return ⋄ :EndIf

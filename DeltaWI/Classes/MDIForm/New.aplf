@@ -1,4 +1,4 @@
- result←object New arg;parent;name;where;newobj;props;border;nocaption;∆where;∆caption;∆border
+ result←object New arg;parent;name;where;newobj;props;border;nocaption;∆where;∆caption;∆border;client
  (parent name)←object ⍝ Separate non-standard two-part argument
  (∆where ∆caption ∆border)←arg ##._supp.GetInitialProps'where' 'caption' '←border' ⍝ Which of our defaults are they giving us anyway (so we can skip our defaults)
 
@@ -24,3 +24,10 @@
 
  newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
  result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure (including the hidden _mdi child)
+
+ props←'MDIClient'('Coord' 'RealPixel')('Posn' 0 0)('Size'(newobj ##.##.∆WG'Size'))
+ client←⎕VGET(newobj⍕⍛,'._mdi')##.##.∆WC props
+ ##.##.New.InitChild newobj client
+⍝ The Dyalog MDIClient defaults to occupying the entirety of the parent Form,
+⍝ but adjustments may be made to reserve space for other objects to be added within the Form.
+⍝ The Attach property is automatically set to stay the same size as the container, unless 'clientwhere' is used to override it

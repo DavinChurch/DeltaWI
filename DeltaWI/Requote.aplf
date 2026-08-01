@@ -9,7 +9,7 @@
 ⍝       '''[^'']*''' '"[^"]*"'⎕R{⍵.('\"' ''''⎕R'''' ''''''⍣PatternNum⊢Match)}
 
  exeme←'⍎',⊃⎕XSI ⍝ Executable recursive execution text (may substitute an execute-replacement function for ⍎ if necessary)
- :If ('⍎'∊exeme)∧'⍎'∊text ⋄ exeme←GUIroot._Translate exeme ⋄ :EndIf ⍝ Automatically translate any remaining ⍎ if available
+ :If ∧/'⍎'∊¨exeme text ⋄ exeme←GUIroot._Translate exeme ⋄ :EndIf ⍝ Automatically translate any remaining ⍎ if available
  clean←0⍴text←,text ⍝ We'll have to build this piecemeal, I think, to avoid really difficult ⎕R-work
  :While ×≢text
      clean,←GUIroot._Translate(t←¯1+⌊/text⍳'''"⍝⍎')↑text ⍝ Grab all the text preceding any signal characters and translate as specified

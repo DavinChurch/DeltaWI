@@ -4,7 +4,7 @@
 ⍝ object←Parent, Name, 'def'-value
 
  (parent name definition)←object ⍝ Separate non-standard three-part argument
- newobj←⎕VGET(parent⍕⍛,'.',name)##.∆WC definition ⍝ Create the actual Dyalog object from a previous namespace definition
+ newobj←⎕VGET(parent⍕⍛,'.',name)⎕WC definition ⍝ Create the actual Dyalog object from a previous namespace definition -- only works for Windows
  result←parent newobj ##.New.Initialize arg ⍝ Complete standard class-initialization procedure (on top of previous definition)
 
  ⍝ After normal initialization, follow through the remainder of the tree that was just created

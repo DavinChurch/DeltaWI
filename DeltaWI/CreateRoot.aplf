@@ -1,5 +1,6 @@
  CreateRoot root;inches;this;tpp;devcaps;wa;en;ev;GUIroot
 ⍝ The first time that ∆WI is used, we need to create and populate the root of the GUI structure
+⍝ Note: Program errors herein (including ⍙Config) cannot be captured and reported using the Developer setting!
 
  this←GUIroot←⎕VGET root ⎕NS'' ⍝ Create the root GUI namespace that we can build from
 
@@ -7,7 +8,7 @@
  this._Ancestry←0⍴this._Class←Classes.System ⍝ Base references
 
  ⍝ Define system settings
- devcaps←'.'∆WG'DevCaps'
+ this.DevCaps←devcaps←'.'∆WG'DevCaps'
  this.ScreenSize←1⊃devcaps ⍝ The pixel-size of the entire screen
  this.AspectRatio←÷/⌽2⊃devcaps ⍝ The ratio (W÷H) of inch-size of the screen; estimated; used for visual concerns like square- and circle-drawing
  ⍝inches←(2⊃devcaps)÷25.4 ⍝ How big is the screen in inches (h,w); estimated
@@ -30,11 +31,11 @@
 
 ⍝ Figure out the screen space available exclusive of the task bar by constructing an ephemeral, invisible, maximized form
  wa←(this⍕⍛,'_wa')∆WC'Form'('Visible' 0)('Coord' 'RealPixel')('State' 2)
- this._workarea←0 0,wa ∆WG'Size' ⋄ ⎕EX⍕wa ⍝ Assume that taskbar is not in the top-left corner ⍝? I don't know how to get actual starting point
+ this._workarea←0 0,wa ∆WG'Size' ⋄ ∆EX⍕wa ⍝ Assume that taskbar is not in the top-left corner ⍝? I don't know how to get actual starting point
 
  ⍝ Assign class default properties
  this ⎕VSET Classes.System ⎕VGET ¯2
 
  ⍝ Initialize all DeltaWI configuration options (from standard sources)
- ev←2 ∆NQ'.' 'GetEnvironment'((⊂'DeltaWI\'),¨en←'Debug' 'Developer' 'EWC' 'EWCMode' 'Migration')
+ ev←2 ∆NQ'.' 'GetEnvironment'((⊂'DeltaWI\'),¨en←'Debug' 'Developer' 'EWC' 'EWCMode' 'Migration' 'Pixels')
  {}this Classes.System.⍙Config en,⍤0⊢ev ⍝ Pass configuration to the ⎕Config synthetic method for setup

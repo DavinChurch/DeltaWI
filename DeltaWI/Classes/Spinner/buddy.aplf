@@ -10,14 +10,14 @@
      '∆WI RANK ERROR: buddy'##.##.Error 1≠≢⍴arg←1/arg
 
      :If oldbuddy≡newbuddy←##.##.∆dim arg ⋄ :Return ⋄ :EndIf ⍝ No changes means nothing to do
-     :If ⎕NULL≢frombuddy←object ⎕VGET⊂'_buddy_'⎕NULL ⍝ Does something need disconnecting before we change it?
+     :If ⎕NULL≠frombuddy←object ⎕VGET⊂'_buddy_'⎕NULL ⍝ Does something need disconnecting before we change it?
          object _supp.ShowBuddy(oldbuddy:newbuddy ⋄ newbuddy:'') ⍝ This only rearranges objects
          frombuddy.⎕EX'_buddy_' ⍝ So it's not pointing back here any more
          object.⎕EX'_buddy_' ⍝ Make sure we're not pointing at a buddy any longer
      :EndIf
      object._buddy←newbuddy ⍝ Let's store the new buddy's name (even if it doesn't exist yet)
      tobuddy←⎕NULL ⋄ :If ×≢newbuddy ⋄ tobuddy←object ##.##.Locate newbuddy,⍨'#.'/⍨~(':'∊newbuddy)∨'.'=⊃newbuddy ⋄ :EndIf
-     :If tobuddy≡⎕NULL ⋄ :Return ⋄ :EndIf ⍝ If there's not a valid buddy object there then we just ignore any connection
+     :If tobuddy=⎕NULL ⋄ :Return ⋄ :EndIf ⍝ If there's not a valid buddy object there then we just ignore any connection
      :If object._Ancestry≢⍥⊃tobuddy._Ancestry ⋄ :Return ⋄ :EndIf ⍝ It must be a true sibling, otherwise we just ignore it
      object._buddy_←tobuddy ⋄ tobuddy._buddy_←object ⍝ Point each to the other
      object _supp.ShowBuddy(oldbuddy:'' ⋄ newbuddy:newbuddy) ⍝ Connect up the new object visually

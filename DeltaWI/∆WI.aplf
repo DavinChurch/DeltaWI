@@ -8,7 +8,7 @@
  :If ×GUIroot ⎕VGET⊂'_Developer' 0 ⋄ ⎕TRAP[3]←⊂(0 1000)'S' ⋄ :EndIf     ⍝ But for developers, just stop immediately if errors happen
 
  :Hold '∆WI#',⍕⎕TID ⋄ top←1 ⋄ :Else ⋄ top←0 ⋄ :EndHold                  ⍝ Is this a recursive call? ⍝? This sequence could theoretically be interrupted by an in-thread event that might happen any time (high-priority??)
- top,⍨←0/⍨top∧'⎕Send'≡⍥⎕C⊃⊆action                                       ⍝ Allow a ⎕Send to execute even while another thread is using ∆WI!
+ top,⍨←0/⍨top∧'⎕Send'≡⊃⊆action                                          ⍝ Allow a ⎕Send to execute even while another thread is using ∆WI!   ⍝? Add ∆dlt here if Normalize does
  :Hold top/'∆WI'('∆WI#',⍕⎕TID)                                          ⍝ Make sure we stay single-threaded!
 
      ⍝ *** Pre-process the ∆WI call
@@ -21,13 +21,13 @@
      :AndIf resume                                                      ⍝ Are we still only resuming (only if we're on :Hold)
          action←Application ⎕VGET⊂'∆WARG'⍬                              ⍝ Reconstitute the original command and pass it back into onAction for resumption
      :EndIf
-     (name args)←Normalize action                                       ⍝ Separate action name from its arguments and standardize structure
+     (name args)←Normalize action                                       ⍝ Separate action name from its arguments and standardize top-level structure
      name←objref Canonize name                                          ⍝ In cases where capitalization is optional, adjust it to standard
      :If ⎕NULL≢result←objref(name Immediate)args ⋄ :Return ⋄ :EndIf     ⍝ Perform any out-of-band "instant" processing
      :If ⎕NULL≢result←objref((1↑action)OnAction resume)args ⋄ :Return ⋄ :EndIf  ⍝ Perform any application-specified alternative onAction processing
 
      ⍝ *** Time to execute the requested operation
-     ⍝ Handle object creation cases separately; otherwise start up the normal action processing by class
+     ⍝ Handle object creation cases separately using the .New namespace; otherwise start up the normal action processing by class
      :Select name
      :Case 'Create' ⋄ result←objref(LeafName objname)New.Create args    ⍝ Delete any existing GUI object and then recreate it
      :Case 'New' ⋄ result←objref(LeafName objname)New.New args          ⍝ Create a new GUI object as a child of its parent objref

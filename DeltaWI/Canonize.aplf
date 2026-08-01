@@ -17,6 +17,7 @@
      ⍝ APL+Win allows only event handler names to be case insensitive, so we'll just check those.
      :If 'on'≡⍥⎕C 2↑given ⍝ This might need recapitalization
          events←(⊂'on'),¨dictionary('events'Invoke)⍬ ⍝ Get a list of all defined event handler names for this argument
+         ⍝? Does ∇Invoke slow this down much?
          canon←(events⍳⍥⎕C⊂given)⊃events,⊂given ⍝ Recapitalize it if it's a known name
      :EndIf
  :EndSelect

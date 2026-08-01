@@ -18,3 +18,5 @@
  ⍝ An action's arguments need to be normalized too but they have different requirements for different actions, so handle them later
  ⍝ For instance, properties that have simple arguments can be either nested (requiring ⊃) or unnested.
  ⍝? Do they? Or can we at least ⊆¨ them?
+
+ ⍝? Can/should we at least ∆dlt action?

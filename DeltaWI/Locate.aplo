@@ -25,7 +25,7 @@
                  :Continue
              :EndIf ⍝ Otherwise, this still contains a name to process
          :EndIf
-         ⍝ Top-level shorthand (with embedded ":") should have been already handled before we get here (right?)
+         ⍝ Top-level shorthand (with embedded ":") should have been already handled before we get here
          :If 0=≢next ⍝ We have a leading ".", so we're going to move relative to our current position
              :If 1<t←+/∧\0=≢¨name ⍝ How many leading "."s do we have together?
                  ref←⊃GUIroot,⍨⌽(t-1)↓ref._Ancestry ⍝ If there's more than one, then that indicates backing up through parents
@@ -52,7 +52,7 @@
          :EndIf
      :EndSection
 
-     :If to≡⎕NULL ⍝ If the child's name does not actually exist, see if there's an alias available
+     :If to=⎕NULL ⍝ If the child's name does not actually exist, see if there's an alias available
          :Section ⍝ Follow any link that might be specified by aliasing the child's name
              next↓⍨←'!'=⊃next ⍝ We've already handled the link-only signal
              :If 2=ref.⎕NC'_links' ⍝ Do we have any links defined here?
@@ -69,6 +69,6 @@
          :EndSection
      :EndIf
 
-     :If to≡⎕NULL ⋄ ref←⎕NULL ⋄ :Return ⋄ :EndIf ⍝ Any failed step will fail the entire location process
+     :If to=⎕NULL ⋄ ref←⎕NULL ⋄ :Return ⋄ :EndIf ⍝ Any failed step will fail the entire location process
      ref←to ⋄ name←1↓name ⍝ Ready to keep going with the next step
  :EndWhile

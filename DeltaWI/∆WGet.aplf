@@ -3,6 +3,7 @@
 ⍝ For use by common-area routines to access properties that may or may not actually exist on the particular object
 
 ⍝ Begin by ensuring correct nesting for each property
+⍝? Is this the best we can do for handling variant argument structures?
  :If 0=≡props ⋄ props←,¨props ⋄ :EndIf
  :If 1=|≡props ⋄ props←⊂,props ⋄ :EndIf
  value←⍬⍨¨props←,¨⊆¨,props

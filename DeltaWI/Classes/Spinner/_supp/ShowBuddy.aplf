@@ -50,7 +50,7 @@
  :If (frombuddy≢tobuddy)∧∧/×≢¨oldbuddy newbuddy ⍝ If the buddy control assignment is changing (regardless of the alignment) then we've got some extra work to do!
      object ShowBuddy(oldstyle:oldstyle ⋄ newstyle:newstyle ⋄ oldbuddy:oldbuddy ⋄ newbuddy:'') ⍝ Let's remove the old control linkage (recursively) first
      object ShowBuddy(oldstyle:oldstyle ⋄ newstyle:newstyle ⋄ oldbuddy:'' ⋄ newbuddy:newbuddy) ⍝ And then we'll create the new control linkage (recursively)
- :ElseIf tobuddy≡⎕NULL ⍝ If we've got nothing there to buddy up with (and frombuddy must also be ⎕NULL by implication)
+ :ElseIf tobuddy=⎕NULL ⍝ If we've got nothing there to buddy up with (and frombuddy must also be ⎕NULL by implication)
      ⍝ There's nothing to do here
  :Else
      mywhere←object ##.##.where ⍬ ⋄ hiswhere←tobuddy ##.##.where ⍬ ⍝ Get our current 'where' settings

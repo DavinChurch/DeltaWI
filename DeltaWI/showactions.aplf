@@ -4,7 +4,7 @@
 ⍝ rpt[;1]←Class (namespace) name; rpt[;2]←'methods' 'properties' 'events' 'defaults'; rpt[;3]←list of names
 
  rpt←0 3⍴⊂''
- meths←{'Create' 'Delete','⍙'⎕R'⎕'⊢⍵/⍨(⊃¨⍵~¨'⍙')∊'⍙',1 ⎕C ⎕A}
+ meths←{'⍙'⎕R'⎕'⊢⍵/⍨(⊃¨⍵~¨'⍙')∊'⍙',1 ⎕C ⎕A}
  props←{'data' '∆',¨⍛,'⍙'⎕R'⎕'⊢(events ⍵)~⍨⍵/⍨(⊃¨⍵~¨'⍙')∊⎕C ⎕A}
  events←{⍵{⍺⍺∊⍨⊂'_',⍵:⍵ ⋄ '(',⍵,')'}¨⍵/⍨(⊂'on')≡¨2↑¨⍵}
  active←{⍵/⍨(⊂1 2 0)≡¨⊃¨⍺.⎕AT¨⍵} ⍝ Determine if these function definitions are "active"
@@ -17,7 +17,7 @@
  :For class :In 'System'⊂⍛,(Classes.⎕NL ¯9)~'System' 'ActiveX' 'Dyalog' '_supp'
      cls←Classes ⎕VGET class ⍝ Point to the class definition
      fns←except~⍨cls active cls.⎕NL ¯3 ⋄ nofns←cls override cls.⎕NL ¯3
-     rpt⍪←class'methods'(except sort(nofns~⍨1⊃common),meths fns)
+     rpt⍪←class'methods'(except sort(nofns~⍨1⊃common),((class≢'System')/⊂'Create'),meths fns)
      rpt⍪←class'properties'(except sort(nofns~⍨2⊃common),props fns)
      rpt⍪←class'events'(except sort(((⊂'()')~¨⍨events nofns)~⍨3⊃common),events fns)
      rpt⍪←class'defaults'(cls.⎕NL ¯2)
