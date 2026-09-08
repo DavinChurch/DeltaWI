@@ -1,0 +1,4 @@
+ props←StartObj type
+⍝ For rendering ops, set up the initial object Type and always-required parameters, to be appended-to and given to ∆WC
+
+ props←(0=≢type)↓type⊂⍛,('Coord' 'RealPixel')('AutoConf' 0)

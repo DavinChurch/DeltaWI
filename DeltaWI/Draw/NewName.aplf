@@ -1,0 +1,5 @@
+ name←State NewName object
+⍝ Return a name for a new graphical-drawing object
+⍝ Pictures and Printers use unnamed (non-refreshable) objects while other controls use named objects
+
+ name←object⍕⍛,'.' ⋄ :If State.NewName ⋄ name,←##.Next object ⋄ :EndIf

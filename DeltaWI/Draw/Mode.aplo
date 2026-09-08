@@ -1,0 +1,3 @@
+ result←object(State Mode)arg
+ result←⍬
+ {}State (##.Classes.mode ChangeError 'mode' 'Mode') arg

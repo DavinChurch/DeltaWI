@@ -1,6 +1,6 @@
  result←object New arg;parent;name;where;newobj;props;border;nocaption;∆where;∆caption;∆border;client
  (parent name)←object ⍝ Separate non-standard two-part argument
- (∆where ∆caption ∆border)←arg ##._supp.GetInitialProps'where' 'caption' '←border' ⍝ Which of our defaults are they giving us anyway (so we can skip our defaults)
+ (∆where ∆caption ∆border)←arg ##._supp.GetInitialProps'where' 'caption' 'border←' ⍝ Which of our defaults are they giving us anyway (so we can skip our defaults)
 
  ⍝? Is where supposed to be centered on the screen? If so, can we use New.Center in some way?
   ⍝ Optionally prepend object defaults (in reverse order) to be handled

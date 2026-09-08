@@ -14,7 +14,7 @@
  sort←{∪⍵[⍋⍵~¨⊂'()']~⍺,⊂''}
  except←'supress' '(onNew)' ⍝ Names I don't want to be carrying around everywhere, such as obsolete spellings or things w/o event handler fns
  rpt⍪←'(shared)' '(planned)'(planning Classes)
- :For class :In 'System'⊂⍛,(Classes.⎕NL ¯9)~'System' 'ActiveX' 'Dyalog' '_supp'
+ :For class :In 'System'⊂⍛,'System' 'ActiveX' 'Dyalog' '_supp'~⍨Classes.⎕NL ¯9
      cls←Classes ⎕VGET class ⍝ Point to the class definition
      fns←except~⍨cls active cls.⎕NL ¯3 ⋄ nofns←cls override cls.⎕NL ¯3
      rpt⍪←class'methods'(except sort(nofns~⍨1⊃common),((class≢'System')/⊂'Create'),meths fns)
@@ -23,6 +23,10 @@
      rpt⍪←class'defaults'(cls.⎕NL ¯2)
      rpt⍪←class'(planned)'(except sort('Create' 'data' '∆',¨⍛,(⊃,/common),(planning Classes)~¨⊂'()'){(⍵~⍺),'(',¨(⍺∩⍵),¨')'}planning cls)
  :EndFor
+ fns←Draw.⎕NL ¯4 ⋄ fns/⍨←(⊂1 2 1)≡¨1 Draw.⎕AT¨fns ⍝ Coded operators with the correct syntax
+ fns←('∆'⎕R'?'⊢fns)∩,'' '?'∘.,Draw.Operations ⍝ Limit to fixed validation list (with or without "?" on all)
+ rpt⍪←'(Draw)' 'operations'(except sort fns)
  rpt←(×≢¨rpt[;3])⌿rpt ⍝ Skip missing types
- pw←⎕PW-2+2⊃⍴⍕rpt[;1 2] ⍝ Figure out maximum wrapping width within ⎕PW
+ pw←⎕PW-2+2⊃⍴⍕rpt[;1 2] ⍝ Figure out maximum wrapping width within external ⎕PW
  rpt[;3]←pw{nc←⌊⍺÷2+⌈/≢¨⍵ ⋄ (nc,⍨⌈nc÷⍨≢⍵)⍴1↓(1+nc×⌈nc÷⍨≢⍵)↑''⊂⍛,⍵}¨rpt[;3] ⍝ Format into columns
+ ⍝? Note that this formula assumes that all columns are at maximum width, and they rarely are, so it will usually be too narrow; is it worth fixing?

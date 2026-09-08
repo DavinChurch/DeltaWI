@@ -1,4 +1,4 @@
- result←object font arg;tunits;t;was;def;props;style;charset;font;fname;oldname;newname;old;fontsize;dyname
+ result←object font arg;tunits;t;was;def;props;style;charset;font;fname;oldname;newname;old;fontsize;dyname;parent
 ⍝ Request or modify the object's font
 
 ⍝ Use the APL+Win structure (usually)
@@ -33,14 +33,16 @@
      :Section ⍝ Update the APL+Win font description
          '∆WI LENGTH ERROR: font'##.Error~arg≢⍛∊⍳4
          arg←arg,arg≢⍛↓def←'' 1 0 'ansi' ⍝ Assume defaults - the default fontname is '' (not 'System') as far as APL+Win is concerned
+         ⍝? Should default size change based on scale?
          :If (×≢was)∧∨/t←0=≢¨arg ⋄ (t/arg)←t/was ⋄ :EndIf ⍝ Allow ⍬ to leave as-is
          :If ∨/t←0=≢¨arg ⋄ (t/arg)←t/def ⋄ :EndIf ⍝ Allow ⍬ with no previous value to fill in with defaults
          '∆WI DOMAIN ERROR: font'##.Error~##.IsChar 1⊃arg
          '∆WI DOMAIN ERROR: font'##.Error~##.IsNum 2⊃arg ⍝ This might be a negative number to remove internal leading
          '∆WI DOMAIN ERROR: font'##.Error~##.IsInt 3⊃arg
-         '∆WI DOMAIN ERROR: font'##.Error(arg[3]<0)∨arg[3]>4095
+         '∆WI DOMAIN ERROR: font'##.Error∨/0>3⊃arg
+         arg[3]←+/style←_supp.SetBitVals 3⊃arg ⍝ Allow for a vector to be summed (?)
+         '∆WI DOMAIN ERROR: font'##.Error arg[3]>4095
          '∆WI DOMAIN ERROR: font'##.Error(~##.IsInt 4⊃arg)∧~arg[4]∊⍥⎕C'ansi' 'oem' 'symbol' 'default'
-         style←##.BitVals 3⊃arg
          '∆WI ATTRIBUTE ERROR: Invalid "font" attribute specified'##.Error∧/32 64∊style
 
          result←NoRes
@@ -53,19 +55,25 @@
          fontsize←⌊0.5+⊃tunits×(|2⊃arg)×1+0.15×0>2⊃arg ⍝ Allow negative numbers to mean "avoid internal leading" like RichEdit does (as close as feasible)
          :If 0=≢newname←dyname←1⊃arg ⋄ dyname←'MS Shell Dlg' ⋄ :EndIf ⍝ Tell Dyalog to use a real fontname equivalent to APL+Win's empty font name
          props←'Font'('Coord' 'RealPixel')('PName'dyname)('Size'fontsize)('Fixed'(>/32 64∊style))
+         object._font_←dyname fontsize(3⊃arg)charset
          props,←('Italic'(2∊style))('Underline'(4∊style))('Weight'(400 700[1+1∊style]))('CharSet'charset)('Rotate' 0)
          ##.∆EX⍕object ##.∆WGet⊂'FontObj' '' ⍝ Destroy any previous font object
-         fname←##.Next object ⍝ Find the next available sequentially-numbered object name
-         font←⎕VGET(object⍕⍛,'.',fname)##.∆WC props ⍝ Create an internal Font object to be used
+         parent←object ⋄ :While 0≠parent.⎕NC'_Owner' ⋄ parent←parent._Owner ⋄ :EndWhile ⍝ Find someone to own the Font object
+         fname←##.Next parent ⍝ Find the next available sequentially-numbered object name
+         font←⎕VGET(parent⍕⍛,'.',fname)##.∆WC props ⍝ Create an internal Font object to be used
          font._Owner←object ⍝ Mark ownership of internal object
-         object ##.∆WSet⊂'FontObj'font ⍝ Attach this font to this object
+         :If 'Namespace'≡object ⎕WG'Type' ⍝ If this is a non-GUI namespace ⍝ *** Note: Use ⎕WG directly here because EWC can't be used on a plain namespace ***
+             object ⎕VSET⊂'FontObj'(⍕font) ⍝ Then just store the name as a variable (used when drawing via a State)
+         :Else ⍝ A GUI object is presumably capable of holding a FontObj reference
+             object ##.∆WS⊂'FontObj'font ⍝ Attach this font reference directly to this GUI object
+         :EndIf
      :EndSection
  :EndIf
 
  :Section ⍝ Modify contents of object to match new font (if necessary)
      :If oldname≢newname ⍝ If the font name has changed
      :AndIf ≠/oldname newname ##.QuadAV¨'⍺' ⍝ And the old and new fonts represent APL symbols differently
-     :AndIf ~object._class⊂⍛∊'Form' 'MDIForm' ⍝ Avoiding exceptional classes
+     :AndIf ~object._class⊂⍛∊'Form' 'MDIForm' '(State)' ⍝ Avoiding exceptional classes
          :If 3=object._Class.⎕NC'caption' ⍝ If this class defines 'caption' (it will never be found in Classes)
              :If ×≢old←object object._Class.caption ⍬ ⍝ And it has something there
                  {}object object._Class.caption,⊂old ⍝ Then it needs to be rebuilt using the standard process

@@ -1,0 +1,38 @@
+ result←object(State Brush)arg;style;color
+ result←⍬
+ ⍝ 'Brush' style [fgcolor]
+ ⍝ 'Brush' ¯1 hbrush
+ ⍝ 'Brush' ¯2 bitmap
+
+ '∆WI LENGTH ERROR: Brush'##.Error~1 2∊⍨≢arg
+ style←⊃arg
+ 'DOMAIN ERROR'##.Error(~##.IsInt style)∨0≠≡style
+ '∆WI DRAW ERROR: Invalid brush style'##.Error~style∊¯2 ¯1 0,⍳7
+ :Select style
+ :Case ¯2
+     '∆WI LENGTH ERROR: Brush'##.Error 2≠≢arg
+     :If ##.IsChar arg←2⊃arg
+         '∆WI RANK ERROR: Brush'##.Error 1≠≢⍴1/arg
+         State._brush←¯2,arg ⍝ No content checking at this time
+     :ElseIf ##.IsNum arg
+         State._brush←¯2,arg ⍝ No error checking at this time
+     :Else
+         ##.Error'∆WI DOMAIN ERROR: Brush'
+     :EndIf
+ :Case ¯1
+     '∆WI LENGTH ERROR: Brush'##.Error 2≠≢arg
+     'DOMAIN ERROR'##.Error~##.IsInt 2⊃arg
+     State._brush←arg
+ :Case 0
+     State._brush←,style ⍝ Color completely ignored for transparent brushes; store only 1⍴0
+ :Else
+     arg,←arg≢⍛↓1(1⊃State._color_) ⍝ Append default (background color)
+     color←2⊃arg ⍝ Color already assigned, checked and possibly modified
+     :If 0=≢color ⋄ color←1⊃State._color_ ⋄ :EndIf
+     'DOMAIN ERROR'##.Error~##.IsInt color
+     '∆WI LENGTH ERROR: Brush'##.Error~color≢⍛∊1 3
+     '∆WI DOMAIN ERROR: Brush'##.Error(3=≢color)∧∨/(color<0)∨color≥256
+     '∆WI DOMAIN ERROR: Brush'##.Error(1=≢color)∨∨/color≥256*3
+     '∆WI DOMAIN ERROR: Brush'##.Error(1=≢color)∨∨/(color<0)∧color≥¯100
+     State._brush←style color ⍝ Remember this setting
+ :EndSelect

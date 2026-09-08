@@ -1,0 +1,17 @@
+ result←object(State Clear)arg;size;props
+ result←⍬
+
+ :Select object._class
+ :Case 'Picture'
+     size←(object ##.Classes.Picture.imagesize ⍬)×⊃##.Classes._supp.MyUnits State ⍝ The full size of the image, in pixels
+⍝? Would setting CBits be a better way?
+     props←StartObj'Rect'
+     props,←DefineBrush State
+     props,←('LStyle' 5)('LWidth' 0) ⍝ Hide the edge
+     props,←('Points' 0 0)('Size'size)
+     State GUI props
+ :Case 'Printer'
+     {}object ##.Classes.Printer.Eject,0 ⍝ Just page-eject a Printer ⍝? Should I be force-ejecting a clean page?
+ :Else
+     ##.Error'Don''t know what to do about Clearing other controls' ⍝? Not sure what to do about other classes!
+ :EndSelect

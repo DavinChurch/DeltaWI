@@ -4,6 +4,7 @@
  'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
  'f.p'∆WI Pass'f.p'⊢'Create' 'Picture'('style' 80)
  'f.p'∆WI Pass 4.875 9.75⊢'size'
+⍝? Hmmm... changing the size of the Picture object doesn't seem to re-fill with grey!
  'f.p'∆WI Pass 4.875 9.75⊢'imagesize'
  'f.p'∆WI Pass 0 0⊢'origin'
  'f.p'∆WI Pass MT⊢'where' 5 10 20 50

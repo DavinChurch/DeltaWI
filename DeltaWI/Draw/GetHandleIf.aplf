@@ -1,0 +1,7 @@
+ content←type GetHandleIf handle
+ ⍝ Retrieve the contents of a numbered handle of a specific type, if it exists; otherwise return ⎕NULL
+ :Trap 870
+     content←type GetHandle handle
+ :Else
+     content←⎕NULL
+ :EndTrap

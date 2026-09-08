@@ -1,0 +1,30 @@
+ State←InitialState object;t;color;fontobj;fontdef
+⍝ Create a base starting state from default values derived from the target object
+
+ State←() ⍝ Build us a namespace to begin tracking the command's drawing states as we go
+ State._class←'(State)'
+ State._Class←object._Class ⍝ Just to keep some things from crashing
+ State._Owner←object ⍝ To allow some objects to be created as the parent's children
+ State.target←object ⋄ :If object._class≡'Picture' ⋄ State.target←object._pic ⋄ :EndIf ⍝ What object will we be drawing upon
+ State.(_size _extent)←object.(_size _extent)
+ State._Ancestry←object,object._Ancestry ⍝ Only for utility support (might need _Owner for other things?)
+ State._pix_size←object._pix_size
+ State.NewName←~'Picture' 'Printer'∊⍨⊂object._class ⍝ Drawing on non-Picture-ish controls requires naming graphical objects
+
+ color←object ⎕VGET⊂'_color_'(¯1 ¯1) ⍝ Obtain target's already-defined colors
+ :If ∨/t←¯1∊¨color ⋄ (t/color)←object ##.Classes._supp.color0 t/color ⋄ :EndIf ⍝ Follow color inheritence
+ {}State ##.Classes.color color ⍝ Assign these to our standard internal values for later use
+
+ ⍝ The State is going to contain object names in variables rather than object references or properties: FontObj, IconObj, BrushBmp
+ fontdef←State ⎕VGET⊂'_font'('MS Shell Dlg' 1 0 'ansi') ⍝ What font is defined on the parent object - capture it for a duplicate construction
+ {}State(##.Classes.font ChangeError'font' 'Font')fontdef ⍝ Call the system font-creation path but put resulting object name in State.FontObj
+ fontobj←State ⎕VGET⊂'FontObj' '' ⍝ This better only be a object name, now
+ 'Internal problems creating a default Draw font'##.Error 0=≢fontobj
+ State.IconObj←State.BrushBmp←'' ⍝ Default to none used yet
+
+ State._scale←object ⎕VGET⊂'_scale' 1
+ State._pen←1(2⊃color)1 ⍝ Default to foreground color
+ State._brush←1(1⊃color) ⍝ Default to background color
+ State._mode←object ⎕VGET⊂'_mode'(1 13 0)
+ State.Window←State.Clip←⍬ ⍝ Default to no Windowing/Clipping
+ State.Window_Mask←State.Clip_Mask←0 0⍴0 ⍝ These will be boolean arrays when used

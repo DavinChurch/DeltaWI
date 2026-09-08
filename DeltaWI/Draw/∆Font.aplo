@@ -1,0 +1,20 @@
+ result←object(State ∆Font)arg;thisfont;fontobj
+ ⍝ Create and return a Font "handle", which itself contains the FontObj used for creating font-based objects
+ ⍝ This handle should be "freed" later with '#' ∆WI '⎕Free'
+
+ ⍝ '?Font' name [size [style [charset [angle]]]
+
+ arg,←arg≢⍛↓⍬ ⍬ 0 'ansi' 0 ⍝ Allow rotation in this operation
+ '∆WI DOMAIN ERROR: Font'##.Error~(##.IsNum 5⊃arg)∧1=≢5⊃arg ⍝ Any number is valid for rotation
+ thisfont←⎕NS State(_font:⍬) ⍝ A place to hold the parsed input (inherit everything else from State)
+ {}object(thisfont Font)4↑arg ⍝ Call the standard font-parsing routine to fill in the normalized parameters on the temporary State
+ thisfont.FontObj ##.∆WS⊂'Rotate'(○180÷⍨5⊃arg) ⍝ Add the font rotation factor which isn't handled above
+
+ :If ##.IsInt⊃thisfont._font ⍝ If they just gave us an old handle
+     result←⊃thisfont._font ⍝ Just return it as-is and do nothing
+ :Else
+     ⍝ Build a "handle" namespace out of this definition for later reference; it will produce a hidden Font object for later graphical use
+     fontobj←⎕VGET thisfont.FontObj
+     fontobj._Owner←State ⍝ Move logical ownership of temporary internal object to proper State
+     result←'Font'CreateHandle(FontObj:⍕fontobj ⋄ ∆EX:⍕fontobj) ⍝ Define & store a Font object reference for later use; mark it to be cleaned up later
+ :EndIf

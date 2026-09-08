@@ -1,0 +1,13 @@
+ content←type GetHandle handle
+ ⍝ Retrieve the contents of a numbered handle of a specific type
+ 'DOMAIN ERROR'##.Error~##.IsInt handle
+ 'RANK ERROR'##.Error 1<≢⍴handle←1/handle
+ 'LENGTH ERROR'##.Error 1≠≢handle
+ 'DOMAIN ERROR'##.Error∨/handle≤0
+ 'Handle Not Found'##.Error 0=##.GUIroot.⎕NC'_Pool'
+ 'Handle Not Found'##.Error∨/9≠##.GUIroot._Pool.⎕NC'_',⍕handle←⊃handle
+ content←##.GUIroot._Pool ⎕VGET'_',⍕handle
+ 'Invalid Handle'##.Error 2.1≠content.⎕NC⊂'Type' ⍝ Only watch for non-GUI objects here
+ 'Invalid Handle'##.Error type≢content.Type ⍝ It had better be the type we're expecting
+⍝? Do we need to use ∆WG instead of a dotted name, since it might be a GUI object? What's supposed to be GUI vs. non-GUI?
+ ⍝ Just return the content namespace and they'd better understand what's in it

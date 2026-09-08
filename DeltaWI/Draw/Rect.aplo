@@ -1,0 +1,20 @@
+ result←object(State Rect)arg;tunits;props;t;box
+ result←⍬
+ ⍝ 'Rect' r c h w [eh ew]
+ ⍝ 'Rect' (r c h w [eh ew]) (r c h w [eh ew]) ...
+ ⍝ 'Rect' (n m ⍴ r c h w [eh ew] ...) (r c h w [eh ew]) ...
+
+ :If 1≥|≡arg ⋄ arg←,⊂arg ⋄ :EndIf
+ '∆WI RANK ERROR: Rect'##.Error∨/2<≢¨⍴¨arg
+ '∆WI LENGTH ERROR: Rect'##.Error∨/~(⊢/¨⍴¨arg)∊¨⊂4 6
+ tunits←⊃##.Classes._supp.MyUnits State
+ arg←⊃,/,¨↓¨arg ⍝ If any items are matrices, split them into individual lines so we can process them sequentially then recombine into a single matrix
+ props←StartObj'Rect'
+ props,←DefinePen State
+ props,←DefineBrush State
+ props,←⊂'DrawMode'(2⊃State._mode)
+
+ :For box :In arg ⍝ Only build one rectangle at a time
+     box←box×box≢⍛⍴tunits ⍝ Convert to pixels from object's scale
+     State GUI props,('Points'(2↑box))('Size'(2↑2↓box))('Radius'(2↑4↓box))
+ :EndFor

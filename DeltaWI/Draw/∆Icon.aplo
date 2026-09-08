@@ -1,0 +1,30 @@
+ result←object(State ∆Icon)arg;icon;bits;mask;objname
+ ⍝ Create and return an Icon "handle", which contains the name of a new Icon object that can be used later
+ ⍝ This handle should be "freed" later with '#' ∆WI '⎕Free'
+
+ ⍝ '?Icon' icon ...
+
+ result←⍬
+ :If 1≥|≡arg ⋄ arg←,⊂arg ⋄ :EndIf
+ '∆WI RANK ERROR: Icon'##.Error∨/2<≢¨⍴¨arg
+
+ :For icon :In arg
+     :If ##.IsInt icon ⍝ This better be an icon handle
+     :AndIf 1=≢icon
+         result,←⊃icon ⍝ Just return the same pointer intact
+     :ElseIf (##.IsChar icon)∧'>'∊icon ⍝ This is an icon resource ⍝? Does this need more thorough validation?
+         ##.Error'Icon resources are not supported yet' ⍝? Add this later
+     :ElseIf ##.IsChar icon ⍝ This is an icon file name
+         '∆WI RANK ERROR: Icon'##.Error 1<≢⍴icon←1/icon
+         :If '.ico'≡⍥⎕C ¯4↑icon ⍝ We're only accepting .ICO files ⍝? May do more later
+         :AndIf ⎕NEXISTS icon
+             objname←(object⍕⍛,'.',##.Next object)##.∆WC'Icon'('File'icon)('Style' 'Large') ⍝ We'll create an object to use later
+             ⍝ Build a "handle" namespace pointing to this icon for later reference
+             result,←'Icon'CreateHandle(ObjName:objname ⋄ ∆EX:objname) ⍝ Just store the object-reference for later use
+         :Else
+             ##.Error'∆WI DRAW ERROR: Invalid or missing icon file "',icon,'"'
+         :EndIf
+     :Else
+         ##.Error'∆WI DOMAIN ERROR: Icon'
+     :EndIf
+ :EndFor

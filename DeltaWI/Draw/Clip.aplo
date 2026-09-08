@@ -1,0 +1,27 @@
+ result←object(State Clip)arg;tunits;pix;max
+ result←⍬
+ ⍝ 'Clip' r c h w
+ ⍝ 'Clip' polygon
+ ⍝ Note: Clipping is always performed within and relative to any Window setting
+
+ 'DOMAIN ERROR'##.Error~##.IsNum arg←##.Single arg
+ '∆WI RANK ERROR: Clip'##.Error~1 2∊⍨≢⍴arg
+ tunits←⊃##.Classes._supp.MyUnits State
+ pix←0×max←State._pix_size ⍝ How big is the whole object we're drawing on (origin @ 0,0)?
+ :If 4=≢State.Window ⋄ pix←State.Window[1 2] ⋄ max←pix+State.Window[3 4] ⋄ :EndIf ⍝ But limit & shift that if we're drawing within a Window
+
+ :If 1=≢⍴arg ⍝ A 4⍴ vector is rectangular clipping
+     '∆WI LENGTH ERROR: Clip'##.Error 4≠≢arg
+     '∆WI DOMAIN ERROR: Clip'##.Error∨/arg<0
+     pix←(4↑pix)+⌊0.5+arg×4⍴tunits ⍝ Convert to pixels
+     pix[1 2]⌊←max ⋄ pix[3 4]⌊←max-pix[1 2] ⍝ Constrain to maximum Window size
+ :ElseIf 2=≢⍴arg ⍝ An (n,2)⍴ matrix is polygonal clipping
+     '∆WI LENGTH ERROR: Clip'##.Error∨/2≠⊢/⍴arg
+     '∆WI LENGTH ERROR: Clip'##.Error∨/1=≢arg
+     pix←pix+⍤1⊢⌊0.5+arg×⍤1⊢tunits ⍝ Convert to pixels
+ :Else
+     ##.Error'∆WI RANK ERROR: Clip'
+ :EndIf
+
+ State.Clip←pix ⍝ Remember the Clip setting in pixels (either vector or matrix form)
+ State.Clip_Mask←object(State BuildMask)pix ⍝ Create a State-internal boolean array to be used for future Window & Clip masking of all other operations

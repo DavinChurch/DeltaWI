@@ -1,0 +1,19 @@
+ result←object(State Seg)arg;tunits;props;points
+ result←⍬
+ ⍝ 'Seg' (n m ⍴ r c r c ...) (r c r c ...) ...
+
+ '∆WI RANK ERROR: Seg'##.Error∨/2<≢¨⍴¨arg
+ '∆WI LENGTH ERROR: Seg'##.Error∨/2|⊢/¨⍴¨arg
+ 'DOMAIN ERROR'##.Error∨/1<|≡¨arg
+ arg←⊃,/,¨↓¨arg ⍝ If any items are matrices, split them into individual lines so we can process them sequentially
+ arg←arg/⍨##.IsNum¨arg ⍝ For some reason, scalar text is not an error, so we'll just ignore it
+
+ tunits←⊃##.Classes._supp.MyUnits State
+ props←StartObj'Poly'
+ props,←DefinePen State
+ props,←⊂'DrawMode'(2⊃State._mode)
+
+ :For points :In arg ⍝ Build one unconnected set of lines at a time
+     points←tunits×⍤1{⍵⍴⍨2,⍨2÷⍨≢⍵}points ⍝ Convert to pixels from object's scale and re-form into 2-column matrix
+     State GUI props,⊂'Points'points
+ :EndFor

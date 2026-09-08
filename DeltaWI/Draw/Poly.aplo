@@ -1,0 +1,19 @@
+ result←object(State Poly)arg;tunits;props;points
+ result←⍬
+ ⍝ 'Poly' (n 2 ⍴ r c) ...
+
+ '∆WI RANK ERROR: Poly'##.Error∨/2<≢¨⍴¨arg
+ '∆WI LENGTH ERROR: Poly'##.Error∨/2≠≢¨⍴¨arg
+ '∆WI LENGTH ERROR: Poly'##.Error∨/2≠⊢/¨⍴¨arg
+ '∆WI LENGTH ERROR: Poly'##.Error∨/1=≢¨arg
+ 'DOMAIN ERROR'##.Error~∧/##.IsNum¨arg
+ tunits←⊃##.Classes._supp.MyUnits State
+ props←StartObj'Poly'
+ props,←DefinePen State
+ props,←DefineBrush State
+ props,←⊂'DrawMode'(2⊃State._mode)
+
+ :For points :In arg ⍝ Build one polygon set of lines at a time
+     points←points×⍤1⊢tunits ⍝ Convert to pixels from object's scale
+     State GUI props,⊂'Points'points
+ :EndFor

@@ -21,10 +21,10 @@
          object._bitmap←''
          cbits←px⍴bkg
 
-     :ElseIf '.bmp'≡⍥⎕C ¯4↑arg ⍝ APL+Win only accepts .BMP files
+     :ElseIf '.bmp'≡⍥⎕C ¯4↑arg ⍝ We're only accepting .BMP files ⍝? May do more later
      :AndIf ⎕NEXISTS arg ⍝ If it's not an existing file, don't change the bitmapsize or image/imagesize
          object._bitmap←arg
-         pxsize←⍴cbits←pic _supp.ReadBMP arg ⍝ Build our base pixel-image from their file
+         pxsize←⍴cbits←object ##._supp.ReadBMP arg ⍝ Build our base pixel-image from their file
          cbits←pic _supp.AlignPic cbits stylebits px ⍝ Align declared image within whole Picture
          object._bitmapsize←pxsize÷tunits
      :EndIf

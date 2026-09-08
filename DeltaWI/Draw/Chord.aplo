@@ -1,0 +1,33 @@
+ result←object(State Chord)arg;props;tunits;circle;this;radius;pen;nopen
+ result←⍬
+ ⍝ 'Chord' r c radius [aspect [start end [border]]]
+ ⍝ 'Chord' r c radius [aspect [start end [border]]] ...
+ ⍝ 'Chord' n m ⍴ r c radius [aspect [start end [border]]] ,,,
+
+ :If 1≥|≡arg ⋄ arg←,⊂arg ⋄ :EndIf
+ '∆WI RANK ERROR: Chord'##.Error∨/2<≢¨⍴¨arg
+ '∆WI LENGTH ERROR: Chord'##.Error∨/~(⊢/¨⍴¨arg)∊¨⊂3 4 6 7
+ tunits←⊃##.Classes._supp.MyUnits State
+ arg←⊃,/,¨↓¨arg ⍝ If any items are matrices, split them into individual lines so we can process them sequentially then recombine into a single matrix
+ props←StartObj''
+ props,←pen←DefinePen State
+ props,←DefineBrush State
+ props,←⊂'DrawMode'(2⊃State._mode)
+ nopen←,⊂'LStyle' 5 ⍝ In case we need to selectively hide all the lines by overriding the pen type
+
+ :For circle :In arg ⍝ Only build one chord at a time
+     circle,←circle≢⍛↓0 0 0 1 0 360 1 ⍝ Assign defaults
+     this←(∨/circle[5 6]≠0 360)/↓'Start' 'End',⍤0⊢circle[5 6]×○÷180
+     this,←⊂'ArcMode'(⌈/0 1/⍨1 2∊##.Classes._supp.SetBitVals 7⊃circle) ⍝? This does not provide full support - do the best we can
+     :If circle[4]∊(÷/⌽tunits),-÷/tunits ⍝ Then they want a perfect circle even with asymmetrical units ⍝? Does this always work?
+         this,←⊂'Points'(tunits×2↑circle)
+         this,←⊂'Radius'(tunits[2]×circle[3])
+         State GUI'Circle'⊂⍛,props,(nopen/⍨circle[7]=0),this
+     :Else ⍝ They're asking for an ellipse instead (have to use a bounding rectangle)
+         ⍝? Are the pixels themselves considered to be square enough to ignore something like ÷/×/##.GUIRoot.(_AspectRatio _pix_size); separate for Printer?
+         radius←circle[3]×⌽tunits×|(circle[4]≥0)⌽1,circle[4] ⍝ Compute relative radii by aspect ratio
+         this,←⊂'Points'(1-⍨radius-⍨tunits×2↑circle)
+         this,←⊂'Size'(1+2×radius) ⍝ Account for 0-point at center
+         State GUI'Ellipse'⊂⍛,props,(nopen/⍨circle[7]=0),this
+     :EndIf
+ :EndFor

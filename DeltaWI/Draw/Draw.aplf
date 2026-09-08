@@ -1,0 +1,24 @@
+ result←object Draw arg;State;op;fn;operation
+ ⍝ Perform a sequence of graphical drawing operations on Pictures, Printers, or any other controls in general
+ result←⍬ ⍝ Accumulate any results they might have asked for
+ State←InitialState object ⍝ Track current state sequentially throughout the drawing process -- manage it pseudo-globally via a namespace reference
+
+ :For op :In ,¨⊆¨arg ⍝ Loop through the application's entire command sequence in strict order
+     fn←Operations ##.Canonize{⍵↓⍨'?'=⊃⍵}⊃op ⍝ Standardize capitalization, since APL+Win allows it to be flexible
+     :If fn⊂⍛∊Operations ⍝ For argument validation to keep from calling an unintentional routine
+     :AndIf 4=⎕NC fn←fn,⍨'∆'/⍨'?'=⊃⊃op ⍝ Make sure it's been implemented
+         ⎕DL 1E¯15 ⍝ This avoids a GUI problem where the object doesn't show up dynamically
+         operation←⍎'State ',fn ⍝ Let's implement all the commands as APL operators with the left operand being the modifiable current-state namespace
+         result,←fn{(0=≢⍵)∧'∆'=⊃⍺:⎕NULL ⋄ ⍵}object operation 1↓op ⍝ Perform the drawing operation, appending any result values that may be returned (usually just ⍬)
+     :Else
+         ##.Error'∆WI DRAW ERROR: Invalid draw command "',fn,'"'
+     :EndIf
+ :EndFor
+ ##.∆EX⍕¨State ⎕VGET('FontObj' '')('IconObj' '')('BrushBmp' '') ⍝ Clean up temporary objects used in this statement
+
+ :If 0=≢result
+     result←##.Classes.NoRes ⍝ If we haven't generated any results at all, just return the standard empty result
+ :Else
+     result←1↓0,result~⎕NULL ⍝ Allow "?" operations to return ⍬ which gets converted to ⎕NULL to signal that a result is always returned
+ :EndIf
+⍝? Are there any control classes which we need to explicitly prevent drawing upon?

@@ -1,0 +1,16 @@
+ result←object(State ∆Text)arg;text;tunits;punits
+ ⍝ Rather than building a handle, the ?Text operation returns the size of the bounding box that will be required around the provided text
+
+ ⍝ '?Text' text ...
+
+ result←⍬
+:If 0=≢arg ⋄ :Return ⋄ :EndIf ⍝ Empty command is ignored
+ arg←,⊆,arg ⍝ Force to a nested vector of items
+ ⍝ If arg[2] is a number, APL+Win is producing a WI LENGTH ERROR instead of a DOMAIN ERROR for some reason - I'm going to ignore that idiosyncrasy
+ 'DOMAIN ERROR'##.Error∨/~##.IsChar¨arg
+ (tunits punits)←2↑##.Classes._supp.MyUnits State
+
+ :For text :In arg
+     text←ToChar text ⍝ Convert any numerics into plain characters
+     result,←⊂(punits÷tunits)×object ##.Classes._supp.GetTextSize text(⎕VGET State.FontObj)1
+ :EndFor

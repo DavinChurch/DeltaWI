@@ -1,0 +1,13 @@
+ result←object(State Window)arg;tunits;pix;max
+ result←⍬
+ ⍝ 'Window' r c h w
+
+ 'DOMAIN ERROR'##.Error~##.IsNum arg←##.Single arg
+ '∆WI LENGTH ERROR: Window'##.Error 4≠≢arg
+ '∆WI DOMAIN ERROR: Window'##.Error∨/arg<0
+ pix←⌊0.5+arg×4⍴tunits←⊃##.Classes._supp.MyUnits State ⍝ Convert to pixels
+ max←State._pix_size ⍝ How big is the whole object we're drawing on?
+ pix[1 2]⌊←max ⋄ pix[3 4]⌊←max-pix[1 2] ⍝ Constrain maximum Window size
+ State.Window←pix ⍝ Remember the Window setting in pixels
+ State.Window_Mask←object(State BuildMask)pix ⍝ Create a State-internal boolean array to be used for future Window & Clip masking of all other operations
+ State.Clip←⍬ ⋄ State.Clip_Mask←0 0⍴0 ⍝ Throw out old clipping when Window changes

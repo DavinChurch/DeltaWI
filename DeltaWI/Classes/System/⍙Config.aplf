@@ -55,7 +55,7 @@
              'Pixels Domain Error'##.##.Error~(⊂value←1∘⎕C@(⍳×≢value)⎕C value)∊'' 'Virtual' 'Real' 'Scaled' 'True'
              value←'Scaled' 'True'⎕R'Virtual' 'Real'⊢value ⍝ Allow undocumented synonyms
              object._Pixels←value←value,(0=≢value)/'Virtual'
-             object._units[5;]←×⍣('V'≠⊃value)⊢object.DevCaps[4]÷100 ⍝ Adjust system 'units' to match
+             object._units[5;]←×⍣('V'≠⊃value)⊢object._DevCaps[4]÷100 ⍝ Adjust system 'units' to match
          :Else ⋄ ##.##.Error'Domain Error'
          :EndSelect
      :EndIf

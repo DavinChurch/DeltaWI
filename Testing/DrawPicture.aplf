@@ -1,0 +1,76 @@
+ DrawPicture;drawclear;bmpfile;icofile;ph;bh;fh;bfh;ifh;apldir;∆wi;Res
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+ apldir←{⍵↑⍨(⍵∊'/\')⌈.×⍳≢⍵}⊃2 ⎕NQ'.' 'GetCommandLineArgs'
+ bmpfile←apldir,'ws\cars.bmp' ⋄ bmpfile←bmpfile/⍨⎕NEXISTS bmpfile ⍝ Look for a standard BMP file for testing (modifiable)
+ icofile←apldir,'ws\aplicon.ico' ⋄ icofile←icofile/⍨⎕NEXISTS icofile ⍝ Look for a standard ICO file for testing (modifiable)
+ ⎕FX↑'result←left ∆wi right' 'result←Res←left ∆WI right' ⍝ Something to assign a semi-global result
+
+ 'f'∆WI Pass(,'f')⊢'New' 'Form'('size' 30 100)
+ 'f.p'∆WI Pass'f.p'⊢'New' 'Picture'('where' 0 0 30 100)('border' 0)
+ drawclear←'Draw'('Brush' 1(3⍴255))'Clear' ⍝ Reset the picture to White before testing each one
+
+ 'f.p'∆WI Pass MT⊢drawclear,('Pen' 1(192 0 0)1)('Line'(2 2⍴5 5 20 50))('Pen' 3(0 192 0)1)('Line'(2 2⍴5 50 20 5))
+ 'f.p'∆WI Pass MT⊢drawclear,('Pen' 1(192 0 0)1)('Seg'(5 5,5 10,10 5,10 10,15 5,15 10))
+ 'f.p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Rect' 10 60 5 30)
+ ⍝? Add check for pen #2 (inside-solid); after implementing
+ 'f.p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Ellipse' 10 60 5 30)
+ 'f.p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)1)('Brush' 5(0 0 128))('Poly'(3 2⍴2 10,10 5,10 15))
+
+ 'f.p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Circle' 10 50 5)
+ 'f.p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Circle' 10 50 5 2)
+ 'f.p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Circle' 10 50 5 0.5)
+ 'f.p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Circle' 10 50 5 ¯2)
+ 'f.p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Circle' 10 50 5 ¯0.5)
+ 'f.p'∆WI Pass MT⊢drawclear,('Scale' 5)('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Circle' 100 500 50)
+ 'f.p'∆WI Pass MT⊢drawclear,('Scale' 5)('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Circle' 100 500 50 2)
+ 'f.p'∆WI Pass MT⊢drawclear,('Scale' 5)('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Circle' 100 500 50 0.5)
+ 'f.p'∆WI Pass MT⊢drawclear,('Scale' 5)('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Circle' 100 500 50 ¯2)
+ 'f.p'∆WI Pass MT⊢drawclear,('Scale' 5)('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Circle' 100 500 50 ¯0.5)
+
+ 'f.p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Circle' 10 50 5 2 45 135 7)
+ 'f.p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Chord' 10 50 5 2 45 135 7)
+ 'f.p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Point'((⊂0 0 0),⍨↑,(5×⍳5)∘.,10×⍳9))
+
+ 'f.p'∆wi Pass{1=≢⍵}⊢'Draw'('?Pen' 1(255 0 0)3) ⋄ ph←⊃Res
+ 'f.p'∆wi Pass{1=≢⍵}⊢'Draw'('?Brush' 5(0 0 128)) ⋄ bh←⊃Res
+ 'f.p'∆WI Pass MT⊢drawclear,('Pen' ¯1 ph)('Brush' ¯1 bh)('Circle' 10 50 5)
+ 'f.p'∆WI Pass MT⊢drawclear,('Pen' ¯1 ph)('Brush' ¯2 bmpfile)('Circle' 10 50 5)
+
+ 'f.p'∆WI Pass MT⊢drawclear,('Mode' 0)('Font' 'Arial' 1 0 'ansi')('Color'(3⍴255)(3⍴0))('Text' 'This is a test...' 5 5)
+ 'f.p'∆WI Pass MT⊢drawclear,('Mode' 0)('Color'(3⍴255)(3⍴0))('Text'('This is a',(⎕UCS 13),'two-line test...')5 5)
+ 'f.p'∆WI Pass MT⊢drawclear,('Mode' 0)('Color'(3⍴255)(3⍴0))('Text'(↑'This is a' 'three-line' 'test...')5 5)
+ 'f.p'∆WI Pass MT⊢drawclear,('Mode' 0)('Font' 'Arial' 1 0 'ansi' 45)('Color'(3⍴255)(3⍴0))('Text' 'This is a test...' 5 5)
+ 'f.p'∆wi Pass{1=≢⍵}⊢'Draw'('?Font' 'Arial' 1 0 'ansi') ⋄ fh←⊃Res
+ 'f.p'∆WI Pass MT⊢drawclear,('Mode' 0)('Font'fh)('Color'(3⍴255)(3⍴0))('Text' 'This is a test...' 5 5)
+
+ 'f.p'∆WI Pass(,⊂1 14.125)⊢drawclear,('Mode' 0)('Font' 'Arial' 1 0 'ansi')('Color'(3⍴255)(3⍴0))('?Text' 'This is a single test')
+ 'f.p'∆WI Pass(,⊂16 113)⊢drawclear,('Mode' 0)('Scale' 5)('Font' 'Arial' 16 0 'ansi')('Color'(3⍴255)(3⍴0))('?Text' 'This is a single test')
+ 'f.p'∆WI Pass((1 6.125)(1 8))⊢drawclear,('Mode' 0)('Font' 'Arial' 1 0 'ansi')('Color'(3⍴255)(3⍴0))('?Text' 'This is a' 'double test')
+ 'f.p'∆WI Pass(,⊂2 6.125)⊢drawclear,('Mode' 0)('Font' 'Arial' 1 0 'ansi')('Color'(3⍴255)(3⍴0))('?Text'(↑'This is a' 'matrix'))
+ 'f.p'∆WI Pass(,⊂2 7.5)⊢drawclear,('Mode' 0)('Font' 'Arial' 1 0 'ansi')('Color'(3⍴255)(3⍴0))('?Text'('This has a',(⎕UCS 13),'new line'))
+ 'f.p'∆WI Fail'DOMAIN ERROR'⊢drawclear,('Mode' 0)('Font' 'Arial' 1 0 'ansi')('Color'(3⍴255)(3⍴0))('?Text'('This is a' 'nested')'double test')
+ 'f.p'∆WI Pass(,⊂1.3125 11.5)⊢drawclear,('Mode' 0)('Font' 'Arial' 1 0 'ansi' 45)('Color'(3⍴255)(3⍴0))('?Text' 'This is a test...')
+
+ 'f.p'∆WI Pass MT⊢drawclear,⊂('Bitmap'bmpfile 0 0)
+ 'f.p'∆WI Pass MT⊢drawclear,⊂('Icon'icofile 0 0)
+ 'f.p'∆wi Pass{1=≢⍵}⊢'Draw'('?Bitmap'bmpfile) ⋄ bfh←⊃Res
+ 'f.p'∆wi Pass{1=≢⍵}⊢'Draw'('?Icon'icofile) ⋄ ifh←⊃Res
+ 'f.p'∆WI Pass MT⊢drawclear,⊂('Bitmap'bfh 0 0)
+ 'f.p'∆WI Pass MT⊢drawclear,⊂('Icon'ifh 0 0)
+
+ 'f.p'∆WI Pass MT⊢drawclear,('Scale' 5)('Pen' 1(255 0 0)3)('Brush' 1(0 0 128))('Circle' 50 50 50)
+ 'f.p'∆WI Pass MT⊢drawclear,('Scale' 5)('Window' 50 100 150 150)('Pen' 1(255 0 0)3)('Brush' 1(0 0 128))('Circle' 50 50 50)
+ 'f.p'∆WI Pass MT⊢drawclear,('Scale' 5)('Window' 50 100 75 75)('Pen' 1(255 0 0)3)('Brush' 1(0 0 128))('Circle' 50 50 50)
+ 'f.p'∆WI Pass MT⊢drawclear,('Scale' 5)('Clip' 25 25 75 75)('Pen' 1(255 0 0)3)('Brush' 1(0 0 128))('Circle' 50 50 50)
+ 'f.p'∆WI Pass MT⊢drawclear,('Scale' 5)('Window' 50 100 150 150)('Clip' 25 25 75 75)('Pen' 1(255 0 0)3)('Brush' 1(0 0 128))('Circle' 50 50 50)
+ 'f.p'∆WI Pass MT⊢drawclear,('Mode' 0)('Window' 10 10 10 30)('Font' 'Arial' 1 0 'ansi')('Color'(3⍴255)(3⍴0))('Text' 'This is a test...' 5 5)
+ 'f.p'∆WI Pass MT⊢drawclear,('Mode' 0)('Clip' 0 8 10 3)('Font' 'Arial' 1 0 'ansi')('Color'(3⍴255)(3⍴0))('Text' 'This is a test...' 5 5)
+ 'f.p'∆WI Pass MT⊢drawclear,('Window' 10 10 10 30)('Bitmap'bmpfile 0 0)
+ 'f.p'∆WI Pass MT⊢drawclear,('Window' 10 10 10 30)('Icon'icofile 0 0)
+ 'f.p'∆WI Pass MT⊢drawclear,('Scale' 5)('Clip'(3 2⍴5 50,75 5,120 90))('Pen' 1(255 0 0)3)('Brush' 1(0 0 128))('Circle' 50 50 50)
+
+
+ '#'∆WI Pass MT⊢'⎕Free'ph bh fh bfh ifh
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests
+
+⍝? Still needed to be added much later: Imagelist

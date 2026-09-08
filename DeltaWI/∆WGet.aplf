@@ -22,3 +22,7 @@
  :If ∨/~real
      ((~real)/value)←obj ⎕VGET real~⍛/props ⍝ Obtain from WS if present, otherwise use default value
  :EndIf
+
+⍝? Can we do anything special about nested scalars so we don't have to unnest it all the time?
+⍝? We should have compatible behaviors with ⎕WG and ⎕VGET where possible.
+⍝? ⎕VGet returns a single value if a nested scalar is specified, for instance, whether or not it's given a default

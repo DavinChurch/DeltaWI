@@ -1,0 +1,26 @@
+ result←object(State Point)arg;tunits;colors;points;pixels;t;scheme
+ result←⍬
+ ⍝ 'Point' r c [color]
+ ⍝ 'Point' (n m ⍴ r c [color] ...) ...
+
+ :If 1≥|≡arg ⋄ arg←,⊂arg ⋄ :EndIf
+ '∆WI RANK ERROR: Point'##.Error∨/2<≢¨⍴¨arg
+ '∆WI LENGTH ERROR: Point'##.Error∨/~(⊢/¨⍴¨arg)∊¨⊂2 3
+ arg←⊃⍪/3↑⍤1¨{(¯2↑1,⍴⍵)⍴⍵}¨arg,¨2⊃State._color_ ⍝ Default all colors and force into a single matrix
+ 'DOMAIN ERROR'##.Error~##.IsNum arg[;1 2]
+ 'DOMAIN ERROR'##.Error~∧/##.IsInt¨colors←arg[;3]
+ '∆WI LENGTH ERROR: Point'##.Error~∧/(≢¨colors)∊¨⊂1 3
+ '∆WI DOMAIN ERROR: Point'##.Error∨/(3=≢¨colors)∧∨/¨(colors<0)∨colors≥256
+ '∆WI DOMAIN ERROR: Point'##.Error∨/(1=≢¨colors)∨∨/¨colors≥256*3
+ '∆WI DOMAIN ERROR: Point'##.Error∨/(1=≢¨colors)∨∨/¨(colors<0)∧colors≥¯100
+ :If ∨/t←1=≢¨colors
+     scheme←##.GUIroot._color_scheme
+     (t/colors)←(⊂⍬)##.Classes._supp.color2¨⊃¨t/colors ⍝ Convert scalars to Dyalog-form (errors if <¯120) ⍝? (De-duping might speed this up if needed)
+     (t/colors)←scheme[1⌈scheme≢⍛⌊-t/colors] ⍝ Then convert Dyalog codes to RBG values
+ :EndIf
+
+ tunits←⊃##.Classes._supp.MyUnits State
+ points←⌊0.5+tunits×⍤1⊢¯1↓⍤1⊢arg
+ pixels←State.target ##.∆WG'CBits' ⍝ Get the entire image numerically
+ pixels[⎕IO+↓points]←256⊥↑[1]colors ⍝ Use Choose-indexing for scatter-point assignment; First coordinate @ (0,0)
+ State.target ##.∆WS⊂'CBits'pixels ⍝ Replace the entire image with new pixels in it

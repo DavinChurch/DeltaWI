@@ -1,0 +1,22 @@
+ mask←object(State BuildMask)edges;size;rc;hw;props;canvas
+⍝ We need this to build a reusable clipping mask for ∇GUI to apply
+⍝ The result should be a boolean array of the size of State._pix_size
+⍝ The right argument should be either a rectangle-style (4⍴start,size) or a 2-column matrix of polygon points, in 0-origin pixels
+⍝ Obvious argument structural errors simply return a Value Error rather than a formal error message
+
+ size←State._pix_size
+ :If (1=≢⍴edges)∧4=≢edges                                       ⍝ *** In standard (start,size) rectangular form
+     rc←2↑edges ⋄ hw←2↓edges ⋄ mask←size↑(-rc+hw)↑hw⍴1          ⍝ We'll just manually build a simple bit mask
+
+ :ElseIf (2=≢⍴edges)∧(2=¯1↑⍴edges)∧1<≢edges                     ⍝ *** They've given us a polygonal shape - this is more difficult
+     canvas←State._Owner⍕⍛,'.',##.Next State._Owner             ⍝ We're going to build a temporary Bitmap here
+     canvas←⎕VGET canvas ##.∆WC'Bitmap'('CBits'(size⍴256*3))    ⍝ We'll use this White space to ask Dyalog to draw our Black polygon for us
+     props←StartObj'Poly'
+     props,←('LStyle' 5)('LWidth' 0)                            ⍝ Hide the edge itself ⍝? (does this work well enough?)
+     props,←('BCol'(3⍴255))('FStyle' 0)('FillCol'(3⍴0))
+     props,←⊂'Points'edges
+     {}(State NewName canvas)##.∆WC props                       ⍝ Draw their requested polygon
+     mask←canvas ##.∆WG'CBits'                                  ⍝ Retrieve the hopefully Black & White pixels to see where it ended up
+     mask←0=mask                                                ⍝ Everywhere it was pure Black, that's inside the polygon and is where we want to allow output
+     ##.∆EX⍕canvas                                              ⍝ We don't need this any more
+ :EndIf

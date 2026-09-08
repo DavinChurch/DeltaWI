@@ -1,0 +1,15 @@
+ result←object(State Font)arg
+ result←⍬
+ ⍝ 'Font' name [size [style [charset [angle]]]
+ ⍝ 'Font' hfont
+
+ :If 0=≢arg ⋄ :Return ⋄ :EndIf ⍝ Empty command is ignored
+ :If (1=≢arg)∧##.IsInt arg ⍝ They're specifying a font handle
+     State.FontObj←('Font'GetHandle⊃arg).FontObj ⍝ Retrieve the *name* of the predefined font and store it in the State
+ :Else
+     '∆WI LENGTH ERROR: Font'##.Error 5<≢arg
+     arg,←arg≢⍛↓⍬ ⍬ 0 'ansi' 0 ⍝ Allow rotation in this operation
+     '∆WI DOMAIN ERROR: Font'##.Error~(##.IsNum 5⊃arg)∧1=≢5⊃arg ⍝ Any number is valid for rotation
+     {}State(##.Classes.font ChangeError'font' 'Font')4↑arg ⍝ Call common property fn but creating a State.FontObj name instead
+     State.FontObj ##.∆WS⊂'Rotate'(○180÷⍨5⊃arg) ⍝ Add the font rotation factor which isn't handled above
+ :EndIf

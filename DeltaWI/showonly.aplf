@@ -1,17 +1,18 @@
  rpt←{andtypes}showonly types;all;t;x
 ⍝ Call showactions but restrict the list to only those classes or categories listed in the right argument
 ⍝ If the left argument is provided, with the same sort of values, restrict the list to rows that are simultaneously members of both arguments
+⍝ Special right-argument commands: '≢' (count all classes & actions); '⍳' (enumerate all supported classes)
  all←showactions
  :If ∨/'⍴≢'∊types ⍝ Return a count of available classes and actions
      rpt←0 2⍴0
-     rpt⍪←(≢∪all[;1]~⊂'(shared)')'Classes'
-     t←'Methods' 'Properties' 'Events'
+     rpt⍪←(≢∪all[;1]~'(shared)' '(Draw)')'Classes'
+     t←'Methods' 'Properties' 'Events' 'Operations'
      x←(t ⎕C⍛⍳all[;2]){⍺,≢⊃,/⍵}⌸(⊂⊂'')~¨⍨,¨all[;3]
      rpt⍪←t,⍨⍪x←x[x[;1]⍳⍳≢t;2]
      rpt⍪←(+/x)'Total actions'
      ⍝? Note: prototype dwi version for METSIM supported exactly 312 total actions across 20 classes
  :ElseIf '⍳'∊types ⍝ Return a list of currently-supported classes
-    rpt←∪all[;1]~⊂'(shared)'
+     rpt←∪all[;1]~'(shared)' '(Draw)'
  :Else
      rpt←∨/(all[;1 2]~¨⊂'()')∊⍥⎕C(,¨⊆types)~¨⊂'()'
      :If 2=⎕NC'andtypes'

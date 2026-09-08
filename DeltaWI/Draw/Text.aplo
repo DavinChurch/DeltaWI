@@ -1,0 +1,34 @@
+ result←object(State Text)arg;was;t;props;tunits;text;item;points;at;NL;colors
+ result←⍬
+ ⍝ 'Text' text r c [h w]                    ⍝? h/w clipping is not supported in Dyalog ⍝? Can we fake it with clipping code?
+ ⍝ 'Text' ([n m ⍴] text r c [h w]) ...      ⍝? h/w clipping is not supported in Dyalog ⍝? Can we fake it with clipping code?
+
+⍝? If the text is rotated, I assume the origin point (r,c) is the top-left leading-corner of the first character. Is (h,w) measured from that same point?
+⍝? How would I specify (h,w) in APL+Win in various rotation quadrants, since it can stick out in any direction?
+⍝? I assume that Dyalog uses the same (r,c) starting point, even when rotated?
+
+ :If 0=≢arg ⋄ :Return ⋄ :EndIf ⍝ Empty command is ignored
+ :If 2>|≡arg ⋄ :OrIf (2=|≡arg)∧##.IsNum 1↓arg ⋄ arg←,⊂,arg ⋄ :EndIf ⍝ This looks like a single Text request - nest it
+ NL←⎕UCS 13
+ tunits←⊃##.Classes._supp.MyUnits State
+ :If 1 ¯2∊⍨≡arg ⋄ arg←,⊂arg ⋄ :EndIf ⍝ Make sure a single argument is enclosed
+ arg←⊃,/,¨↓¨arg ⍝ If any items are matrices, split them into individual lines so we can process them sequentially
+ props←StartObj'Text'
+ colors←(⊂⍬)##.Classes._supp.color2¨State._color_ ⍝ Text background, foreground
+ props,←⊂'FCol'(2⊃colors) ⍝ They'll always want a foreground color to write the text with
+ props,←(1⊃State._mode)/⊂'BCol'(1⊃colors) ⍝ They may also want a background behind the text
+ props,←(~1⊃State._mode)/⊂'BCol'(3⍴255) ⍝? Testing forced white background until we can leave it transparent
+ props,←⊂'DrawMode'(2⊃State._mode)
+
+ :For item :In arg ⍝ Verify, process & write each Text item one at a time
+     '∆WI LENGTH ERROR: Text'##.Error~item≢⍛∊3 5
+     '∆WI DOMAIN ERROR: Text'##.Error~##.IsNum at←2↑1↓item
+     '∆WI RANK ERROR: Text'##.Error 2<|≡text←⊃item
+     '∆WI DOMAIN ERROR: Text'##.Error~##.IsChar text
+     points←tunits×at
+     :If 2=≢⍴text ⋄ text←NL ##.∆sew ##.∆dtr¨↓text ⋄ :EndIf ⍝ A matrix - convert to vector with NLs
+     text←ToChar text ⍝ Convert any numerics into plain characters
+     text←↑NL ##.∆cuts text ⍝ Switch to a matrix to allow a multi-line property
+     ⍝ Add a limiting size if they ask for it; use a Size pseudo-property
+     State GUI props,('Text'text)('Points'points)('FontObj'State.FontObj),(5=≢item)/⊂'Size'(3↓item)
+ :EndFor

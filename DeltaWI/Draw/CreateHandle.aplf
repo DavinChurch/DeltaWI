@@ -1,0 +1,10 @@
+ handle←type CreateHandle content;new;pool
+⍝ Create a "drawing" object handle from source namespace contents
+⍝ Note: Use standardized "content" names as much as possible (e.g. Type, Props, Uses)
+⍝? Should this be renamed to NewPool (or somesuch) and moved to the framework tool list? Only if we're going to need this for something else, outside of Draw.
+
+ :If 0=##.GUIroot.⎕NC'_Pool' ⋄ '_Pool'##.GUIroot.⎕NS'' ⋄ :EndIf ⋄ pool←##.GUIroot._Pool ⍝ Find where we keep global handles (creating it if necessary)
+ new←⎕VGET(pool⍕⍛,'.',##.Next pool)⎕NS(Type:type)content ⍝ Build our new handle namespace with the next-available name
+ handle←⊃2⊃⎕VFI 1↓##.LeafName⍕new ⍝ Return them the global handle # for them to use later
+ ⍝ These handle namespaces can just be erased when no longer needed, but if they point to any special content (such as external storage or EWC objects)
+ ⍝ then those may need to be separately cleaned up before erasure.

@@ -1,0 +1,21 @@
+ result←object(State Ellipse)arg;props;tunits;box
+ result←⍬
+
+ ⍝ 'Ellipse' r c h w
+ ⍝ 'Ellipse' (r c h w) (r c h w) ...
+ ⍝ 'Ellipse' (n m ⍴ r c h w ...) ...
+
+ :If 1≥|≡arg ⋄ arg←,⊂arg ⋄ :EndIf
+ '∆WI RANK ERROR: Ellipse'##.Error∨/2<≢¨⍴¨arg
+ '∆WI LENGTH ERROR: Ellipse'##.Error∨/4≠⊢/¨⍴¨arg
+ tunits←⊃##.Classes._supp.MyUnits State
+ arg←⊃,/,¨↓¨arg ⍝ If any items are matrices, split them into individual lines so we can process them sequentially then recombine into a single matrix
+ props←StartObj'Ellipse'
+ props,←DefinePen State
+ props,←DefineBrush State
+ props,←⊂'DrawMode'(2⊃State._mode)
+
+ :For box :In arg ⍝ Only build one ellipse at a time
+     box←box×box≢⍛⍴tunits ⍝ Convert to pixels from object's scale
+     State GUI props,('Points'(2↑box))('Size'(2↑2↓box))
+ :EndFor

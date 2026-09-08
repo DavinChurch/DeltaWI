@@ -3,3 +3,5 @@
 
  nums←⊃¨2⊃¨⎕VFI¨{(∧/¨⍵∊¨⊂⎕D)/⍵}1↓¨'_'object.⎕NL ¯9
  next←'_',⍕⊃nums~⍨⍳1+⌈/0,nums
+
+⍝? Might we take an optional left arg of something ('.'??) to indicate that we want to return object⍕⍛,'.',##.Next object directly??

@@ -1,6 +1,7 @@
  result←object New arg;parent;name;props;newobj;newpic;∆border;px;∆style;psize;bkg
  (parent name)←object ⍝ Separate non-standard two-part argument
- (∆style ∆border)←arg ##._supp.GetInitialProps'style' 'border'
+ (∆style ∆border)←arg ##._supp.GetInitialProps'style' 'border←'
+ ∆border←+/∆border,(0=≢∆border),1 ⍝ Default border=1 if not supplied
  arg←(parent:parent ⋄ border:∆border)##.##.New.Center arg
 
  props←'SubForm'('Visible' 0) ⍝ Set standard creation properties
@@ -20,8 +21,13 @@
  newpic←⎕VGET(newobj⍕⍛,'._pic')##.##.∆WC props ⍝ Create the hidden Dyalog object to hold the dynamic image
  ##.##.New.InitChild newobj newpic
 
-⍝ Must do this after creating the child because argument-processing will depend on it
+ ⍝ Must do this after creating the child because argument-processing will depend on it
  result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure
+ ⍝ Now, adjust starting imagesize to fit size just defined from command line
+ newobj._imagesize←newobj._size ⍝ Reset the scaled version
+ px←⌊0.5+newobj._size×1⌷3⊃##._supp.MyUnits parent ⍝ Compute the final size in pixels
+ newobj._pic ##.##.∆WS⊂'CBits'(px⍴bkg) ⍝ Resize the bitmap to fit starting control size
+ ⍝ Finally we attach the Bitmap to the SubForm for display
  newobj ##.##.∆WS'Picture'(newpic 0) ⍝? Will the SubForm auto-update when the Bitmap's CBits are changed (explicitly or implicitly)?
 
 

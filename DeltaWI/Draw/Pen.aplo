@@ -1,0 +1,30 @@
+ result←object(State Pen)arg;style;color;size
+ result←⍬
+ ⍝ 'Pen' style [fgcolor] [size]
+ ⍝ 'Pen' ¯1 hpen
+
+ '∆WI LENGTH ERROR: Pen'##.Error~1 2 3∊⍨≢arg
+ style←⊃arg
+ 'DOMAIN ERROR'##.Error(~##.IsInt style)∨0≠≡style
+ '∆WI DRAW ERROR: Invalid pen style'##.Error~style∊¯1 0,⍳6
+ :If 3=≢arg ⋄ :AndIf 1<3⊃arg ⋄ style←1 ⋄ :EndIf ⍝ If size>1 then force a solid line
+ :Select style
+ :Case ¯1
+     '∆WI LENGTH ERROR: Pen'##.Error 2≠≢arg
+     'DOMAIN ERROR'##.Error~##.IsInt 2⊃arg
+     State._pen←arg ⍝ Store only 2⍴ in this case
+ :Case 0
+     State._pen←,style ⍝ Color & size completely ignored for transparent pens; store only 1⍴0
+ :Else
+     arg,←arg≢⍛↓1(2⊃State._color_)1 ⍝ Append defaults
+     (color size)←1↓arg ⍝ Style already assigned, checked and possibly modified
+     :If 0=≢color ⋄ color←2⊃State._color_ ⋄ :EndIf
+     'DOMAIN ERROR'##.Error~##.IsInt color
+     ⍝ Note that APL+Win produces an incorrectly-labelled error message here -- we'll duplicate the incorrect text in case they depend on it
+     '∆WI LENGTH ERROR: Brush'##.Error~color≢⍛∊1 3
+     '∆WI DOMAIN ERROR: Brush'##.Error(3=≢color)∧∨/(color<0)∨color≥256
+     '∆WI DOMAIN ERROR: Brush'##.Error(1=≢color)∨∨/color≥256*3
+     '∆WI DOMAIN ERROR: Brush'##.Error(1=≢color)∨∨/(color<0)∧color≥¯100
+     'DOMAIN ERROR'##.Error(~##.IsInt size)∨(1<≢⍴size)∨1≠≢size
+     State._pen←style color(⊃size) ⍝ Remember this setting (3⍴)
+ :EndSelect

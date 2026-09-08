@@ -1,24 +1,37 @@
- textsize←object GetTextSize text;tunits;scale;fontspec;tempfont;fontname;leading
+ textsize←object GetTextSize text;tunits;fontspec;tempfont;fontname;leading
 ⍝ Return the (h,w) size of the given text using the object's font and in the units of the object
 ⍝ Right argument may optionally be nested, with 0 to 3 items:
 ⍝   [1]←Text
-⍝   [2]←Replacement font specification to use in place of the object-defined one.
+⍝   [2]←Replacement font specification to use in place of the object-default one.
 ⍝       The font specification is a font name optionally plus size (in object-scaled units)
 ⍝       and any other parameters (in canonical order) to be used to construct a Font object.
-⍝   [3]←Leading factor (default = 1.2 = 120% leading)
+⍝       Alternatively, this could be a reference to an actual named(!) Font object
+⍝       This CANNOT be just the name of a named font object, it must be ⎕VGET first
+⍝   [3]←Leading factor (default = 1.2 = 120% leading) [This is properly pronounced LED-ing, BTW, not LEED-ing.]
 
- scale←object ⎕VGET⊂'_scale' 1
- tunits←⊃MyUnits object
+ tunits←⊃MyUnits object ⋄ tempfont←''
  :If 1<|≡text ⋄ (text fontspec leading)←3↑text,text≢⍛↓'Xy' '' 1.2 ⋄ :Else ⋄ fontspec←'' ⋄ leading←1.2 ⋄ :EndIf
- :If 0=≢fontspec ⋄ fontspec←⊂'' ⋄ :EndIf ⋄ fontspec←,⊆fontspec ⋄ fontspec←(⊂##.##.∆dlt⊃fontspec),1↓fontspec
- :If (×≢⊃fontspec)∨1<≢fontspec ⍝ Did they specify an alternate font name or size to use instead?
-     :If 0=≢⊃fontspec ⋄ fontspec[1]←⊂'System' ⋄ :EndIf ⍝? Is this really the correct PName to use when there is no FontObj?
-     :If 2≤≢fontspec ⋄ fontspec[2]×←⊃tunits ⋄ :Else ⋄ fontspec,←⊃tunits ⋄ :EndIf ⍝ Size in current units, default = 1 chars
-     tempfont←##.##.GUIroot⍕⍛,'.',##.##.Next ##.##.GUIroot
-     fontname←⊂tempfont ##.##.∆WC'Font'⊂⍛,fontspec ⍝ Create a Font object for temporary use by this method
+ ⍝'Nested argument not currently supported'##.##.Halt 1<|≡text
+ :If 13 ⎕UCS⍛∊text ⋄ text←↑13 ⎕UCS⍛##.##.∆cuts text ⋄ :EndIf ⍝ A simple vector (not a matrix) with an embedded newline, convert to a simple matrix
+ :If 9=⎕NC'fontspec'
+     fontname←⊂⍕fontspec ⍝ Just use a font that they've previously defined
+     'A font reference must point to a NAMED Font object'⎕SIGNAL 16/⍨'['=⊃fontname
  :Else
-     fontname←0⍴⊂''
+     :If 0=≢fontspec ⋄ fontspec←⊂'' ⋄ :EndIf ⋄ fontspec←,⊆fontspec ⋄ fontspec←(⊂##.##.∆dlt⊃fontspec),1↓fontspec
+     :If (×≢⊃fontspec)∨1<≢fontspec ⍝ Did they specify an alternate font name or size to use instead?
+         :If 0=≢⊃fontspec ⋄ fontspec[1]←⊂'MS Shell Dlg' ⋄ :EndIf ⍝? Is this really the correct PName to use when there is no FontObj?
+         :If 2≤≢fontspec ⋄ fontspec[2]×←⊃tunits ⋄ :Else ⋄ fontspec,←⊃tunits ⋄ :EndIf ⍝ Size in current units, default = 1 chars
+         tempfont←##.##.GUIroot⍕⍛,'.',##.##.Next ##.##.GUIroot
+         fontname←⊂tempfont ##.##.∆WC'Font'⊂⍛,fontspec ⍝ Create a Font object for temporary use by this method
+     :Else
+         fontname←0⍴⊂''
+     :EndIf
  :EndIf
 
- textsize←tunits÷⍨⌈(leading,1)×2 ##.##.∆NQ object'GetTextSize'text,fontname ⍝? Is 120% the best default leading size to use?
- ⎕EX fontname
+ textsize←tunits÷⍨(leading,1)×2 ##.##.∆NQ object'GetTextSize'text,fontname ⍝? Is 120% the best default leading size to use? What about 115% used by RichEdit?
+
+ :If 1<|≡text ⍝? What happens if the text is nested?
+     ##.##.Tracer'object' ']disp text' 'textsize' 'fontname' '(⍎fontname) ⎕wg ''Rotate''' ⍝? Make a screen log of the data if it ever happens so I can answer that question
+ :EndIf
+
+ ⎕EX tempfont

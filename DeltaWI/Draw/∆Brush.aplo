@@ -1,0 +1,16 @@
+ result←object(State ∆Brush)arg;style;color;size;brush;next;thisbrush
+ ⍝ Create and return a Brush "handle", which itself contains the properties used for creating brush-based objects
+ ⍝ This handle should be "freed" later with '#' ∆WI '⎕Free'
+
+ ⍝ '?Brush' style [fgcolor]
+ ⍝ '?Brush' ¯2 bitmap
+
+ thisbrush←(_brush:⍬ ⋄ _color_:State._color_) ⍝ A place to hold the parsed input
+ {}object(thisbrush Brush)arg ⍝ Call the standard brush-parsing routine to fill in the normalized parameters
+
+ :If ¯1=⊃thisbrush._brush ⍝ If they just gave us an old handle
+     result←2⊃thisbrush._brush ⍝ Just return it as-is and do nothing
+ :Else
+     ⍝ Build a "handle" namespace out of this definition for later reference; all it needs is the final property-list
+     result←'Brush'CreateHandle(Props:DefineBrush thisbrush) ⍝ Turn it into a property-list for creation and store that creation vector
+ :EndIf

@@ -1,0 +1,58 @@
+ State GUI props;master;canvas;mask;icon;points;size;origin;t
+⍝ Create a GUI drawing object on the State.target (it should be a Bitmap if there are any special things to do to it)
+⍝ Do this the hard way if Windowing or Clipping is in effect, otherwise just draw it directly
+⍝ Special Icon "object" property syntax: 'Icon' ('Icon' objname) ('Points' rc)
+⍝ Special Text object property syntax when clipped: 'Text' ('Text' ...)('Points' rc) ... ('Size' hw)
+
+ :If (0=≢State.Window)∧0=≢State.Clip
+ :AndIf 'Icon'≢⊃props                                       ⍝ But we have to use the special clipping code to do Icons
+ :AndIf ~('Text'≡⊃props)∧'Size'⊂⍛∊⊃¨props                   ⍝ And clipped Text also needs to be done with the special code
+     {}(State NewName State.target)##.∆WC props             ⍝ Just do it the easy way most of the time
+     :Return
+ :EndIf
+
+ ⍝ Now for the much more complicated (and slower) method...
+ 'This procedure only works on Bitmap objects!'##.Halt'Bitmap'≢⊃State.target ##.∆WGet⊂'Type' ''
+ origin←0 0                                                 ⍝ Start out by assuming it's measuring from (0,0)
+ master←State.target ##.∆WG'CBits'                          ⍝ Get the pixels from the master Bitmap for us to end up changing
+ canvas←State._Owner⍕⍛,'.',##.Next State._Owner             ⍝ Where we can create temporary Bitmaps & Icons
+ canvas←⎕VGET canvas ##.∆WC'Bitmap'('CBits'master)          ⍝ Create a temporary copy of the master pixels for direct modification
+ mask←master⍴⍛⍴1                                            ⍝ Start building us a mask to represent the area we're allowed to actually change
+ :If ×≢State.Window
+     origin←2↑State.Window ⋄ mask∧←State.Window_Mask        ⍝ Limit area of concern and starting point based on current Window setting (if any)
+ :EndIf
+ :If ×≢State.Clip ⋄ mask∧←State.Clip_Mask ⋄ :EndIf          ⍝ Further limit area based on current Clip setting (if any)
+
+ :Section                                                   ⍝ Draw graphical objects differently for certain Types
+     :Select ⊃props                                         ⍝ It's time to create the drawing object on the working canvas
+     :Case 'Icon'
+         ⍝ Let's pick up the only properties we care about, and we'll use a pre-defined Icon object name instead of a File name
+         (icon points)←props ##.Classes._supp.GetInitialProps'Icon' 'Points'
+         points←##.Single points                            ⍝ It will usually be nested
+         props←StartObj'Image'                              ⍝ We'll create an unnamed Image object to output the Icon for us
+         props,←⊂'Points'⊂⍛,points+origin                   ⍝ The size will always be 32×32 for APL+Win
+         props,←⊂'Picture'icon
+         {}(State NewName canvas)##.∆WC props               ⍝ Now write the Icon onto the working canvas
+         mask∧←mask⍴⍛↑(-32+points+origin)↑32 32⍴1           ⍝ Modify the mask array to show where the Icon was drawn
+         ##.∆EX icon                                        ⍝ Get rid of our temporary Icon
+     :Case 'Text'
+         ⍝ Extract the [pseudo-]properties we're going use to mask off the maximum size
+         (points size)←props ##.Classes._supp.GetInitialProps'Points' 'Size'
+         points←##.Single points                            ⍝ It will usually be nested
+         :If 2=≢size
+             mask∧←mask⍴⍛↑(-points+origin)↑size⍴1           ⍝ Modify the mask array to show where we're limiting the Text output
+         :EndIf
+         t←(⊃¨props)⍳⍥⎕C⊂'Points'
+         (t⊃props)←'Points'⊂⍛,origin+points                 ⍝ Adjust Points for a relocated Window origin
+         props/⍨←~(⊃¨props)∊⊂'Size'                         ⍝ Exclude the pseudo-property from what we give ∆WC
+         {}(State NewName canvas)##.∆WC props               ⍝ Now we can write the Text object directly onto the working canvas normally
+     :Else                                                  ⍝ Most drawing objects are handled here and just respect Window & Clip settings
+         'Don''t all GUI objects use Points?'##.Halt props≢⍛<t←(⊃¨props)⍳⍥⎕C⊂'Points'
+         (t⊃props)←'Points'⊂⍛,origin+##.Single 1↓t⊃props    ⍝ Adjust Points (usually nested) for a relocated Window origin
+         {}(State NewName canvas)##.∆WC props               ⍝ Just write the drawing object directly onto the working canvas normally
+     :EndSelect
+ :EndSection
+
+ ((,mask)/,master)←mask/⍥,canvas ##.∆WG'CBits'              ⍝ Copy only the masked area from working image to final image
+ State.target ##.∆WS'CBits'master                           ⍝ Replace our target Bitmap with the new data
+ ##.∆EX⍕canvas                                              ⍝ Clean up our working area

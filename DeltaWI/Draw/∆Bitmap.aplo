@@ -1,0 +1,30 @@
+ result←object(State ∆Bitmap)arg;bmp;objname
+ ⍝ Create and return a Bitmap "handle", which contains the pixel-contents of the bitmap
+ ⍝ This handle should be "freed" later with '#' ∆WI '⎕Free'
+
+ ⍝ '?Bitmap' bitmap ...
+
+ result←⍬
+ :If 1≥|≡arg ⋄ arg←,⊂arg ⋄ :EndIf
+ '∆WI RANK ERROR: Bitmap'##.Error∨/2<≢¨⍴¨arg
+
+ :For bmp :In arg
+     :If ##.IsInt bmp ⍝ This better be a bitmap handle
+     :AndIf 1=≢bmp
+         result,←⊃bmp ⍝ Just return the same pointer intact
+     :ElseIf (##.IsChar bmp)∧'>'∊bmp ⍝ This is a bitmap resource ⍝? Does this need more thorough validation?
+         ##.Error'Bitmap resources are not supported yet' ⍝? Add this later
+     :ElseIf ##.IsChar bmp ⍝ This is a bitmap file name
+         '∆WI RANK ERROR: Bitmap'##.Error 1<≢⍴bmp←1/bmp
+         :If '.bmp'≡⍥⎕C ¯4↑bmp ⍝ We're only accepting .BMP files ⍝? May do more later
+         :AndIf ⎕NEXISTS bmp
+             objname←(object⍕⍛,'.',##.Next object)##.∆WC'Bitmap'('File'bmp) ⍝ We'll create an object to use later
+             ⍝ Build a "handle" namespace pointing to this bitmap for later reference
+             result,←'Bitmap'CreateHandle(ObjName:objname ⋄ ∆EX:objname) ⍝ Just store the object-reference for later use
+         :Else
+             ##.Error'∆WI DRAW ERROR: Invalid or missing bitmap file "',bmp,'"'
+         :EndIf
+     :Else
+         ##.Error'∆WI DOMAIN ERROR: Bitmap'
+     :EndIf
+ :EndFor

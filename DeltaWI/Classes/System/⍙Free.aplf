@@ -1,0 +1,19 @@
+ result←object ⍙Free arg;names;objs;types;cleanup
+⍝ Release (erase) previously defined graphical drawing "handles" from the shared pool.
+ result←##.NoRes
+
+⍝? Should I just ignore invalid pointers like Wfree does?
+
+ :If 0=≢arg ⋄ :Return ⋄ :EndIf ⍝ Nothing to do
+ 'DOMAIN ERROR'##.##.Error~##.##.IsInt arg
+ 'RANK ERROR'##.##.Error 1<≢⍴arg←1/arg
+ 'DOMAIN ERROR'##.##.Error∨/arg≤0
+ 'Handle Not Found'##.##.Error 0=##.##.GUIroot.⎕NC'_Pool'
+ 'Handle Not Found'##.##.Error∨/9≠##.##.GUIroot._Pool.⎕NC↑names←'_',¨⍕¨arg
+ objs←##.##.GUIroot._Pool ⎕VGET names
+ 'Invalid Handle'##.##.Error ⎕NULL∊types←objs ⎕VGET⊂'Type'⎕NULL ⍝ Only watch for non-GUI objects
+ 'Invalid Handle'##.##.Error~∧/types∊'Pen' 'Brush' 'Font' 'Bitmap' 'Icon' ⍝ We're only recognizing these types at present
+
+ ⍝ Everything looks OK - we're ready to "free" them
+ :For cleanup :In ⎕NULL~⍨objs ⎕VGET⊂'∆EX'⎕NULL ⋄ ##.##.∆EX⍕cleanup ⋄ :EndFor ⍝ Look for any ∆EX: references to clean up first
+ ##.##.GUIroot._Pool.⎕EX names ⍝ Dispose of them all (these are all non-GUI namespaces [on the surface] so don't need ∆EX)

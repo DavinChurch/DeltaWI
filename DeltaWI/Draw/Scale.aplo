@@ -1,0 +1,7 @@
+ result←object(State Scale)arg
+ result←⍬
+ ⍝ 'Scale' [0] [r c] h w
+
+ :If 0=≢arg ⋄ :Return ⋄ :EndIf ⍝ Empty command is ignored
+ 'DOMAIN ERROR'##.Error~##.IsNum arg←##.Single arg
+ {}State(##.Classes.scale ChangeError'scale' 'Scale')arg ⍝ Call the standard property fn to make assignments directly into our current State

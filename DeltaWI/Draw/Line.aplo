@@ -1,0 +1,20 @@
+ result←object(State Line)arg;points;pen;props;fcol;tunits
+ result←⍬
+ ⍝ 'Line' points ...
+ ⍝      points←(n,2)⍴ coordinates to be connected in sequence (using the current Pen)
+
+ '∆WI RANK ERROR: Line'##.Error∨/2<≢¨⍴¨arg
+ '∆WI LENGTH ERROR: Line'##.Error∨/2≠≢¨⍴¨arg
+ '∆WI LENGTH ERROR: Line'##.Error∨/2≠⊢/¨⍴¨arg
+ '∆WI LENGTH ERROR: Line'##.Error∨/1=≢¨arg
+ 'DOMAIN ERROR'##.Error~∧/##.IsNum¨arg
+ 'DOMAIN ERROR'##.Error∨/1<|≡¨arg
+ tunits←⊃##.Classes._supp.MyUnits State
+ props←StartObj'Poly'
+ props,←DefinePen State
+ props,←⊂'DrawMode'(2⊃State._mode)
+
+ :For points :In arg ⍝ Build one connected set of lines at a time
+     points←points×⍤1⊢tunits ⍝ Convert to pixels from object's scale
+     State GUI props,⊂'Points'points
+ :EndFor

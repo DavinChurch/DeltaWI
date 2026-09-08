@@ -1,0 +1,14 @@
+ text←ToChar mixed;dr
+⍝ Convert characters and/or numeric Unicode code-points into Dyalog Unicode-text
+
+ :If ##.IsChar text←1/mixed ⍝ The usual case
+     ⍝ We should be able to use this as-is
+ :ElseIf ##.IsInt text
+     'DOMAIN ERROR: Unicode values out of range'##.Error∨/~(0∘≤∧≤∘65535)text
+     text←⎕UCS⌊0.5+text ⍝ Convert this whole thing to text first
+ :ElseIf ∧/0 1 2 3 5∊⍨dr←10|⎕DR¨text ⍝ Check if it's mixed text and numbers
+     'DOMAIN ERROR: Unicode values out of range'##.Error∨/~(0∘≤∧≤∘65535)(dr∊1 3 5)/text
+     text←{⎕UCS⌊0.5+⍵}@(⍸dr∊1 3 5)⊢text ⍝ Convert only the numbers to text
+ :Else
+     ##.Error'∆WI DOMAIN ERROR: Text' ⍝? Is this the right message when used with '?Text'? Or do I need to use ChangeError?
+ :EndIf

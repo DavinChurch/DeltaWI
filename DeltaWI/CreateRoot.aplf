@@ -1,4 +1,4 @@
- CreateRoot root;inches;this;tpp;devcaps;wa;en;ev;GUIroot
+ CreateRoot root;inches;this;tpp;devcaps;wa;en;ev;GUIroot;cs;bm;scheme;fcol
 ⍝ The first time that ∆WI is used, we need to create and populate the root of the GUI structure
 ⍝ Note: Program errors herein (including ⍙Config) cannot be captured and reported using the Developer setting!
 
@@ -8,9 +8,9 @@
  this._Ancestry←0⍴this._Class←Classes.System ⍝ Base references
 
  ⍝ Define system settings
- this.DevCaps←devcaps←'.'∆WG'DevCaps'
- this.ScreenSize←1⊃devcaps ⍝ The pixel-size of the entire screen
- this.AspectRatio←÷/⌽2⊃devcaps ⍝ The ratio (W÷H) of inch-size of the screen; estimated; used for visual concerns like square- and circle-drawing
+ this._DevCaps←devcaps←'.'∆WG'DevCaps'
+ this._ScreenSize←1⊃devcaps ⍝ The pixel-size of the entire screen
+ this._AspectRatio←÷/⌽2⊃devcaps ⍝ The ratio (W÷H) of inch-size of the screen; estimated; used for visual concerns like square- and circle-drawing
  ⍝inches←(2⊃devcaps)÷25.4 ⍝ How big is the screen in inches (h,w); estimated
  ⍝tpp←⌈/1440÷25.4×⊃÷/2↑devcaps ⍝ Twips/pixel ⍝ Figure best-guess assumption from DevCaps - it should be around 15 twips/pixel
  tpp←15 ⍝ No, override the calcuation with a whole # constant - the hardware estimates are too unreliable and this should be close enough
@@ -21,17 +21,28 @@
  this._units⍪←2⍴÷tpp ⍝ Twips (1440/in) [use hardware estimate]
  this._units⍪←devcaps[4]÷100 ⍝ Virtual pixels (scaled, by default)
  this._units⍪←1 1 ⍝ True pixels
- this._size←this.ScreenSize÷this._units[1;] ⍝ Represents the physical screen size, in character units
+ this._size←this._ScreenSize÷this._units[1;] ⍝ Represents the physical screen size, in character units
  this._where←0 0,this._size ⍝ Pretend the APL root has a location (full-screen)
  this._extent←this._size ⍝ Pretend the APL root has an extent (full-screen)
  this._scale←1 ⍝ Pretend the APL root is measured in characters
- this._pix_size←this.ScreenSize ⍝ We'll record hidden pixel-sizes for all objects to allow closing certain Dyalog loopholes
+ this._pix_size←this._ScreenSize ⍝ We'll record hidden pixel-sizes for all objects to allow closing certain Dyalog loopholes
  ⍝ Dyalog GUI objects need a parent's Coord in order to measure Posn (at least)
  ⍝ The usual default for a Dyalog root is 'Prop', so convert it to/from pixels to match up (unless it has been changed)
 
 ⍝ Figure out the screen space available exclusive of the task bar by constructing an ephemeral, invisible, maximized form
- wa←(this⍕⍛,'_wa')∆WC'Form'('Visible' 0)('Coord' 'RealPixel')('State' 2)
- this._workarea←0 0,wa ∆WG'Size' ⋄ ∆EX⍕wa ⍝ Assume that taskbar is not in the top-left corner ⍝? I don't know how to get actual starting point
+ wa←(this⍕⍛,'._wa')∆WC'Form'('Visible' 0)('Coord' 'RealPixel')('State' 2)
+ this._workarea←0 0,wa ∆WG'Size' ⋄ ∆EX wa ⍝ Assume that taskbar is not in the top-left corner ⍝? I don't know how to get actual starting point
+
+⍝ Determine Windows-standard color scheme assignments, by trying each one the hard way
+ cs←(this⍕⍛,'._cs')∆WC'Form'('Visible' 0)('Coord' 'RealPixel')
+ bm←(cs⍕⍛,'._bm')∆WC'Bitmap'('CBits'(1 1⍴0))
+ scheme←⍬
+ :For fcol :In -⍳21
+     (bm⍕⍛,'.')∆WC'Rect'('Points' 0 0)('Size' 2 2)('LStyle' 0)('LWidth' 1)('FCol'fcol)
+     scheme,←⊂(3⍴256)⊤⊃bm ∆WG'CBits'
+ :EndFor
+ this._color_scheme←scheme,⊂0 0 0 ⍝ Store Windows' user-defined color scheme (in RGB order) for later use; default larger choices to Black just in case
+ ∆EX cs
 
  ⍝ Assign class default properties
  this ⎕VSET Classes.System ⎕VGET ¯2

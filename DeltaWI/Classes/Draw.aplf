@@ -1,0 +1,2 @@
+result←object Draw arg
+result←object ##.Draw.Draw arg ⍝ Just call special Draw module directly

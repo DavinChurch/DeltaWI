@@ -1,5 +1,5 @@
  inherit←object color0 this;parent;t
- ⍝ Determine inheritable colors
+ ⍝ Determine inheritable colors in vector <this>
  inherit←-¯1∊¨this ⍝ We may need to search for an inherited color back through the ancestors
  :For parent :In ¯1↓object._Ancestry
      :If ∧/inherit≠¯1 ⋄ :Leave ⋄ :EndIf ⍝ Once we have inherited colors we can stop

@@ -1,0 +1,34 @@
+ props←DefineBrush State;brush;fcol;bmp;obj
+⍝ Create GUI properties to be used with filled figures
+
+ props←⍬
+ :Select ⊃brush←State._brush
+ :Case ¯2 ⍝ A bitmap name or handle used to create a brush
+     bmp←2⊃brush
+     :If (##.IsChar bmp)∧'>'∊bmp ⍝ This is a bitmap resource ⍝? Does this need more thorough validation?
+         ##.Error'Bitmap resources are not supported yet' ⍝? Add this later
+     :ElseIf ##.IsChar bmp←2⊃brush ⍝ This is a bitmap file name
+     :AndIf '.bmp'≡⍥⎕C ¯4↑bmp ⍝ We're only accepting .BMP files ⍝? May do more later
+     :AndIf ⎕NEXISTS bmp
+         ##.∆EX⍕State ⎕VGET⊂'BrushBmp' '' ⍝ Discard any previous temporary object
+         State.BrushBmp←(State._Owner⍕⍛,'.',##.Next State._Owner)##.∆WC'Bitmap'('File'bmp) ⍝ We'll create an object to use
+         props,←⊂'FStyle'State.BrushBmp
+     :ElseIf ##.IsInt bmp ⍝ This is a Bitmap handle
+     :AndIf 1≥≢⍴bmp
+     :AndIf 1=≢bmp
+     :AndIf ⎕NULL≠obj←'Bitmap'GetHandleIf⊃bmp ⍝ Retrieve the predefined bitmap image, if possible
+         props,←⊂'FStyle'obj.ObjName ⍝ Direct the brush to the stored Bitmap object name
+     :Else ⍝ If the brush is illegal, just use a solid background color
+         props,←⊂'FStyle' 0
+         fcol←⍬ ##.Classes._supp.color2⊃State._color_ ⍝ Convert APL+Win color into a 3⍴ Dyalog color
+         props,←⊂'FillCol'fcol
+     :EndIf
+ :Case ¯1 ⍝ A brush handle
+     props←('Brush'GetHandle 2⊃brush).Props ⍝ Retrieve the predefined property list
+ :Case 0 ⍝ Transparent/invisible brush
+     props,←⊂'FStyle' ¯1 ⍝ No filling
+ :Else ⍝ Fill a figure
+     props,←⊂'FStyle'(1-⍨⊃brush)
+     fcol←⍬ ##.Classes._supp.color2 2⊃brush ⍝ Convert APL+Win color into a 3⍴ Dyalog color ⍝? Do we need to pre-check for any errors here?
+     props,←⊂'FillCol'fcol
+ :EndSelect

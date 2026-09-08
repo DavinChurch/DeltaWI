@@ -1,0 +1,46 @@
+ result←object(State Bitmap)arg;item;bmp;r;c;h;w;bits;master;objname;mask;origin
+ result←⍬
+⍝ 'Bitmap' ([n] m ⍴ bitmap [r c [h w]]) ... ⍝ bitmap may be a file/resource name or a bitmap handle
+
+ :If 1 ¯2∊⍨≡arg ⋄ arg←,⊂arg ⋄ :EndIf
+ '∆WI RANK ERROR: Bitmap'##.Error∨/2<≢¨⍴¨arg
+ '∆WI LENGTH ERROR: Bitmap'##.Error∨/~(⊢/¨⍴¨arg)∊¨⊂1 3 5
+ arg←⊃,/,¨↓¨arg                                             ⍝ If any items are matrices, split them into individual lines so we can process them sequentially
+ origin←0 0 ⋄ mask←1⍴⍨State.target ##.∆WG'Size'
+ :If ×≢State.Window
+     origin←2↑State.Window ⋄ mask∧←State.Window_Mask        ⍝ Limit area of concern and starting point based on current Window setting (if any)
+ :EndIf
+ :If ×≢State.Clip ⋄ mask∧←State.Clip_Mask ⋄ :EndIf          ⍝ Further limit area based on current Clip setting (if any)
+
+ :For item :In arg
+     :If (1≥|≡item)∧~##.IsNum⊃item ⋄ item←,⊂item ⋄ :EndIf
+     (bmp r c h w)←item,item≢⍛↓'' 0 0 ⍬ ⍬
+     'DOMAIN ERROR'##.Error~∧/##.IsInt¨r c h w
+     'DOMAIN ERROR'##.Error∨/(1≠≢¨r c)∨1<≢¨⍴¨r c
+     'DOMAIN ERROR'##.Error∨/(1<≢¨h w)∨1<≢¨⍴¨h w
+     :If ##.IsInt bmp                                       ⍝ This better be a bitmap handle
+     :AndIf 1=≢bmp
+         objname←('Bitmap'GetHandle bmp).ObjName            ⍝ Retrieve Bitmap object from stored handle
+         bits←objname ##.∆WG'CBits'                         ⍝ Get the image out of it to process
+     :ElseIf (##.IsChar bmp)∧'>'∊bmp                        ⍝ This is a bitmap resource ⍝? Does this need more thorough validation?
+         ##.Error'Bitmap resources are not supported yet' ⍝? Add this later
+     :ElseIf ##.IsChar bmp                                  ⍝ This is a bitmap file name
+         '∆WI RANK ERROR: Bitmap'##.Error 1<≢⍴bmp←1/bmp
+         :If '.bmp'≡⍥⎕C ¯4↑bmp                              ⍝ We're only accepting .BMP files ⍝? May do more later
+         :AndIf ⎕NEXISTS bmp
+             bits←object ##.Classes._supp.ReadBMP bmp       ⍝ Get the file's image
+         :Else
+             ##.Error'∆WI DRAW ERROR: Invalid or missing bitmap file "',bmp,'"'
+         :EndIf
+     :Else
+         ##.Error'∆WI DOMAIN ERROR: Bitmap'
+     :EndIf
+     :If 2=≢h,w ⋄ bits←(bits⍴⍛⌊h,w)↑bits ⋄ :EndIf           ⍝ Limit to requested maximum size ⍝? It is actually a maximum, right?
+     master←State.target ##.∆WG'CBits'
+     (r c)←r c+origin                                       ⍝ Obey Window starting point
+     bits←(bits⍴⍛⌊master⍴⍛-r,c)↑bits                        ⍝ Don't run off the edge
+     mask∧←mask⍴⍛↑(-bits⍴⍛+r,c)↑bits⍴⍛⍴1                    ⍝ Trim mask down to the rectangular size of bits, so it won't copy outside the Bitmap edges
+     bits←mask⍴⍛↑(-bits⍴⍛+r,c)↑bits                         ⍝ Relocate bits to fit in the correct place in target (synchronized with trimmed mask)
+     ((,mask)/,master)←mask/⍥,bits                          ⍝ Copy only the masked area from working image to final image
+     State.target ##.∆WS⊂'CBits'master
+ :EndFor

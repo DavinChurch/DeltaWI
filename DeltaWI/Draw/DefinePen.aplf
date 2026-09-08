@@ -1,0 +1,16 @@
+ props←DefinePen State;pen;fcol
+⍝ Create GUI properties to be used with line-drawing figures
+
+ :Select ⊃pen←State._pen
+ :Case ¯1 ⍝ A pen-handle
+     props←('Pen'GetHandle 2⊃pen).Props ⍝ Retrieve the predefined property list
+ :Case 0 ⍝ Transparent/invisible pen
+     props,←⊂'LStyle' 5
+ :Else ⍝ Draw a circle's edge
+     'Pen 2 is not supported'##.Error 2=⊃pen ⍝? The interpreter needs to be able to do this, unless I can find some way to simulate it??
+     props←⍬
+     props,←⊂'LStyle'(pen⊃⍛⊃0 6 1 2 3 4) ⍝ 1→0, 2→6, 3→1, 4→2, 5→3, 6→4
+     fcol←⍬ ##.Classes._supp.color2 2⊃pen ⍝ Convert APL+Win color into a 3⍴ Dyalog color ⍝? Do we need to pre-check for any errors here?
+     props,←⊂'FCol'fcol
+     props,←⊂'LWidth'(3⊃pen)
+ :EndSelect

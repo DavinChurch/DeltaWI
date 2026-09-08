@@ -1,0 +1,15 @@
+ result←object(State ∆Pen)arg;style;color;size;pen;next;thispen
+ ⍝ Create and return a Pen "handle", which itself contains the properties used for creating pen-based objects
+ ⍝ This handle should be "freed" later with '#' ∆WI '⎕Free'
+
+ ⍝ '?Pen' style [fgcolor] [size]
+
+ thispen←(_pen:⍬ ⋄ _color_:State._color_) ⍝ A place to hold the parsed input
+ {}object(thispen Pen)arg ⍝ Call the standard pen-parsing routine to fill in the normalized parameters
+
+ :If ¯1=⊃thispen._pen ⍝ If they just gave us an old handle
+     result←2⊃thispen._pen ⍝ Just return it as-is and do nothing
+ :Else
+     ⍝ Build a "handle" namespace out of this definition for later reference; all it needs is the final property-list
+     result←'Pen'CreateHandle(Props:DefinePen thispen) ⍝ Turn it into a property-list for creation and store that creation vector
+ :EndIf
