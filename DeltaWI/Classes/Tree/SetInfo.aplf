@@ -22,7 +22,6 @@
  ops←'checkstate' 'list' 'label' 'images' 'highlightbold' 'highlightcut' 'highlightdrop' 'highlightselect'
  ops,←'expanded' 'expandedonce' 'forceparent'
  '∆WI ACTION ERROR: Invalid operation for "SetInfo" method'##.##.Error~opr⊂⍛∊ops
- '∆WI ACTION ERROR: highlightcut is not supported yet'##.##.Error opr≡'highlightcut'
  '∆WI ACTION ERROR: forceparent is not supported yet'##.##.Error opr≡'forceparent'
 
  result←nodes≢⍛⍴1 ⍝ Default result
@@ -30,7 +29,7 @@
  ('∆WI ARGUMENT ERROR: Item ',(⍕⊃nodes~tree[;1]),' not found ("SetInfo" method)')##.##.Error~∧/nodes∊tree[;1]
  ndx←tree[;1]⍳nodes
  states←{⊃2 ##.##.∆NQ object'GetItemState'⍵}¨ndx
- statebits←'' 'highlightselect' '' 'highlightdrop' 'highlightbold' 'expanded' 'expandedonce'
+ statebits←'' 'highlightselect' 'highlightcut' 'highlightdrop' 'highlightbold' 'expanded' 'expandedonce'
 
  :Select opr ⍝ Set any of an assortment of different things
  :Case 'checkstate' ⍝ User-state image index

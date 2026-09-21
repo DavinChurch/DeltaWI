@@ -9,7 +9,6 @@
  ops←'checkstate' 'list' 'label' 'images' 'highlightbold' 'highlightcut' 'highlightdrop' 'highlightselect'
  ops,←'expanded' 'expandedonce' 'forceparent' 'haschildren' 'wherelabel' 'whererow' 'handle'
  '∆WI ACTION ERROR: Invalid operation for "GetInfo" method'##.##.Error~opr⊂⍛∊ops
- '∆WI ACTION ERROR: highlightcut is not supported yet'##.##.Error opr≡'highlightcut'
  '∆WI ACTION ERROR: forceparent is not supported yet'##.##.Error opr≡'forceparent'
  '∆WI ACTION ERROR: internal API-support arguments are not supported'##.##.Error opr⊂⍛∊'wherelabel' 'whererow' 'handle'
 
@@ -22,7 +21,7 @@
  :EndIf
 
  states←{⊃2 ##.##.∆NQ object'GetItemState'⍵}¨ndx
- statebits←'' 'highlightselect' '' 'highlightdrop' 'highlightbold' 'expanded' 'expandedonce'
+ statebits←'' 'highlightselect' 'highlightcut' 'highlightdrop' 'highlightbold' 'expanded' 'expandedonce'
  statenames←##.##.∆dim¨↓(statebits≢⍛##.##.Bits states)/⍤1⊢statebits
 
  :Select opr ⍝ Get any of an assortment of different things

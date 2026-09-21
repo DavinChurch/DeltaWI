@@ -11,6 +11,7 @@
 
  tunits←⊃MyUnits object ⋄ tempfont←''
  :If 1<|≡text ⋄ (text fontspec leading)←3↑text,text≢⍛↓'Xy' '' 1.2 ⋄ :Else ⋄ fontspec←'' ⋄ leading←1.2 ⋄ :EndIf
+ ⍝? Can we allow this to calculate leading by giving it a matrix and comparing it to a single line?
  ⍝'Nested argument not currently supported'##.##.Halt 1<|≡text
  :If 13 ⎕UCS⍛∊text ⋄ text←↑13 ⎕UCS⍛##.##.∆cuts text ⋄ :EndIf ⍝ A simple vector (not a matrix) with an embedded newline, convert to a simple matrix
  :If 9=⎕NC'fontspec'

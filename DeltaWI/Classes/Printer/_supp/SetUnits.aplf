@@ -1,15 +1,32 @@
- units←SetUnits object;tpp
+ (units deffont)←SetUnits object;tpp;fn;fs;px;mm;in;ppi;px_point;px_twip
 ⍝ Determine the 'units' array for this particular Printer (object)
 ⍝ This can vary when PName changes!
+⍝ While we're here, define the Printer's default Font, too
 
- tpp←⌈/1440÷25.4×⊃÷/2↑object ##.##.##.∆WG'DevCaps' ⍝ Twips/pixel
- units←1 2⍴2 ##.##.##.∆NQ object'GetTextSize' 'X' ⍝ 1=Character units ⍝? This is wrong! units don't depend on font, or resolution either -- what then??
- units⍪←units[1;]÷8 4 ⍝ 2=Dialog units (this calculation works regardless of how units[1;] is derived)
- units⍪←2⍴20÷tpp ⍝ screensize÷inches÷72 ⍝ 3=Points (72/in)
- units⍪←2⍴÷tpp ⍝ 4=Twips (1440/in)
+ ⍝ Printer page size in mm does not seem to be perfectly accurate, so we'll need to round it off for use.
+ ⍝ This formula works on the assumption that every printer has a nice, round number of dots-per-inch (pixels-per-inch).
+ ⍝ So we'll compute the actual number of printable inches it has that produces a nice, round ppi.
+ (px mm)←2↑object ##.##.##.∆WG'DevCaps' ⍝ Start with what they tell us - pixel size should be perfect
+ ppi←4800÷⌊0.5+4800×(mm÷25.4)÷px ⍝ Assume 4800 is the LCM of all reasonable ppi possibilities and compute a rounded ppi for our use
+ in←px÷ppi ⍝ Now this should be our true printable area in inches (inside hardware margins)
+ (px_point px_twip)←ppi÷72 1440 ⍝ Now pixels-per-point and pixels-per-twip are straightforward
+
+ fn←object ##.##.##.∆WG'FontList' ⋄ (fn fs)←2↑fn⊃⍨(⊃¨fn)⍳⊂'Times New Roman' ⍝ Do our best to get a reasonable printer font size
+ fs×←px_point ⍝ Convert font size in points to desired font size in pixels ⍝? Oops!! This isn't coming in in points! What is it?
+ fs←⌊0.5+⊃12×ppi÷72 ⍝? Fake a font size (12pt) so we can maybe work with it for now
+ object ##.##.##.∆WS 'FontObj' (⎕VGET(object⍕⍛,'.',##.##.##.Next object)##.##.##.∆WC'Font'('PName'fn)('Size'fs)) ⍝ Assign temporary font
+ units←1 2⍴2 ##.##.##.∆NQ object'GetTextSize' 'x' ⍝ 1=Character units (as best we can estimate); pixel height of 1 character
+⍝ {}object ##.##.font fn fs ⍝ Use the standard font definition routine to identify our font
+ units←1 2⍴2 ##.##.##.∆NQ object'GetTextSize' 'x' ⍝ 1=Character units (as best we can estimate)
+ units⍪←units[1;]÷8 4 ⍝ 2=Dialog units (this calculation works regardless of how units[1;] is derived, right?)
+ units⍪←px_point ⍝ screensize÷inches÷72 ⍝ 3=Points (72/in)
+ units⍪←px_twip ⍝ 4=Twips (1440/in)
  units⍪←1 1 ⍝ 5=Virtual pixels; always true pixels on a printer
  units⍪←1 1 ⍝ 6=True pixels
-
+ 'Text height doesn''t match font height?'##.##.##.Halt fs≠⊃units
+ ⍝##.##.##.∆EX⍕font
+⍝? Track down the default font (and size?) via APIs 'GetTextFace' & 'GetTextMetrics' (or from extended 'FontList' property); avgcharwidth = 'x'
+ deffont←fn (fs÷units[1;1])
 
 
 

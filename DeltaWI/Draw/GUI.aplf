@@ -1,5 +1,5 @@
- State GUI props;master;canvas;mask;icon;points;size;origin;t
-⍝ Create a GUI drawing object on the State.target (it should be a Bitmap if there are any special things to do to it)
+ State GUI props;master;canvas;mask;icon;points;size;origin;t;new
+⍝ Create a GUI drawing object on the State.target bitmap
 ⍝ Do this the hard way if Windowing or Clipping is in effect, otherwise just draw it directly
 ⍝ Special Icon "object" property syntax: 'Icon' ('Icon' objname) ('Points' rc)
 ⍝ Special Text object property syntax when clipped: 'Text' ('Text' ...)('Points' rc) ... ('Size' hw)
@@ -8,6 +8,7 @@
  :AndIf 'Icon'≢⊃props                                       ⍝ But we have to use the special clipping code to do Icons
  :AndIf ~('Text'≡⊃props)∧'Size'⊂⍛∊⊃¨props                   ⍝ And clipped Text also needs to be done with the special code
      {}(State NewName State.target)##.∆WC props             ⍝ Just do it the easy way most of the time
+     State._dirty←1
      :Return
  :EndIf
 
@@ -15,6 +16,7 @@
  'This procedure only works on Bitmap objects!'##.Halt'Bitmap'≢⊃State.target ##.∆WGet⊂'Type' ''
  origin←0 0                                                 ⍝ Start out by assuming it's measuring from (0,0)
  master←State.target ##.∆WG'CBits'                          ⍝ Get the pixels from the master Bitmap for us to end up changing
+ 'Shouldn''t be using floating-point storage'##.Halt~##.IsInt master
  canvas←State._Owner⍕⍛,'.',##.Next State._Owner             ⍝ Where we can create temporary Bitmaps & Icons
  canvas←⎕VGET canvas ##.∆WC'Bitmap'('CBits'master)          ⍝ Create a temporary copy of the master pixels for direct modification
  mask←master⍴⍛⍴1                                            ⍝ Start building us a mask to represent the area we're allowed to actually change
@@ -53,6 +55,16 @@
      :EndSelect
  :EndSection
 
- ((,mask)/,master)←mask/⍥,canvas ##.∆WG'CBits'              ⍝ Copy only the masked area from working image to final image
+ new←canvas ##.∆WG'CBits'                                   ⍝ Capture the full-size working image; use separate line to minimize ⎕WA usage
+ 'Shouldn''t be using floating-point storage'##.Halt~##.IsInt new
+ ##.∆EX⍕canvas                                              ⍝ Clean up our working area as early as possible
+ mask←,mask ⋄ new←,new                                      ⍝ Try to conserve ⎕WA during single-line computations
+ new←mask/new                                               ⍝ Select only the masked bits from the working image, with minimal ⎕WA usage
+ size←⍴master ⋄ master←,master                              ⍝ Continue trying to conserve ⎕WA
+⍝? How can we selectively assign the new bits into the master with minimal ⎕WA? I don't even want to try looping (way too slow)
+ mask←⍸mask                                                 ⍝ (This way doesn't seem to save any more space than: (mask/master)←new)
+ master←new@mask⊢master                                     ⍝ Store the new bits directly into the masked area of the final image
+ new←mask←0                                                 ⍝ Reclaim no-longer-needed ⎕WA to keep overhead as low as possible
+ master←size⍴master                                         ⍝ Restore our natural shape
  State.target ##.∆WS'CBits'master                           ⍝ Replace our target Bitmap with the new data
- ##.∆EX⍕canvas                                              ⍝ Clean up our working area
+ State._dirty←1

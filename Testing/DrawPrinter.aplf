@@ -1,0 +1,96 @@
+ DrawPrinter;drawclear;bmpfile;icofile;ph;bh;fh;bfh;ifh;apldir;∆wi;Res;units
+
+⍝? Todo:
+⍝   Have ∇Bitmap call ∇GUI ⍝ Are we still using GUI this way?
+⍝   It's WAY too slow (because of huge memory) - don't know what to do about that
+⍝   See about better testing for ?Text results (but must assume something about the printer in use?)
+⍝   Do we need more comprehensive WS FULL testing?
+
+⍝ Note: This test requires a great deal of ⎕WA to complete, depending upon the resolution of your default printer
+⍝       For instance, even even simple operations on a 600dpi printer can require 256Mb or more available in ⎕WA
+⍝       Other operations may require 3-4 times that much memory, and higher-resolution printers can be several times as much as that
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+ apldir←{⍵↑⍨(⍵∊'/\')⌈.×⍳≢⍵}⊃2 ⎕NQ'.' 'GetCommandLineArgs'
+ bmpfile←apldir,'ws\cars.bmp' ⋄ bmpfile←bmpfile/⍨⎕NEXISTS bmpfile ⍝ Look for a standard BMP file for testing (modifiable)
+ icofile←apldir,'ws\aplicon.ico' ⋄ icofile←icofile/⍨⎕NEXISTS icofile ⍝ Look for a standard ICO file for testing (modifiable)
+ ⎕FX↑'result←left ∆wi right' 'result←Res←left ∆WI right' ⍝ Something to assign a semi-global result
+
+ 'p'∆WI Pass(,'p')⊢'New' 'Printer'
+ drawclear←'Draw'('Brush' 1(3⍴255))'Clear' ⍝ Reset the picture to White before testing each one
+ 'p'∆wi Pass{6 2≡⍴⍵}⊢'units' ⋄ units←Res
+
+ 'p'∆WI Pass MT⊢drawclear,('Pen' 1(192 0 0)1)('Line'(2 2⍴5 5 20 50))('Pen' 3(0 192 0)1)('Line'(2 2⍴5 50 20 5))
+ 'p'∆WI Pass MT⊢drawclear,('Pen' 1(192 0 0)1)('Seg'(5 5,5 10,10 5,10 10,15 5,15 10))
+ 'p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Rect' 10 60 5 30)
+ 'p'∆WI Pass MT⊢drawclear,('Pen' 2(255 0 0)10)('Brush' 0)('Rect' 0 0 5 30) ⍝? Why does this look like it has rounded corners?
+ 'p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Ellipse' 10 60 5 30)
+ 'p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)1)('Brush' 5(0 0 128))('Poly'(3 2⍴2 10,10 5,10 15))
+
+ 'p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Circle' 10 50 5)
+ 'p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Circle' 10 50 5 2)
+ 'p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Circle' 10 50 5 0.5)
+ 'p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Circle' 10 50 5 ¯2)
+ 'p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Circle' 10 50 5 ¯0.5)
+ 'p'∆WI Pass MT⊢drawclear,('Scale' 5)('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Circle' 100 500 50)
+ 'p'∆WI Pass MT⊢drawclear,('Scale' 5)('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Circle' 100 500 50 2)
+ 'p'∆WI Pass MT⊢drawclear,('Scale' 5)('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Circle' 100 500 50 0.5)
+ 'p'∆WI Pass MT⊢drawclear,('Scale' 5)('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Circle' 100 500 50 ¯2)
+ 'p'∆WI Pass MT⊢drawclear,('Scale' 5)('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Circle' 100 500 50 ¯0.5)
+
+ 'p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Circle' 10 50 5 2 45 135 7)
+ 'p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Chord' 10 50 5 2 45 135 7)
+ 'p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Point'((⊂0 0 0),⍨↑,(5×⍳5)∘.,10×⍳9))
+
+ 'p'∆wi Pass{1=≢⍵}⊢'Draw'('?Pen' 1(255 0 0)3) ⋄ ph←⊃Res
+ 'p'∆wi Pass{1=≢⍵}⊢'Draw'('?Brush' 5(0 0 128)) ⋄ bh←⊃Res
+ 'p'∆WI Pass MT⊢drawclear,('Pen' ¯1 ph)('Brush' ¯1 bh)('Circle' 10 50 5)
+ 'p'∆WI Pass MT⊢drawclear,('Pen' ¯1 ph)('Brush' ¯2 bmpfile)('Circle' 10 50 5)
+
+ 'p'∆WI Pass MT⊢drawclear,('Mode' 0)('Font' 'Arial' 1 0 'ansi')('Color'(3⍴255)(3⍴0))('Text' 'This is a test...' 5 5)
+ 'p'∆WI Pass MT⊢drawclear,('Mode' 0)('Color'(3⍴255)(3⍴0))('Text'('This is a',(⎕UCS 13),'two-line test...')5 5)
+ 'p'∆WI Pass MT⊢drawclear,('Mode' 0)('Color'(3⍴255)(3⍴0))('Text'(↑'This is a' 'three-line' 'test...')5 5)
+ 'p'∆WI Pass MT⊢drawclear,('Mode' 0)('Font' 'Arial' 1 0 'ansi' 45)('Color'(3⍴255)(3⍴0))('Text' 'This is a test...' 5 5)
+ 'p'∆wi Pass{1=≢⍵}⊢'Draw'('?Font' 'Arial' 1 0 'ansi') ⋄ fh←⊃Res
+ 'p'∆WI Pass MT⊢drawclear,('Mode' 0)('Font'fh)('Color'(3⍴255)(3⍴0))('Text' 'This is a test...' 5 5)
+
+⍝? Text font-sizing cannot be consistently tested for different printer devices
+⍝? Maybe we can come up with a 'units'-related way to adjust for measurements?
+⍝ 'p'∆WI Pass(,⊂1 14.125)⊢drawclear,('Mode' 0)('Font' 'Arial' 1 0 'ansi')('Color'(3⍴255)(3⍴0))('?Text' 'This is a single test')
+⍝ 'p'∆WI Pass(,⊂16 113)⊢drawclear,('Mode' 0)('Scale' 5)('Font' 'Arial' 16 0 'ansi')('Color'(3⍴255)(3⍴0))('?Text' 'This is a single test')
+⍝ 'p'∆WI Pass((1 6.125)(1 8))⊢drawclear,('Mode' 0)('Font' 'Arial' 1 0 'ansi')('Color'(3⍴255)(3⍴0))('?Text' 'This is a' 'double test')
+⍝ 'p'∆WI Pass(,⊂2 6.125)⊢drawclear,('Mode' 0)('Font' 'Arial' 1 0 'ansi')('Color'(3⍴255)(3⍴0))('?Text'(↑'This is a' 'matrix'))
+⍝ 'p'∆WI Pass(,⊂2 7.5)⊢drawclear,('Mode' 0)('Font' 'Arial' 1 0 'ansi')('Color'(3⍴255)(3⍴0))('?Text'('This has a',(⎕UCS 13),'new line'))
+⍝ 'p'∆WI Fail'DOMAIN ERROR'⊢drawclear,('Mode' 0)('Font' 'Arial' 1 0 'ansi')('Color'(3⍴255)(3⍴0))('?Text'('This is a' 'nested')'double test')
+⍝ 'p'∆WI Pass(,⊂1.3125 11.5)⊢drawclear,('Mode' 0)('Font' 'Arial' 1 0 'ansi' 45)('Color'(3⍴255)(3⍴0))('?Text' 'This is a test...')
+
+ :Section ⍝ This section requires even more ⎕WA than is needed for the other operations, so we'll try to catch that here
+     :Trap 1 ⍝ Try to trap WS FULL ⍝? This may need to be expanded to include the whole function
+         'p'∆WI Pass MT⊢drawclear,('Scale' 5)('Pen' 1(255 0 0)3)('Brush' 1(0 0 128))('Circle' 50 50 50)
+         'p'∆WI Pass MT⊢drawclear,('Scale' 5)('Window' 50 100 150 150)('Pen' 1(255 0 0)3)('Brush' 1(0 0 128))('Circle' 50 50 50)
+         'p'∆WI Pass MT⊢drawclear,('Scale' 5)('Window' 50 100 75 75)('Pen' 1(255 0 0)3)('Brush' 1(0 0 128))('Circle' 50 50 50)
+         'p'∆WI Pass MT⊢drawclear,('Scale' 5)('Clip' 25 25 75 75)('Pen' 1(255 0 0)3)('Brush' 1(0 0 128))('Circle' 50 50 50)
+         'p'∆WI Pass MT⊢drawclear,('Scale' 5)('Window' 50 100 150 150)('Clip' 25 25 75 75)('Pen' 1(255 0 0)3)('Brush' 1(0 0 128))('Circle' 50 50 50)
+         'p'∆WI Pass MT⊢drawclear,('Mode' 0)('Window' 10 10 10 30)('Font' 'Arial' 1 0 'ansi')('Color'(3⍴255)(3⍴0))('Text' 'This is a test...' 5 5)
+         'p'∆WI Pass MT⊢drawclear,('Mode' 0)('Clip' 0 8 10 3)('Font' 'Arial' 1 0 'ansi')('Color'(3⍴255)(3⍴0))('Text' 'This is a test...' 5 5)
+         'p'∆WI Pass MT⊢drawclear,('Window' 10 10 10 30)('Bitmap'bmpfile 0 0)
+         'p'∆WI Pass MT⊢drawclear,('Window' 10 10 10 30)('Icon'icofile 0 0)
+         'p'∆WI Pass MT⊢drawclear,('Scale' 5)('Clip'(3 2⍴5 50,75 5,120 90))('Pen' 1(255 0 0)3)('Brush' 1(0 0 128))('Circle' 50 50 50)
+         'p'∆wi Pass{1=≢⍵}⊢'Draw'('?Bitmap'bmpfile) ⋄ bfh←⊃Res
+         'p'∆wi Pass{1=≢⍵}⊢'Draw'('?Icon'icofile) ⋄ ifh←⊃Res
+         'p'∆WI Pass MT⊢drawclear,⊂('Bitmap'bmpfile 0 0)
+         'p'∆WI Pass MT⊢drawclear,⊂('Icon'icofile 0 0)
+         'p'∆WI Pass MT⊢drawclear,⊂('Bitmap'bfh 0 0)
+         'p'∆WI Pass MT⊢drawclear,⊂('Icon'ifh 0 0)
+     :Else
+         'WS FULL reported on large-memory operations - tests skipped!'
+     :EndTrap
+ :EndSection
+
+ 'p' ∆WI Pass MT⊢'Abort' ⍝? For the normal hidden testing process
+⍝ 'p'∆WI Pass 1⊢'Close' ⍝? Replace this with Abort when finalizing everything
+ '#'∆WI Pass MT⊢'⎕Free'ph bh fh bfh ifh
+⍝? What does APL+Win do if you Reset while a print job is open?
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests
+
+⍝? Still needed to be added much later: Imagelist

@@ -12,7 +12,7 @@
  'f.p'∆WI Pass MT⊢drawclear,('Pen' 1(192 0 0)1)('Line'(2 2⍴5 5 20 50))('Pen' 3(0 192 0)1)('Line'(2 2⍴5 50 20 5))
  'f.p'∆WI Pass MT⊢drawclear,('Pen' 1(192 0 0)1)('Seg'(5 5,5 10,10 5,10 10,15 5,15 10))
  'f.p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Rect' 10 60 5 30)
- ⍝? Add check for pen #2 (inside-solid); after implementing
+ 'f.p'∆WI Pass MT⊢drawclear,('Pen' 2(255 0 0)10)('Brush' 0)('Rect' 0 0 5 30) ⍝? Why does this look like it has rounded corners?
  'f.p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)3)('Brush' 5(0 0 128))('Ellipse' 10 60 5 30)
  'f.p'∆WI Pass MT⊢drawclear,('Pen' 1(255 0 0)1)('Brush' 5(0 0 128))('Poly'(3 2⍴2 10,10 5,10 15))
 

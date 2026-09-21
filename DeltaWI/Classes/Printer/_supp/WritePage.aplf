@@ -1,0 +1,10 @@
+ WritePage object
+⍝ Flush the Bitmap to the Printer page & empty it
+⍝ If the Bitmap hasn't ever been used then do nothing; otherwise make sure the image is transferred to paper
+
+ :If ~object ##.dirty ⍬ ⋄ :Return ⋄ :EndIf ⍝ If nothing was ever written, then don't flush to the printer page
+
+ ⍝ Time to transfer the Bitmap content to the page for printing
+ (object⍕⍛,'.')##.##.##.∆WC'Image'('Coord' 'RealPixel')('Points' 0 0)('Picture' object._pic)
+
+ EmptyPage object ⍝ Reset the Bitmap back to pure White

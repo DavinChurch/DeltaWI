@@ -1,17 +1,27 @@
- result←object New arg;parent;name;props;newobj;tunits;punits
+ result←object New arg;parent;name;props;newobj;tunits;punits;px;newpic;deffont
  (parent name)←object ⍝ Separate non-standard two-part argument
 
  props←'Printer'('Coord' 'RealPixel')('PagesBeginDirty' 0) ⍝ Set standard creation properties
  newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
 
  :Section ⍝ Set up special Printer parameters
-     newobj._units←_supp.SetUnits newobj ⍝ Each Printer has its own 'units' definition
+     (newobj._units deffont)←_supp.SetUnits newobj ⍝ Each Printer has its own 'units' definition and default 'font'
      newobj._Ancestry←,parent ⍝ Fake this to check units
      (tunits punits)←2↑##._supp.MyUnits newobj ⍝ Set hard sizing of immovable object
-     newobj.(_size _extent)←(⊂⊃newobj ##.##.∆WG'DevCaps')÷tunits punits ⍝ Figure out the logical printer size
+     newobj.(_size _extent)←tunits punits÷⍨⊂px←⊃newobj ##.##.∆WG'DevCaps' ⍝ Figure out the logical printer size
      newobj._where←0 0,newobj._extent ⍝ _where & _extent are dummy information, just present so shared code will continue to work
      newobj._pixelmargin←_supp.SetMargin newobj ⍝ Each Printer has its own default margin setting
      newobj._collate_default←newobj ##.##.∆WG'Collate' ⍝ Determine default setting
+     newobj._position←0 0 ⍝ Track "Print" position in pixels
+     newobj._page←newobj._dirty←0 ⍝ Go ahead and initialize page variables
  :EndSection
 
  result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure
+ {}newobj ##.font deffont ⍝ Set the formal default font in the usual way
+
+ ⍝ Now we'll create a Bitmap to use as our page-construction area
+ ⍝ It will be written to the paper with an Image object when the page is completed
+ props←⊂'Bitmap'
+ props,←⊂'CBits'(px⍴¯1+⌊256*3) ⍝ Start with a completely white paper
+ newpic←⎕VGET(newobj⍕⍛,'._pic')##.##.∆WC props ⍝ Create the hidden Dyalog object to hold the dynamic image
+ ##.##.New.InitChild newobj newpic

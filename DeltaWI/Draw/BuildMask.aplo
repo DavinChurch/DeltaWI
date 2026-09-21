@@ -10,7 +10,7 @@
 
  :ElseIf (2=≢⍴edges)∧(2=¯1↑⍴edges)∧1<≢edges                     ⍝ *** They've given us a polygonal shape - this is more difficult
      canvas←State._Owner⍕⍛,'.',##.Next State._Owner             ⍝ We're going to build a temporary Bitmap here
-     canvas←⎕VGET canvas ##.∆WC'Bitmap'('CBits'(size⍴256*3))    ⍝ We'll use this White space to ask Dyalog to draw our Black polygon for us
+     canvas←⎕VGET canvas ##.∆WC'Bitmap'('CBits'(size⍴¯1+⌊256*3)) ⍝ We'll use this White space to ask Dyalog to draw our Black polygon for us
      props←StartObj'Poly'
      props,←('LStyle' 5)('LWidth' 0)                            ⍝ Hide the edge itself ⍝? (does this work well enough?)
      props,←('BCol'(3⍴255))('FStyle' 0)('FillCol'(3⍴0))

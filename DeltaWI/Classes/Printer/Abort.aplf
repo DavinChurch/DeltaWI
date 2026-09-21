@@ -1,5 +1,7 @@
  result←object Abort arg
  ⍝ (Ignore any argument)
- object.(_page _dirty _position)←0 0(0 0)
- 2 ##.##.∆NQ object'Abort' ⍝? Is this all we need to do?
+
+ _supp.EmptyPage object ⍝ Reset the Bitmap back to pure White
+ object.(_page _dirty _position)←0 0(0 0) ⍝ Reset internal counters
+ 2 ##.##.∆NQ object'Abort' ⍝? Is this all we need to do to the Printer object?
  result←##.NoRes

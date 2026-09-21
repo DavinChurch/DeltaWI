@@ -44,3 +44,6 @@
      ((,mask)/,master)←mask/⍥,bits                          ⍝ Copy only the masked area from working image to final image
      State.target ##.∆WS⊂'CBits'master
  :EndFor
+ State._dirty←1 ⍝? This should be done via ∇GUI
+
+ ⍝? Why isn't this calling ∇GUI ??

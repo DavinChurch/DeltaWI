@@ -11,7 +11,7 @@
      object._printername←arg←plist[;1]##.##.Canonize arg
      ⍝object ##.##.∆WS'PName'(','##.##.∆sew plist[plist[;1]⍳⊂arg;]) ⍝? Create-only
      object._pixelmargin←_supp.SetMargin object
-     object._units←_supp.SetUnits object
+     object._units←⊃_supp.SetUnits object
      object.⎕EX'_devmode' '_devnames' ⍝ Recompute DevMode & DevNames next time we need them
      result←##.NoRes
  :EndIf

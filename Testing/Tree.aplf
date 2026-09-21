@@ -54,6 +54,7 @@
  'f.t'∆WI Pass 0⊢'value'
  'f.t'∆WI Pass 1⊢'ShowNode' 'select' 31
  'f.t'∆WI Pass 31⊢'value'
+ 'f.t'∆WI Pass 1⊢'ShowNode' 'firstvisible' 11
 
  'f.t'∆WI Pass 1⊢'Expand' 'collapse' 1
  'f.t'∆WI Pass 1⊢'Expand' 'expand' 1
@@ -88,6 +89,7 @@
  'f.t'∆WI Pass'One-two' 'Three-one'⊢'GetInfo' 'label'(12 31)
  'f.t'∆WI Pass(3 4⍴1 1 0 0)⊢'GetInfo' 'images'(12 121 122)
  'f.t'∆WI Pass 0 0 0⊢'GetInfo' 'highlightbold'(1 2 3)
+ 'f.t'∆WI Pass 0 0 0⊢'GetInfo' 'highlightcut'(1 2 3)
  'f.t'∆WI Pass 0 0⊢'GetInfo' 'expanded'(12 3)
  'f.t'∆WI Pass 0 0⊢'GetInfo' 'expandedonce'(12 3)
  'f.t'∆WI Pass 1⊢'Expand' 'expand' 3
@@ -112,6 +114,10 @@
  'f.t'∆WI Pass 0 0 0⊢'GetInfo' 'highlightbold'(1 2 3)
  'f.t'∆WI Pass 1 1 1⊢'SetInfo' 'highlightbold'(1 2 3)(0 1 0)
  'f.t'∆WI Pass 0 1 0⊢'GetInfo' 'highlightbold'(1 2 3)
+ 'f.t'∆WI Pass 0 0 0⊢'GetInfo' 'highlightcut'(1 2 3)
+ 'f.t'∆WI Pass 1 1 1⊢'SetInfo' 'highlightcut'(1 2 3)(0 1 0)
+ 'f.t'∆WI Pass 0 1 0⊢'GetInfo' 'highlightcut'(1 2 3)
+ 'f.t'∆WI Pass 1 1 1⊢'SetInfo' 'highlightcut'(1 2 3)(0 0 0)
  'f.t'∆WI Pass MT⊢'list'(tree[;⍳3])
  'f.t'∆WI Pass{tree[7 8;3 4]≡2↑[2]⍵}⊢'GetInfo' 'list'(2 3)
  'f.t'∆WI Pass 0 0⊢'GetInfo' 'expandedonce'(1 3)

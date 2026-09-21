@@ -1,0 +1,5 @@
+ EmptyPage object;px
+⍝ Reset the Bitmap back to pure White
+
+ px←object._pic ##.##.##.∆WG'Size'              ⍝ Printer pages are usually exceptionally large (in pixels)
+ object._pic ##.##.##.∆WS⊂'CBits'(px⍴¯1+⌊256*3)

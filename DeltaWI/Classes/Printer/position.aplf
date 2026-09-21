@@ -1,12 +1,13 @@
- result←object position arg
+ result←object position arg;tunits
+ tunits←⊃##._supp.MyUnits object
  :If 0=≢arg
-     result←object ⎕VGET⊂'_position'(0 0)
+     result←tunits÷⍨object ⎕VGET⊂'_position'(0 0) ⍝ Keep in pixels
  :Else
      arg←##.##.Single arg
      '∆WI DOMAIN ERROR: position'##.##.Error~##.##.IsInt arg
      '∆WI LENGTH ERROR: position'##.##.Error 2≠≢arg
      '∆WI DOMAIN ERROR: position'##.##.Error∨/arg<0
      '∆WI DOMAIN ERROR: position'##.##.Error∨/arg>object size ⍬ ⍝ Can't set it to anything bigger than the printable size of the page
-     object._position←arg
+     object._position←arg×tunits
      result←##.NoRes
  :EndIf

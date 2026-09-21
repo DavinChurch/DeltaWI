@@ -1,24 +1,38 @@
- State←InitialState object;t;color;fontobj;fontdef
+ State←InitialState object;t;color;fontobj;fontdef;px;props;newpic
 ⍝ Create a base starting state from default values derived from the target object
 
  State←() ⍝ Build us a namespace to begin tracking the command's drawing states as we go
  State._class←'(State)'
  State._Class←object._Class ⍝ Just to keep some things from crashing
  State._Owner←object ⍝ To allow some objects to be created as the parent's children
- State.target←object ⋄ :If object._class≡'Picture' ⋄ State.target←object._pic ⋄ :EndIf ⍝ What object will we be drawing upon
+⍝? Let's assume here that EVERY Draw command will require a Bitmap for drawing; Create one if necessary
+ :If 0=object.⎕NC'_pic'
+⍝? This will not work! Only Printer and Root have DevCaps, so we'll need another method to handle other controls (Picture & Printer already have this)
+     ##.Halt'This will not function if object does not already have a _pic Bitmap'
+     px←⊃object ##.∆WG'DevCaps'
+     props←⊂'Bitmap'
+     props,←⊂'CBits'(px⍴¯1+⌊256*3) ⍝ Start with a completely white paper
+     newpic←⎕VGET(object⍕⍛,'._pic')##.##.∆WC props ⍝ Create the hidden Dyalog object to hold the dynamic image
+     ##.New.InitChild object newpic
+ :EndIf
+ State.target←object._pic ⍝ Now we're going to do all our Draw operations directly on this Bitmap ⍝? (Might get rid of this variable later and use a ._pic constant)
  State.(_size _extent)←object.(_size _extent)
  State._Ancestry←object,object._Ancestry ⍝ Only for utility support (might need _Owner for other things?)
  State._pix_size←object._pix_size
- State.NewName←~'Picture' 'Printer'∊⍨⊂object._class ⍝ Drawing on non-Picture-ish controls requires naming graphical objects
+ :If 2=object.⎕NC'_units' ⋄ State._units←object._units ⋄ :EndIf
+ ⍝State.NewName←~'Picture' 'Printer'∊⍨⊂object._class ⍝ Drawing on non-Picture-ish controls requires naming graphical objects ⍝? Will we dispense with this altogether and always use _pic?
+ State.NewName←0 ⍝? We won't use permanent names anywhere for now, but keep the flag around in case we change our minds later
+ State._dirty←0 ⍝ Keep track of this locally so we only need to set it once per Draw
 
- color←object ⎕VGET⊂'_color_'(¯1 ¯1) ⍝ Obtain target's already-defined colors
- :If ∨/t←¯1∊¨color ⋄ (t/color)←object ##.Classes._supp.color0 t/color ⋄ :EndIf ⍝ Follow color inheritence
+ color←3⍴¨255 0 ⍝? Make sure that no colors are ever defaulted! (Always assume Black on White to start)
+ ⍝color←object ⎕VGET⊂'_color_'(¯1 ¯1) ⍝ Obtain target's already-defined colors
+ ⍝:If ∨/t←¯1∊¨color ⋄ (t/color)←object ##.Classes._supp.color0 t/color ⋄ :EndIf ⍝ Follow color inheritence
  {}State ##.Classes.color color ⍝ Assign these to our standard internal values for later use
 
  ⍝ The State is going to contain object names in variables rather than object references or properties: FontObj, IconObj, BrushBmp
  fontdef←State ⎕VGET⊂'_font'('MS Shell Dlg' 1 0 'ansi') ⍝ What font is defined on the parent object - capture it for a duplicate construction
  {}State(##.Classes.font ChangeError'font' 'Font')fontdef ⍝ Call the system font-creation path but put resulting object name in State.FontObj
- fontobj←State ⎕VGET⊂'FontObj' '' ⍝ This better only be a object name, now
+ fontobj←State ⎕VGET⊂'FontObj' '' ⍝? This better only be a object name, now
  'Internal problems creating a default Draw font'##.Error 0=≢fontobj
  State.IconObj←State.BrushBmp←'' ⍝ Default to none used yet
 
@@ -27,4 +41,4 @@
  State._brush←1(1⊃color) ⍝ Default to background color
  State._mode←object ⎕VGET⊂'_mode'(1 13 0)
  State.Window←State.Clip←⍬ ⍝ Default to no Windowing/Clipping
- State.Window_Mask←State.Clip_Mask←0 0⍴0 ⍝ These will be boolean arrays when used
+ State.Window_Mask←State.Clip_Mask←0 0⍴0 ⍝ These will be boolean matrices when used

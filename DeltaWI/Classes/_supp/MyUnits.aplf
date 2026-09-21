@@ -1,11 +1,11 @@
- (tunits punits units)←MyUnits object;units;ppxsize;pscale;scale;pxsize;parent
+ (tunits punits units)←MyUnits object;ppxsize;pscale;scale;pxsize;parent
 ⍝ Determine what pixel-size my object's (and my parent's, and all the system's) unit sizes are
 
  parent←⊃object._Ancestry,##.##.GUIroot
- :While 0≠parent.⎕NC'_Owner' ⋄ parent←parent._Owner ⋄ :EndWhile ⍝ Find logical parent
+ :While 0≠parent.⎕NC'_Owner' ⋄ parent←parent._Owner ⋄ :EndWhile ⍝ Find logical parent ⍝? Assume the parent can't be a Printer with its own units, for now(?)
  ((scale pxsize)(pscale ppxsize))←(object,parent)⎕VGET('_scale' 1)('_pix_size'(0 0))
  punits←units←##.##.GUIroot._units ⍝ Get system conversion factors
- tunits←object ⎕VGET⊂'_units'punits ⍝ Watch for local override (for Printers)
+ (tunits units)←⊂object ⎕VGET⊂'_units'units ⍝ Watch for local override (for Printers)
  tunits←(tunits⍪⍨pxsize÷1⌈|2↑3↓scale)[1+⊃scale;] ⍝ Compute unit-conversions for this object's scale ⍝? Is this anywhere close to right for scale=0??
  punits←(punits⍪⍨ppxsize÷1⌈|2↑3↓pscale)[1+⊃pscale;] ⍝ Compute unit-conversions for the parent object's scale
 

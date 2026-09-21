@@ -4,11 +4,13 @@
      '∆WI LENGTH ERROR: Eject'##.##.Error 1<≢arg
      '∆WI DOMAIN ERROR: Eject'##.##.Error~0 1∊⍨arg←⊃arg
  :EndIf
+ ⍝object._page←object ⎕VGET⊂'_page' 0 ⍝? This initialization shouldn't be needed here any more
  :If arg←⊃arg,0 ⍝ If 1, override 'dirty' check
  :OrIf object dirty ⍬
+     _supp.WritePage object ⍝ Flush the Bitmap to the Printer page & empty it
      2 ##.##.∆NQ object'NewPage'
-     object._page←1+object ⎕VGET⊂'_page' 0
+     object._page←1+object._page
  :EndIf
- object._position←0 0 ⋄ object._dirty←0
+ object.(_position _dirty)←(0 0)0
  'Page'##.##.Event object ##.##.Application object._page
  result←##.NoRes

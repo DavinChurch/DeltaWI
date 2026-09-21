@@ -34,7 +34,7 @@
          '∆WI LENGTH ERROR: font'##.Error~arg≢⍛∊⍳4
          arg←arg,arg≢⍛↓def←'' 1 0 'ansi' ⍝ Assume defaults - the default fontname is '' (not 'System') as far as APL+Win is concerned
          ⍝? Should default size change based on scale?
-         :If (×≢was)∧∨/t←0=≢¨arg ⋄ (t/arg)←t/was ⋄ :EndIf ⍝ Allow ⍬ to leave as-is
+         :If (×≢was)∧∨/t←(0=≢¨arg)∧##.IsNum¨arg ⋄ (t/arg)←t/was ⋄ :EndIf ⍝ Allow ⍬ (but not '') to leave as-is
          :If ∨/t←0=≢¨arg ⋄ (t/arg)←t/def ⋄ :EndIf ⍝ Allow ⍬ with no previous value to fill in with defaults
          '∆WI DOMAIN ERROR: font'##.Error~##.IsChar 1⊃arg
          '∆WI DOMAIN ERROR: font'##.Error~##.IsNum 2⊃arg ⍝ This might be a negative number to remove internal leading
@@ -53,7 +53,9 @@
              charset←0 255 2 1['ansi' 'oem' 'symbol' 'default'⍳⍥⎕C arg[4]]
          :EndIf
          fontsize←⌊0.5+⊃tunits×(|2⊃arg)×1+0.15×0>2⊃arg ⍝ Allow negative numbers to mean "avoid internal leading" like RichEdit does (as close as feasible)
-         :If 0=≢newname←dyname←1⊃arg ⋄ dyname←'MS Shell Dlg' ⋄ :EndIf ⍝ Tell Dyalog to use a real fontname equivalent to APL+Win's empty font name
+         :If 0=≢newname←dyname←1⊃arg ⍝ Tell Dyalog to use a real fontname equivalent to APL+Win's empty font name
+             dyname←(1+'Printer'≡object ⎕VGET⊂'_class')⊃'MS Shell Dlg' 'Courier New'
+         :EndIf
          props←'Font'('Coord' 'RealPixel')('PName'dyname)('Size'fontsize)('Fixed'(>/32 64∊style))
          object._font_←dyname fontsize(3⊃arg)charset
          props,←('Italic'(2∊style))('Underline'(4∊style))('Weight'(400 700[1+1∊style]))('CharSet'charset)('Rotate' 0)
@@ -62,9 +64,9 @@
          fname←##.Next parent ⍝ Find the next available sequentially-numbered object name
          font←⎕VGET(parent⍕⍛,'.',fname)##.∆WC props ⍝ Create an internal Font object to be used
          font._Owner←object ⍝ Mark ownership of internal object
-         :If 'Namespace'≡object ⎕WG'Type' ⍝ If this is a non-GUI namespace ⍝ *** Note: Use ⎕WG directly here because EWC can't be used on a plain namespace ***
+         :If object._class≡'(State)' ⍝ If this is a State namespace ⍝? (will any other plain namespaces be used with this?)
              object ⎕VSET⊂'FontObj'(⍕font) ⍝ Then just store the name as a variable (used when drawing via a State)
-         :Else ⍝ A GUI object is presumably capable of holding a FontObj reference
+         :Else ⍝ Any GUI object is presumably capable of holding a FontObj reference
              object ##.∆WS⊂'FontObj'font ⍝ Attach this font reference directly to this GUI object
          :EndIf
      :EndSection

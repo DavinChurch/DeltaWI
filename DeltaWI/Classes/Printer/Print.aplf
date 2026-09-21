@@ -1,8 +1,16 @@
- result←object Print arg;dr;NL;FF;position;t;line;tunits;page;fs;pagesize;NeverSuppress
+ result←object Print arg;dr;NL;FF;position;t;line;tunits;page;fs;pagesize;NeverSuppress;dirty;fontdefn;units
  '∆WI ARGUMENT ERROR: Argument required for "Print" method'##.##.Error 0=≢arg
  '∆WI DOMAIN ERROR: Print'##.##.Error 1≠≢arg
  '∆WI RANK ERROR: Print'##.##.Error 1<≢⍴arg←⊃arg
  '∆WI DOMAIN ERROR: Print'##.##.Error~0 1∊⍨≡arg
+ (tunits units)←1 0 1/##._supp.MyUnits object ⍝ Will provide printer-specific values
+
+ ⍝ Make sure we have a reasonable font to use
+ :If 0=≢fontdefn←object ⎕VGET⊂'_font' '' ⍝ Have they defined a global font for this printer?
+     ⍝ If not, we'll have to invent our own temporary font (to be removed later)
+     {}object ##.font 'Courier New'(units÷⍥⊃tunits) ⍝ Default font size = 1 character printer-unit tall (regardless of scale)
+⍝? Problem: Every printer seems to have a different default font - how can we tell them apart?
+ :EndIf
 
  :If 0=object._opened ⍝ If the Printer is currently closed, we need to Open it first
      object('Open'##.##.Invoke)⍬
@@ -22,12 +30,13 @@
  :EndIf
 
  ⍝ Now we should have a simple character vector to process
- (NL FF)←⎕UCS 13 12 ⋄ tunits←⊃##._supp.MyUnits object
+ (NL FF)←⎕UCS 13 12 ⋄ dirty←0
  (pagesize position page)←object ⎕VGET('_size'⍬)('_position'(0 0))('_page' 0)
+ pagesize×←tunits ⍝ For use when comparing to position
  :While ×≢arg
      :Select ⊃arg
      :Case NL
-         position←position,⍥⊃object ##._supp.GetTextSize'X'
+         position←2↑position[1]+tunits[1]×⊃object ##._supp.GetTextSize'X' ⍝ Move to the beginning of the next line
          arg←1↓arg
      :Case FF
          :If object dirty ⍬ ⍝ Don't auto-eject if the page is not yet dirty
@@ -38,16 +47,18 @@
          arg←1↓arg
      :Else
          line←(t←¯1+⌊/arg⍳NL,FF)↑arg ⋄ arg←t↓arg
-         fs←object ##._supp.GetTextSize line
+         fs←tunits×object ##._supp.GetTextSize line
          :If (position[1]>0)∧⊃pagesize<position+fs ⍝ If this will overflow the page vertically, eject first
              2 ##.##.∆NQ object'NewPage'
              page+←1 ⋄ position←0 0
              'Page'##.##.Event object ##.##.Application page
          :EndIf
-         (object⍕⍛,'.')##.##.∆WC'Text'('Coord' 'RealPixel')('Text'line)('Points'(⌽position))
-         page⌈←1 ⋄ position[2]+←fs[2]
+         (object._pic⍕⍛,'.')##.##.∆WC'Text'('Coord' 'RealPixel')('Text'line)('Points'position)
+         page⌈←1 ⋄ position[2]+←fs[2] ⋄ dirty←1
      :EndSelect
  :EndWhile
- object._position←position÷tunits ⋄ object._page←page
+ object._position←position ⋄ object._page←page
+ :If dirty∧~object._dirty ⋄ object._dirty←1 ⋄ object ##.##.∆WS⊂'Dirty' 1 ⋄ :EndIf
+ :If 0=≢fontdefn ⋄ {}object ##.font,⊂fontdefn ⋄ object._font←fontdefn ⋄ :EndIf ⍝ Restore original default font setting if we invented one
 
  result←##.NoRes

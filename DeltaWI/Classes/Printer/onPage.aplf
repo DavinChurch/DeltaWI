@@ -1,2 +1,2 @@
  result←object onPage arg
- result←object(''##.##.SetEvent'Page')arg ⍝ This is never activated by a native Dyalog event
+ result←object(''##.##.SetEvent'Page')arg ⍝ This is never activated by a native Dyalog event - only when we do it

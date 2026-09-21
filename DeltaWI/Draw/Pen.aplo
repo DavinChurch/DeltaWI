@@ -7,7 +7,7 @@
  style←⊃arg
  'DOMAIN ERROR'##.Error(~##.IsInt style)∨0≠≡style
  '∆WI DRAW ERROR: Invalid pen style'##.Error~style∊¯1 0,⍳6
- :If 3=≢arg ⋄ :AndIf 1<3⊃arg ⋄ style←1 ⋄ :EndIf ⍝ If size>1 then force a solid line
+ :If 3=≢arg ⋄ :AndIf 1<3⊃arg ⋄ :andif style>2 ⋄ style←1 ⋄ :EndIf ⍝ If size>1 then force a solid or inside-solid line
  :Select style
  :Case ¯1
      '∆WI LENGTH ERROR: Pen'##.Error 2≠≢arg
