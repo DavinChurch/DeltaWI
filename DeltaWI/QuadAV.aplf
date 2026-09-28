@@ -19,7 +19,7 @@
  :EndIf
 
  reverse←'←'∊fnt ⋄ fnt~←'←→' ⍝ Watch out for switching it back to Unicode
- :If fnt⊂⍛∊⍥⎕C'APL+Win' 'APL2000' 'APLHELP' 'APLPLUS' 'APLPLUSI' ⍝ List of known APL+Win font names
+ :If fnt⊂⍛∊⍥⎕C'APL+Win' 'APL2000' 'APLFONT' 'APLHELP' 'APLPLUS' 'APLPLUSI' ⍝ List of known APL+Win font names
      letter←0≢¨⊃0⍴⊂unicode
      :If reverse ⍝ Return the ⎕UCS character that matches the selected ⎕AV glyph
          av←letter⍴⍛⍴letter\⍥,⎕UCS UCStoAV[⎕IO+160@{~⍵∊0,⍳255}61440-⍨⎕UCS letter/⍥,unicode] ⍝ Fill unknowns with non-breaking space
@@ -31,3 +31,5 @@
      ⍝ their ⎕UCS function. I don't think that their Unicode datatype is supported by ⎕WI at all, but if it turns out that it is needed
      ⍝ then something will need to be added here.
  :EndIf
+
+ ⍝? Should this be auto-ignoring ⎕TC characters and not translating them? Or does someone want to show those strange glyphs in places?

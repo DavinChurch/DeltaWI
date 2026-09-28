@@ -1,5 +1,5 @@
 result←object error arg
-⍝? This property is not supported under Dyalog - printing errors cannot be trapped
+⍝? This property is not supported under Dyalog - printing errors cannot be detected
  :If 0=≢arg
      result←0
  :Else

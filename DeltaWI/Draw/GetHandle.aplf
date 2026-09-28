@@ -9,5 +9,5 @@
  content←##.GUIroot._Pool ⎕VGET'_',⍕handle
  'Invalid Handle'##.Error 2.1≠content.⎕NC⊂'Type' ⍝ Only watch for non-GUI objects here
  'Invalid Handle'##.Error type≢content.Type ⍝ It had better be the type we're expecting
-⍝? Do we need to use ∆WG instead of a dotted name, since it might be a GUI object? What's supposed to be GUI vs. non-GUI?
+⍝? Do we need to use ∆WG instead of a dotted name, since it might be a GUI object? What's supposed to be GUI vs. non-GUI? ⍝? Huh?
  ⍝ Just return the content namespace and they'd better understand what's in it

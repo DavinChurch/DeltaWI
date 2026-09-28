@@ -2,6 +2,6 @@
  ⍝ Force the printer to print the current page before calling the standard Close method
 
  _supp.WritePage object ⍝ Flush the Bitmap to the Printer page & empty it
- result←object ##.Close arg ⍝ Then call the standard Close routine (but it may be opened again, as normal)
  ##.##.∆NQ object'Print' ⍝ Flush the now-closed Printer to paper immediately
+ result←object ##.Close arg ⍝ Then call the standard Close routine (but it may be opened again, as normal)
  object.(_page _dirty _position)←0 0(0 0) ⍝ Reset internal counters

@@ -2,7 +2,7 @@
 ⍝ Return the (h,w) size of the given text using the object's font and in the units of the object
 ⍝ Right argument may optionally be nested, with 0 to 3 items:
 ⍝   [1]←Text
-⍝   [2]←Replacement font specification to use in place of the object-default one.
+⍝   [2]←Replacement font specification to use in place of the object-default one (or '' if none).
 ⍝       The font specification is a font name optionally plus size (in object-scaled units)
 ⍝       and any other parameters (in canonical order) to be used to construct a Font object.
 ⍝       Alternatively, this could be a reference to an actual named(!) Font object

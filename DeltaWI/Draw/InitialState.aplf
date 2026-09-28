@@ -7,7 +7,7 @@
  State._Owner←object ⍝ To allow some objects to be created as the parent's children
 ⍝? Let's assume here that EVERY Draw command will require a Bitmap for drawing; Create one if necessary
  :If 0=object.⎕NC'_pic'
-⍝? This will not work! Only Printer and Root have DevCaps, so we'll need another method to handle other controls (Picture & Printer already have this)
+⍝? This will not work! Only Printer and Root have DevCaps, so we'll need another method to handle other controls (Picture & Printer already have this set up)
      ##.Halt'This will not function if object does not already have a _pic Bitmap'
      px←⊃object ##.∆WG'DevCaps'
      props←⊂'Bitmap'
@@ -30,6 +30,7 @@
  {}State ##.Classes.color color ⍝ Assign these to our standard internal values for later use
 
  ⍝ The State is going to contain object names in variables rather than object references or properties: FontObj, IconObj, BrushBmp
+⍝? Do we need to specify a default font at all?? For either Pictures or Printers? Or need they be different?
  fontdef←State ⎕VGET⊂'_font'('MS Shell Dlg' 1 0 'ansi') ⍝ What font is defined on the parent object - capture it for a duplicate construction
  {}State(##.Classes.font ChangeError'font' 'Font')fontdef ⍝ Call the system font-creation path but put resulting object name in State.FontObj
  fontobj←State ⎕VGET⊂'FontObj' '' ⍝? This better only be a object name, now

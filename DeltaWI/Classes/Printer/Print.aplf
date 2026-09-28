@@ -1,4 +1,4 @@
- result←object Print arg;dr;NL;FF;position;t;line;tunits;page;fs;pagesize;NeverSuppress;dirty;fontdefn;units
+ result←object Print arg;dr;NL;FF;position;t;line;tunits;page;fs;pagesize;NeverSuppress;fontdefn;units;wasdirty
  '∆WI ARGUMENT ERROR: Argument required for "Print" method'##.##.Error 0=≢arg
  '∆WI DOMAIN ERROR: Print'##.##.Error 1≠≢arg
  '∆WI RANK ERROR: Print'##.##.Error 1<≢⍴arg←⊃arg
@@ -8,57 +8,42 @@
  ⍝ Make sure we have a reasonable font to use
  :If 0=≢fontdefn←object ⎕VGET⊂'_font' '' ⍝ Have they defined a global font for this printer?
      ⍝ If not, we'll have to invent our own temporary font (to be removed later)
-     {}object ##.font 'Courier New'(units÷⍥⊃tunits) ⍝ Default font size = 1 character printer-unit tall (regardless of scale)
-⍝? Problem: Every printer seems to have a different default font - how can we tell them apart?
+     {}object ##.font'Courier New'(units÷⍥⊃tunits) ⍝ Default font size = 1 character printer-unit tall (regardless of scale)
+⍝? Problem: Every printer seems to have a different default font and default size - how can we find out what to use?
  :EndIf
 
  :If 0=object._opened ⍝ If the Printer is currently closed, we need to Open it first
      object('Open'##.##.Invoke)⍬
  :EndIf
 
- ⍝ Clean up the argument
- :If ##.##.IsChar arg←,arg ⍝ The usual case
-     ⍝ We should be able to print this as-is
- :ElseIf ##.##.IsInt arg
-     'DOMAIN ERROR: Unicode values out of range'##.##.Error∨/~(0∘≤∧≤∘65535)arg
-     arg←⎕UCS⌊0.5+arg ⍝ Convert this whole thing to text first
- :ElseIf ∧/0 1 2 3 5∊⍨dr←10|⎕DR¨arg ⍝ Check if it's mixed text and numbers
-     'DOMAIN ERROR: Unicode values out of range'##.##.Error∨/~(0∘≤∧≤∘65535)(dr∊1 3 5)/arg
-     arg←{⎕UCS⌊0.5+⍵}@(⍸dr∊1 3 5)⊢arg ⍝ Convert only the numbers to text
- :Else
-     ##.##.Error'∆WI DOMAIN ERROR: Print'
- :EndIf
+ arg←'Print'##.##.ToChar,arg ⍝ Allow argument to present mixed characters and Unicode code points
 
  ⍝ Now we should have a simple character vector to process
- (NL FF)←⎕UCS 13 12 ⋄ dirty←0
+ (NL FF)←⎕UCS 13 12 ⋄ wasdirty←object._dirty
+ t←~arg∊NL FF ⋄ (t/arg)←object ##.##.QuadAV t/arg ⍝ Convert to APL font codepoints if needed
  (pagesize position page)←object ⎕VGET('_size'⍬)('_position'(0 0))('_page' 0)
  pagesize×←tunits ⍝ For use when comparing to position
  :While ×≢arg
      :Select ⊃arg
      :Case NL
-         position←2↑position[1]+tunits[1]×⊃object ##._supp.GetTextSize'X' ⍝ Move to the beginning of the next line
+         position←2↑position[1]+tunits×⍥⊃object ##._supp.GetTextSize'x' ⍝ Move to the beginning of the next line
          arg←1↓arg
      :Case FF
-         :If object dirty ⍬ ⍝ Don't auto-eject if the page is not yet dirty
-             2 ##.##.∆NQ object'NewPage'
-             page+←1 ⋄ position←0 0
-             'Page'##.##.Event object ##.##.Application page
-         :EndIf
+         {}object Eject 0  ⍝ Don't auto-eject if the page is not yet dirty
          arg←1↓arg
      :Else
-         line←(t←¯1+⌊/arg⍳NL,FF)↑arg ⋄ arg←t↓arg
+         line←arg↑⍨t←¯1+⌊/arg⍳NL,FF ⋄ arg↓⍨←t
          fs←tunits×object ##._supp.GetTextSize line
+         ##.##.Tracer 'line' 'tunits' 'fs' 'position' 'pagesize' ']display object ⎕wg ''FontObj''' ']display object._pic ⎕wg ''FontObj'''
          :If (position[1]>0)∧⊃pagesize<position+fs ⍝ If this will overflow the page vertically, eject first
-             2 ##.##.∆NQ object'NewPage'
-             page+←1 ⋄ position←0 0
-             'Page'##.##.Event object ##.##.Application page
+             {}object Eject 0
          :EndIf
-         (object._pic⍕⍛,'.')##.##.∆WC'Text'('Coord' 'RealPixel')('Text'line)('Points'position)
-         page⌈←1 ⋄ position[2]+←fs[2] ⋄ dirty←1
+         (object._pic⍕⍛,'.')##.##.∆WC'Text'('Coord' 'RealPixel')('Text'line)('Points'position) ('FontObj' '')
+         page⌈←1 ⋄ position[2]+←fs[2] ⋄ object._dirty←1
      :EndSelect
  :EndWhile
  object._position←position ⋄ object._page←page
- :If dirty∧~object._dirty ⋄ object._dirty←1 ⋄ object ##.##.∆WS⊂'Dirty' 1 ⋄ :EndIf
+ :If object._dirty∧~wasdirty ⋄ object ##.##.∆WS⊂'Dirty' 1 ⋄ :EndIf ⍝? Do we need to force this, or will it happen automatically?
  :If 0=≢fontdefn ⋄ {}object ##.font,⊂fontdefn ⋄ object._font←fontdefn ⋄ :EndIf ⍝ Restore original default font setting if we invented one
 
  result←##.NoRes

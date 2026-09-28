@@ -1,7 +1,7 @@
  result←object(State Text)arg;was;t;props;tunits;text;item;points;at;NL;colors
  result←⍬
- ⍝ 'Text' text r c [h w]                    ⍝? h/w clipping is not supported in Dyalog ⍝? Can we fake it with clipping code?
- ⍝ 'Text' ([n m ⍴] text r c [h w]) ...      ⍝? h/w clipping is not supported in Dyalog ⍝? Can we fake it with clipping code?
+ ⍝ 'Text' text r c [h w]                    ⍝? h/w clipping is not supported in Dyalog ⍝? We're faking it with clipping code
+ ⍝ 'Text' ([n m ⍴] text r c [h w]) ...      ⍝? h/w clipping is not supported in Dyalog ⍝? We're faking it with clipping code
 
 ⍝? If the text is rotated, I assume the origin point (r,c) is the top-left leading-corner of the first character. Is (h,w) measured from that same point?
 ⍝? How would I specify (h,w) in APL+Win in various rotation quadrants, since it can stick out in any direction?
@@ -17,8 +17,9 @@
  colors←(⊂⍬)##.Classes._supp.color2¨State._color_ ⍝ Text background, foreground
  props,←⊂'FCol'(2⊃colors) ⍝ They'll always want a foreground color to write the text with
  props,←(1⊃State._mode)/⊂'BCol'(1⊃colors) ⍝ They may also want a background behind the text
- props,←(~1⊃State._mode)/⊂'BCol'(3⍴255) ⍝? Testing forced white background until we can leave it transparent
+ props,←(~1⊃State._mode)/⊂'BCol'(3⍴255) ⍝? Testing forced white background until we can leave it transparent ⍝? What should this be for Pictures??
  props,←⊂'DrawMode'(2⊃State._mode)
+ props,←(×≢State.FontObj)/⊂'FontObj'State.FontObj ⍝ Only declare if there is one ⍝? Does it work without this?
 
  :For item :In arg ⍝ Verify, process & write each Text item one at a time
      '∆WI LENGTH ERROR: Text'##.Error~item≢⍛∊3 5
@@ -27,8 +28,11 @@
      '∆WI DOMAIN ERROR: Text'##.Error~##.IsChar text
      points←tunits×at
      :If 2=≢⍴text ⋄ text←NL ##.∆sew ##.∆dtr¨↓text ⋄ :EndIf ⍝ A matrix - convert to vector with NLs
-     text←ToChar text ⍝ Convert any numerics into plain characters
+     text←'Text'##.ToChar text ⍝ Convert any numerics into plain characters
+     t←~text∊NL ⋄ (t/text)←object ##.QuadAV t/text ⍝ Convert to APL font codepoints if needed
      text←↑NL ##.∆cuts text ⍝ Switch to a matrix to allow a multi-line property
      ⍝ Add a limiting size if they ask for it; use a Size pseudo-property
-     State GUI props,('Text'text)('Points'points)('FontObj'State.FontObj),(5=≢item)/⊂'Size'(3↓item)
+     State GUI props,('Text'text)('Points'points),(5=≢item)/⊂'Size'(3↓item)
  :EndFor
+
+⍝? How would we work with a default FontObj?

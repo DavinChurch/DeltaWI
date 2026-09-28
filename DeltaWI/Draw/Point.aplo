@@ -1,4 +1,4 @@
- result←object(State Point)arg;tunits;colors;points;pixels;t;scheme
+ result←object(State Point)arg;tunits;colors;points;pixels;t;scheme;props
  result←⍬
  ⍝ 'Point' r c [color]
  ⍝ 'Point' (n m ⍴ r c [color] ...) ...
@@ -21,6 +21,8 @@
 
  tunits←⊃##.Classes._supp.MyUnits State
  points←⌊0.5+tunits×⍤1⊢¯1↓⍤1⊢arg
- pixels←State.target ##.∆WG'CBits' ⍝ Get the entire image numerically
- pixels[⎕IO+↓points]←256⊥↑[1]colors ⍝ Use Choose-indexing for scatter-point assignment; First coordinate @ (0,0)
- State.target ##.∆WS⊂'CBits'pixels ⍝ Replace the entire image with new pixels in it
+ (colors points)←↓[1]colors{(⊃⍺) ⍵}⌸points ⍝ Group them by color
+ props←StartObj 'Marker'
+ props,←⊂'Style' 0 ⍝ Single pixels
+ props,←('Points' points)('FCol' colors)
+ State GUI props

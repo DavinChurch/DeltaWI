@@ -17,7 +17,7 @@
  :EndSection
 
  result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure
- {}newobj ##.font deffont ⍝ Set the formal default font in the usual way
+:if 0=≢newobj ⎕vget⊂'_font' '' ⋄ {}newobj ##.font deffont ⋄ :endif ⍝ Set the formal default font, if needed, in the usual way
 
  ⍝ Now we'll create a Bitmap to use as our page-construction area
  ⍝ It will be written to the paper with an Image object when the page is completed

@@ -1,0 +1,72 @@
+ Print data;⎕IO;∆WSELF;t;cfg;pn;⎕ML
+⍝∇ Davin's "Print" utility ⍝ ****  Direct ported from APL+Win to test with ∆WI  *****
+⍝∇      Print <text> ...
+⍝∇ Prints one or more text (or code) blocks to the printer.
+⍝∇ Text items can be character arrays (⍴⍴≤2), or arrays of higher rank
+⍝∇ (⍴⍴>2) where each plane of the array is printed on a separate page
+⍝∇ of paper (it inserts ⎕TCFF codes between planes of the array).
+⍝∇ Allowed special characters include: ⎕TCNL, ⎕TCLF, ⎕TCFF.
+⍝∇ Numeric items may also be included and will be sent to the printer
+⍝∇ without processing so that control codes and escape sequences can
+⍝∇ be printed directly.  Interesting codes include: 13, 10, 12, 27.
+⍝∇ The numeric code ¯1 may also be included to close the printer and
+⍝∇ delete it's associated object from memory (if desired).  This also
+⍝∇ causes the printer to flush its buffer and print any pending output.
+⍝∇ The numeric code ¯2 may also be included to simply close and then
+⍝∇ re-open the printer object.  This causes the printer to flush it's
+⍝∇ buffers but leaves it open for further output (and leaves any
+⍝∇ external definitions intact).
+⍝∇ The numeric code ¯3 may also be included to abort the printing in
+⍝∇ progress and cancel any output already sent to Print but not yet
+⍝∇ "flushed".  The printer remains open.
+⍝∇ The numeric code ¯4 may be included as a auxilary method of producing
+⍝∇ a "form feed" or "new page" on the printer.  It is functionally identical
+⍝∇ to the use of a 12 or ⎕TCFF code.
+⍝∇ The printer object's properties may be modified by creating the printer
+⍝∇ with "Print ''" and then modifying the printer object directly before
+⍝∇ proceeding to use ∇Print for output.
+
+ ⎕IO←1 ⋄ ⎕ML←2
+⍝ If called with multiple arguments, process them one at a time, then exit.
+ :If 1<≡data ⋄ Print¨data ⋄ :Return ⋄ :EndIf
+⍝ If called with a 3-D matrix, print one on each page
+ :If 2<⍴⍴data ⋄ Print¨,(⊂[1↓⍴data]data),[1.5]¯4 ⋄ :Return ⋄ :EndIf
+
+ :If 0=⎕NC pn←'Printer_Name' ⋄ pn←'Printer' ⋄ :Else ⋄ pn←⍎pn ⋄ :EndIf
+ :If 0=⍴∆WSELF←pn ∆WI'self' ⍝ Does "Printer" need to be created?
+     cfg←⊂'caption' 'APL Printer Object' ⍝ Typical configuration...
+     cfg←cfg,⊂'font' 'APLPLUS' 1 0 'symbol'
+     ∆WSELF←pn ∆WI'New' 'Printer',1↓cfg ⍝ Make it
+ :Else ⋄ ('"',pn,'" is not a Printer!')⎕SIGNAL 11/⍨~'Printer'≡∆WI'class'
+ :EndIf
+
+⍝ Time to start printing...
+ :If 1<⍴⍴data←1/data ⋄ data←,data,⎕UCS 13 ⋄ :EndIf
+ :While ×⍴data
+     :If 0<t←+/∧\data∊⎕AV~⎕UCS 12 ⍝ Find "normal" characters
+         ∆WI'Print'(t↑data) ⍝ Print them
+     :EndIf
+     :If ×⍴data←t↓data ⍝ Anything left over?
+         :Select ↑data ⍝ What's the first item look like?
+         :CaseList (⎕UCS 12)12 ¯4 ⍝ Is it a formfeed?
+             ∆WI'Eject' ⋄ data←1↓data ⍝ Do it the built-in way
+         :Case ¯1 ⍝ Special code -- Close/Delete Printer = *Done*
+             :If ∆WI'Close' ⋄ 0 0⍴'⎕wgive 0' ⋄ ∆WI'Delete' ⋄ data←1↓data
+             :Else ⋄ 11 ⎕SIGNAL⍨'Printer "',pn,'" close failure!'
+             :EndIf
+             :If ×⍴data ⍝ If there's anything else left...
+                 Print data ⋄ data←'' ⍝ We must recurse to print it
+             :EndIf
+         :Case ¯2 ⍝ Special code -- Close/Open Printer
+             :If ∆WI'Close' ⋄ ∆WI'Open' ⋄ data←1↓data
+             :Else ⋄ 11 ⎕SIGNAL⍨'"Printer" close failure!'
+             :EndIf ⍝ Now we may continue
+         :Case ¯3 ⍝ Special code -- Abort printing in progress
+             ∆WI'Abort' ⋄ data←1↓data ⍝ Just "can" it
+         :Else ⍝ Anything else better be just ⎕AF number(s)
+             t←+/∧\0=↑0⍴⊂data ⋄ t←t⌊¯1+(t↑data)⍳¯1
+             ∆WI'Print'(⎕AV[t↑data]) ⋄ data←t↓data ⍝ Send it
+         :EndSelect
+     :EndIf
+ :EndWhile ⍝ And continue until we run out of stuff to print
+⍝ That's all, folks!

@@ -35,7 +35,7 @@
          arg←arg,arg≢⍛↓def←'' 1 0 'ansi' ⍝ Assume defaults - the default fontname is '' (not 'System') as far as APL+Win is concerned
          ⍝? Should default size change based on scale?
          :If (×≢was)∧∨/t←(0=≢¨arg)∧##.IsNum¨arg ⋄ (t/arg)←t/was ⋄ :EndIf ⍝ Allow ⍬ (but not '') to leave as-is
-         :If ∨/t←0=≢¨arg ⋄ (t/arg)←t/def ⋄ :EndIf ⍝ Allow ⍬ with no previous value to fill in with defaults
+         :If ∨/t←(0=≢¨arg)∧##.IsNum¨arg ⋄ (t/arg)←t/def ⋄ :EndIf ⍝ Allow ⍬ with no previous value to fill in with defaults
          '∆WI DOMAIN ERROR: font'##.Error~##.IsChar 1⊃arg
          '∆WI DOMAIN ERROR: font'##.Error~##.IsNum 2⊃arg ⍝ This might be a negative number to remove internal leading
          '∆WI DOMAIN ERROR: font'##.Error~##.IsInt 3⊃arg

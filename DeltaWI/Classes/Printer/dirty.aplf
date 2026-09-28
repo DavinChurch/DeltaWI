@@ -1,5 +1,5 @@
  result←object dirty arg;was
- was←object ⎕VGET⊂'_dirty' 0 ⍝?object ##.##.∆WG'Dirty'
+ was←object ⎕VGET⊂'_dirty' 0
  :If 0=≢arg
      result←was
  :Else

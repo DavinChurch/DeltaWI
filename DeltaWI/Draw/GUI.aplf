@@ -68,3 +68,5 @@
  master←size⍴master                                         ⍝ Restore our natural shape
  State.target ##.∆WS'CBits'master                           ⍝ Replace our target Bitmap with the new data
  State._dirty←1
+
+⍝? Is there a way to build a new Clipping object into the system to avoid the big bitmaps problem this requires?
