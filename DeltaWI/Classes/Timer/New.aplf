@@ -1,0 +1,6 @@
+ result←object New arg;parent;name;props;newobj
+ (parent name)←object ⍝ Separate non-standard two-part argument
+ props←'Timer'('Active' 0)('FireOnce' 0)
+ newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object with required parameters
+ newobj.(_where _extent _size)←(0 0 0 0)(0 0)(0 0) ⍝ Assign unused attributes
+ result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure

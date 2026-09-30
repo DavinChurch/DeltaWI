@@ -1,0 +1,2 @@
+ ok←run _onTimer message
+ ok←1⊣⎕AI[3]##.##.Run run

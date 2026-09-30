@@ -1,0 +1,14 @@
+ result←object interval arg;old;new
+ old←object ⎕VGET⊂'_interval' 1000
+ :If 0=≢arg
+     result←old
+ :Else
+     '∆WI LENGTH ERROR: interval'##.##.Error 1≠≢arg
+     new←##.##.Single arg
+     '∆WI LENGTH ERROR: interval'##.##.Error 1<≢⍴new
+     '∆WI DOMAIN ERROR: interval'##.##.Error~##.##.IsInt new
+     '∆WI DOMAIN ERROR: interval'##.##.Error new<0
+     object._interval←new ⍝ Update the APL+Win record
+     object ##.##.∆WS⊂'Interval'(1⌈new)
+     result←##.NoRes
+ :EndIf

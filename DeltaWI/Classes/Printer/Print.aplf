@@ -34,7 +34,6 @@
      :Else
          line←arg↑⍨t←¯1+⌊/arg⍳NL,FF ⋄ arg↓⍨←t
          fs←tunits×object ##._supp.GetTextSize line
-         ##.##.Tracer 'line' 'tunits' 'fs' 'position' 'pagesize' ']display object ⎕wg ''FontObj''' ']display object._pic ⎕wg ''FontObj'''
          :If (position[1]>0)∧⊃pagesize<position+fs ⍝ If this will overflow the page vertically, eject first
              {}object Eject 0
          :EndIf

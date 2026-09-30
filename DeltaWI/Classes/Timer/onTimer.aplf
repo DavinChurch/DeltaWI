@@ -1,0 +1,2 @@
+ result←object onTimer arg
+ result←object('Timer'##.##.SetEvent'Timer')arg

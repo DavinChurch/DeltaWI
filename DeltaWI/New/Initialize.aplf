@@ -18,10 +18,12 @@
  object.(_Ancestry _Class)←(parent,parent._Ancestry)this ⍝ Set ∆WI system control information
  object._self↓⍨←2×'#.'≡2↑object._self ⍝ Make sure that _self doesn't have a leading '#.' on it
  :If 0 2≡≢¨object ⎕VGET('_pix_size'⍬)('_extent'⍬) ⍝ Compute pixel-size if not predefined (usually only needed for fixed-position controls)
+⍝? This only applies to "visible" objects - do we need to do anything special with Timers and things like that?
      margins←+/2 2⍴+⌿(##.Classes._supp.GetBorders object)[1;,2;] ⍝ Differences between 'extent' and 'size' (in pixels)
      object._pix_size←⌊0.5+margins-⍨object._extent×⊃##.Classes._supp.MyUnits parent ⍝ Calculate absolute size (in pixels)
  :EndIf
 
+⍝? Many of these only apply to "visible" objects - do we need to ignore anything special?
  object ##.∆WSet('Coord' 'RealPixel')('AutoConf' 0)('Visible' 0) ⍝ Everybody needs these set (where they exist)
  siz←object ⎕VGET⊂'_pix_size'(100 100) ⋄ siz←⊃object ##.∆WGet⊂'Size'siz ⍝ Figure out a reasonable object size to use
  object ##.∆WSet↓'YRange' 'XRange',⍤0⊢0,¨siz ⍝ Set default ranges for everyone in case a child needs Coord=User

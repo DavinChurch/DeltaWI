@@ -1,0 +1,16 @@
+ result←object enabled arg;old;new
+ old←object ⎕VGET⊂'_enabled' 1
+ :If 0=≢arg
+     result←old
+ :Else
+     '∆WI LENGTH ERROR: enabled'##.##.Error 1≠≢arg
+     new←##.##.Single arg
+     '∆WI LENGTH ERROR: enabled'##.##.Error 1≠≢new
+     '∆WI DOMAIN ERROR: enabled'##.##.Error~new∊0 1
+     object._enabled←new←⊃new
+     :If old>new
+     :OrIf (old<new)∧object._opened ⍝ Only turn on if also opened
+         object ##.##.∆WS⊂'Active'new
+     :EndIf
+     result←##.NoRes
+ :EndIf

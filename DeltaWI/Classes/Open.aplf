@@ -17,7 +17,9 @@
      (object ⎕VGET ##.LeafName¨kids)('Open'##.Invoke)¨⊂⍬ ⍝ Recursively Open all my children
  :EndIf
 
- object ##.∆WSet⊂'Active' 1 ⍝ Update Dyalog control properties
+ :If object ⎕VGET⊂'_enabled' 1 ⍝ If they have a turned-off 'enabled' property, don't make it Active
+     object ##.∆WSet⊂'Active' 1 ⍝ Update Dyalog control properties
+ :EndIf
  :If object._enabled∧object._visible>0
      object ##.∆WSet⊂'Visible' 1 ⍝ Make sure it's shown
  :EndIf
