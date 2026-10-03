@@ -22,7 +22,7 @@
      :EndIf
  :EndIf
  arg,⍨←(~arg ##._supp.HasInitialProps'caption')/⊂'caption'name ⍝ [1] Use the object name as a default caption
- border←+/∆border,(0=≢∆border)/_border ⍝ Assume default, and handle multi-bit borders
+ border←##._supp.SetBitVals ∆border,(~arg ##._supp.HasInitialProps'border')/_border ⍝ Assume default, and handle multi-bit borders
 
  :If mdi=⎕NULL ⋄ :AndIf parent._class≡'System' ⍝ If this is a top-level object, then create it as a Form
      props←'Form'('Visible' 0)
