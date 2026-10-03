@@ -9,7 +9,7 @@
      arg,⍨←⊂'where'where ⍝ [2] Start us with a default 'where' size and position (APL+Win measure) -- will usually be overridden later
  :EndIf
  arg,⍨←(~arg ##._supp.HasInitialProps'caption')/⊂'caption'name ⍝ [1] Use the object name as a default caption
- border←+/∆border,(0=≢∆border)/_border ⍝ Assume default, and handle multi-bit borders
+ border←##._supp.SetBitVals ∆border,(~arg ##._supp.HasInitialProps'border')/_border ⍝ Assume default, and handle multi-bit borders
 
  props←'Form'('Visible' 0)
  nocaption←∆caption≡'' ⍝ (This won't match a ⍬ default, thus it's been provided to us this way)
