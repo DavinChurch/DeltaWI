@@ -14,7 +14,7 @@
  object._opened←1 ⍝ Now it's fully open
 
  :If ×≢kids←object children ⍬
-     (object ⎕VGET ##.LeafName¨kids)('Open'##.Invoke)¨⊂⍬ ⍝ Recursively Open all my children
+     (object ##.Locate¨##.LeafName¨kids)('Open'##.Invoke)¨⊂⍬ ⍝ Recursively Open all my children
  :EndIf
 
  :If object ⎕VGET⊂'_enabled' 1 ⍝ If they have a turned-off 'enabled' property, don't make it Active

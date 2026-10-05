@@ -15,7 +15,7 @@
 
  ⍝ Proceed to close the object, starting by force-closing all its children
  :If ×≢kids←object ##.children ⍬
- :AndIf ×≢kids←object ⎕VGET ##.##.LeafName¨kids ⍝ Except our own tree ⍝? (what's this comment mean?)
+ :AndIf ×≢kids←object ##.Locate¨##.LeafName¨kids
      kids(1 close)¨⊂⍬ ⍝ Force-close all my children recursively
  :EndIf
 

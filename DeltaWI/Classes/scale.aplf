@@ -62,7 +62,7 @@
 ⍝? Note: (physical?) margins can be maintained across changes to the printer, especially to a different resolution -- what do we need to do, and where?
 
      ⍝ Convert extent and where values of children to match my new scaling factor
-     :For child :In ##.GUIroot ##.Locate¨object children ⍬
+     :For child :In object ##.Locate¨##.LeafName¨object children ⍬
          :If 2=≢extent←child ⎕VGET⊂'_extent'⍬ ⋄ child._extent←extent×pfactor ⋄ :EndIf
          :If 4=≢where←child ⎕VGET⊂'_extent'⍬ ⋄ child._where←where×4⍴pfactor ⋄ :EndIf
      :EndFor
