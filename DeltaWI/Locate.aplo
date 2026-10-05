@@ -1,14 +1,13 @@
- ref←{leaf}(root Locate)name;next;class;to;links;link;t
+ ref←{leaf}(root Locate)name;next;to;links;link;t;hidden
 ⍝ Traverse each level in the composite name to find the GUI object defined for it and return a reference to the ultimate object.
 ⍝ Watch out for invisible layers (_mb, _mdi, _pic) in the Dyalog GUI structure,
 ⍝ Return ⎕NULL if a named object does not exist at any point in the traversal.
-⍝ (Hopefully this runs quickly enough.)
+⍝ (Hopefully this runs quickly enough for use in many places.)
 ⍝ Specify a reference to the starting point of the search as the left operand.
 ⍝ Right argument (name) may be passed as a character string or a nested vector.
 ⍝ Optional left argument (leaf) is the number of leaf nodes to ignore (either 0 or 1).
 ⍝ Allow relative naming with ":" and/or "." prefixes on each node; so must assume proper _Ancestry variables for implementation.
 ⍝ Support use of 'links' property to provide for child alias names.
-⍝ If the final object has an invisible Dyalog-required child, ignore the child and return only the APL+Win object reference
 ⍝ Global: GUIroot, *._Ancestry
 
  :If IsChar name ⋄ name←'.'∆cuts name ⋄ :EndIf ⍝ Split apart composite name if not already provided that way
@@ -35,15 +34,6 @@
          :EndIf
      :EndSection
 
-     class←ref._class ⍝ In case there's more than one redirection
-     :Section ⍝ Redirections around hidden child objects
-         :If 9=ref.⎕NC'_mb' ⋄ ref←ref._mb ⋄ :EndIf ⍝ Skip over a hidden MenuBar object layer, if present
-         :Select class ⍝ Check APL+Win parent class type to watch out for other invisible children
-         :Case 'MDIForm' ⋄ ref←ref._mdi ⍝ Skip over required hidden object layer
-         :Case 'Picture' ⋄ ref←ref._pic ⍝ Skip over required hidden object layer
-         :EndSelect
-     :EndSection
-
      :Section ⍝ Follow this next step in the normal path traversal
          :If '!'≠⊃next ⍝ Look for a normal child, unless they've specified not to
              to←ref ⎕VGET⊂next ⎕NULL ⍝ Find next reference following the chain forward
@@ -52,7 +42,7 @@
          :EndIf
      :EndSection
 
-     :If to=⎕NULL ⍝ If the child's name does not actually exist, see if there's an alias available
+     :If to=⎕NULL ⍝ If the child's name does not exist directly, see if there's an alias available
          :Section ⍝ Follow any link that might be specified by aliasing the child's name
              next↓⍨←'!'=⊃next ⍝ We've already handled the link-only signal
              :If 2=ref.⎕NC'_links' ⍝ Do we have any links defined here?
@@ -67,6 +57,14 @@
                  :EndIf
              :EndIf
          :EndSection
+     :EndIf
+
+     :If to=⎕NULL ⍝ If the child's name still does not exist normally, see if there's one or more hidden objects to search
+         :For hidden :In '_mb' '_mdi' '_pic'{⍺/⍨⍺∊⍵}ref.⎕NL ¯9 ⍝ Any of these names may exist as invisible child layers containing their own children
+             :If ⎕NULL≠to←(ref ⎕VGET hidden)Locate,⊂next ⍝ Recursively check to see if this one has the requested name as an immediate child
+                 :Leave ⍝ If this hidden child DOES have the required next-level name, then that must be the one they want - follow it
+             :EndIf
+         :EndFor
      :EndIf
 
      :If to=⎕NULL ⋄ ref←⎕NULL ⋄ :Return ⋄ :EndIf ⍝ Any failed step will fail the entire location process

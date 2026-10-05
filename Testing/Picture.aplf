@@ -2,7 +2,7 @@
  '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
 
  'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
- 'f.p'∆WI Pass'f.p'⊢'Create' 'Picture'('style' 80)
+ 'f.p'∆WI Pass'f.p'⊢'Create' 'Picture'
  'f.p'∆WI Pass 4.875 9.75⊢'size'
 ⍝? Hmmm... changing the size of the Picture object doesn't seem to re-fill with grey!
  'f.p'∆WI Pass 4.875 9.75⊢'imagesize'

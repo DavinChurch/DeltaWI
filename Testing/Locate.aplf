@@ -1,0 +1,42 @@
+ Locate;Find
+⍝ Make sure that DeltaWI.Locate can find names wherever they are in a sample GUI structure
+
+⍝ Test structure:
+⍝   MDIForm
+⍝       Menu
+⍝           Menu
+⍝       Form
+⍝           Menu
+⍝               Menu
+⍝           Label
+⍝           Picture
+⍝               Label
+⍝? Later add checks using 'links', including those with relative references
+⍝? 'links' are the only reasonable way to check for relative references within ∇Locate,
+⍝? because most such naming constructions are handled by ∇ObjectName before they ever get to ∇Locate.
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ ⍝ Build our main testing structure
+ 'mdi'∆WI Pass'mdi'⊢'New' 'MDIForm'
+ 'mdi.m1'∆WI Pass'mdi.m1'⊢'New' 'Menu'
+ 'mdi.m1.m2'∆WI Pass'mdi.m1.m2'⊢'New' 'Menu'
+ 'mdi.f'∆WI Pass'mdi.f'⊢'New' 'Form'
+ 'mdi.f.m1'∆WI Pass'mdi.f.m1'⊢'New' 'Menu'
+ 'mdi.f.m1.m2'∆WI Pass'mdi.f.m1.m2'⊢'New' 'Menu'
+ 'mdi.f.l'∆WI Pass'mdi.f.l'⊢'New' 'Label'
+ 'mdi.f.p'∆WI Pass'mdi.f.p'⊢'New' 'Picture'
+⍝ 'mdi.f.p.l'∆WI Pass'mdi.f.p.l'⊢'New' 'Label' ⍝? Not yet available for testing
+
+ ⍝ Now let's try to see if we can find specific object names
+ Find←(∆WI Pass{×≢⍵})∘'self' ⍝ Give us a simple name to do the same thing over and over
+ Find'mdi'
+ Find'mdi.m1'
+ Find'mdi.m1.m2'
+ Find'mdi.f'
+ Find'mdi.f.m1'
+ Find'mdi.f.m1.m2'
+ Find'mdi.f.l'
+ Find'mdi.f.p'
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

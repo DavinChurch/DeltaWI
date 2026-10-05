@@ -1,7 +1,7 @@
  result←object New arg;parent;name;props;newobj;newpic;∆border;px;∆style;psize;bkg
  (parent name)←object ⍝ Separate non-standard two-part argument
  (∆style ∆border)←arg ##._supp.GetInitialProps'style' 'border←'
- ∆border←##._supp.SetBitVals ∆border,(~arg ##._supp.HasInitialProps'border')/_border ⍝ Default border=1 if not supplied
+ ∆border←⊃##._supp.SetBitVals ∆border,(~arg ##._supp.HasInitialProps'border')/_border ⍝ Default border=1 if not supplied
 
  arg←(parent:parent ⋄ border:∆border)##.##.New.Center arg
 
