@@ -5,7 +5,7 @@
  newtab←⎕VGET(parent⍕⍛,'.',##.##.Next parent)##.##.∆WC'TabButton' ⍝ First create a hidden "Tab" object using the next available arbitrary number
  ##.##.New.InitChild parent newtab
 
- props←'SubForm'('Visible' 0) ⍝ Define properties that must be used during "Page" creation
+ props←'SubForm'('Visible' 0)('Sizeable' 0) ⍝ Define properties that must be used during "Page" creation
  newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object with required parameters
  newobj ##.##.∆WS⊂'TabObj'newtab ⍝ Connect this to the hidden TabButton object created above
  newtab._Owner←newobj ⍝ Change the ownership of the TabButton to be this new SubForm (Page) so internal events fire properly

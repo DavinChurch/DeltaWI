@@ -1,0 +1,44 @@
+ result←object style arg;bits;props;style;was
+
+⍝ 0 = Vertical (right/left)
+⍝ 1 = Horizontal (bottom/top)
+⍝ 2 = Size box (corner)
+⍝    Select one (ignored except during creation, so they've already been handled):
+⍝ +0 = No alignment (floating)
+⍝ +4 = Bottom/right alignment
+⍝ +8 = Top/left alignment
+
+ style←object ⎕VGET⊂'_style' 0 ⍝ What style were we?
+ :If 0=≢arg
+     result←style
+ :Else
+     '∆WI DOMAIN ERROR: style'##.##.Error~##.##.IsInt arg←##.##.Single arg
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∨/∊arg<0
+     arg←+/bits←##._supp.SetBitVals arg
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error×≢bits~0 1 2 4 8
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error(∧/1 2∊bits)∨∧/4 8∊bits
+     object._style←arg
+     was←##.##.BitVals style ⍝ Previous bit settings
+
+     :If (1∊was)≠1∊bits ⍝ If the orientation flag has not changed, then we don't need to mess with it
+         props←0⍴⊂''
+         props,←0/⊂'VScroll'(-1∊bits) ⍝ Changing orientation will not change size/where     ⍝? Create-only
+         props,←0/⊂'HScroll'(-2∊bits) ⍝ Changing orientation will not change size/where     ⍝? Create-only
+         ⍝object ##.##.∆WS props ⍝? Nothing changeable here ATM
+     :EndIf
+
+     :If (2∊was)≠2∊bits ⍝ If the corner flag has not changed, then we don't need to mess with it
+         ⍝? How in the world are we going to manage this non-destructively???
+         :If 2∊bits ⍝ Switch from a scroll bar to a corner
+             ##.##.Error'Scroll bar cannot currently be changed to a corner shape'
+         :Else ⍝ Switch from a corner to a scroll bar
+             ##.##.Error'Corner shape cannot currently be changed to a scroll bar'
+         :EndIf
+     :EndIf
+
+     :If (4 8∊was)≢4 8∊bits ⍝ If the alignment flags have not changed, then we don't need to mess with it
+        ⍝ But changing alignment has no effect on an existing control anyway
+     :EndIf
+
+     result←##.NoRes
+ :EndIf

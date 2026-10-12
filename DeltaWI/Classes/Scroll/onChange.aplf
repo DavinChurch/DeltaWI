@@ -1,0 +1,9 @@
+ result←object onChange arg;tracking
+ tracking←5⊃object ⎕VGET⊂'_value'(0 100 1 0 0) ⍝ Have they asked for continuous drag-tracking?
+ result←object('Scroll'##.##.SetEvent'Change')arg ⍝ Generates a single event when Thumb changes
+ :If tracking ⍝ Turn tracking on
+     result←object('ThumbDrag'##.##.SetEvent'Change')arg ⍝ Generates repeated events as Thumb changes continuously while dragging
+ :Else ⍝ Turn tracking off
+     ⍝ Hopefully this event will run quickly enough if it's been turned off after having been turned on
+     result←object('ThumbDrag'##.##.SetEvent'Change'),⊂''
+ :EndIf

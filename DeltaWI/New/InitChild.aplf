@@ -1,4 +1,4 @@
- InitChild (parent object)
+ InitChild(parent object);props
 ⍝ Some GUI objects are hidden children rather than within APL+Win GUI tree.
 ⍝ Add the necessary minimal settings for such a hidden child.
 ⍝
@@ -6,6 +6,8 @@
 ⍝       [1] Reference to the Dyalog parent object, not always the _Owner
 ⍝       [2] Reference to the just-created hidden child object (not its name at this point)
 
- object ##.∆WSet('Coord' 'RealPixel')('AutoConf' 0) ⍝ Everybody needs these set (where they exist)
+ props←('Coord' 'RealPixel')('AutoConf' 0)('Sizeable' 0)('Dragable' 0)('AcceptFiles' 0)
+ object ##.∆WSet props ⍝ Everybody needs these set (where they exist)
  object.⎕WX←0 ⍝ Let's hide all GUI properties, etc., so that they won't be accidentally used directly - ∆WS/∆WG should be used instead
- object._Owner←parent ⍝ Make the initial ownership assumption, but change it later if it is not correct
+
+  object._Owner←parent ⍝ Make the initial ownership assumption, but change it later if it is not correct

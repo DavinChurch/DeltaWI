@@ -68,6 +68,7 @@
      :Else
          :If sys~⍛∧0=≢arg ⍝ Are they disabling an event?
              pseudo~←⊂myevent ⍝ Remove the name from the list to process (if it's the last one, just leave the argument empty)
+⍝? For normal events, it shouldn't hurt much to call it without doing anything; but what about rapidly-repeated calls such a ThumbDrag?
          :ElseIf myevent⊂⍛∊pseudo
          ⍝ It's already here - leave it alone
              :Return ⍝ We don't need to update anything in the GUI

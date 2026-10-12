@@ -1,4 +1,4 @@
- result←object Initialize arg;parent;class;name;this;sub;illegal;final;v0;vars;acts;action;aarg;isdef;margins;props;siz
+ result←object Initialize arg;parent;class;name;this;sub;illegal;final;v0;vars;acts;action;aarg;isdef;margins;props;siz;sizeable;noresize
 ⍝ Properly set up a newly-created object, starting with it's required system control information
 ⍝ It must be called directly(!) from the creating-class namespace.
 ⍝? (Watch out if it's a special-case class type such as ActiveX or Dyalog)
@@ -23,8 +23,11 @@
      object._pix_size←⌊0.5+margins-⍨object._extent×⊃##.Classes._supp.MyUnits parent ⍝ Calculate absolute size (in pixels)
  :EndIf
 
-⍝? Many of these only apply to "visible" objects - do we need to ignore anything special?
- object ##.∆WSet('Coord' 'RealPixel')('AutoConf' 0)('Visible' 0) ⍝ Everybody needs these set (where they exist)
+⍝? Many of these only apply to "visible" objects - do we need to ignore anything special or just let ∆WSet ignore them?
+ sizeable←class⊂⍛∊'Form' 'MDIForm' ⍝ Only [MDI]Forms can be resized by the user
+ noresize←class⊂⍛∊'Form' 'MDIForm' 'Page' 'Picture' ⍝ These classes cannot change Sizeable after creation
+ props←('Coord' 'RealPixel')('AutoConf' 0)('Visible' 0),noresize↓('Sizeable'sizeable)('Dragable' 0)('AcceptFiles' 0)
+ object ##.∆WSet props ⍝ Everybody needs these set (where they exist)
  siz←object ⎕VGET⊂'_pix_size'(100 100) ⋄ siz←⊃object ##.∆WGet⊂'Size'siz ⍝ Figure out a reasonable object size to use
  object ##.∆WSet↓'YRange' 'XRange',⍤0⊢0,¨siz ⍝ Set default ranges for everyone in case a child needs Coord=User
  object.⎕WX←0 ⍝ Let's hide all GUI properties, etc., so that they won't be accidentally used directly - ∆WS/∆WG should be used instead

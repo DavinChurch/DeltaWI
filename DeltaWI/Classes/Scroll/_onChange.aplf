@@ -1,0 +1,11 @@
+ ok←run _onChange message
+ ⍝ Can be invoked by the Scroll or ThumbDrag events, or by setting the value property, each potentially different
+
+ :Select 2⊃message
+ :Case '' ⍝ An internal call due to value being changed
+     ok←##.NoRes⊣(message[3],0)##.##.Run run ⍝ (We never care about the result when called internally)
+ :Case 'onThumbDrag' ⍝ A continuous dragging of the thumb
+     ok←1⊣(message[3],0)##.##.Run run
+ :Case 'onScroll' ⍝ Scrolling complete
+     ok←1⊣(message[4],0)##.##.Run run ⍝ Always approve change; APL+Win can't cancel
+ :EndSelect

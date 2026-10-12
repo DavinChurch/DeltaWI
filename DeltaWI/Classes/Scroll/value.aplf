@@ -1,0 +1,35 @@
+ result←object value arg;was;chg
+ ⍝ [1]←Current position (always read/write from 'Thumb')
+ ⍝ [2]←Maximum position (2⊃'Limits')
+ ⍝ [3]←Page size ('PageSize' & 2⊃'Step')
+ ⍝ [4]←Minimum position (1⊃'Limits')
+ ⍝ [5]←Enable tracking of scroll box
+
+ was←object ⎕VGET⊂'_value'(0 100 1 0 0)
+ was[1]←object ##.##.∆WG'Thumb' ⍝ Note actual current value
+ :If 0=≢arg
+     result←was
+ :Else
+     '∆WI DOMAIN ERROR: value'##.##.Error~##.##.IsInt arg←##.##.Single arg
+     '∆WI RANK ERROR: value'##.##.Error 1<≢⍴arg
+     '∆WI LENGTH ERROR: value'##.##.Error~arg≢⍛∊⍳5
+     arg←arg,arg≢⍛↓was
+     '∆WI DOMAIN ERROR: value'##.##.Error≥/arg[4 2]
+     '∆WI DOMAIN ERROR: value'##.##.Error(arg[2]>¯1+2*31)∨(arg[4]<1-2*31)∨(-/arg[2 4])>¯1+2*31
+     '∆WI DOMAIN ERROR: value'##.##.Error~arg[5]∊0 1
+     object._value←arg
+     object ##.##.∆WS('Step'(1,3⊃arg))('Limits'(arg[4 2]))('PageSize'(3⊃arg))('Thumb'(1⊃arg))
+     :If arg[1]≠was[1] ⍝ Has the Thumb position changed?
+         'Change?'##.##.Event object ##.##.Application,arg[1] ⍝ Invoke their onChange handler internally
+     :EndIf
+     :If arg[5]≠was[5] ⍝ If this changes, make adjustments to event handling
+     :AndIf ×≢chg←object ⎕VGET⊂'_onChange' '' ⍝ But only if events are being used
+         :If arg[5] ⍝ Tracking being turned on
+             {}object('ThumbDrag'##.##.SetEvent'Change'),⊂chg ⍝ Generates repeated events as Thumb changes continuously while dragging
+         :Else ⍝ Tracking being turned off
+             ⍝ Hopefully this event will run quickly enough if it's been turned off after having been turned on
+             {}object('ThumbDrag'##.##.SetEvent'Change'),⊂''
+         :EndIf
+     :EndIf
+     result←##.NoRes
+ :EndIf

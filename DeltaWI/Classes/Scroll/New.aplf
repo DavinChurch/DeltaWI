@@ -1,0 +1,89 @@
+ result←object New arg;parent;name;∆style;∆border;props;dir;newobj;align;extentvh;middle;punits;units;psize;where;newrect
+
+⍝ 0 = Vertical (right/left)
+⍝ 1 = Horizontal (bottom/top)
+⍝ 2 = Size box (corner)
+⍝    Select one:
+⍝ +0 = No alignment (floating)
+⍝ +4 = Bottom/right alignment
+⍝ +8 = Top/left alignment
+⍝ APL+Win says that the edge alignments apply to the inside of the "where" rectangle, but that's not (or no longer) true.
+⍝ Setting "where" instead specifies the exact position and size of the bar, including the thickness.
+⍝ Therefore, that means that the +0/4/8 in the style is unused and useless except during creation.
+⍝ All varieties of aligned bars/corners occupy the edges/corners of the center 50% of the screen by default (indented 25% from all sides).
+⍝ Corner is always solid #240 grey, regardless of what 'color' is set to.
+⍝ The background 'color' ([1]) is used for the interior of bars (does not include any control items).
+⍝ The foreground 'color' ([2]) is not used at all, a different grey is used for all control items.
+
+ (parent name)←object ⍝ Separate non-standard two-part argument
+ (∆border ∆style)←arg ##._supp.GetInitialProps'border' 'style'
+
+ dir←1+0 1 ##.##.BitOf+/∆style                          ⍝ Select only 0/1/2 direction values from bits 0 & 1 → 1/2/3
+ align←1+2 3 ##.##.BitOf+/∆style                        ⍝ Select only 0/4/8 alignment values from bits 2 & 3 → 1/2/3
+ extentvh←⊃_supp ⎕VGET⊂'_extentVH',align⊃'048'          ⍝ Determine constant bar thicknesses for various alignments
+ (punits units)←1 0 1/##._supp.MyUnits parent           ⍝ Get the unit-conversions for the parent object's scale
+ psize←units[1;]÷⍨punits×parent ⎕VGET'_size'            ⍝ How big is our container in character units?
+ middle←1 3∘.×psize÷4                                   ⍝ Corner locations of the central half of our parent's size, for alignment purposes
+ :Select dir                                            ⍝ Now, figure out where this needs to go (by default)
+ :Case 1 ⍝ Vertical
+     :Select align
+     :Case 1 ⍝ Centered (only 1/3 psize tall)
+         where←(psize[1]÷3),(2÷⍨psize[2]-extentvh[2]),(psize[1]÷3),extentvh[2]
+     :Case 2 ⍝ Right-aligned
+         where←middle[1;1],(middle[2;2]-extentvh[2]),(psize[1]÷2),extentvh[2]
+     :Case 3 ⍝ Left-aligned
+         where←middle[1;],(psize[1]÷2),extentvh[2]
+     :EndSelect
+ :Case 2 ⍝ Horizontal
+     :Select align
+     :Case 1 ⍝ Centered (only 1/5 psize wide)
+         where←(extentvh[1]-⍨psize[1]÷2),(2×psize[2]÷5),extentvh[1],psize[2]÷5
+     :Case 2 ⍝ Bottom-aligned
+         where←(middle[2;1]-extentvh[1]),(psize[2]÷4),extentvh[1],psize[2]÷2
+     :Case 3 ⍝ Top-aligned
+         where←middle[1;1],(psize[2]÷4),extentvh[1],psize[2]÷2
+     :EndSelect
+ :Case 3 ⍝ Corner
+     :Select align
+     :Case 1 ⍝ Centered
+         where←extentvh,⍨2÷⍨psize-extentvh
+     :Case 2 ⍝ Lower-right corner
+         where←extentvh,⍨middle[2;]-extentvh
+     :Case 3 ⍝ Upper-left corner
+         where←extentvh,⍨middle[1;]
+     :EndSelect
+ :EndSelect
+ ⍝ Once created, the default 'where' calculation is never used again.
+
+ arg←(parent:parent ⋄ border:0 ⋄ where:where)##.##.New.Center arg ⍝ Just assign pre-computed locations; border is ignored (for sizing?)
+
+⍝? What happens if we change style later between =2 and ≠2 ??
+ :If dir<3 ⍝ A normal scroll bar (non-corner)
+     props←'Scroll'('Visible' 0)('Align' 'None')('Sizeable' 0) ⍝ Properties that should be used during creation
+     props,←⊂'VScroll'(-dir=1) ⍝? Create-only
+     props,←⊂'HScroll'(-dir=2) ⍝? Create-only
+     props,←⊂'Border'(0×∆border) ⍝ Set border upon creation ⍝? This seems to be ignored in APL+Win; what about Dyalog? ⍝? Create-only
+     props,←⊂'Posn'(where[1 2]×units[1;])
+     props,←⊂'Size'(where[3 4]×units[1;])
+     props,←('Thumb' 0)('Limits' 0 100)('PageSize' 1)('Step' 1 1)
+     props,←⊂'BCol'(3⍴256-8)
+     newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
+     newobj._style←+/1 2 4 8∩∆style ⍝ Remember how we started
+     result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure
+     newobj._value←0 100 1 0 0 ⍝ Keep track of our value property, except for Thumb which is dynamic
+
+ :Else ⍝ Fake a corner-piece
+     props←'Static'('Coord' 'RealPixel')('Visible' 1)('Border' 0)('Style' 'WhiteBox')
+     props,←('Posn' 0 0)('Size'(where[3 4]×units[1;]))
+     newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
+     newobj._style←+/1 2 4 8∩∆style ⍝ Remember how we started
+     result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure
+     newobj._value←0 100 1 0 0 ⍝ Keep track of our value property; but this is not used as long as this remains a corner box
+     ⍝ Note: This will set a maximum size for the corner equal to the current size of the parent object,
+     ⍝       but this will not change if the parent is later resized.
+     props←'Rect'('Coord' 'RealPixel')('Visible' 1)
+     props,←('Points' 0 0)('Size'(parent._pix_size))
+     props,←('LStyle' 5)('FStyle' 0)('FillCol'(3⍴256-12))
+     newrect←⎕VGET(newobj⍕⍛,'._1')##.##.∆WC props ⍝ Color the Static object with the standard color using a named Rect
+     ##.##.New.InitChild newobj newrect
+ :EndIf

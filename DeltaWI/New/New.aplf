@@ -83,6 +83,7 @@
      :EndSection
 
  :ElseIf '.'∊class ⍝ Check for an implied ActiveX control here ⍝? (is this the best way to check?)
+⍝? APL[2000].Grid[.1] will fall into this category and must be rerouted to be specially handled in Dyalog
      :Section ⍝ This must be an implied meta-class
          in←##.Classes.ActiveX ⍝ Just for easier reference
          :If parent ChildOK in class subclass ⍝ Determine if we can place this child here

@@ -1,0 +1,18 @@
+ Scroll
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+
+ 'f.v'∆WI Pass'f.v'⊢'Create' 'Scroll'('style' 0)
+ 'f.v'∆WI Pass 10 2.5⊢'size'
+ 'f.v'∆WI Pass MT⊢'where'(0 100 30 2.5-0 2.5 1.25 0)
+
+ 'f.h'∆WI Pass'f.h'⊢'Create' 'Scroll'('style' 1)
+ 'f.h'∆WI Pass 1.25 20⊢'size'
+ 'f.h'∆WI Pass MT⊢'where'(30 0 1.25 100-1.25 0 0 2.5)
+
+ 'f.c'∆WI Pass'f.c'⊢'Create' 'Scroll'('style' 2)
+ 'f.c'∆WI Pass 1.25 2.5⊢'size'
+ 'f.c'∆WI Pass MT⊢'where'(30 100 1.25 2.5-1.25 2.5 0 0)
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

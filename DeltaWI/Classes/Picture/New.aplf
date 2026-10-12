@@ -5,7 +5,7 @@
 
  arg←(parent:parent ⋄ border:∆border)##.##.New.Center arg
 
- props←'SubForm'('Visible' 0) ⍝ Set standard creation properties
+ props←'SubForm'('Visible' 0)('Sizeable' 0) ⍝ Set standard creation properties
  props,←⊂'Border'∆border ⍝ Set border upon creation ⍝? Create-only
  props,←⊂'VScroll'(-16∊∆style) ⍝ Create-only
  props,←⊂'HScroll'(-64∊∆style) ⍝ Create-only
