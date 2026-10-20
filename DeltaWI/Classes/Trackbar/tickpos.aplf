@@ -1,0 +1,3 @@
+ result←object tickpos arg
+ '∆WI ACTION ERROR: Property "tickpos" is read-only'##.##.Error×≢arg
+ ##.##.Error'Dyalog does not support "tickpos"'

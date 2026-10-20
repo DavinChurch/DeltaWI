@@ -13,5 +13,5 @@
  ⍝ Throw away the system object and all its contents, too - they'll be recreated with default values on the next call
  ##.##.∆EX⍕##.##.GUIroot
 ⍝? When we're using EWC, how do we kill off all the root properties?
- ##.##.Application.⎕EX'∆WSELF' '∆WEVENT' '∆WARG' '∆WRES' ⍝ Dispose of all the ∆W-variables
+ ##.##.Application.⎕EX'∆WSELF' '∆WEVENT' '∆WARG' '∆WRES' '∆WEVENT_priority' ⍝ Dispose of all the ∆W-variables
  result←##.NoRes

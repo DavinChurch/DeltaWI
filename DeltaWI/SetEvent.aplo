@@ -1,4 +1,4 @@
- result←object(realevent SetEvent myevent)arg;after;before;event;pseudo;t;bat;aat;sys;custom
+ result←object(realevent SetEvent myevent)arg;after;before;event;pseudo;t;bat;aat;sys;custom;secondary
 ⍝ Set up event-handling in a standard way
 
 ⍝ Left and right arguments are provided directly from the ∇onXxxx setting function
@@ -38,10 +38,11 @@
      :Else
          before,←⊂'Event' ⍝ Always put APL+Win events before Dyalog events (design decision)
          'LENGTH ERROR: Wrong number of arguments'Error 1<≢arg
-         ('∆WI DOMAIN ERROR: on',myevent)Error~IsChar arg←⊃arg
+         :If secondary←⎕NULL∊arg←⊃arg ⋄ arg←1↓' ',⎕NULL~⍨arg ⋄ :EndIf
+         ('∆WI DOMAIN ERROR: on',myevent)Error~IsChar arg
          ('∆WI RANK ERROR: on',myevent)Error 1≠≢⍴arg←1/arg
          arg←∆dlt arg ⍝ Ignore leading and trailing spaces
-         object ⎕VSET sys~⍛/⊂('_on',myevent)arg ⍝ Set new APL+Win event handler text
+         object ⎕VSET(~sys∨secondary)/⊂('_on',myevent)arg ⍝ Set new APL+Win event handler text (if not secondary)
          :If 0=≢realevent
              :Return ⍝ There's nothing else to do here, so just exit
          :EndIf

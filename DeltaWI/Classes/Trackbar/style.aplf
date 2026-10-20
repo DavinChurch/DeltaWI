@@ -1,0 +1,42 @@
+ result←object style arg;bits;props;style;was;handler
+
+⍝ 0   = Vertical (right/left)
+⍝ 1   = Horizontal (bottom/top)
+⍝     Select one:
+⍝ +0  = Ticks on bottom/right
+⍝ +2  = Ticks on top/left
+⍝ +4  = Ticks on both sides
+⍝     Select any:
+⍝ +8  = Hide tick marks but display slider
+⍝ +16 = Track slider movement
+⍝ +32 = Enable selection range
+
+ style←object ⎕VGET⊂'_style' 0 ⍝ What style were we?
+ :If 0=≢arg
+     result←style
+ :Else
+     '∆WI DOMAIN ERROR: style'##.##.Error~##.##.IsInt arg←##.##.Single arg
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∨/∊arg<0
+     arg←+/bits←##._supp.SetBitVals arg
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error×≢bits~0 1 2 4 8 16 32
+     '∆WI ATTRIBUTE ERROR: Invalid "style" attribute specified'##.##.Error∧/2 4∊bits
+     object._style←arg
+     was←##.##.BitVals style ⍝ Previous bit settings
+
+     props←0⍴⊂''
+     props,←0/⊂'VScroll'(-~1∊bits) ⍝ Changing orientation will not change size/where     ⍝? Create-only
+     props,←0/⊂'HScroll'(-1∊bits) ⍝ Changing orientation will not change size/where     ⍝? Create-only
+     props,←0/⊂'HasTicks'(~8∊bits) ⍝? Create-only
+     props,←0/⊂'TickAlign'((1⍳⍨2 4∊bits)⊃(1+1∊bits)⊃('Left' 'Both' 'Right')('Top' 'Both' 'Bottom')) ⍝? Create-only
+     props,←0/⊂'Style'((1+32∊bits)⊃'Standard' 'Selection') ⍝? Create-only ⍝? Does this do what we think it does?
+     ⍝? If we turn Style on/off, do we need to mess with SelRange at the same time?
+     ⍝?object ##.##.∆WS props ⍝? Nothing changeable here ATM
+     :If 16∊bits
+     :AndIf ×≢handler←object ⎕VGET⊂'_onChange'
+         result←object('ThumbDrag'##.##.SetEvent'Change'),⊂handler ⍝ Generates repeated events as Thumb changes continuously while dragging
+     :Else
+         ⍝ Hopefully this event will run quickly enough if it's been turned off after having been turned on
+         result←object('ThumbDrag'##.##.SetEvent'Change'),⎕NULL ⍝ Turn off ThumbDrag but leave 'Scroll' as-is
+     :EndIf
+     result←##.NoRes
+ :EndIf

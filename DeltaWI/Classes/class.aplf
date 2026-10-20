@@ -1,5 +1,3 @@
  result←object class arg
-⍝ Return the APL+Win class name for this object
-
  '∆WI ACTION ERROR: Property "class" is read-only'##.Error×≢arg
  result←object._class

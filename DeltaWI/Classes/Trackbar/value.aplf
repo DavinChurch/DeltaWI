@@ -1,0 +1,16 @@
+ result←object value arg;new;low;high;old
+ old←object ##.##.∆WG'Thumb'
+ :If 0=≢arg
+     result←old
+ :Else
+     '∆WI DOMAIN ERROR: value'##.##.Error~##.##.IsInt new←##.##.Single arg
+     '∆WI RANK ERROR: value'##.##.Error 1<≢⍴new
+     '∆WI LENGTH ERROR: value'##.##.Error 1≠≢new
+     (low high)←object ⎕VGET⊂'_range'(0 100)
+     object._increment←new←⊃low⌈high⌊new
+     object ##.##.∆WS'Thumb'new
+     :If old≠new ⍝ Has the Thumb position changed?
+         'Change?'##.##.Event object ##.##.Application,arg[1] ⍝ Invoke their onChange handler internally
+     :EndIf
+     result←##.NoRes
+ :EndIf

@@ -1,4 +1,4 @@
- {dq}←events Event message;event;object;realevent;localize;fn;action;run;Application;handler;⎕TRAP;GUIroot;suppress;warg;wres;wevent;force;mousing;mouseonce;top;realobject;suppressable
+ {dq}←events Event message;event;object;realevent;localize;fn;action;run;Application;handler;⎕TRAP;GUIroot;suppress;warg;wres;wevent;force;mousing;mouseonce;top;suppressable
 ⍝ When any needed Dyalog event is signalled, execute this function directly to perform the appropriate operations.
 ⍝ Important: This function often operates independently of ∆WI and allows a separate access point into the DeltaWI system when system events call it.
 ⍝
@@ -25,29 +25,39 @@
  ⍝? Since this normally happens within an event callback rather than an application call, how do we really want to handle ∆WI-style (or other) errors??
  ⍝? And since we often call this implicitly during internal processing, do we want to do the same thing to report back to our internal code (probably OK?)?
 
- :Hold '∆WI#',⍕⎕TID ⋄ top←1 ⋄ :Else ⋄ top←0 ⋄ :EndHold                  ⍝ Is this a recursive call? ⍝? This sequence could be interrupted by an in-thread event that might happen any time (high-priority??)
+ ⍝ We need to start off by getting the appropriate "Application" reference before we can get into the normal processing sequence using :Hold
+ (object realevent)←2↑message ⋄  ⍝ What object/event are we processing? ("message" may be synthetic)
+ :If 9=⎕NC'realevent' ⍝ Is this an internal (non-real) event call?
+     Application←realevent ⍝ Expect that the Application pointer is provided to us directly instead of looking for an external caller source
+     ⍝ Further preparations are handled below...
+ :Else
+     :If 0∧(1<≢⎕RSI)∧∧/1,2≡/⎕NSI ⍝? This is for debugging internal event calls - delete before production ⍝? This seems to be working - shut it off for now
+         'Messages from ⎕RSI determination when called from within DeltaWI'Tracer')SI'
+         Application←⎕←⊃⎕THIS,⍨⎕RSI/⍨⎕←⎕THIS⍕⍛{(⊂⍺,'.')≢¨⍵↑¨⍨1+≢⍺}⎕←⎕NSI,¨'.' ⍝ Global: What is the current application namespace (outside DeltaWI) when the event fires?
+     :Else
+         Application←⊃⎕THIS,⍨⎕RSI/⍨⎕THIS⍕⍛{(⊂⍺,'.')≢¨⍵↑¨⍨1+≢⍺}⎕NSI,¨'.' ⍝ Global: What is the current application namespace (outside DeltaWI) when the event fires?
+⍝? There was a minor loophole if another namespace is named with #.DeltaWIxxx (see also ∆WI) ⍝? Does this change fix it??
+     :EndIf
+ :EndIf
+
+ :If top←~message[2]∊⊂'Scroll'                                          ⍝ Detect high-priority callbacks and avoid :Hold while running them
+ ⍝ Note: ∆WEVENT_priority will be an application-global variable, only defined while it is in use
+ :AndIf top←~×Application ⎕VGET⊂'∆WEVENT_priority' 0                    ⍝ Detect recursive calls during high-priority callbacks to also avoid :Hold
+     :Hold '∆WI#',⍕⎕TID ⋄ top←1 ⋄ :Else ⋄ top←0 ⋄ :EndHold              ⍝ Is this a recursive call? ⍝? This sequence could be interrupted by an in-thread event that might happen any time (high-priority??)
+ :EndIf
  :Hold top/'∆WI'('∆WI#',⍕⎕TID)                                          ⍝ Make sure we stay single-threaded!
 
      :If 0=≢events←,⊆,events ⋄ :Return ⋄ :EndIf ⍝ If there are no APL+Win events to emulate, just exit quickly
-     object←⊃(realobject realevent)←2↑message ⋄  ⍝ What object/event are we processing? ("message" may be synthetic)
      :While 0≠object.⎕NC'_Owner' ⋄ object←object._Owner ⋄ :EndWhile ⍝ Follow the ownership chain up to a real APL+Win object to work on
      :If 9=⎕NC'realevent' ⍝ Is this an internal (non-real) event call?
-         ⍝ If our event message ia synthetic with an "event name" that's actually a namespace reference,
+         ⍝ If our event message is synthetic with an "event name" that's actually a namespace reference,
          ⍝ then that is a previous "Application" pointer being passed in from an internal (implied) event.
          ⍝ All implicit (code-driven) events are potentially suppressable.
          'Exactly one event name required for synthetic events'⎕SIGNAL 11/⍨(2≠≡events)∨1≠≢events ⍝ Report improper usage directly
-         Application←realevent ⍝ Use what we're given instead of looking for an external caller source
          message[2]←⊂realevent←'' ⍝ Signal everyone that this is a synthetic event and should be handled a little differently
          suppress←object ⎕VGET⊂'_suppress' 0 ⍝ Have they asked to suppress this implied event?
          dq←Classes.NoRes ⍝ We'll have a different default return value for synthetic events (e.g. for when it is suppressed or doesn't have a handler)
      :Else
-         :If 0∧(1<≢⎕RSI)∧∧/1,2≡/⎕NSI ⍝? This is for debugging internal event calls - delete before production ⍝? This seems to be working - shut it off for now
-             'Messages from ⎕RSI determination when called from within DeltaWI'Tracer')SI'
-             Application←⎕←⊃⎕THIS,⍨⎕RSI/⍨⎕←⎕THIS⍕⍛{(⊂⍺,'.')≢¨⍵↑¨⍨1+≢⍺}⎕←⎕NSI,¨'.' ⍝ Global: What is the current application namespace (outside DeltaWI) when the event fires?
-         :Else
-             Application←⊃⎕THIS,⍨⎕RSI/⍨⎕THIS⍕⍛{(⊂⍺,'.')≢¨⍵↑¨⍨1+≢⍺}⎕NSI,¨'.' ⍝ Global: What is the current application namespace (outside DeltaWI) when the event fires?
-⍝? There was a minor loophole if another namespace is named with #.DeltaWIxxx (see also ∆WI) ⍝? Does this change fix it??
-         :EndIf
          suppress←0 ⍝ User (real) events never get suppressed
          dq←1 ⍝ If nothing else, just continue APL/Windows processing normally
      :EndIf

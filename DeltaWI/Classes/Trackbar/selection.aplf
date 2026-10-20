@@ -1,0 +1,17 @@
+ result←object selection arg;new;old
+ old←object ⎕VGET⊂'_selection'⍬
+ :If 0=≢arg
+     result←old
+ :Else
+     '∆WI DOMAIN ERROR: selection'##.##.Error~##.##.IsInt new←##.##.Single arg
+     '∆WI RANK ERROR: selection'##.##.Error 1<≢⍴new
+     '∆WI LENGTH ERROR: selection'##.##.Error~0 2∊⍨≢new
+     '∆WI DOMAIN ERROR: selection'##.##.Error>/new
+     object._selection←new
+     :If 32∊##.##.BitVals object ⎕VGET⊂'_style' 0
+         object ##.##.∆WS'SelRange'new
+     :Else
+         object ##.##.∆WS'SelRange' ¯1 ¯1 ⍝? Should we leave this alone in case Style gets changed back (in the future)?
+     :EndIf
+     result←##.NoRes
+ :EndIf

@@ -4,8 +4,10 @@
  :Select 2⊃message
  :Case '' ⍝ An internal call due to value being changed
      ok←##.NoRes⊣(message[3],0)##.##.Run run ⍝ (We never care about the result when called internally)
- :Case 'onThumbDrag' ⍝ A continuous dragging of the thumb
+ :Case 'ThumbDrag' ⍝ A continuous dragging of the thumb
      ok←1⊣(message[3],0)##.##.Run run
- :Case 'onScroll' ⍝ Scrolling complete
+ :Case 'Scroll' ⍝ Scrolling complete {A high-priority callback}
+     :With ##.##.Application ⋄ ∆WEVENT_priority←1+⎕VGET⊂'∆WEVENT_priority' 0 ⋄ :EndWith ⍝ Signal that no :Holds are to be recursively applied
      ok←1⊣(message[4],0)##.##.Run run ⍝ Always approve change; APL+Win can't cancel
+     :With ##.##.Application ⋄ ∆WEVENT_priority-←1 ⋄ ⎕EX(0≥∆WEVENT_priority)/'∆WEVENT_priority' ⋄ :EndWith ⍝ End recursive :Hold override
  :EndSelect

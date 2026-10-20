@@ -1,0 +1,17 @@
+ result←object increment arg;new;old;increment
+ old←object ⎕VGET⊂'_increment'(¯1 1)
+ :If 0=≢arg
+     result←old
+ :Else
+     '∆WI DOMAIN ERROR: increment'##.##.Error~##.##.IsInt new←##.##.Single arg
+     '∆WI RANK ERROR: increment'##.##.Error 1<≢⍴new
+     '∆WI LENGTH ERROR: increment'##.##.Error 2<≢new
+     new,←new≢⍛↓old ⍝ Default trailing values to previous values
+     '∆WI DOMAIN ERROR: increment'##.##.Error(new≤0)∧1,⍨¯1≠⊃new
+     object._increment←new
+     :If ¯1=⊃new ⍝ Need to figure out what the default page size is
+         new[1]←⌊0.2×--/object ⎕VGET⊂'_range'(0 100) ⍝ 20% of full range
+     :EndIf
+     object ##.##.∆WS'Step'(⌽new)
+     result←##.NoRes
+ :EndIf

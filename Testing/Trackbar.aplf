@@ -1,0 +1,43 @@
+ Trackbar;sty;value
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean out any previous GUI work
+
+ 'f'∆WI Pass(,'f')⊢'Create' 'Form'('size' 30 100)
+
+ :For sty :In 0 2 4 8
+     'f.t'∆WI Pass'f.t'⊢'Create' 'Trackbar'('style'sty)
+     'f.t'∆WI Pass 10 5⊢'size'
+     'f.t'∆WI Pass 10 47.5 10 5⊢'where'
+ :EndFor
+
+ :For sty :In 1 3 5 9
+     'f.t'∆WI Pass'f.t'⊢'Create' 'Trackbar'('style'sty)
+     'f.t'∆WI Pass 2.5 20⊢'size'
+     'f.t'∆WI Pass 13.75 40 2.5 20⊢'where'
+ :EndFor
+
+ 'f.t'∆WI Pass'f.t'⊢'Create' 'Trackbar'('style' 1 32)
+ 'f.t'∆WI Pass 0 100⊢'range'
+ 'f.t'∆WI Pass MT⊢'range'(0 120)
+ 'f.t'∆WI Pass 0 120⊢'range'
+ 'f.t'∆WI Pass ¯1 1⊢'increment'
+ 'f.t'∆WI Pass MT⊢'increment' 10 2
+ 'f.t'∆WI Pass 10 2⊢'increment'
+ 'f.t'∆WI Pass ⍬⊢'selection'
+ 'f.t'∆WI Pass MT⊢'selection' 10 90
+ 'f.t'∆WI Pass 10 90⊢'selection'
+ 'f.t'∆WI Pass 0⊢'tickinterval'
+ 'f.t'∆WI Pass MT⊢'tickinterval' 20
+ 'f.t'∆WI Pass 20⊢'tickinterval'
+
+ value←0
+ 'f.t'∆WI Pass MT⊢'onChange' 'value←⊃∆WARG'
+ 'f.t'∆WI Pass 0⊢'value'
+ 'f.t'∆WI Pass MT⊢'value' 33
+ 'f.t'∆WI Pass 33⊢'value'
+ ⊢Pass 33⊢value
+ 'f.t'∆WI Pass'value←⊃∆WARG'⊢'onChange'
+ 'f.t'∆WI Pass MT⊢'value' 0
+ 'f.t'∆WI Pass 0.25 1 0.75 18⊢'channelwhere' ⍝ This does not match APL+Win exactly because it's a different control version
+ 'f.t'∆WI Pass 0.125 1 1.1875 1.375⊢'sliderwhere' ⍝ This does not match APL+Win exactly because it's a different control version
+
+ '#'∆WI Pass MT⊢'Reset' ⍝ Clean up after tests

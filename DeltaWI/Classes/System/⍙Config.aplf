@@ -44,7 +44,7 @@
              :If 0≠≢value←'.'##.##.∆dtr value ⋄ :AndIf '#.'≡2↑value ⋄ :AndIf 9=⎕NC value ⋄ :AndIf 4=(⎕VGET value).⎕NC'⍙_Each'
 ⍝? What happens if this namespace disappears during execution? Will translations just blow up, and is that OK?
                  object._Migration←value ⍝ Set up a pre-defined migration translation function connected to this namespace
-                 (from to)←↓⍉↑'%'(≠⊆¨⊢)'#.'⎕R(value,'.')⍠'Regex' 0⊢_supp.apw_replacements
+                 (from to)←↓⍉↑'%'(≠⊆¨⊢)'#.'⎕R(value,'.')⍠1⍠'UCP' 1⊢_supp.apw_replacements
                  (from to)⊂⍛,⍨←'''[^'']*''|⍝.*' '&'
                  object._Translate←from ⎕R to ⍝ Predefine the translation function for use by ∇Requote
              :Else

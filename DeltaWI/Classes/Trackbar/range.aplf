@@ -1,0 +1,26 @@
+ result←object range arg;new;old;increment
+ old←object ⎕VGET⊂'_range'(0 100)
+ :If 0=≢arg
+     result←old
+ :Else
+     '∆WI DOMAIN ERROR: range'##.##.Error~##.##.IsInt new←##.##.Single arg
+     '∆WI RANK ERROR: range'##.##.Error 1<≢⍴new
+     '∆WI LENGTH ERROR: range'##.##.Error 2<≢new
+     'DOMAIN ERROR'##.##.Error∨/~((-1-⍨2*31)∘≤∧≤∘(1-⍨2*31))new
+     :If 0=≢new
+         new←0 100
+     :ElseIf 1=≢new
+         new←{⍵[⍋⍵]}0,new
+     :EndIf
+     '∆WI DOMAIN ERROR: range'##.##.Error>/new
+     object._range←new
+     object ##.##.∆WS'Limits'new
+     :If ¯1=⊃increment←object ⎕VGET⊂'_increment'(¯1 1) ⍝ Re-figure out what the default page size is
+         increment[1]←⌊0.2×--/new ⍝ 20% of full increment
+         object ##.##.∆WS'Step'(⌽increment)
+     :EndIf
+     :If 0=object ⎕VGET⊂'_tickinterval' 0
+         object ##.##.∆WS'TickSpacing'(--/new)
+     :EndIf
+     result←##.NoRes
+ :EndIf

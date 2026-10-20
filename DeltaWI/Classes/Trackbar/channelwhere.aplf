@@ -1,0 +1,3 @@
+ result←object channelwhere arg
+ '∆WI ACTION ERROR: Property "channelwhere" is read-only'##.##.Error×≢arg
+ result←(object ##.##.∆WG'TrackRect')÷4⍴⊃##._supp.MyUnits object

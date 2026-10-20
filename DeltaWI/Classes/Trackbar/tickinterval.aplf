@@ -1,0 +1,14 @@
+ result←object tickinterval arg;new;old
+ old←object ⎕VGET⊂'_tickinterval' 0
+ :If 0=≢arg
+     result←32767|old
+ :Else
+     '∆WI DOMAIN ERROR: tickinterval'##.##.Error~##.##.IsInt new←##.##.Single arg
+     '∆WI RANK ERROR: tickinterval'##.##.Error 1<≢⍴new
+     '∆WI LENGTH ERROR: tickinterval'##.##.Error 1≠≢new
+     '∆WI DOMAIN ERROR: tickinterval'##.##.Error new<0
+     object._tickinterval←⊃new ⋄ object._ticks←⍬
+     :If new=0 ⋄ new←--/object ⎕VGET⊂'_range'(0 100) ⋄ :EndIf
+     object ##.##.∆WS'TickSpacing'new
+     result←##.NoRes
+ :EndIf

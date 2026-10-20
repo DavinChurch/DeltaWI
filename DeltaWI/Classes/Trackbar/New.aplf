@@ -1,0 +1,16 @@
+ result←object New arg;parent;name;props;newobj;∆border;∆style;stretch;extent
+ (parent name)←object ⍝ Separate non-standard two-part argument
+ (∆border ∆style)←arg ##._supp.GetInitialProps'border' 'style'
+ extent←(1+1∊∆style)⊃_supp.(_extentV _extentH) ⍝ Allow different default sizing based on orientation
+ arg←(parent:parent ⋄ border:∆border ⋄ extent:extent)##.##.New.Center arg
+
+ props←'TrackBar'('Visible' 0) ⍝ Properties that should be used during creation
+ props,←('Limits' 0 100)('Thumb' 0)('TickSpacing' 32767)
+ props,←⊂'VScroll'(-~1∊∆style) ⍝? Create-only
+ props,←⊂'HScroll'(-1∊∆style) ⍝? Create-only
+ props,←⊂'Border'∆border ⍝ Set border upon creation ⍝? Create-only
+ props,←⊂'HasTicks'(~8∊∆style) ⍝? Create-only
+ props,←⊂'TickAlign'((1⍳⍨2 4∊∆style)⊃(1+1∊∆style)⊃('Left' 'Both' 'Right')('Top' 'Both' 'Bottom')) ⍝? Create-only
+ props,←⊂'Style'((1+32∊∆style)⊃'Standard' 'Selection') ⍝? Create-only ⍝? Does this do what we think it does?
+ newobj←⎕VGET(parent⍕⍛,'.',name)##.##.∆WC props ⍝ Create the actual Dyalog object
+ result←parent newobj ##.##.New.Initialize arg ⍝ Complete standard class-initialization procedure

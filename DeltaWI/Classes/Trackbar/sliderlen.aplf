@@ -1,0 +1,7 @@
+ result←object sliderlen arg;old
+ old←object ⎕VGET⊂'_sliderlen' ¯1
+ :If 0=≢arg
+     result←old
+ :Else
+     ##.##.Error'Dyalog does not support "sliderlen"'
+ :EndIf

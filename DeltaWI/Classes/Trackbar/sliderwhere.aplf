@@ -1,0 +1,3 @@
+ result←object sliderwhere arg
+ '∆WI ACTION ERROR: Property "sliderwhere" is read-only'##.##.Error×≢arg
+ result←(object ##.##.∆WG'ThumbRect')÷4⍴⊃##._supp.MyUnits object

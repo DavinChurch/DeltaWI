@@ -1,0 +1,7 @@
+ result←object ticks arg;old
+ old←object ⎕VGET⊂'_ticks'⍬
+ :If 0=≢arg
+     result←old
+ :Else
+     ##.##.Error'Dyalog does not support "ticks"'
+ :EndIf
